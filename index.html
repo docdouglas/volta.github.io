@@ -35,6 +35,14 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        html, body {
+            width: 100vw; /* Asegura que ocupe el 100% del ancho del viewport */
+            height: 100vh; /* Asegura que ocupe el 100% de la altura del viewport */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Oculta cualquier desbordamiento global */
+        }
+
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--background-color);
@@ -43,7 +51,6 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow: hidden; /* Asegura que no haya desplazamiento en el cuerpo principal */
         }
 
         .content {
@@ -74,7 +81,7 @@
             box-shadow: var(--shadow);
             flex-shrink: 0;
             overflow-y: auto;
-            overflow-x: hidden; /* **NUEVO**: Evita el desplazamiento horizontal dentro de cada pestaña */
+            overflow-x: hidden; /* Evita el desplazamiento horizontal dentro de cada pestaña */
         }
 
         /* Estilo para los títulos de todas las secciones con iconos */
