@@ -49,7 +49,8 @@
         .content {
             flex-grow: 1;
             padding: 24px;
-            padding-bottom: 80px;
+            /* Eliminado padding-bottom: 80px; */
+            height: calc(100vh - 60px); /* Altura explícita para dejar espacio a la barra de navegación */
             overflow-y: auto; /* Cambiado de 'hidden' a 'auto' para permitir el desplazamiento vertical */
             position: relative;
         }
@@ -674,7 +675,7 @@
             <!-- SECCIÓN DE BIBLIOTECA PÚBLICA MODIFICADA PARA AGRUPAR POR TIPO -->
             <section id="biblioteca" class="tab-content">
                 <h1><i class="fa-solid fa-book-open-reader"></i>Biblioteca</h1>
-                <p>Colección de recursos disponibles.</p>
+                <p>Aquí encontrarás una gran colección de recursos disponibles para ti.</p>
                 <div id="public-library-container">
                     <!-- El contenido de la biblioteca pública se generará aquí dinámicamente por tipo -->
                 </div>
