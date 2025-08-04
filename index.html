@@ -43,15 +43,14 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Asegura que no haya desplazamiento en el cuerpo principal */
         }
 
         .content {
             flex-grow: 1;
             padding: 24px;
-            /* Eliminado padding-bottom: 80px; */
             height: calc(100vh - 60px); /* Altura explícita para dejar espacio a la barra de navegación */
-            overflow-y: auto; /* Cambiado de 'hidden' a 'auto' para permitir el desplazamiento vertical */
+            overflow-y: auto; /* Permite el desplazamiento vertical dentro del área de contenido */
             position: relative;
         }
 
@@ -75,6 +74,7 @@
             box-shadow: var(--shadow);
             flex-shrink: 0;
             overflow-y: auto;
+            overflow-x: hidden; /* **NUEVO**: Evita el desplazamiento horizontal dentro de cada pestaña */
         }
 
         /* Estilo para los títulos de todas las secciones con iconos */
@@ -133,7 +133,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 6px 0; /* Reducido de 8px a 6px */
+            padding: 6px 0;
             flex: 1;
             color: var(--nav-inactive-color);
             text-decoration: none;
