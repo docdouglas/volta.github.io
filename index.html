@@ -597,6 +597,64 @@
         .confirmation-modal .cancel-btn:active {
             transform: translateY(2px);
         }
+        
+        /* Estilos para el multi-select */
+        .multi-select-container {
+            position: relative;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .multi-select-container .selected-items-display {
+            padding: 15px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fff;
+            cursor: pointer;
+            min-height: 50px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .multi-select-container .selected-item-tag {
+            background: var(--primary-color);
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .multi-select-container .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            z-index: 10;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+        }
+
+        .multi-select-container .dropdown-content label {
+            display: block;
+            padding: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .multi-select-container .dropdown-content label:hover {
+            background-color: #f5f5f5;
+        }
+
+        .multi-select-container .dropdown-content input[type="checkbox"] {
+            margin-right: 10px;
+        }
 
     </style>
 </head>
@@ -660,12 +718,18 @@
                 </div>
 
                 <div id="student-portal" class="student-portal-container">
+                    <h2><i class="fa-solid fa-user-circle"></i>Portal del Alumno</h2>
+                    
                     <div class="student-info">
-                        <h2><i class="fa-solid fa-user-circle"></i>Portal del Alumno</h2>
                         <h3 id="student-name"></h3>
-                        <p><strong>Materia:</strong> <span id="student-materia"></span></p>
+                        <p><strong>Cursos:</strong> <span id="student-materias"></span></p>
                     </div>
 
+                    <!-- Nuevo selector de materia para el alumno -->
+                    <div class="input-group" style="margin-top: 20px;">
+                        <select id="student-materia-select"></select>
+                    </div>
+                    
                     <div class="student-grades">
                         <h3><i class="fa-solid fa-graduation-cap"></i>Calificaciones</h3>
                         <div id="grades-list"></div>
@@ -762,7 +826,16 @@
             <span class="close-btn">&times;</span>
             <h2><i class="fa-solid fa-graduation-cap"></i>Gestionar Calificaciones</h2>
             <h3 id="grades-main-student-name" style="text-align: center; margin-top: 10px;"></h3>
-            <div class="grades-management-container">
+            
+            <!-- Nuevo selector de materia para el administrador -->
+            <div class="input-group" style="margin-top: 20px;">
+                <select id="grades-materia-select">
+                    <option value="">Seleccione una materia</option>
+                </select>
+                <label for="grades-materia-select">Materia</label>
+            </div>
+            
+            <div class="grades-management-container" id="grades-options" style="display: none;">
                 <button class="action-btn" id="open-asistencia-btn">Asistencia</button>
                 <button class="action-btn" id="open-practicas-btn">Prácticas</button>
                 <button class="action-btn" id="open-parciales-btn">Parciales</button>
@@ -941,12 +1014,17 @@
                     <input type="text" id="phone-number" required>
                     <label for="phone-number">Número de Teléfono</label>
                 </div>
-                <div class="input-group">
-                    <select id="materia-select" required>
-                        <option value="">Seleccione una materia</option>
-                    </select>
-                    <label for="materia-select">Materia</label>
+                
+                <!-- Multi-select para materias -->
+                <div class="multi-select-container">
+                    <div class="selected-items-display">
+                        <span id="materias-display-label">Seleccione materias</span>
+                    </div>
+                    <div id="materias-dropdown" class="dropdown-content">
+                        <!-- Las opciones se poblarán dinámicamente -->
+                    </div>
                 </div>
+                
                 <button type="submit" class="action-btn">Guardar Alumno</button>
             </form>
         </div>
@@ -1089,7 +1167,7 @@
             const parcialesPonderacionInput = document.getElementById('parciales-ponderacion-input');
             const newsTitleInput = document.getElementById('news-title-input');
             const newsBodyInput = document.getElementById('news-body-input');
-            const materiaSelect = document.getElementById('materia-select');
+            const materiasDropdown = document.getElementById('materias-dropdown');
             
             // Nuevos elementos para la noticia en la pestaña de inicio
             const newsContainer = document.getElementById('news-container');
@@ -1103,7 +1181,8 @@
             
             // Elementos del portal del alumno
             const studentName = document.getElementById('student-name');
-            const studentMateria = document.getElementById('student-materia');
+            const studentMateriasDisplay = document.getElementById('student-materias');
+            const studentMateriaSelect = document.getElementById('student-materia-select');
             const gradesList = document.getElementById('grades-list');
             const attendanceList = document.getElementById('attendance-list');
             const practicesList = document.getElementById('practices-list');
@@ -1111,10 +1190,14 @@
             
             // Elementos para gestión de calificaciones
             let currentStudentKey = null;
+            let currentMateriaName = null;
             let loggedInUser = null;
             let studentDataListener = null;
 
             const gradesMainStudentName = document.getElementById('grades-main-student-name');
+            const gradesMateriaSelect = document.getElementById('grades-materia-select');
+            const gradesOptions = document.getElementById('grades-options');
+            
             const asistenciaStudentName = document.getElementById('asistencia-student-name');
             const practicasStudentName = document.getElementById('practicas-student-name');
             const parcialesStudentName = document.getElementById('parciales-student-name');
@@ -1314,16 +1397,15 @@
                 });
             }
             
-            async function populateMateriaSelect() {
-                materiaSelect.innerHTML = '<option value="">Seleccione una materia</option>';
+            async function populateMateriaDropdowns() {
+                materiasDropdown.innerHTML = '';
                 const snapshot = await dbMaterias.once('value');
                 const materias = snapshot.val();
                 if (materias) {
                     Object.values(materias).forEach(materia => {
-                        const option = document.createElement('option');
-                        option.value = materia.nombre;
-                        option.textContent = materia.nombre;
-                        materiaSelect.appendChild(option);
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="checkbox" value="${materia.nombre}"> ${materia.nombre}`;
+                        materiasDropdown.appendChild(label);
                     });
                 }
             }
@@ -1351,16 +1433,14 @@
                 return finalGrade.toFixed(2);
             }
             
-            async function renderStudentPortal(studentData) {
-                // Obtener las ponderaciones de la materia del alumno
-                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(studentData.materia).once('value');
+            async function renderStudentPortal(studentData, materiaName) {
+                // Obtener las ponderaciones de la materia seleccionada
+                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(materiaName).once('value');
                 const materiaData = materiaSnapshot.val();
                 
                 if (!materiaData) {
-                    showMessageModal(`Error: No se encontró la materia "${studentData.materia}" en la base de datos.`);
-                    // Limpiar la interfaz del alumno para reflejar el error
-                    studentName.textContent = studentData.nombre;
-                    studentMateria.textContent = studentData.materia || 'No asignada';
+                    showMessageModal(`Error: No se encontró la materia "${materiaName}" en la base de datos.`);
+                    // Limpiar la interfaz
                     gradesList.innerHTML = '<p style="text-align: center;">Materia no encontrada.</p>';
                     attendanceList.innerHTML = '<p style="text-align: center;">Materia no encontrada.</p>';
                     practicesList.innerHTML = '<p style="text-align: center;">Materia no encontrada.</p>';
@@ -1370,36 +1450,33 @@
                 
                 const materiaKey = Object.keys(materiaData)[0];
                 const ponderaciones = materiaData[materiaKey].ponderaciones;
+                const courseGrades = studentData.materias[materiaName] || {};
                 
-                // Actualizar info del alumno en el portal
-                studentName.textContent = studentData.nombre;
-                studentMateria.textContent = studentData.materia;
-
                 // Calcular y mostrar la nota final con las ponderaciones correctas
-                const finalGrade = calculateFinalGrade(studentData, ponderaciones);
+                const finalGrade = calculateFinalGrade(courseGrades, ponderaciones);
                 finalGradeValue.textContent = finalGrade;
 
                 // Mostrar calificación de Parciales
                 const promedioParciales = (
-                    (parseFloat(studentData.calificaciones?.parcial1 || 0) + parseFloat(studentData.calificaciones?.parcial2 || 0)) / 2
+                    (parseFloat(courseGrades.calificaciones?.parcial1 || 0) + parseFloat(courseGrades.calificaciones?.parcial2 || 0)) / 2
                 ).toFixed(2);
                 let parcialesHTML = `
                     <p>Promedio: <span class="grade-value">${promedioParciales}</span> (Ponderación: ${ponderaciones.parciales}%)</p>
-                    <div class="grade-item"><span>Parcial 1:</span><span class="grade-value">${studentData.calificaciones?.parcial1 || 'N/A'}</span></div>
-                    <div class="grade-item"><span>Parcial 2:</span><span class="grade-value">${studentData.calificaciones?.parcial2 || 'N/A'}</span></div>
+                    <div class="grade-item"><span>Parcial 1:</span><span class="grade-value">${courseGrades.calificaciones?.parcial1 || 'N/A'}</span></div>
+                    <div class="grade-item"><span>Parcial 2:</span><span class="grade-value">${courseGrades.calificaciones?.parcial2 || 'N/A'}</span></div>
                 `;
                 gradesList.innerHTML = parcialesHTML;
 
                 // Mostrar asistencia
                 attendanceList.innerHTML = `
                     <p>Ponderación: ${ponderaciones.asistencia}% de la nota final</p>
-                    <div class="grade-item"><span>Porcentaje total:</span><span class="grade-value">${studentData.asistencia || 'N/A'}%</span></div>
+                    <div class="grade-item"><span>Porcentaje total:</span><span class="grade-value">${courseGrades.asistencia || 'N/A'}%</span></div>
                 `;
 
                 // Mostrar calificaciones de prácticas
                 const practicas = [];
                 for(let i = 1; i <= 6; i++) {
-                    practicas.push(parseFloat(studentData.calificaciones?.[`practica${i}`] || 0));
+                    practicas.push(parseFloat(courseGrades.calificaciones?.[`practica${i}`] || 0));
                 }
                 const promedioPracticas = (practicas.reduce((sum, val) => sum + val, 0) / (practicas.length > 0 ? practicas.length : 1)).toFixed(2);
                 
@@ -1407,13 +1484,34 @@
                     <p>Promedio: <span class="grade-value">${promedioPracticas}</span> (Ponderación: ${ponderaciones.practicas}%)</p>
                 `;
                 for (let i = 1; i <= 6; i++) {
-                    practicasHTML += `<div class="grade-item"><span>Práctica ${i}:</span><span class="grade-value">${studentData.calificaciones?.[`practica${i}`] || 'N/A'}</span></div>`;
+                    practicasHTML += `<div class="grade-item"><span>Práctica ${i}:</span><span class="grade-value">${courseGrades.calificaciones?.[`practica${i}`] || 'N/A'}</span></div>`;
                 }
                 practicesList.innerHTML = practicasHTML;
+            }
+
+            function populateStudentMateriaSelect(materias) {
+                studentMateriaSelect.innerHTML = '';
+                if (materias) {
+                    const materiaNames = Object.keys(materias);
+                    materiaNames.forEach(name => {
+                        const option = document.createElement('option');
+                        option.value = name;
+                        option.textContent = name;
+                        studentMateriaSelect.appendChild(option);
+                    });
+                    if (materiaNames.length > 0) {
+                        // Cargar la primera materia por defecto
+                        const defaultMateria = materiaNames[0];
+                        studentMateriaSelect.value = defaultMateria;
+                        renderStudentPortal(loggedInUser, defaultMateria);
+                    }
+                }
             }
             
             function logout() {
                 loggedInUser = null;
+                currentStudentKey = null;
+                currentMateriaName = null;
                 loginFormContainer.style.display = 'block';
                 adminPanel.style.display = 'none';
                 studentPortal.style.display = 'none';
@@ -1433,6 +1531,7 @@
                 dbMaterias.on('value', (snapshot) => {
                     const materias = snapshot.val();
                     renderList(materiaList, materias);
+                    populateMateriaDropdowns();
                 });
 
                 dbNoticias.on('value', (snapshot) => {
@@ -1491,12 +1590,20 @@
                                 errorMessage.style.display = 'none';
                                 
                                 studentName.textContent = loggedInUser.nombre;
-                                studentMateria.textContent = loggedInUser.materia;
+                                studentMateriasDisplay.textContent = Object.keys(loggedInUser.materias || {}).join(', ');
+                                
+                                // Poblar el selector de materias y renderizar el portal
+                                populateStudentMateriaSelect(loggedInUser.materias);
                                 
                                 // Escuchar cambios en los datos del alumno en tiempo real
                                 const onStudentDataChange = (snapshot) => {
                                     const updatedStudentData = snapshot.val();
-                                    renderStudentPortal(updatedStudentData);
+                                    loggedInUser = updatedStudentData;
+                                    studentMateriasDisplay.textContent = Object.keys(loggedInUser.materias || {}).join(', ');
+                                    populateStudentMateriaSelect(loggedInUser.materias);
+                                    if (studentMateriaSelect.value) {
+                                        renderStudentPortal(loggedInUser, studentMateriaSelect.value);
+                                    }
                                 };
                                 dbAlumnos.child(alumnoKey).on('value', onStudentDataChange);
                                 studentDataListener = { key: alumnoKey, callback: onStudentDataChange };
@@ -1512,6 +1619,14 @@
             }
             logoutBtn.addEventListener('click', logout);
             studentLogoutBtn.addEventListener('click', logout);
+
+            // Listener para el cambio de materia en el portal del alumno
+            studentMateriaSelect.addEventListener('change', (e) => {
+                const selectedMateria = e.target.value;
+                if (loggedInUser && selectedMateria) {
+                    renderStudentPortal(loggedInUser, selectedMateria);
+                }
+            });
 
             // Lógica para abrir modals desde el panel de administrador
             adminPanelButtons.forEach(button => {
@@ -1536,79 +1651,74 @@
                 const alumno = snapshot.val();
                 
                 if (alumno) {
-                    // **[INICIO DE CAMBIO]**
-                    // Verificar si el alumno tiene una materia válida antes de abrir el modal principal
-                    if (!alumno.materia) {
-                        showMessageModal('Este alumno no tiene una materia asignada. Por favor, edite el registro del alumno para asignarle una.');
-                        return;
-                    }
-                    
-                    const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(alumno.materia).once('value');
-                    const materiaData = materiaSnapshot.val();
-                    
-                    if (!materiaData) {
-                        showMessageModal(`La materia "${alumno.materia}" no existe. Por favor, edite el registro del alumno o cree la materia.`);
-                        return;
-                    }
-                    // **[FIN DE CAMBIO]**
-                    
                     gradesMainStudentName.textContent = alumno.nombre;
+                    
+                    // Llenar el selector de materias en el modal principal
+                    gradesMateriaSelect.innerHTML = '<option value="">Seleccione una materia</option>';
+                    if (alumno.materias) {
+                        Object.keys(alumno.materias).forEach(materiaName => {
+                            const option = document.createElement('option');
+                            option.value = materiaName;
+                            option.textContent = materiaName;
+                            gradesMateriaSelect.appendChild(option);
+                        });
+                    }
+                    
+                    gradesOptions.style.display = 'none';
                     showModal(gradesMainModal);
                 } else {
                     showMessageModal('No se encontró al alumno.');
                 }
             });
             
+            // Listener para el selector de materia en el modal de gestión de calificaciones
+            gradesMateriaSelect.addEventListener('change', (e) => {
+                currentMateriaName = e.target.value;
+                if (currentMateriaName) {
+                    gradesOptions.style.display = 'flex';
+                } else {
+                    gradesOptions.style.display = 'none';
+                }
+            });
+
             // Lógica para abrir los modales individuales de gestión de notas
             document.getElementById('open-asistencia-btn').addEventListener('click', async () => {
+                if (!currentStudentKey || !currentMateriaName) return;
                 closeModal(gradesMainModal);
                 const snapshot = await dbAlumnos.child(currentStudentKey).once('value');
                 const alumno = snapshot.val();
-                if (!alumno) { // FIX: Added check for data
-                    showMessageModal('No se encontró la información del alumno.');
-                    return;
-                }
+                const courseGrades = alumno?.materias?.[currentMateriaName] || {};
                 
-                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(alumno.materia).once('value');
+                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(currentMateriaName).once('value');
                 const materiaData = materiaSnapshot.val();
-                if (!materiaData) { // FIX: Added check for data
-                    showMessageModal('No se encontró la materia del alumno.');
-                    return;
-                }
                 const materiaKey = Object.keys(materiaData)[0];
                 const ponderaciones = materiaData[materiaKey].ponderaciones;
-
-                asistenciaStudentName.textContent = alumno.nombre;
+                
+                asistenciaStudentName.textContent = `${alumno.nombre} - ${currentMateriaName}`;
                 asistenciaPonderacionInfo.innerHTML = `Ponderación: <strong>${ponderaciones.asistencia}%</strong> de la nota final`;
-                asistenciaInput.value = alumno.asistencia || '0';
+                asistenciaInput.value = courseGrades.asistencia || '0';
                 asistenciaMessage.style.display = 'none';
 
                 showModal(asistenciaModal);
             });
 
             document.getElementById('open-practicas-btn').addEventListener('click', async () => {
+                if (!currentStudentKey || !currentMateriaName) return;
                 closeModal(gradesMainModal);
                 const snapshot = await dbAlumnos.child(currentStudentKey).once('value');
                 const alumno = snapshot.val();
-                if (!alumno) { // FIX: Added check for data
-                    showMessageModal('No se encontró la información del alumno.');
-                    return;
-                }
-                
-                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(alumno.materia).once('value');
+                const courseGrades = alumno?.materias?.[currentMateriaName] || {};
+
+                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(currentMateriaName).once('value');
                 const materiaData = materiaSnapshot.val();
-                 if (!materiaData) { // FIX: Added check for data
-                    showMessageModal('No se encontró la materia del alumno.');
-                    return;
-                }
                 const materiaKey = Object.keys(materiaData)[0];
                 const ponderaciones = materiaData[materiaKey].ponderaciones;
 
-                practicasStudentName.textContent = alumno.nombre;
+                practicasStudentName.textContent = `${alumno.nombre} - ${currentMateriaName}`;
                 practicasPonderacionInfo.innerHTML = `Ponderación: <strong>${ponderaciones.practicas}%</strong> de la nota final`;
 
                 practicaInputs.forEach((input, index) => {
-                    input.value = alumno.calificaciones?.[`practica${index + 1}`] || '0';
+                    input.value = courseGrades.calificaciones?.[`practica${index + 1}`] || '0';
                 });
                 practicasMessage.style.display = 'none';
                 
@@ -1616,28 +1726,22 @@
             });
 
             document.getElementById('open-parciales-btn').addEventListener('click', async () => {
+                if (!currentStudentKey || !currentMateriaName) return;
                 closeModal(gradesMainModal);
                 const snapshot = await dbAlumnos.child(currentStudentKey).once('value');
                 const alumno = snapshot.val();
-                if (!alumno) { // FIX: Added check for data
-                    showMessageModal('No se encontró la información del alumno.');
-                    return;
-                }
+                const courseGrades = alumno?.materias?.[currentMateriaName] || {};
                 
-                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(alumno.materia).once('value');
+                const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(currentMateriaName).once('value');
                 const materiaData = materiaSnapshot.val();
-                if (!materiaData) { // FIX: Added check for data
-                    showMessageModal('No se encontró la materia del alumno.');
-                    return;
-                }
                 const materiaKey = Object.keys(materiaData)[0];
                 const ponderaciones = materiaData[materiaKey].ponderaciones;
                 
-                parcialesStudentName.textContent = alumno.nombre;
+                parcialesStudentName.textContent = `${alumno.nombre} - ${currentMateriaName}`;
                 parcialesPonderacionInfo.innerHTML = `Ponderación: <strong>${ponderaciones.parciales}%</strong> de la nota final`;
 
                 parcialInputs.forEach((input, index) => {
-                    input.value = alumno.calificaciones?.[`parcial${index + 1}`] || '0';
+                    input.value = courseGrades.calificaciones?.[`parcial${index + 1}`] || '0';
                 });
                 parcialesMessage.style.display = 'none';
                 
@@ -1646,10 +1750,10 @@
             
             // Lógica para guardar calificaciones
             saveAsistenciaBtn.addEventListener('click', async () => {
-                if (!currentStudentKey) return;
+                if (!currentStudentKey || !currentMateriaName) return;
                 const asistenciaValue = asistenciaInput.value;
                 try {
-                    await dbAlumnos.child(currentStudentKey).update({ asistencia: asistenciaValue });
+                    await dbAlumnos.child(currentStudentKey).child('materias').child(currentMateriaName).update({ asistencia: asistenciaValue });
                     asistenciaMessage.textContent = 'Asistencia guardada correctamente.';
                     asistenciaMessage.className = 'success';
                     asistenciaMessage.style.display = 'block';
@@ -1664,14 +1768,14 @@
             });
 
             savePracticasBtn.addEventListener('click', async () => {
-                if (!currentStudentKey) return;
+                if (!currentStudentKey || !currentMateriaName) return;
                 const updates = {};
                 practicaInputs.forEach((input, index) => {
                     updates[`calificaciones/practica${index + 1}`] = input.value || '0';
                 });
                 
                 try {
-                    await dbAlumnos.child(currentStudentKey).update(updates);
+                    await dbAlumnos.child(currentStudentKey).child('materias').child(currentMateriaName).update(updates);
                     practicasMessage.textContent = 'Prácticas guardadas correctamente.';
                     practicasMessage.className = 'success';
                     practicasMessage.style.display = 'block';
@@ -1686,14 +1790,14 @@
             });
 
             saveParcialesBtn.addEventListener('click', async () => {
-                if (!currentStudentKey) return;
+                if (!currentStudentKey || !currentMateriaName) return;
                 const updates = {
                     'calificaciones/parcial1': document.getElementById('parcial1-input').value || '0',
                     'calificaciones/parcial2': document.getElementById('parcial2-input').value || '0',
                 };
                 
                 try {
-                    await dbAlumnos.child(currentStudentKey).update(updates);
+                    await dbAlumnos.child(currentStudentKey).child('materias').child(currentMateriaName).update(updates);
                     parcialesMessage.textContent = 'Parciales guardados correctamente.';
                     parcialesMessage.className = 'success';
                     parcialesMessage.style.display = 'block';
@@ -1725,7 +1829,8 @@
             createStudentBtnInPanel.addEventListener('click', async (e) => {
                 e.preventDefault();
                 editingKey = null;
-                await populateMateriaSelect();
+                await populateMateriaDropdowns();
+                document.getElementById('materias-display-label').textContent = 'Seleccione materias';
                 registrationModalTitle.innerHTML = '<i class="fa-solid fa-user-plus"></i>Registrar Alumno';
                 registrationForm.reset();
                 showModal(registrationModal);
@@ -1736,6 +1841,31 @@
                 document.querySelector('#biblioteca-modal h2').innerHTML = '<i class="fa-solid fa-folder-plus"></i>Crear Recurso';
                 bibliotecaForm.reset();
                 showModal(bibliotecaModal);
+            });
+
+            // Lógica para el multi-select de materias
+            document.querySelector('.multi-select-container').addEventListener('click', (e) => {
+                const dropdownContent = e.currentTarget.querySelector('.dropdown-content');
+                if (e.target.closest('.selected-items-display')) {
+                    dropdownContent.style.display = dropdownContent.style.display === 'block' ? 'none' : 'block';
+                }
+            });
+            materiasDropdown.addEventListener('change', (e) => {
+                const selectedItemsDisplay = document.querySelector('.selected-items-display');
+                const checkboxes = materiasDropdown.querySelectorAll('input[type="checkbox"]');
+                const selectedMaterias = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.value);
+
+                selectedItemsDisplay.innerHTML = '';
+                if (selectedMaterias.length > 0) {
+                    selectedMaterias.forEach(materia => {
+                        const tag = document.createElement('span');
+                        tag.className = 'selected-item-tag';
+                        tag.textContent = materia;
+                        selectedItemsDisplay.appendChild(tag);
+                    });
+                } else {
+                    selectedItemsDisplay.innerHTML = '<span id="materias-display-label">Seleccione materias</span>';
+                }
             });
 
             // Lógica para cerrar modals
@@ -1879,19 +2009,15 @@
                 const studentPaternal = paternalLastname.value.trim();
                 const studentMaternal = maternalLastname.value.trim();
                 const studentPhone = phoneNumber.value.trim();
-                const studentMateria = materiaSelect.value.trim();
                 
-                const studentData = {
-                    paternal: studentPaternal,
-                    maternal: studentMaternal,
-                    names: studentNames,
-                    phone: studentPhone,
-                    materia: studentMateria,
-                    nombre: `${studentNames} ${studentPaternal} ${studentMaternal}`,
-                    // Usuario y contraseña en minúsculas por defecto
-                    usuario: studentNames.toLowerCase().replace(/\s/g, ''),
-                    contrasena: studentPhone.toLowerCase(), 
-                    rol: 'alumno',
+                const selectedMaterias = Array.from(materiasDropdown.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+
+                if (selectedMaterias.length === 0) {
+                    showMessageModal('Debe seleccionar al menos una materia.');
+                    return;
+                }
+                
+                const initialCourseData = {
                     calificaciones: {
                         parcial1: '0',
                         parcial2: '0',
@@ -1905,9 +2031,31 @@
                     asistencia: '0',
                 };
                 
+                const materiasObject = {};
+                selectedMaterias.forEach(materia => {
+                    materiasObject[materia] = { ...initialCourseData };
+                });
+
+                const studentData = {
+                    paternal: studentPaternal,
+                    maternal: studentMaternal,
+                    names: studentNames,
+                    phone: studentPhone,
+                    nombre: `${studentNames} ${studentPaternal} ${studentMaternal}`,
+                    // Usuario y contraseña en minúsculas por defecto
+                    usuario: studentNames.toLowerCase().replace(/\s/g, ''),
+                    contrasena: studentPhone.toLowerCase(), 
+                    rol: 'alumno',
+                    materias: materiasObject
+                };
+                
                 try {
                     if (editingKey) {
-                        await dbAlumnos.child(editingKey).update(studentData);
+                        // Al editar, actualizamos solo los campos que cambiaron
+                        const existingStudent = (await dbAlumnos.child(editingKey).once('value')).val();
+                        const updatedMaterias = { ...existingStudent.materias, ...materiasObject };
+                        
+                        await dbAlumnos.child(editingKey).update({ ...studentData, materias: updatedMaterias });
                         showMessageModal('Alumno actualizado correctamente.');
                     } else {
                         await dbAlumnos.push(studentData);
@@ -1932,14 +2080,28 @@
                         return;
                     }
                     editingKey = key;
-                    await populateMateriaSelect();
+                    await populateMateriaDropdowns();
                     
                     registrationModalTitle.innerHTML = '<i class="fa-solid fa-pen-to-square"></i>Modificar Alumno';
                     paternalLastname.value = alumno.paternal;
                     maternalLastname.value = alumno.maternal;
                     names.value = alumno.names;
                     phoneNumber.value = alumno.phone;
-                    materiaSelect.value = alumno.materia;
+                    
+                    // Marcar los checkboxes de las materias ya inscritas
+                    const selectedMateriasDisplay = document.querySelector('.selected-items-display');
+                    selectedMateriasDisplay.innerHTML = '';
+                    if (alumno.materias) {
+                        const enrolledMaterias = Object.keys(alumno.materias);
+                        enrolledMaterias.forEach(materiaName => {
+                             const tag = document.createElement('span');
+                            tag.className = 'selected-item-tag';
+                            tag.textContent = materiaName;
+                            selectedMateriasDisplay.appendChild(tag);
+                            const checkbox = materiasDropdown.querySelector(`input[value="${materiaName}"]`);
+                            if (checkbox) checkbox.checked = true;
+                        });
+                    }
                     
                     showModal(registrationModal);
                 } else if (target.classList.contains('delete-btn')) {
