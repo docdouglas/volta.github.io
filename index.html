@@ -35,14 +35,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body {
-            width: 100vw; /* Asegura que ocupe el 100% del ancho del viewport */
-            height: 100vh; /* Asegura que ocupe el 100% de la altura del viewport */
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Oculta cualquier desbordamiento global */
-        }
-
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--background-color);
@@ -51,13 +43,14 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow: hidden;
         }
 
         .content {
             flex-grow: 1;
             padding: 24px;
-            height: calc(100vh - 60px); /* Altura explícita para dejar espacio a la barra de navegación */
-            overflow-y: auto; /* Permite el desplazamiento vertical dentro del área de contenido */
+            padding-bottom: 80px;
+            overflow-y: auto; /* Cambiado de 'hidden' a 'auto' para permitir el desplazamiento vertical */
             position: relative;
         }
 
@@ -81,7 +74,6 @@
             box-shadow: var(--shadow);
             flex-shrink: 0;
             overflow-y: auto;
-            overflow-x: hidden; /* Evita el desplazamiento horizontal dentro de cada pestaña */
         }
 
         /* Estilo para los títulos de todas las secciones con iconos */
@@ -140,7 +132,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 6px 0;
+            padding: 12px 0;
             flex: 1;
             color: var(--nav-inactive-color);
             text-decoration: none;
@@ -1484,7 +1476,7 @@
                 // Mostrar calificaciones de prácticas
                 const practicas = [];
                 for(let i = 1; i <= 6; i++) {
-                    practicas.push(parseFloat(courseGrades.calificaciones?.[`practica${i}`]) || 0);
+                    practicas.push(parseFloat(courseGrades.calificaciones?.[`practica${i}`] || 0));
                 }
                 const promedioPracticas = (practicas.reduce((sum, val) => sum + val, 0) / (practicas.length > 0 ? practicas.length : 1)).toFixed(2);
                 
