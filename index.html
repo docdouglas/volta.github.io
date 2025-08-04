@@ -1355,9 +1355,25 @@
                 // Obtener las ponderaciones de la materia del alumno
                 const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(studentData.materia).once('value');
                 const materiaData = materiaSnapshot.val();
-                if (!materiaData) return; // FIX: Added check
+                
+                if (!materiaData) {
+                    showMessageModal(`Error: No se encontró la materia "${studentData.materia}" en la base de datos.`);
+                    // Limpiar la interfaz del alumno para reflejar el error
+                    studentName.textContent = studentData.nombre;
+                    studentMateria.textContent = studentData.materia || 'No asignada';
+                    gradesList.innerHTML = '<p style="text-align: center;">Materia no encontrada.</p>';
+                    attendanceList.innerHTML = '<p style="text-align: center;">Materia no encontrada.</p>';
+                    practicesList.innerHTML = '<p style="text-align: center;">Materia no encontrada.</p>';
+                    finalGradeValue.textContent = 'N/A';
+                    return;
+                }
+                
                 const materiaKey = Object.keys(materiaData)[0];
                 const ponderaciones = materiaData[materiaKey].ponderaciones;
+                
+                // Actualizar info del alumno en el portal
+                studentName.textContent = studentData.nombre;
+                studentMateria.textContent = studentData.materia;
 
                 // Calcular y mostrar la nota final con las ponderaciones correctas
                 const finalGrade = calculateFinalGrade(studentData, ponderaciones);
@@ -1519,9 +1535,24 @@
                 const snapshot = await dbAlumnos.child(key).once('value');
                 const alumno = snapshot.val();
                 
-                if (alumno) { // FIX: Added check for data
+                if (alumno) {
+                    // **[INICIO DE CAMBIO]**
+                    // Verificar si el alumno tiene una materia válida antes de abrir el modal principal
+                    if (!alumno.materia) {
+                        showMessageModal('Este alumno no tiene una materia asignada. Por favor, edite el registro del alumno para asignarle una.');
+                        return;
+                    }
+                    
+                    const materiaSnapshot = await dbMaterias.orderByChild('nombre').equalTo(alumno.materia).once('value');
+                    const materiaData = materiaSnapshot.val();
+                    
+                    if (!materiaData) {
+                        showMessageModal(`La materia "${alumno.materia}" no existe. Por favor, edite el registro del alumno o cree la materia.`);
+                        return;
+                    }
+                    // **[FIN DE CAMBIO]**
+                    
                     gradesMainStudentName.textContent = alumno.nombre;
-                    // Mostrar el modal principal de gestión de calificaciones
                     showModal(gradesMainModal);
                 } else {
                     showMessageModal('No se encontró al alumno.');
