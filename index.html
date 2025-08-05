@@ -204,7 +204,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
+            overflow: auto; /* Permite desplazamiento vertical y horizontal en el modal si el contenido lo excede */
             background-color: var(--modal-bg-color);
             padding-top: 60px;
             animation: fadeIn 0.3s ease-out;
@@ -393,16 +393,24 @@
         }
 
         /* Estilos para tablas de contenido */
+        .table-responsive {
+            overflow-x: auto; /* Permite el desplazamiento horizontal */
+            margin-top: 20px; /* Espacio para separar de elementos anteriores */
+            border-radius: 8px; /* Bordes redondeados para el contenedor de la tabla */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra ligera */
+        }
+
         .content-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
             font-size: 0.9em;
+            min-width: 500px; /* Asegura que la tabla tenga un ancho mínimo para activar el scroll si es necesario */
         }
         .content-table th, .content-table td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            white-space: nowrap; /* Evita que el texto se envuelva en celdas */
         }
         .content-table th {
             background-color: var(--primary-color);
@@ -767,19 +775,21 @@
                 <button type="submit">Guardar</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Noticias y Eventos Publicados</h4>
-            <table class="content-table">
-                <thead>
-                    <tr>
-                        <th>Tipo</th>
-                        <th>Título</th>
-                        <th>Contenido</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="news-events-admin-tbody">
-                    <!-- Noticias y eventos se cargarán aquí -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Título</th>
+                            <th>Contenido</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="news-events-admin-tbody">
+                        <!-- Noticias y eventos se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -811,20 +821,22 @@
                 <button type="submit">Guardar</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Ítems de Biblioteca</h4>
-            <table class="content-table">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Título</th>
-                        <th>Tipo</th>
-                        <th>Link</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="library-items-admin-tbody">
-                    <!-- Ítems de la biblioteca se cargarán aquí -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Título</th>
+                            <th>Tipo</th>
+                            <th>Link</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="library-items-admin-tbody">
+                        <!-- Ítems de la biblioteca se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -847,20 +859,22 @@
                 <button type="submit">Guardar Materia</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Materias Creadas</h4>
-            <table class="content-table">
-                <thead>
-                    <tr>
-                        <th>Materia</th>
-                        <th>Asistencia</th>
-                        <th>Prácticas</th>
-                        <th>Parciales</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="materias-admin-tbody">
-                    <!-- Materias se cargarán aquí -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Materia</th>
+                            <th>Asistencia</th>
+                            <th>Prácticas</th>
+                            <th>Parciales</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materias-admin-tbody">
+                        <!-- Materias se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -887,19 +901,21 @@
                 <button type="submit">Guardar Alumno</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Alumnos Registrados</h4>
-            <table class="content-table">
-                <thead>
-                    <tr>
-                        <th>Nombre Completo</th>
-                        <th>Celular</th>
-                        <th>Materias</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody id="students-admin-tbody">
-                    <!-- Alumnos se cargarán aquí -->
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre Completo</th>
+                            <th>Celular</th>
+                            <th>Materias</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="students-admin-tbody">
+                        <!-- Alumnos se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -1310,7 +1326,7 @@
                                 showMessageBox('Éxito', 'Elemento eliminado con éxito.');
                             } catch (error) {
                                 console.error("Error al eliminar documento de Firebase: ", error);
-                                showMessageBox('Error', 'Error al eliminar el documento. Por favor, inténtalo de nuevo.');
+                                showBox('Error', 'Error al eliminar el documento. Por favor, inténtalo de nuevo.');
                             }
                         }
                     });
@@ -1501,31 +1517,33 @@
                         container.innerHTML = `<p style="text-align: center; color: var(--muted-text-color);">No hay ${type}s para mostrar.</p>`;
                     } else {
                         let tableHTML = `
-                            <table class="content-table">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Título</th>
-                                        <th>Link</th>
-                                        <th>Descripción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                        `;
+                            <div class="table-responsive">
+                                <table class="content-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Título</th>
+                                            <th>Link</th>
+                                            <th>Descripción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                            `;
                         groupedItems[type].forEach(item => {
                             tableHTML += `
-                                <tr>
-                                    <td>${item.code}</td>
-                                    <td>${item.title}</td>
-                                    <td><a href="${item.link}" target="_blank">${item.link.substring(0, Math.min(item.link.length, 30))}...</a></td>
-                                    <td>${item.description || 'N/A'}</td>
-                                </tr>
-                            `;
+                                    <tr>
+                                        <td>${item.code}</td>
+                                        <td>${item.title}</td>
+                                        <td><a href="${item.link}" target="_blank">${item.link.substring(0, Math.min(item.link.length, 30))}...</a></td>
+                                        <td>${item.description || 'N/A'}</td>
+                                    </tr>
+                                `;
                         });
                         tableHTML += `
-                                </tbody>
-                            </table>
-                        `;
+                                    </tbody>
+                                </table>
+                            </div>
+                            `;
                         container.innerHTML = tableHTML;
                     }
                 }
@@ -1860,15 +1878,17 @@
                         <h3><i class="fas fa-users"></i> Alumnos de ${materiaData.name}</h3>
                         <span class="close-button">&times;</span>
                     </div>
-                    <table class="content-table">
-                        <thead>
-                            <tr>
-                                <th>Nombre del Alumno</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody id="materia-students-tbody"></tbody>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="content-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Alumno</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="materia-students-tbody"></tbody>
+                        </table>
+                    </div>
                     <div class="modal-actions">
                         <button class="close-btn close-button">Cerrar</button>
                     </div>
