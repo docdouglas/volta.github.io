@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navegación Móvil Elegante</title>
+    <title>Volta Electrica & Electronica</title>
     <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -1016,7 +1016,8 @@
             messagingSenderId: "209382996934",
             appId: "1:209382996934:web:f85f1eccff138ee26a10c7"
         };
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initialAuthToken : null;
+        // FIX: Corrected typo from __initialAuthToken to __initial_auth_token
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -1477,7 +1478,8 @@
                                 await deleteDoc(doc(libraryItemsCollection, id));
                                 console.log("Ítem de biblioteca eliminado con éxito de Firebase!");
                                 showMessageBox('Éxito', 'Ítem de biblioteca eliminado con éxito.');
-                            } catch (error) {
+                            }
+                            catch (error) {
                                 console.error("Error al eliminar ítem de biblioteca de Firebase: ", error);
                                 showMessageBox('Error', 'Error al eliminar el ítem de biblioteca. Por favor, inténtalo de nuevo.');
                             }
@@ -1502,19 +1504,31 @@
                 software: []
             };
 
+            console.log("DEBUG: allLibraryItems at start of renderLibraryItemsInModals:", allLibraryItems);
+
             allLibraryItems.forEach(item => {
+                console.log(`DEBUG: Processing item - ID: ${item.id}, Type: ${item.type}, Title: ${item.title}`);
                 if (groupedItems[item.type]) {
                     groupedItems[item.type].push(item);
+                    console.log(`DEBUG: Item pushed to groupedItems.${item.type}`);
+                } else {
+                    console.log(`DEBUG: Item type "${item.type}" not recognized or groupedItems key missing.`);
                 }
             });
+
+            console.log("DEBUG: groupedItems after processing allLibraryItems:", groupedItems);
+            console.log("DEBUG: Number of software items found:", groupedItems.software.length);
+
 
             // Render each group into its respective modal container
             for (const type in groupedItems) {
                 const containerId = `${type}s-list`; // e.g., 'practicas-list'
                 const container = document.getElementById(containerId);
+                console.log(`DEBUG: Attempting to render for type "${type}", container ID: "${containerId}"`);
                 if (container) {
                     if (groupedItems[type].length === 0) {
                         container.innerHTML = `<p style="text-align: center; color: var(--muted-text-color);">No hay ${type}s para mostrar.</p>`;
+                        console.log(`DEBUG: No ${type}s to show for ${containerId}.`);
                     } else {
                         let tableHTML = `
                             <div class="table-responsive">
@@ -1530,14 +1544,17 @@
                                     <tbody>
                             `;
                         groupedItems[type].forEach(item => {
+                            // FIX: Added check for item.link to prevent errors if link is null or undefined
+                            const displayLink = item.link ? `<a href="${item.link}" target="_blank">${item.link.substring(0, Math.min(item.link.length, 30))}...</a>` : 'N/A';
                             tableHTML += `
                                     <tr>
                                         <td>${item.code}</td>
                                         <td>${item.title}</td>
-                                        <td><a href="${item.link}" target="_blank">${item.link.substring(0, Math.min(item.link.length, 30))}...</a></td>
+                                        <td>${displayLink}</td>
                                         <td>${item.description || 'N/A'}</td>
                                     </tr>
                                 `;
+                            console.log(`DEBUG: Added row for ${item.title} (${item.type}) to tableHTML.`);
                         });
                         tableHTML += `
                                     </tbody>
@@ -1545,7 +1562,13 @@
                             </div>
                             `;
                         container.innerHTML = tableHTML;
+                        console.log(`DEBUG: Rendered ${groupedItems[type].length} ${type}s into ${containerId}.`);
+                        if (type === 'software') {
+                            console.log("DEBUG: HTML generated for software modal:", tableHTML);
+                        }
                     }
+                } else {
+                    console.log(`ERROR: Container with ID "${containerId}" not found for type "${type}".`);
                 }
             }
         }
