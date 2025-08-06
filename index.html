@@ -563,7 +563,19 @@
         .materia-grade-card button:hover {
             background-color: var(--button-hover-bg);
         }
-
+        .filter-group {
+            margin-bottom: 10px;
+        }
+        .filter-group label {
+            font-weight: 600;
+            color: var(--text-color);
+            margin-right: 10px;
+        }
+        .filter-group select {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
         /* Animaciones */
         @keyframes fadeIn {
             from { opacity: 0; }
@@ -694,6 +706,14 @@
                 <h3><i class="fas fa-flask"></i> Prácticas Disponibles</h3>
                 <span class="close-button">&times;</span>
             </div>
+            <div class="filter-group">
+                <label for="practicas-filter">Filtrar por tipo:</label>
+                <select id="practicas-filter" onchange="filterLibraryItems('practica', this.value)">
+                    <option value="todos">Todos</option>
+                    <option value="ELT">Eléctrica</option>
+                    <option value="ELTN">Electrónica</option>
+                </select>
+            </div>
             <div id="practicas-list"></div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
@@ -706,6 +726,14 @@
             <div class="modal-header">
                 <h3><i class="fas fa-book"></i> Libros Disponibles</h3>
                 <span class="close-button">&times;</span>
+            </div>
+            <div class="filter-group">
+                <label for="libros-filter">Filtrar por tipo:</label>
+                <select id="libros-filter" onchange="filterLibraryItems('libro', this.value)">
+                    <option value="todos">Todos</option>
+                    <option value="ELT">Eléctrica</option>
+                    <option value="ELTN">Electrónica</option>
+                </select>
             </div>
             <div id="libros-list"></div>
             <div class="modal-actions">
@@ -720,6 +748,14 @@
                 <h3><i class="fas fa-video"></i> Videos Educativos</h3>
                 <span class="close-button">&times;</span>
             </div>
+            <div class="filter-group">
+                <label for="videos-filter">Filtrar por tipo:</label>
+                <select id="videos-filter" onchange="filterLibraryItems('video', this.value)">
+                    <option value="todos">Todos</option>
+                    <option value="ELT">Eléctrica</option>
+                    <option value="ELTN">Electrónica</option>
+                </select>
+            </div>
             <div id="videos-list"></div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
@@ -732,6 +768,14 @@
             <div class="modal-header">
                 <h3><i class="fas fa-code"></i> Software y Herramientas</h3>
                 <span class="close-button">&times;</span>
+            </div>
+            <div class="filter-group">
+                <label for="software-filter">Filtrar por tipo:</label>
+                <select id="software-filter" onchange="filterLibraryItems('software', this.value)">
+                    <option value="todos">Todos</option>
+                    <option value="ELT">Eléctrica</option>
+                    <option value="ELTN">Electrónica</option>
+                </select>
             </div>
             <div id="software-list"></div>
             <div class="modal-actions">
@@ -1029,6 +1073,7 @@
         let listMateriasModal, materiasListButtons;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let studentGradeDetailModal, detailStudentName, detailMateriaName, gradeDetailsContent;
+        let practicasFilter, librosFilter, videosFilter, softwareFilter;
 
 
         // Custom message box function (updated to include a callback for confirmation)
@@ -1147,6 +1192,15 @@
             // Library Items Collection Listener
             onSnapshot(libraryItemsCollection, (snapshot) => {
                 allLibraryItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                // Order items based on the new logic: by type prefix and number
+                allLibraryItems.sort((a, b) => {
+                    const [prefixA, numA] = a.code.split('-');
+                    const [prefixB, numB] = b.code.split('-');
+                    if (prefixA !== prefixB) {
+                        return prefixA.localeCompare(prefixB);
+                    }
+                    return parseInt(numA) - parseInt(numB);
+                });
                 console.log("Library Items updated:", allLibraryItems);
                 populateLibraryItemCodes(); // Update codes for admin form
                 renderAdminLibraryItemsTable();
@@ -1416,7 +1470,7 @@
                     <td>${item.code}</td>
                     <td>${item.title}</td>
                     <td>${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                    <td><a href="${item.link}" target="_blank">${item.link.substring(0, Math.min(item.link.length, 30))}...</a></td>
+                    <td><a href="${item.link}" target="_blank">Ver recurso</a></td>
                     <td class="actions-column">
                         <button class="edit-btn" data-id="${item.id}">Editar</button>
                         <button class="delete-btn" data-id="${item.id}">Eliminar</button>
@@ -1460,8 +1514,13 @@
                 });
             });
         }
+        
+        // New function to filter items and re-render the list
+        window.filterLibraryItems = function(type, filterCode) {
+            renderLibraryItemsInModals(type, filterCode);
+        };
 
-        function renderLibraryItemsInModals() {
+        function renderLibraryItemsInModals(targetType = null, filterCode = 'todos') {
             // Clear previous content in all library modals' lists
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
@@ -1476,31 +1535,30 @@
                 software: []
             };
 
-            console.log("DEBUG: allLibraryItems at start of renderLibraryItemsInModals:", allLibraryItems);
-
             allLibraryItems.forEach(item => {
-                console.log(`DEBUG: Processing item - ID: ${item.id}, Type: ${item.type}, Title: ${item.title}`);
                 if (groupedItems[item.type]) {
                     groupedItems[item.type].push(item);
-                    console.log(`DEBUG: Item pushed to groupedItems.${item.type}`);
-                } else {
-                    console.log(`DEBUG: Item type "${item.type}" not recognized or groupedItems key missing.`);
                 }
             });
-
-            console.log("DEBUG: groupedItems after processing allLibraryItems:", groupedItems);
-            console.log("DEBUG: Number of software items found:", groupedItems.software.length);
-
 
             // Render each group into its respective modal container
             for (const type in groupedItems) {
                 const containerId = `${type}s-list`; // e.g., 'practicas-list'
                 const container = document.getElementById(containerId);
-                console.log(`DEBUG: Attempting to render for type "${type}", container ID: "${containerId}"`);
+                
+                // If a specific type is being filtered, only render that one. Otherwise render all.
+                if (targetType && targetType !== type) {
+                    continue;
+                }
+
+                let itemsToRender = groupedItems[type];
+                if (filterCode !== 'todos') {
+                    itemsToRender = itemsToRender.filter(item => item.code.startsWith(filterCode));
+                }
+
                 if (container) {
-                    if (groupedItems[type].length === 0) {
+                    if (itemsToRender.length === 0) {
                         container.innerHTML = `<p style="text-align: center; color: var(--muted-text-color);">No hay ${type}s para mostrar.</p>`;
-                        console.log(`DEBUG: No ${type}s to show for ${containerId}.`);
                     } else {
                         let tableHTML = `
                             <div class="table-responsive">
@@ -1509,24 +1567,22 @@
                                         <tr>
                                             <th>Código</th>
                                             <th>Título</th>
-                                            <th>Link</th>
                                             <th>Descripción</th>
+                                            <th>Recurso</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                             `;
-                        groupedItems[type].forEach(item => {
-                            // FIX: Added check for item.link to prevent errors if link is null or undefined
-                            const displayLink = item.link ? `<a href="${item.link}" target="_blank">${item.link.substring(0, Math.min(item.link.length, 30))}...</a>` : 'N/A';
+                        itemsToRender.forEach(item => {
+                            const displayLink = item.link ? `<a href="${item.link}" target="_blank">Ver recurso</a>` : 'N/A';
                             tableHTML += `
                                     <tr>
                                         <td>${item.code}</td>
                                         <td>${item.title}</td>
-                                        <td>${displayLink}</td>
                                         <td>${item.description || 'N/A'}</td>
+                                        <td>${displayLink}</td>
                                     </tr>
                                 `;
-                            console.log(`DEBUG: Added row for ${item.title} (${item.type}) to tableHTML.`);
                         });
                         tableHTML += `
                                     </tbody>
@@ -1534,13 +1590,7 @@
                             </div>
                             `;
                         container.innerHTML = tableHTML;
-                        console.log(`DEBUG: Rendered ${groupedItems[type].length} ${type}s into ${containerId}.`);
-                        if (type === 'software') {
-                            console.log("DEBUG: HTML generated for software modal:", tableHTML);
-                        }
                     }
-                } else {
-                    console.log(`ERROR: Container with ID "${containerId}" not found for type "${type}".`);
                 }
             }
         }
@@ -2490,6 +2540,12 @@
             detailMateriaName = document.getElementById('detail-materia-name');
             gradeDetailsContent = document.getElementById('grade-details-content');
 
+            // Library filter selects
+            practicasFilter = document.getElementById('practicas-filter');
+            librosFilter = document.getElementById('libros-filter');
+            videosFilter = document.getElementById('videos-filter');
+            softwareFilter = document.getElementById('software-filter');
+
 
             // --- Event Listeners ---
             navItems.forEach(item => {
@@ -2509,9 +2565,18 @@
                     if (modal) {
                         modal.style.display = 'block';
                         // Call the rendering function specifically for library modals
-                        if (modalTargetId === '#practicasModal' || modalTargetId === '#librosModal' ||
-                            modalTargetId === '#videosModal' || modalTargetId === '#softwareModal') {
-                            renderLibraryItemsInModals(); // This will re-render all library modals
+                        if (modalTargetId === '#practicasModal') {
+                            practicasFilter.value = 'todos';
+                            filterLibraryItems('practica', 'todos');
+                        } else if (modalTargetId === '#librosModal') {
+                            librosFilter.value = 'todos';
+                            filterLibraryItems('libro', 'todos');
+                        } else if (modalTargetId === '#videosModal') {
+                            videosFilter.value = 'todos';
+                            filterLibraryItems('video', 'todos');
+                        } else if (modalTargetId === '#softwareModal') {
+                            softwareFilter.value = 'todos';
+                            filterLibraryItems('software', 'todos');
                         }
                     }
                 });
