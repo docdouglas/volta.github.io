@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volta Electrica & Electronica</title>
-    <!-- Font Awesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         /* Estilos CSS integrados */
@@ -586,12 +585,9 @@
             <section id="inicio" class="tab-content active">
                 <h2><i class="fas fa-home" style="margin-right: 10px;"></i>Bienvenido a Volta</h2>
                 
-                <!-- Imagen añadida aquí -->
                 <img src="novell.png" alt="Imagen de Novell" class="hero-image">
-                <!-- Los botones de Noticias y Eventos han sido eliminados de aquí -->
                 <div id="news-events-display">
-                    <!-- Noticias y eventos se cargarán aquí -->
-                </div>
+                    </div>
             </section>
             <section id="biblioteca" class="tab-content">
                 <h2><i class="fas fa-book-open" style="margin-right: 10px;"></i>Biblioteca Digital</h2>
@@ -614,8 +610,7 @@
                         Software
                     </button>
                 </div>
-                <!-- El contenedor library-items-display ha sido eliminado de aquí -->
-            </section>
+                </section>
             <section id="portal" class="tab-content">
                 <h2 id="portal-title"><i class="fas fa-user-circle" style="margin-right: 10px;"></i>Portal de Acceso</h2>
                 <p id="portal-intro-text">Inicia sesión para acceder a tu perfil y funcionalidades avanzadas.</p>
@@ -637,18 +632,14 @@
                     </form>
                 </div>
 
-                <!-- Contenedor para el panel de administración (inicialmente oculto) -->
                 <div id="admin-panel-content" class="admin-button-group" style="display: none;">
-                    <!-- Los botones de administración se cargarán aquí dinámicamente -->
-                </div>
+                    </div>
 
-                <!-- Contenedor para el portal del estudiante (inicialmente oculto) -->
                 <div id="student-portal-content" class="student-portal-section" style="display: none;">
                     <h3>Bienvenido, <span id="student-portal-name"></span>!</h3>
                     <p>Tus materias registradas y calificaciones:</p>
                     <div id="student-materias-grades">
-                        <!-- Las materias y calificaciones del estudiante se cargarán aquí -->
-                    </div>
+                        </div>
                     <button id="studentLogoutButton" class="admin-button logout-button">
                         <span class="button-icon"><i class="fas fa-sign-out-alt"></i></span> Cerrar Sesión
                     </button>
@@ -671,7 +662,6 @@
         </nav>
     </div>
 
-    <!-- Modales para las pestañas de usuario -->
     <div id="noticiasModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -704,7 +694,6 @@
                 <h3><i class="fas fa-flask"></i> Prácticas Disponibles</h3>
                 <span class="close-button">&times;</span>
             </div>
-            <!-- Contenedor para las prácticas -->
             <div id="practicas-list"></div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
@@ -718,7 +707,6 @@
                 <h3><i class="fas fa-book"></i> Libros Disponibles</h3>
                 <span class="close-button">&times;</span>
             </div>
-            <!-- Contenedor para los libros -->
             <div id="libros-list"></div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
@@ -732,7 +720,6 @@
                 <h3><i class="fas fa-video"></i> Videos Educativos</h3>
                 <span class="close-button">&times;</span>
             </div>
-            <!-- Contenedor para el software -->
             <div id="videos-list"></div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
@@ -746,7 +733,6 @@
                 <h3><i class="fas fa-code"></i> Software y Herramientas</h3>
                 <span class="close-button">&times;</span>
             </div>
-            <!-- Contenedor para el software -->
             <div id="software-list"></div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
@@ -754,7 +740,6 @@
         </div>
     </div>
 
-    <!-- Modales de Administración -->
     <div id="manageNewsEventsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -786,8 +771,7 @@
                         </tr>
                     </thead>
                     <tbody id="news-events-admin-tbody">
-                        <!-- Noticias y eventos se cargarán aquí -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -803,8 +787,7 @@
                 <input type="hidden" id="library-item-id">
                 <label for="library-item-code">Código:</label>
                 <select id="library-item-code" required>
-                    <!-- Opciones de código se generarán con JS -->
-                </select>
+                    </select>
                 <label for="library-item-title">Título:</label>
                 <input type="text" id="library-item-title" placeholder="Título del ítem" required>
                 <label for="library-item-type">Tipo:</label>
@@ -833,8 +816,7 @@
                         </tr>
                     </thead>
                     <tbody id="library-items-admin-tbody">
-                        <!-- Ítems de la biblioteca se cargarán aquí -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -871,8 +853,7 @@
                         </tr>
                     </thead>
                     <tbody id="materias-admin-tbody">
-                        <!-- Materias se cargarán aquí -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -896,8 +877,7 @@
                 <input type="text" id="student-celular" placeholder="Ej: 77712345">
                 <label>Materias (selecciona una o más):</label>
                 <div id="student-materias-checkbox-group" class="materias-checkbox-group">
-                    <!-- Checkboxes de materias se cargarán aquí -->
-                </div>
+                    </div>
                 <button type="submit">Guardar Alumno</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Alumnos Registrados</h4>
@@ -912,8 +892,7 @@
                         </tr>
                     </thead>
                     <tbody id="students-admin-tbody">
-                        <!-- Alumnos se cargarán aquí -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
@@ -926,8 +905,7 @@
                 <span class="close-button">&times;</span>
             </div>
             <div id="materias-list-buttons" class="admin-button-group">
-                <!-- Botones de materias se cargarán aquí -->
-            </div>
+                </div>
         </div>
     </div>
 
@@ -950,22 +928,19 @@
                 <div style="margin-top: 15px;">
                     <label>Prácticas (Puntaje 0-100):</label>
                     <div id="practicas-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <!-- Inputs de prácticas se generarán aquí -->
-                    </div>
+                        </div>
                 </div>
 
                 <div style="margin-top: 15px;">
                     <label>Parciales (Puntaje 0-100):</label>
                     <div id="parciales-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        <!-- Inputs de parciales se generarán aquí -->
-                    </div>
+                        </div>
                 </div>
                 <button type="submit">Guardar Calificaciones</button>
             </form>
         </div>
     </div>
 
-    <!-- Nuevo Modal para el detalle de calificaciones del estudiante -->
     <div id="studentGradeDetailModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -975,15 +950,13 @@
             <p>Alumno: <strong id="detail-student-name"></strong></p>
             <p>Materia: <strong id="detail-materia-name"></strong></p>
             <div id="grade-details-content">
-                <!-- Los detalles de las calificaciones se cargarán aquí -->
-            </div>
+                </div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
             </div>
         </div>
     </div>
 
-    <!-- Custom Message Box Modal -->
     <div id="messageBoxModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -997,7 +970,6 @@
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -1012,7 +984,7 @@
             authDomain: "volta-77f5a.firebaseapp.com",
             databaseURL: "https://volta-77f5a-default-rtdb.firebaseio.com",
             projectId: "volta-77f5a",
-            storageBucket: "volta-77f5a.firebasestorage.app",
+            storageBucket: "volta-77f5a.appspot.com",
             messagingSenderId: "209382996934",
             appId: "1:209382996934:web:f85f1eccff138ee26a10c7"
         };
