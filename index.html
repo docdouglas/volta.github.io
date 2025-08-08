@@ -22,6 +22,7 @@
             --modal-bg-color: rgba(0, 0, 0, 0.7); /* Fondo de modal semi-transparente */
             --input-focus-border: #80bdff; /* Borde de input al enfocar */
             --button-hover-bg: #3876c7; /* Fondo de botón al pasar el ratón */
+            --pearl-color: #eceff1; /* Color perla para íconos inactivos */
         }
         body {
             font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -29,20 +30,35 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* Alinea la app al fondo de la pantalla */
+            align-items: flex-end; /* Alinea la app al fondo de la pantalla por defecto (móvil) */
             min-height: 100vh;
             background-color: var(--secondary-color);
         }
+
+        /* Ajustes para tabletas y laptops */
+        @media (min-width: 768px) {
+            body {
+                align-items: center; /* Centra la app verticalmente en pantallas grandes */
+            }
+            .app-container {
+                max-width: 700px; /* Ancho máximo para pantallas más grandes */
+                height: 90vh; /* Ocupa el 90% de la altura de la vista en pantallas grandes */
+                border-radius: 15px; /* Bordes redondeados para una apariencia de aplicación de escritorio */
+                margin: auto; /* Centra la aplicación en pantallas grandes */
+            }
+        }
+
         .app-container {
             width: 100%;
-            max-width: 420px; /* Ancho máximo para simular móvil */
-            height: 100vh; /* Altura completa de la vista */
+            max-width: 420px; /* Ancho máximo para simular móvil por defecto */
+            height: 100vh; /* Altura completa de la vista en móvil */
             display: flex;
             flex-direction: column;
             background-color: #fff;
             box-shadow: 0 0 25px var(--shadow-color);
             position: relative;
         }
+
         .content {
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
             overflow-y: auto; /* Habilita el scroll si el contenido es largo */
@@ -132,7 +148,10 @@
             margin: 0 2px;
         }
         .nav-item:not(.active) {
-            opacity: 0.6; /* Menos opacidad para ítems inactivos */
+            opacity: 0.8; /* Menos opacidad para ítems inactivos */
+        }
+        .nav-item:not(.active) .icon { /* Estilo para el ícono inactivo */
+            color: var(--pearl-color); /* Color perla para íconos inactivos */
         }
         .nav-item.active {
             color: var(--gold-color);
@@ -346,7 +365,7 @@
         /* Estilo para la imagen en la sección de inicio */
         .hero-image {
             max-width: 100%;
-            width: 250px; /* Ancho fijo para la imagen */
+            width: auto; /* Permitir que la imagen se ajuste automáticamente */
             height: auto;
             display: block; /* Para centrarla con margin auto */
             margin-left: auto;
@@ -409,7 +428,8 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
-            white-space: nowrap; /* Evita que el texto se envuelva en celdas */
+            word-wrap: break-word; /* Asegura que las palabras largas se rompan */
+            white-space: normal; /* Permite el salto de línea normal */
         }
         .content-table th {
             background-color: var(--primary-color);
@@ -603,26 +623,40 @@
             </section>
             <section id="biblioteca" class="tab-content">
                 <h2><i class="fas fa-book-open" style="margin-right: 10px;"></i>Biblioteca Digital</h2>
-                <p>Explora nuestros recursos digitales: libros, videos y software.</p>
-                <div class="button-group">
-                    <button class="action-button" data-modal-target="#practicasModal">
-                        <span class="button-icon"><i class="fas fa-flask"></i></span>
-                        Prácticas
-                    </button>
-                    <button class="action-button" data-modal-target="#librosModal">
-                        <span class="button-icon"><i class="fas fa-book"></i></span>
-                        Libros
-                    </button>
-                    <button class="action-button" data-modal-target="#videosModal">
-                        <span class="button-icon"><i class="fas fa-video"></i></span>
-                        Videos
-                    </button>
-                    <button class="action-button" data-modal-target="#softwareModal">
-                        <span class="button-icon"><i class="fas fa-code"></i></span>
-                        Software
-                    </button>
+                
+                <div id="library-access-required" style="text-align: center; padding: 5px;">
+                    <img src="volta.png" alt="Volta Logo" style="max-width: 200px; margin-bottom: 5px; border-radius: 5px;">
+                    <p style="color: var(--primary-color); font-weight: bold; font-size: 1.1em;">
+                        ¡Acceso Restringido!
+                    </p>
+                    <p style="color: var(--muted-text-color);">
+                        Para acceder a la biblioteca digital, por favor **inicia sesión** en tu cuenta de alumno
+                        desde la pestaña **"Portal"**. Una vez que hayas iniciado sesión, podrás explorar todos nuestros recursos.
+                    </p>
                 </div>
-                </section>
+
+                <div id="library-content" style="display: none;">
+                    <p>Explora nuestros recursos digitales: libros, videos y software.</p>
+                    <div class="button-group">
+                        <button class="action-button" data-modal-target="#practicasModal">
+                            <span class="button-icon"><i class="fas fa-flask"></i></span>
+                            Prácticas
+                        </button>
+                        <button class="action-button" data-modal-target="#librosModal">
+                            <span class="button-icon"><i class="fas fa-book"></i></span>
+                            Libros
+                        </button>
+                        <button class="action-button" data-modal-target="#videosModal">
+                            <span class="button-icon"><i class="fas fa-video"></i></span>
+                            Videos
+                        </button>
+                        <button class="action-button" data-modal-target="#softwareModal">
+                            <span class="button-icon"><i class="fas fa-code"></i></span>
+                            Software
+                        </button>
+                    </div>
+                </div>
+            </section>
             <section id="portal" class="tab-content">
                 <h2 id="portal-title"><i class="fas fa-user-circle" style="margin-right: 10px;"></i>Portal de Acceso</h2>
                 <p id="portal-intro-text">Inicia sesión para acceder a tu perfil y funcionalidades avanzadas.</p>
@@ -1026,6 +1060,7 @@
 
         let userId = null; // Will store the authenticated user ID
         let currentLoggedInStudent = null; // To store the currently logged-in student object
+        let userIsLoggedIn = false; // New flag to track login status
 
         // --- Firebase Collections References ---
         const getCollectionRef = (collectionName) => {
@@ -1059,6 +1094,9 @@
         let studentGradeDetailModal, detailStudentName, detailMateriaName, gradeDetailsContent;
         // Changed these variables from _filter to _search_input for the new text inputs
         let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
+        // Library access control DOM elements
+        let libraryAccessRequiredDiv;
+        let libraryContentDiv;
 
 
         // Custom message box function (updated to include a callback for confirmation)
@@ -1232,6 +1270,8 @@
                         loginCard.style.display = 'block';
                         portalIntroText.style.display = 'block';
                         portalTitle.textContent = 'Portal de Acceso';
+                        userIsLoggedIn = false; // Also set to false on student data loss
+                        updateLibraryTabContentVisibility();
                         showMessageBox('Sesión Terminada', 'Tu cuenta de estudiante ha sido eliminada o modificada. Por favor, inicia sesión de nuevo.');
                     }
                 }
@@ -2239,6 +2279,8 @@
                 loginCard.style.display = 'block';
                 portalIntroText.style.display = 'block';
                 portalTitle.textContent = 'Portal de Acceso';
+                userIsLoggedIn = false; // IMPORTANT: Update the flag here
+                updateLibraryTabContentVisibility(); // Update library tab content
             });
             adminPanelContent.appendChild(logoutButton);
         }
@@ -2474,7 +2516,7 @@
             studentPortalContent = document.getElementById('student-portal-content');
             studentPortalName = document.getElementById('student-portal-name');
             studentMateriasGrades = document.getElementById('student-materias-grades');
-            studentLogoutButton = document.getElementById('studentLogoutButton'); // Corrected this line
+            studentLogoutButton = document.getElementById('studentLogoutButton');
 
             manageNewsEventsModal = document.getElementById('manageNewsEventsModal');
             newsEventForm = document.getElementById('news-event-form');
@@ -2533,12 +2575,18 @@
             detailMateriaName = document.getElementById('detail-materia-name');
             gradeDetailsContent = document.getElementById('grade-details-content');
 
-            // Library search inputs (updated from filter selects)
+            // Library search inputs
             practicasSearchInput = document.getElementById('practicas-search');
             librosSearchInput = document.getElementById('libros-search');
             videosSearchInput = document.getElementById('videos-search');
             softwareSearchInput = document.getElementById('software-search');
 
+            // Library access control DOM elements
+            libraryAccessRequiredDiv = document.getElementById('library-access-required');
+            libraryContentDiv = document.getElementById('library-content');
+
+            // Initial state: hide library content, show access required message
+            updateLibraryTabContentVisibility();
 
             // --- Event Listeners ---
             navItems.forEach(item => {
@@ -2636,6 +2684,7 @@
 
                     if (username.toLowerCase() === adminUsername.toLowerCase() && password.toLowerCase() === adminPassword.toLowerCase()) {
                         // Admin Login
+                        userIsLoggedIn = true; // Set logged in flag
                         loginCard.style.display = 'none';
                         portalIntroText.style.display = 'none';
                         portalTitle.textContent = 'Panel de Administración';
@@ -2643,6 +2692,7 @@
                         studentPortalContent.style.display = 'none'; // Hide student portal if visible
                         renderAdminPanelButtons(); // Render buttons directly in the content area
                         loginForm.reset(); // Clear login form
+                        updateLibraryTabContentVisibility(); // Update library tab content visibility
                     } else {
                         // Try Student Login
                         const studentQuery = query(studentsCollection, where("nombres", "==", username), where("celular", "==", password));
@@ -2652,6 +2702,7 @@
                                 const studentDoc = studentSnapshot.docs[0];
                                 currentLoggedInStudent = { id: studentDoc.id, ...studentDoc.data() };
 
+                                userIsLoggedIn = true; // Set logged in flag
                                 loginCard.style.display = 'none';
                                 portalIntroText.style.display = 'none';
                                 adminPanelContent.style.display = 'none'; // Hide admin panel if visible
@@ -2660,6 +2711,7 @@
                                 studentPortalName.textContent = `${currentLoggedInStudent.nombres} ${currentLoggedInStudent.paterno}`;
                                 renderStudentPortal(); // Render student's enrolled materias and grades
                                 loginForm.reset(); // Clear login form
+                                updateLibraryTabContentVisibility(); // Update library tab content visibility
                             } else {
                                 showMessageBox('Error de Inicio de Sesión', 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.');
                             }
@@ -2674,11 +2726,24 @@
             // Student Logout Button
             studentLogoutButton.addEventListener('click', () => {
                 currentLoggedInStudent = null; // Clear logged-in student
+                userIsLoggedIn = false; // Set logged out flag
                 studentPortalContent.style.display = 'none'; // Hide student portal
                 loginCard.style.display = 'block'; // Show login form
                 portalIntroText.style.display = 'block';
                 portalTitle.textContent = 'Portal de Acceso';
+                updateLibraryTabContentVisibility(); // Update library tab content visibility
             });
+
+            // Function to toggle library content visibility
+            function updateLibraryTabContentVisibility() {
+                if (userIsLoggedIn) {
+                    libraryContentDiv.style.display = 'block';
+                    libraryAccessRequiredDiv.style.display = 'none';
+                } else {
+                    libraryContentDiv.style.display = 'none';
+                    libraryAccessRequiredDiv.style.display = 'block';
+                }
+            }
 
             // Form submissions
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
