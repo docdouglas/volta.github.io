@@ -571,7 +571,7 @@
             color: var(--text-color);
             margin-right: 10px;
         }
-        .filter-group select {
+        .filter-group select, .filter-group input[type="text"] { /* Added input[type="text"] */
             padding: 8px;
             border-radius: 8px;
             border: 1px solid #ccc;
@@ -707,12 +707,8 @@
                 <span class="close-button">&times;</span>
             </div>
             <div class="filter-group">
-                <label for="practicas-filter">Filtrar por tipo:</label>
-                <select id="practicas-filter" onchange="filterLibraryItems('practica', this.value)">
-                    <option value="todos">Todos</option>
-                    <option value="ELT">Eléctrica</option>
-                    <option value="ELTN">Electrónica</option>
-                </select>
+                <label for="practicas-search">Buscar por título/descripción:</label>
+                <input type="text" id="practicas-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('practica', this.value)">
             </div>
             <div id="practicas-list"></div>
             <div class="modal-actions">
@@ -728,12 +724,8 @@
                 <span class="close-button">&times;</span>
             </div>
             <div class="filter-group">
-                <label for="libros-filter">Filtrar por tipo:</label>
-                <select id="libros-filter" onchange="filterLibraryItems('libro', this.value)">
-                    <option value="todos">Todos</option>
-                    <option value="ELT">Eléctrica</option>
-                    <option value="ELTN">Electrónica</option>
-                </select>
+                <label for="libros-search">Buscar por título/descripción:</label>
+                <input type="text" id="libros-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('libro', this.value)">
             </div>
             <div id="libros-list"></div>
             <div class="modal-actions">
@@ -749,12 +741,8 @@
                 <span class="close-button">&times;</span>
             </div>
             <div class="filter-group">
-                <label for="videos-filter">Filtrar por tipo:</label>
-                <select id="videos-filter" onchange="filterLibraryItems('video', this.value)">
-                    <option value="todos">Todos</option>
-                    <option value="ELT">Eléctrica</option>
-                    <option value="ELTN">Electrónica</option>
-                </select>
+                <label for="videos-search">Buscar por título/descripción:</label>
+                <input type="text" id="videos-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('video', this.value)">
             </div>
             <div id="videos-list"></div>
             <div class="modal-actions">
@@ -770,12 +758,8 @@
                 <span class="close-button">&times;</span>
             </div>
             <div class="filter-group">
-                <label for="software-filter">Filtrar por tipo:</label>
-                <select id="software-filter" onchange="filterLibraryItems('software', this.value)">
-                    <option value="todos">Todos</option>
-                    <option value="ELT">Eléctrica</option>
-                    <option value="ELTN">Electrónica</option>
-                </select>
+                <label for="software-search">Buscar por título/descripción:</label>
+                <input type="text" id="software-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('software', this.value)">
             </div>
             <div id="software-list"></div>
             <div class="modal-actions">
@@ -1073,7 +1057,8 @@
         let listMateriasModal, materiasListButtons;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let studentGradeDetailModal, detailStudentName, detailMateriaName, gradeDetailsContent;
-        let practicasFilter, librosFilter, videosFilter, softwareFilter;
+        // Changed these variables from _filter to _search_input for the new text inputs
+        let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
 
 
         // Custom message box function (updated to include a callback for confirmation)
@@ -1516,11 +1501,13 @@
         }
         
         // New function to filter items and re-render the list
-        window.filterLibraryItems = function(type, filterCode) {
-            renderLibraryItemsInModals(type, filterCode);
+        // Modified to take a search query instead of a filter code
+        window.filterLibraryItems = function(type, searchQuery) {
+            renderLibraryItemsInModals(type, searchQuery);
         };
 
-        function renderLibraryItemsInModals(targetType = null, filterCode = 'todos') {
+        // Modified to filter by title, description, or code dynamically
+        function renderLibraryItemsInModals(targetType = null, searchQuery = '') {
             // Clear previous content in all library modals' lists
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
@@ -1552,8 +1539,14 @@
                 }
 
                 let itemsToRender = groupedItems[type];
-                if (filterCode !== 'todos') {
-                    itemsToRender = itemsToRender.filter(item => item.code.startsWith(filterCode));
+                // Apply search filter if a query is provided
+                if (searchQuery) {
+                    const lowerCaseQuery = searchQuery.toLowerCase();
+                    itemsToRender = itemsToRender.filter(item =>
+                        (item.title && item.title.toLowerCase().includes(lowerCaseQuery)) ||
+                        (item.description && item.description.toLowerCase().includes(lowerCaseQuery)) ||
+                        (item.code && item.code.toLowerCase().includes(lowerCaseQuery))
+                    );
                 }
 
                 if (container) {
@@ -2540,11 +2533,11 @@
             detailMateriaName = document.getElementById('detail-materia-name');
             gradeDetailsContent = document.getElementById('grade-details-content');
 
-            // Library filter selects
-            practicasFilter = document.getElementById('practicas-filter');
-            librosFilter = document.getElementById('libros-filter');
-            videosFilter = document.getElementById('videos-filter');
-            softwareFilter = document.getElementById('software-filter');
+            // Library search inputs (updated from filter selects)
+            practicasSearchInput = document.getElementById('practicas-search');
+            librosSearchInput = document.getElementById('libros-search');
+            videosSearchInput = document.getElementById('videos-search');
+            softwareSearchInput = document.getElementById('software-search');
 
 
             // --- Event Listeners ---
@@ -2566,17 +2559,17 @@
                         modal.style.display = 'block';
                         // Call the rendering function specifically for library modals
                         if (modalTargetId === '#practicasModal') {
-                            practicasFilter.value = 'todos';
-                            filterLibraryItems('practica', 'todos');
+                            practicasSearchInput.value = ''; // Clear search input
+                            filterLibraryItems('practica', ''); // Show all initially
                         } else if (modalTargetId === '#librosModal') {
-                            librosFilter.value = 'todos';
-                            filterLibraryItems('libro', 'todos');
+                            librosSearchInput.value = ''; // Clear search input
+                            filterLibraryItems('libro', ''); // Show all initially
                         } else if (modalTargetId === '#videosModal') {
-                            videosFilter.value = 'todos';
-                            filterLibraryItems('video', 'todos');
+                            videosSearchInput.value = ''; // Clear search input
+                            filterLibraryItems('video', ''); // Show all initially
                         } else if (modalTargetId === '#softwareModal') {
-                            softwareFilter.value = 'todos';
-                            filterLibraryItems('software', 'todos');
+                            softwareSearchInput.value = ''; // Clear search input
+                            filterLibraryItems('software', ''); // Show all initially
                         }
                     }
                 });
