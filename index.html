@@ -1043,7 +1043,6 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
             apiKey: "AIzaSyCoeIyKkUbtKLzpr0-FO9vkt9SqsMuQl_k",
             authDomain: "volta-77f5a.firebaseapp.com",
-            databaseURL: "https://volta-77f5a-default-rtdb.firebaseio.com",
             projectId: "volta-77f5a",
             storageBucket: "volta-77f5a.appspot.com",
             messagingSenderId: "209382996934",
@@ -2348,24 +2347,32 @@
                         loginForm.reset();
                         updateLibraryTabContentVisibility();
                     } else {
-                        const studentQuery = query(studentsCollection, where("nombres", "==", username), where("celular", "==", password));
                         try {
+                            const studentQuery = query(studentsCollection, where("nombres", "==", username));
                             const studentSnapshot = await getDocs(studentQuery);
-                            if (!studentSnapshot.empty) {
-                                const studentDoc = studentSnapshot.docs[0];
-                                currentLoggedInStudent = { id: studentDoc.id, ...studentDoc.data() };
+                            let studentFound = false;
 
-                                userIsLoggedIn = true;
-                                loginCard.style.display = 'none';
-                                portalIntroText.style.display = 'none';
-                                adminPanelContent.style.display = 'none';
-                                portalTitle.textContent = 'Portal del Estudiante';
-                                studentPortalContent.style.display = 'flex';
-                                studentPortalName.textContent = `${currentLoggedInStudent.nombres} ${currentLoggedInStudent.paterno}`;
-                                renderStudentPortal();
-                                loginForm.reset();
-                                updateLibraryTabContentVisibility();
-                            } else {
+                            if (!studentSnapshot.empty) {
+                                studentSnapshot.forEach(studentDoc => {
+                                    const studentData = studentDoc.data();
+                                    if (studentData.celular === password) {
+                                        currentLoggedInStudent = { id: studentDoc.id, ...studentData };
+                                        userIsLoggedIn = true;
+                                        loginCard.style.display = 'none';
+                                        portalIntroText.style.display = 'none';
+                                        adminPanelContent.style.display = 'none';
+                                        portalTitle.textContent = 'Portal del Estudiante';
+                                        studentPortalContent.style.display = 'flex';
+                                        studentPortalName.textContent = `${currentLoggedInStudent.nombres} ${currentLoggedInStudent.paterno}`;
+                                        renderStudentPortal();
+                                        loginForm.reset();
+                                        updateLibraryTabContentVisibility();
+                                        studentFound = true;
+                                    }
+                                });
+                            }
+
+                            if (!studentFound) {
                                 showMessageBox('Error de Inicio de Sesión', 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.');
                             }
                         } catch (error) {
@@ -2407,5 +2414,4 @@
     </script>
 </body>
 </html>
-
 
