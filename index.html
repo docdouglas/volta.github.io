@@ -50,7 +50,7 @@
 
         .app-container {
             width: 100%;
-            max-width: 420px; /* Ancho máximo para simular móvil por defecto */
+            max-width: 380px; /* Ancho máximo reducido para simular móvil por defecto */
             height: 100vh; /* Altura completa de la vista en móvil */
             display: flex;
             flex-direction: column;
@@ -62,8 +62,8 @@
         .content {
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
             overflow-y: auto; /* Habilita el scroll si el contenido es largo */
-            padding: 20px;
-            padding-bottom: 80px; /* Espacio para la barra de navegación inferior */
+            padding: 12px; /* Padding reducido */
+            padding-bottom: 60px; /* Espacio reducido para la barra de navegación inferior */
         }
         .tab-content {
             display: none; /* Oculta las pestañas por defecto */
@@ -74,36 +74,36 @@
         }
         h2 {
             color: var(--primary-color);
-            font-size: 1.8em;
-            margin-bottom: 15px;
+            font-size: 1.4em; /* Tamaño de fuente reducido */
+            margin-bottom: 10px; /* Margen reducido */
             padding-bottom: 5px;
             border-bottom: 2px solid var(--primary-color);
             display: inline-block; /* Ajusta el borde inferior al texto */
         }
         h4 {
             color: var(--primary-color);
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-top: 12px; /* Margen reducido */
+            margin-bottom: 6px; /* Margen reducido */
         }
         p {
             color: var(--muted-text-color);
-            line-height: 1.7;
+            line-height: 1.5; /* Altura de línea reducida */
         }
         .button-group {
             display: flex;
             flex-direction: column;
-            gap: 15px; /* Espacio entre botones */
-            margin-top: 20px;
+            gap: 8px; /* Espacio reducido entre botones */
+            margin-top: 12px;
         }
         .action-button {
             display: flex;
             align-items: center;
-            padding: 15px 20px;
+            padding: 10px 12px; /* Padding reducido */
             border: 2px solid var(--primary-color);
-            border-radius: 12px;
+            border-radius: 10px;
             background-color: #fff;
             color: var(--primary-color);
-            font-size: 1.1em;
+            font-size: 0.9em; /* Tamaño de fuente reducido */
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
@@ -116,14 +116,14 @@
             transform: translateY(-2px); /* Efecto de elevación */
         }
         .action-button .button-icon {
-            font-size: 1.5em;
-            margin-right: 15px;
+            font-size: 1.2em; /* Tamaño de ícono reducido */
+            margin-right: 10px; /* Margen reducido */
         }
         /* Estilos de la barra de navegación inferior */
         .bottom-nav {
             display: flex;
             width: 100%;
-            height: 60px; /* Tamaño disminuido */
+            height: 50px; /* Altura disminuida */
             background-color: var(--dark-nav-color);
             border-top: 1px solid #34495e;
             box-shadow: 0 -5px 15px var(--dark-shadow-color);
@@ -144,8 +144,8 @@
             transition: all 0.3s ease;
             color: var(--text-color-light);
             position: relative;
-            padding: 5px;
-            margin: 0 2px;
+            padding: 2px; /* Padding reducido */
+            margin: 0 1px;
         }
         .nav-item:not(.active) {
             opacity: 0.8; /* Menos opacidad para ítems inactivos */
@@ -159,9 +159,9 @@
             opacity: 1;
             background-color: #34495e; /* Fondo ligeramente diferente para activo */
             border-radius: 8px 8px 0 0; /* Bordes redondeados superiores */
-            border-bottom: 5px solid var(--button-3d-shadow); /* Sombra inferior para efecto 3D */
-            transform: translateY(-5px); /* Efecto de elevación */
-            padding-bottom: 10px;
+            border-bottom: 3px solid var(--button-3d-shadow); /* Sombra inferior reducida */
+            transform: translateY(-3px); /* Efecto de elevación reducido */
+            padding-bottom: 6px; /* Padding reducido */
         }
         .nav-item.active:hover {
             transform: translateY(0); /* Vuelve a la posición normal al pasar el ratón */
@@ -173,7 +173,7 @@
             top: 0;
             left: 50%;
             transform: translateX(-50%);
-            width: 80%;
+            width: 70%; /* Ancho reducido */
             height: 3px;
             background-color: var(--gold-color);
             transition: width 0.3s ease;
@@ -190,7 +190,7 @@
             transition: width 0.3s ease;
         }
         .icon {
-            font-size: 2.2em; /* Tamaño disminuido */
+            font-size: 1.7em; /* Tamaño de ícono disminuido */
             line-height: 1;
             transition: transform 0.3s ease-in-out, color 0.3s ease;
         }
@@ -198,11 +198,11 @@
             transform: scale(1.1); /* Icono ligeramente más grande al estar activo */
         }
         span {
-            font-size: 0.8em;
+            font-size: 0.7em; /* Tamaño de fuente reducido */
             font-weight: 500;
             white-space: nowrap;
             transition: opacity 0.3s ease;
-            margin-top: 4px;
+            margin-top: 2px; /* Margen reducido */
         }
         .nav-item:not(.active) span {
             opacity: 0; /* Oculta el texto para inactivos */
@@ -230,30 +230,30 @@
         .modal-content {
             background-color: #fefefe;
             margin: 5% auto;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 12px; /* Padding reducido */
+            border-radius: 10px;
             width: 90%;
-            max-width: 400px;
+            max-width: 360px;
             box-shadow: 0 10px 30px var(--dark-shadow-color);
             animation: slideIn 0.3s ease-out;
-            padding-bottom: 25px;
+            padding-bottom: 15px;
         }
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 2px solid var(--primary-color);
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            padding-bottom: 8px; /* Padding reducido */
+            margin-bottom: 15px; /* Margen reducido */
         }
         .modal-header h3 {
             margin: 0;
             color: var(--primary-color);
-            font-size: 1.5em;
+            font-size: 1.3em; /* Tamaño de fuente reducido */
         }
         .close-button {
             color: var(--muted-text-color);
-            font-size: 28px;
+            font-size: 24px; /* Tamaño de fuente reducido */
             font-weight: bold;
             cursor: pointer;
             transition: color 0.3s ease;
@@ -270,10 +270,10 @@
         }
         .modal-actions button {
             flex-grow: 1;
-            padding: 15px;
+            padding: 10px; /* Padding reducido */
             border: none;
             border-radius: 8px;
-            font-size: 1.1em;
+            font-size: 0.9em; /* Tamaño de fuente reducido */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -290,16 +290,16 @@
         /* Estilos específicos para el formulario de inicio de sesión (Pestaña Portal) */
         .login-card {
             background-color: #fff;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 20px; /* Padding reducido */
+            border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-top: 30px;
+            margin-top: 20px;
             animation: slideInUp 0.5s ease-out;
         }
         .login-form {
             display: flex;
             flex-direction: column;
-            gap: 18px; /* Espacio entre elementos del formulario */
+            gap: 12px; /* Espacio reducido entre elementos del formulario */
         }
         .login-form label {
             display: block;
@@ -313,11 +313,11 @@
         }
         .input-group input, .input-group select, .input-group textarea {
             width: 100%;
-            padding: 14px;
+            padding: 10px; /* Padding reducido */
             border: 1px solid #ddd;
-            border-radius: 10px;
+            border-radius: 8px;
             box-sizing: border-box;
-            font-size: 1em;
+            font-size: 0.95em;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
@@ -345,12 +345,12 @@
         }
         .login-form button, .admin-button {
             width: 100%;
-            padding: 15px;
+            padding: 12px; /* Padding reducido */
             background-color: var(--primary-color);
             color: var(--text-color-light);
             border: none;
-            border-radius: 10px;
-            font-size: 1.1em;
+            border-radius: 8px;
+            font-size: 1em; /* Tamaño de fuente reducido */
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
@@ -370,8 +370,8 @@
             display: block; /* Para centrarla con margin auto */
             margin-left: auto;
             margin-right: auto;
-            border-radius: 12px; /* Bordes redondeados para la imagen */
-            margin-bottom: 25px; /* Espacio debajo de la imagen */
+            border-radius: 10px; /* Bordes redondeados para la imagen */
+            margin-bottom: 20px; /* Espacio reducido debajo de la imagen */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra suave para la imagen */
         }
 
@@ -379,26 +379,26 @@
         .admin-button-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
             margin-top: 20px;
         }
         .admin-button {
             display: flex;
             align-items: center;
-            padding: 15px 20px;
+            padding: 10px 15px; /* Padding reducido */
             border: 2px solid var(--primary-color);
-            border-radius: 12px;
+            border-radius: 10px;
             background-color: #fff;
             color: var(--primary-color);
-            font-size: 1.1em;
+            font-size: 0.9em; /* Tamaño de fuente reducido */
             font-weight: 600;
             text-decoration: none;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         .admin-button .button-icon {
-            font-size: 1.5em;
-            margin-right: 15px;
+            font-size: 1.3em; /* Tamaño de ícono reducido */
+            margin-right: 10px; /* Margen reducido */
         }
         .admin-button.logout-button {
             background-color: #f44336;
@@ -421,12 +421,12 @@
         .content-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9em;
+            font-size: 0.8em; /* Tamaño de fuente reducido */
             min-width: 500px; /* Asegura que la tabla tenga un ancho mínimo para activar el scroll si es necesario */
         }
         .content-table th, .content-table td {
             border: 1px solid #ddd;
-            padding: 8px;
+            padding: 5px; /* Padding reducido */
             text-align: left;
             word-wrap: break-word; /* Asegura que las palabras largas se rompan */
             white-space: normal; /* Permite el salto de línea normal */
@@ -447,7 +447,7 @@
             justify-content: center;
         }
         .content-table .actions-column button {
-            padding: 5px 10px;
+            padding: 4px 8px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.8em;
@@ -478,9 +478,9 @@
         .form-group select,
         .form-group textarea {
             width: 100%;
-            padding: 10px;
+            padding: 7px; /* Padding reducido */
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 6px;
             box-sizing: border-box;
             font-size: 1em;
         }
@@ -493,7 +493,7 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
         }
         .form-group button {
-            padding: 10px 20px;
+            padding: 7px 14px; /* Padding reducido */
             background-color: var(--primary-color);
             color: white;
             border: none;
@@ -552,7 +552,7 @@
         }
         .materia-grade-card {
             background-color: #e6f0ff;
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
             border: 1px solid var(--primary-color);
             display: flex;
@@ -563,21 +563,21 @@
         .materia-grade-card h4 {
             margin: 0;
             color: var(--dark-nav-color);
-            font-size: 1.1em;
+            font-size: 1em;
         }
         .materia-grade-card .grade-info {
             font-weight: bold;
             color: var(--primary-color);
-            font-size: 1.2em;
+            font-size: 1.1em;
         }
         .materia-grade-card button {
-            padding: 8px 15px;
+            padding: 6px 12px;
             background-color: var(--primary-color);
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: background-color 0.3s ease;
         }
         .materia-grade-card button:hover {
@@ -847,9 +847,8 @@
             </div>
             <form id="library-item-form" class="form-group">
                 <input type="hidden" id="library-item-id">
-                <label for="library-item-code">Código:</label>
-                <select id="library-item-code" required>
-                    </select>
+                <label for="library-item-code-display">Nro.:</label>
+                <input type="text" id="library-item-code-display" disabled style="background-color: #eee; cursor: not-allowed;">
                 <label for="library-item-title">Título:</label>
                 <input type="text" id="library-item-title" placeholder="Título del ítem" required>
                 <label for="library-item-type">Tipo:</label>
@@ -870,7 +869,7 @@
                 <table class="content-table">
                     <thead>
                         <tr>
-                            <th>Código</th>
+                            <th>Nro.</th>
                             <th>Título</th>
                             <th>Tipo</th>
                             <th>Link</th>
@@ -1035,7 +1034,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         console.log("Script loaded and DOMContentLoaded event fired.");
 
@@ -1079,22 +1078,19 @@
         let allLibraryItems = [];
         let allMaterias = {}; // Keyed by lowercased materia name
         let allStudents = [];
-        let lastCodes = { ELT: 0, ELTN: 0 }; // Still manage locally, but update on save
 
         // --- DOM Elements (Declared globally) ---
         let navItems, tabContents, actionButtons, modals, closeButtons;
         let portalTitle, portalIntroText, loginCard, togglePassword, passwordInput, loginForm, adminPanelContent;
         let studentPortalContent, studentPortalName, studentMateriasGrades, studentLogoutButton;
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventsAdminTbody, newsEventsDisplay;
-        let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeSelect, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listMateriasModal, materiasListButtons;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let studentGradeDetailModal, detailStudentName, detailMateriaName, gradeDetailsContent;
-        // Changed these variables from _filter to _search_input for the new text inputs
         let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
-        // Library access control DOM elements
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
 
@@ -1149,9 +1145,8 @@
             newConfirmBtn.addEventListener('click', confirmClickHandler);
             newCloseBtn.addEventListener('click', closeClickHandler);
 
-            // Close on outside click for general modals, but for messageBox, only if it's an alert
             modal.onclick = (event) => {
-                if (event.target === modal && modal.id !== 'messageBoxModal') { // Only close if it's not the messageBoxModal itself
+                if (event.target === modal && modal.id !== 'messageBoxModal') { 
                     closeHandler();
                 }
             };
@@ -1174,12 +1169,10 @@
                     if (user) {
                         userId = user.uid;
                         console.log("Auth state changed. User ID:", userId);
-                        // Start listening to Firestore collections only after auth is ready
                         setupFirestoreListeners();
                     } else {
                         userId = null;
                         console.log("User is signed out.");
-                        // Optionally clear data or redirect if no user
                     }
                 });
             } catch (error) {
@@ -1190,7 +1183,6 @@
 
         // --- Firestore Listeners ---
         function setupFirestoreListeners() {
-            // News Collection Listener
             onSnapshot(newsCollection, (snapshot) => {
                 allNews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 console.log("News updated:", allNews);
@@ -1201,7 +1193,6 @@
                 showMessageBox('Error de Carga', 'No se pudieron cargar las noticias.');
             });
 
-            // Events Collection Listener
             onSnapshot(eventsCollection, (snapshot) => {
                 allEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 console.log("Events updated:", allEvents);
@@ -1212,28 +1203,18 @@
                 showMessageBox('Error de Carga', 'No se pudieron cargar los eventos.');
             });
 
-            // Library Items Collection Listener
             onSnapshot(libraryItemsCollection, (snapshot) => {
                 allLibraryItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Order items based on the new logic: by type prefix and number
-                allLibraryItems.sort((a, b) => {
-                    const [prefixA, numA] = a.code.split('-');
-                    const [prefixB, numB] = b.code.split('-');
-                    if (prefixA !== prefixB) {
-                        return prefixA.localeCompare(prefixB);
-                    }
-                    return parseInt(numA) - parseInt(numB);
-                });
-                console.log("Library Items updated:", allLibraryItems);
-                populateLibraryItemCodes(); // Update codes for admin form
+                // Sort by the new numerical code
+                allLibraryItems.sort((a, b) => a.code - b.code);
+                console.log("Library Items updated and sorted:", allLibraryItems);
                 renderAdminLibraryItemsTable();
-                renderLibraryItemsInModals(); // Update user-facing library modals
+                renderLibraryItemsInModals();
             }, (error) => {
                 console.error("Error fetching library items:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar los ítems de la biblioteca.');
             });
 
-            // Materias Collection Listener
             onSnapshot(materiasCollection, (snapshot) => {
                 allMaterias = {}; // Clear previous data
                 snapshot.docs.forEach(doc => {
@@ -1242,35 +1223,32 @@
                 });
                 console.log("Materias updated:", allMaterias);
                 renderAdminMateriasTable();
-                populateStudentMateriasCheckboxes(); // Update checkboxes for student registration
-                renderMateriasListButtons(); // Update buttons for grading
+                populateStudentMateriasCheckboxes();
+                renderMateriasListButtons();
                 if (currentLoggedInStudent) {
-                    renderStudentPortal(); // Re-render student portal if logged in
+                    renderStudentPortal();
                 }
             }, (error) => {
                 console.error("Error fetching materias:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar las materias.');
             });
 
-            // Students Collection Listener
             onSnapshot(studentsCollection, (snapshot) => {
                 allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 console.log("Students updated:", allStudents);
                 renderAdminStudentsTable();
-                // If a student is currently logged in, update their data
                 if (currentLoggedInStudent) {
                     const updatedStudent = allStudents.find(s => s.id === currentLoggedInStudent.id);
                     if (updatedStudent) {
                         currentLoggedInStudent = updatedStudent;
-                        renderStudentPortal(); // Re-render student portal with updated grades
+                        renderStudentPortal();
                     } else {
-                        // Student might have been deleted by admin
                         currentLoggedInStudent = null;
                         studentPortalContent.style.display = 'none';
                         loginCard.style.display = 'block';
                         portalIntroText.style.display = 'block';
                         portalTitle.textContent = 'Portal de Acceso';
-                        userIsLoggedIn = false; // Also set to false on student data loss
+                        userIsLoggedIn = false;
                         updateLibraryTabContentVisibility();
                         showMessageBox('Sesión Terminada', 'Tu cuenta de estudiante ha sido eliminada o modificada. Por favor, inicia sesión de nuevo.');
                     }
@@ -1292,20 +1270,13 @@
 
             const newItem = { type, title, heading };
             console.log("Intentando guardar/actualizar noticia/evento:", newItem);
-            console.log("ID del documento (si existe):", id);
 
             try {
                 const targetCollection = type === 'news' ? newsCollection : eventsCollection;
-                console.log("Colección de destino:", targetCollection.path);
-
                 if (id) {
-                    // Update existing document
                     await setDoc(doc(targetCollection, id), newItem);
-                    console.log("Documento actualizado con ID: ", id, "en colección:", targetCollection.path);
                 } else {
-                    // Add a new document
-                    const docRef = await addDoc(targetCollection, newItem);
-                    console.log("Documento escrito con ID: ", docRef.id, "a la colección:", targetCollection.path);
+                    await addDoc(targetCollection, newItem);
                 }
                 newsEventForm.reset();
                 newsEventIdInput.value = '';
@@ -1318,9 +1289,7 @@
 
         function renderAdminNewsEventsTable() {
             newsEventsAdminTbody.innerHTML = '';
-            // Combine news and events from local arrays (kept updated by onSnapshot)
             const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => {
-                // Sort by type (news first, then events) and then by title
                 if (a.type === b.type) {
                     return a.title.localeCompare(b.title);
                 }
@@ -1349,8 +1318,6 @@
             newsEventsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
-                    const type = e.target.dataset.type;
-                    // Find from the combined local array
                     const item = [...allNews, ...allEvents].find(n => n.id === id);
                     if (item) {
                         newsEventIdInput.value = item.id;
@@ -1368,17 +1335,12 @@
                     showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este elemento?', 'confirm', async (confirmed) => {
                         if (confirmed) {
                             try {
-                                // Delete from the specific collection (news or events)
-                                if (type === 'news') {
-                                    await deleteDoc(doc(newsCollection, id));
-                                } else if (type === 'event') {
-                                    await deleteDoc(doc(eventsCollection, id));
-                                }
-                                console.log("Documento eliminado con éxito de Firebase!");
+                                const targetCollection = type === 'news' ? newsCollection : eventsCollection;
+                                await deleteDoc(doc(targetCollection, id));
                                 showMessageBox('Éxito', 'Elemento eliminado con éxito.');
                             } catch (error) {
                                 console.error("Error al eliminar documento de Firebase: ", error);
-                                showBox('Error', 'Error al eliminar el documento. Por favor, inténtalo de nuevo.');
+                                showMessageBox('Error', 'Error al eliminar el documento. Por favor, inténtalo de nuevo.');
                             }
                         }
                     });
@@ -1388,12 +1350,7 @@
 
         function renderNewsEvents() {
             newsEventsDisplay.innerHTML = '';
-            const allCombinedNewsEvents = [...allNews, ...allEvents];
-            allCombinedNewsEvents.sort((a, b) => {
-                // Simple sort by ID for now (Firestore document IDs are not necessarily chronological)
-                // For more robust sorting, a timestamp field would be ideal.
-                return a.id.localeCompare(b.id);
-            });
+            const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => a.id.localeCompare(b.id));
 
             if (allCombinedNewsEvents.length === 0) {
                 newsEventsDisplay.innerHTML = '<p style="text-align: center; color: var(--muted-text-color);">No hay noticias o eventos para mostrar.</p>';
@@ -1412,70 +1369,39 @@
 
 
         // --- Admin: Manage Library Items ---
-        function populateLibraryItemCodes() {
-            libraryItemCodeSelect.innerHTML = '';
-            const types = ['ELT', 'ELTN'];
-            types.forEach(prefix => {
-                // Add existing codes first
-                const existingCodesForPrefix = allLibraryItems
-                    .filter(item => item.code.startsWith(prefix))
-                    .map(item => parseInt(item.code.split('-')[1]))
-                    .sort((a, b) => a - b);
-
-                // Add options for existing codes
-                existingCodesForPrefix.forEach(num => {
-                    const code = `${prefix}-${String(num).padStart(2, '0')}`;
-                    const option = document.createElement('option');
-                    option.value = code;
-                    option.textContent = code;
-                    libraryItemCodeSelect.appendChild(option);
-                });
-
-                // Add a new code option
-                const nextNumber = (existingCodesForPrefix.length > 0 ? Math.max(...existingCodesForPrefix) : 0) + 1;
-                const newCode = `${prefix}-${String(nextNumber).padStart(2, '0')}`;
-                const newOption = document.createElement('option');
-                newOption.value = newCode;
-                newOption.textContent = `${newCode} (Nuevo)`;
-                libraryItemCodeSelect.appendChild(newOption);
-                libraryItemCodeSelect.value = newCode; // Select the new code by default
-            });
-        }
-
-
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
             const id = libraryItemIdInput.value;
-            const code = libraryItemCodeSelect.value;
             const title = libraryItemTitleInput.value;
             const type = libraryItemTypeSelect.value;
             const link = libraryItemLinkInput.value;
             const description = libraryItemDescriptionInput.value;
 
+            let code;
+            if (id) {
+                const existingItem = allLibraryItems.find(item => item.id === id);
+                if (!existingItem) {
+                    showMessageBox('Error', 'No se encontró el ítem para actualizar.');
+                    return;
+                }
+                code = existingItem.code;
+            } else {
+                code = allLibraryItems.length > 0 ? Math.max(...allLibraryItems.map(item => item.code)) + 1 : 1;
+            }
+
             const newItem = { code, title, type, link, description };
             console.log("Intentando guardar/actualizar ítem de biblioteca:", newItem);
-            console.log("ID del documento (si existe):", id);
-            console.log("Colección de destino:", libraryItemsCollection.path);
 
             try {
                 if (id) {
-                    // Update existing
                     await setDoc(doc(libraryItemsCollection, id), newItem);
-                    console.log("Ítem de biblioteca actualizado con ID: ", id);
                 } else {
-                    // Add new
-                    // Check if code already exists for a new item
-                    if (allLibraryItems.some(item => item.code === code)) {
-                        showMessageBox('Código Duplicado', 'Ya existe un ítem de biblioteca con este código. Por favor, selecciona un código diferente o un código "Nuevo".');
-                        return;
-                    }
-                    const docRef = await addDoc(libraryItemsCollection, newItem);
-                    console.log("Ítem de biblioteca escrito con ID: ", docRef.id);
-                    // lastCodes is updated by onSnapshot, no need to manually update here
+                    await addDoc(libraryItemsCollection, newItem);
                 }
                 libraryItemForm.reset();
                 libraryItemIdInput.value = '';
-                populateLibraryItemCodes(); // Re-populate codes after saving/adding
+                const nextCode = allLibraryItems.length + 1;
+                libraryItemCodeDisplay.value = nextCode;
                 showMessageBox('Éxito', 'Ítem de biblioteca guardado con éxito.');
             } catch (e) {
                 console.error("Error al añadir/actualizar ítem de biblioteca: ", e);
@@ -1510,8 +1436,7 @@
                     const item = allLibraryItems.find(n => n.id === id);
                     if (item) {
                         libraryItemIdInput.value = item.id;
-                        populateLibraryItemCodes(); // Ensure all codes are available before setting value
-                        libraryItemCodeSelect.value = item.code;
+                        libraryItemCodeDisplay.value = item.code;
                         libraryItemTitleInput.value = item.title;
                         libraryItemTypeSelect.value = item.type;
                         libraryItemLinkInput.value = item.link;
@@ -1523,16 +1448,33 @@
             libraryItemsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
-                    showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este elemento de la biblioteca?', 'confirm', async (confirmed) => {
+                    showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este ítem? Los ítems restantes se re-numerarán.', 'confirm', async (confirmed) => {
                         if (confirmed) {
-                            try {
-                                await deleteDoc(doc(libraryItemsCollection, id));
-                                console.log("Ítem de biblioteca eliminado con éxito de Firebase!");
-                                showMessageBox('Éxito', 'Ítem de biblioteca eliminado con éxito.');
+                            const itemToDelete = allLibraryItems.find(item => item.id === id);
+                            if (!itemToDelete) {
+                                showMessageBox('Error', 'No se pudo encontrar el ítem a eliminar.');
+                                return;
                             }
-                            catch (error) {
-                                console.error("Error al eliminar ítem de biblioteca de Firebase: ", error);
-                                showMessageBox('Error', 'Error al eliminar el ítem de biblioteca. Por favor, inténtalo de nuevo.');
+                            const deletedItemCode = itemToDelete.code;
+
+                            try {
+                                const batch = writeBatch(db);
+
+                                const docToDeleteRef = doc(libraryItemsCollection, id);
+                                batch.delete(docToDeleteRef);
+
+                                const itemsToUpdate = allLibraryItems.filter(item => item.code > deletedItemCode);
+                                itemsToUpdate.forEach(item => {
+                                    const itemRef = doc(libraryItemsCollection, item.id);
+                                    const newCode = item.code - 1;
+                                    batch.update(itemRef, { code: newCode });
+                                });
+
+                                await batch.commit();
+                                showMessageBox('Éxito', 'Ítem eliminado y re-enumerado con éxito.');
+                            } catch (error) {
+                                console.error("Error durante la eliminación en lote: ", error);
+                                showMessageBox('Error', 'Error al eliminar el ítem de la biblioteca.');
                             }
                         }
                     });
@@ -1540,52 +1482,37 @@
             });
         }
         
-        // New function to filter items and re-render the list
-        // Modified to take a search query instead of a filter code
         window.filterLibraryItems = function(type, searchQuery) {
             renderLibraryItemsInModals(type, searchQuery);
         };
 
-        // Modified to filter by title, description, or code dynamically
         function renderLibraryItemsInModals(targetType = null, searchQuery = '') {
-            // Clear previous content in all library modals' lists
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
             document.getElementById('videos-list').innerHTML = '';
             document.getElementById('software-list').innerHTML = '';
 
-            // Group items by type from the allLibraryItems array (kept updated by onSnapshot)
-            const groupedItems = {
-                practica: [],
-                libro: [],
-                video: [],
-                software: []
-            };
-
+            const groupedItems = { practica: [], libro: [], video: [], software: [] };
             allLibraryItems.forEach(item => {
                 if (groupedItems[item.type]) {
                     groupedItems[item.type].push(item);
                 }
             });
 
-            // Render each group into its respective modal container
             for (const type in groupedItems) {
-                const containerId = `${type}s-list`; // e.g., 'practicas-list'
+                const containerId = `${type}s-list`;
                 const container = document.getElementById(containerId);
                 
-                // If a specific type is being filtered, only render that one. Otherwise render all.
                 if (targetType && targetType !== type) {
                     continue;
                 }
 
                 let itemsToRender = groupedItems[type];
-                // Apply search filter if a query is provided
                 if (searchQuery) {
                     const lowerCaseQuery = searchQuery.toLowerCase();
                     itemsToRender = itemsToRender.filter(item =>
                         (item.title && item.title.toLowerCase().includes(lowerCaseQuery)) ||
-                        (item.description && item.description.toLowerCase().includes(lowerCaseQuery)) ||
-                        (item.code && item.code.toLowerCase().includes(lowerCaseQuery))
+                        (item.description && item.description.toLowerCase().includes(lowerCaseQuery))
                     );
                 }
 
@@ -1598,7 +1525,7 @@
                                 <table class="content-table">
                                     <thead>
                                         <tr>
-                                            <th>Código</th>
+                                            <th>Nro.</th>
                                             <th>Título</th>
                                             <th>Descripción</th>
                                             <th>Recurso</th>
@@ -1634,7 +1561,7 @@
             e.preventDefault();
             const id = materiaIdInput.value;
             const name = materiaNameInput.value.trim();
-            const nameKey = name.toLowerCase(); // Use lowercase for key
+            const nameKey = name.toLowerCase();
             const ponderacionAsistencia = parseInt(ponderacionAsistenciaInput.value);
             const ponderacionPracticas = parseInt(ponderacionPracticasInput.value);
             const ponderacionParciales = parseInt(ponderacionParcialesInput.value);
@@ -1645,30 +1572,23 @@
             }
 
             const newMateriaData = {
-                name: name, // Keep original case for display
+                name: name,
                 ponderaciones: {
                     asistencia: ponderacionAsistencia,
                     practicas: ponderacionPracticas,
                     parciales: ponderacionParciales
                 }
             };
-            console.log("Intentando guardar/actualizar materia:", newMateriaData);
-            console.log("ID del documento (si existe):", id);
-            console.log("Colección de destino:", materiasCollection.path);
-
+            
             try {
                 if (id) {
-                    // Update existing
                     await setDoc(doc(materiasCollection, id), newMateriaData);
-                    console.log("Materia actualizada con ID: ", id);
                 } else {
-                    // Add new
                     if (allMaterias[nameKey]) {
                         showMessageBox('Materia Existente', 'Ya existe una materia con este nombre.');
                         return;
                     }
-                    const docRef = await addDoc(materiasCollection, newMateriaData);
-                    console.log("Materia escrita con ID: ", docRef.id);
+                    await addDoc(materiasCollection, newMateriaData);
                 }
                 createMateriaForm.reset();
                 materiaIdInput.value = '';
@@ -1724,13 +1644,9 @@
                         const materiaNameKey = materiaToDelete.name.toLowerCase();
                         showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar esta materia? Esto también eliminará las calificaciones de los alumnos en esta materia.', 'confirm', async (confirmed) => {
                             if (confirmed) {
-                                console.log("Intentando eliminar materia:", materiaToDelete.name, "con ID:", id);
                                 try {
-                                    // Delete materia document
                                     await deleteDoc(doc(materiasCollection, id));
-                                    console.log("Documento de materia eliminado con éxito de Firebase!");
-
-                                    // Update students: remove this materia from their enrolledMaterias and grades
+                                    
                                     for (const student of allStudents) {
                                         if (student.enrolledMaterias.includes(materiaNameKey)) {
                                             const updatedEnrolledMaterias = student.enrolledMaterias.filter(m => m !== materiaNameKey);
@@ -1741,10 +1657,8 @@
                                                 enrolledMaterias: updatedEnrolledMaterias,
                                                 grades: updatedGrades
                                             });
-                                            console.log(`Estudiante ${student.id} actualizado: materia ${materiaNameKey} eliminada`);
                                         }
                                     }
-                                    console.log("Materia y datos de estudiante asociados eliminados con éxito!");
                                     showMessageBox('Éxito', 'Materia y datos asociados eliminados con éxito.');
                                 } catch (error) {
                                     console.error("Error al eliminar materia de Firebase: ", error);
@@ -1786,12 +1700,11 @@
             const nombres = studentNombresInput.value.trim();
             const celular = studentCelularInput.value.trim();
             
-            // Get selected materias from checkboxes
             const selectedMateriasCheckboxes = Array.from(studentMateriasCheckboxGroup.querySelectorAll('input[type="checkbox"]:checked'));
             const selectedMaterias = selectedMateriasCheckboxes.map(checkbox => checkbox.value);
 
             let studentGrades = {};
-            if (id) { // If updating, preserve existing grades for unchanged materias
+            if (id) {
                 const existingStudent = allStudents.find(s => s.id === id);
                 if (existingStudent) {
                     studentGrades = existingStudent.grades;
@@ -1807,13 +1720,11 @@
                     };
                 }
             });
-            // Remove grades for unselected materias
             Object.keys(studentGrades).forEach(materiaName => {
                 if (!selectedMaterias.includes(materiaName)) {
                     delete studentGrades[materiaName];
                 }
             });
-
 
             const newStudentData = {
                 paterno,
@@ -1823,23 +1734,15 @@
                 enrolledMaterias: selectedMaterias,
                 grades: studentGrades
             };
-            console.log("Intentando guardar/actualizar alumno:", newStudentData);
-            console.log("ID del documento (si existe):", id);
-            console.log("Colección de destino:", studentsCollection.path);
 
             try {
                 if (id) {
-                    // Update existing
                     await setDoc(doc(studentsCollection, id), newStudentData);
-                    console.log("Alumno actualizado con ID: ", id);
                 } else {
-                    // Add new
-                    const docRef = await addDoc(studentsCollection, newStudentData);
-                    console.log("Alumno escrito con ID: ", docRef.id);
+                    await addDoc(studentsCollection, newStudentData);
                 }
                 registerStudentForm.reset();
                 studentIdInput.value = '';
-                // Deselect all checkboxes
                 studentMateriasCheckboxGroup.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
                     checkbox.checked = false;
                 });
@@ -1859,7 +1762,7 @@
             allStudents.forEach(student => {
                 const enrolledMateriasNames = student.enrolledMaterias.map(materiaKey => {
                     const materiaData = allMaterias[materiaKey];
-                    return materiaData ? materiaData.name : materiaKey; // Use original name if available
+                    return materiaData ? materiaData.name : materiaKey;
                 }).join(', ');
 
                 const tr = document.createElement('tr');
@@ -1886,8 +1789,7 @@
                         studentNombresInput.value = student.nombres;
                         studentCelularInput.value = student.celular;
 
-                        // Populate and select enrolled materias in the checkbox group
-                        populateStudentMateriasCheckboxes(); // Ensure checkboxes are rendered first
+                        populateStudentMateriasCheckboxes();
                         student.enrolledMaterias.forEach(enrolledMateria => {
                             const checkbox = studentMateriasCheckboxGroup.querySelector(`input[type="checkbox"][value="${enrolledMateria}"]`);
                             if (checkbox) {
@@ -1903,10 +1805,8 @@
                     const id = e.target.dataset.id;
                     showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este alumno?', 'confirm', async (confirmed) => {
                         if (confirmed) {
-                            console.log("Intentando eliminar alumno con ID:", id);
                             try {
                                 await deleteDoc(doc(studentsCollection, id));
-                                console.log("Alumno eliminado con éxito de Firebase!");
                                 showMessageBox('Éxito', 'Alumno eliminado con éxito.');
                             }
                             catch (error) {
@@ -1947,7 +1847,6 @@
                 return;
             }
 
-            // Create a temporary modal to list students for this materia
             const studentListModal = document.createElement('div');
             studentListModal.className = 'modal';
             studentListModal.innerHTML = `
@@ -2001,7 +1900,7 @@
                         const studentId = e.target.dataset.studentId;
                         const materiaName = e.target.dataset.materiaName;
                         openStudentGradesModal(studentId, materiaName);
-                        document.body.removeChild(studentListModal); // Close student list modal
+                        document.body.removeChild(studentListModal);
                     });
                 });
             }
@@ -2024,10 +1923,8 @@
 
             const studentMateriaGrades = student.grades[materiaName] || { asistencia: null, practicas: Array(6).fill(null), parciales: Array(2).fill(null) };
 
-            // Populate Asistencia
             gradeAsistenciaInput.value = studentMateriaGrades.asistencia !== null ? studentMateriaGrades.asistencia : '';
 
-            // Populate Prácticas
             practicasInputsDiv.innerHTML = '';
             for (let i = 0; i < 6; i++) {
                 const input = document.createElement('input');
@@ -2040,7 +1937,6 @@
                 practicasInputsDiv.appendChild(input);
             }
 
-            // Populate Parciales
             parcialesInputsDiv.innerHTML = '';
             for (let i = 0; i < 2; i++) {
                 const input = document.createElement('input');
@@ -2078,22 +1974,18 @@
             }
 
             const updatedGrades = {
-                ...student.grades, // Copy existing grades
-                [materiaName]: { // Update or add grades for this specific materia
+                ...student.grades,
+                [materiaName]: {
                     asistencia: newAsistencia,
                     practicas: newPracticas,
                     parciales: newParciales
                 }
             };
-            console.log("Intentando guardar calificaciones para el alumno:", student.id, "materia:", materiaName, "calificaciones:", updatedGrades[materiaName]);
-            console.log("Colección de destino:", studentsCollection.path);
-
 
             try {
                 await updateDoc(doc(studentsCollection, student.id), {
                     grades: updatedGrades
                 });
-                console.log("Calificaciones guardadas con éxito para el alumno:", student.id, "materia:", materiaName);
                 showMessageBox('Éxito', 'Calificaciones guardadas con éxito.');
                 studentGradesModal.style.display = 'none';
             } catch (error) {
@@ -2104,7 +1996,7 @@
 
         // --- Student Portal Functions ---
         function renderStudentPortal() {
-            studentMateriasGrades.innerHTML = ''; // Clear previous content
+            studentMateriasGrades.innerHTML = '';
             if (!currentLoggedInStudent) return;
 
             if (currentLoggedInStudent.enrolledMaterias.length === 0) {
@@ -2131,7 +2023,6 @@
                 }
             });
 
-            // Add event listeners to the "Calificación" buttons
             document.querySelectorAll('.view-grades-detail-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const materiaName = e.target.dataset.materiaName;
@@ -2151,13 +2042,11 @@
             let totalGrade = 0;
             let hasValidGrades = false;
 
-            // Asistencia
             if (studentGrades.asistencia !== null) {
                 totalGrade += (studentGrades.asistencia * (materia.ponderaciones.asistencia / 100));
                 hasValidGrades = true;
             }
 
-            // Prácticas
             const validPracticas = studentGrades.practicas.filter(grade => grade !== null);
             if (validPracticas.length > 0) {
                 const avgPracticas = validPracticas.reduce((sum, grade) => sum + grade, 0) / validPracticas.length;
@@ -2165,7 +2054,6 @@
                 hasValidGrades = true;
             }
 
-            // Parciales
             const validParciales = studentGrades.parciales.filter(grade => grade !== null);
             if (validParciales.length > 0) {
                 const avgParciales = validParciales.reduce((sum, grade) => sum + grade, 0) / validParciales.length;
@@ -2221,9 +2109,8 @@
         }
 
 
-        // Function to render admin panel buttons directly in the Portal tab
         function renderAdminPanelButtons() {
-            adminPanelContent.innerHTML = ''; // Clear previous content
+            adminPanelContent.innerHTML = ''; 
 
             const buttonsConfig = [
                 { text: 'Gestionar Noticias y Eventos', icon: 'fas fa-bullhorn', target: '#manageNewsEventsModal' },
@@ -2241,16 +2128,16 @@
                     const modal = document.querySelector(btn.target);
                     if (modal) {
                         modal.style.display = 'block';
-                        // Specific actions for each admin modal when opened
                         if (btn.target === '#manageNewsEventsModal') {
                             renderAdminNewsEventsTable();
                             newsEventForm.reset();
                             newsEventIdInput.value = '';
                         } else if (btn.target === '#manageLibraryModal') {
-                            populateLibraryItemCodes();
                             renderAdminLibraryItemsTable();
                             libraryItemForm.reset();
                             libraryItemIdInput.value = '';
+                            const nextCode = allLibraryItems.length + 1;
+                            libraryItemCodeDisplay.value = nextCode;
                         } else if (btn.target === '#createMateriaModal') {
                             renderAdminMateriasTable();
                             createMateriaForm.reset();
@@ -2268,237 +2155,24 @@
                 adminPanelContent.appendChild(button);
             });
 
-            // Add logout button
             const logoutButton = document.createElement('button');
             logoutButton.className = 'admin-button logout-button';
-            logoutButton.id = 'adminLogoutButton'; // Assign ID for easier reference if needed
+            logoutButton.id = 'adminLogoutButton';
             logoutButton.innerHTML = `<span class="button-icon"><i class="fas fa-sign-out-alt"></i></span> Cerrar Sesión Admin`;
             logoutButton.addEventListener('click', () => {
-                adminPanelContent.innerHTML = ''; // Clear buttons
+                adminPanelContent.innerHTML = '';
                 adminPanelContent.style.display = 'none';
                 loginCard.style.display = 'block';
                 portalIntroText.style.display = 'block';
                 portalTitle.textContent = 'Portal de Acceso';
-                userIsLoggedIn = false; // IMPORTANT: Update the flag here
-                updateLibraryTabContentVisibility(); // Update library tab content
+                userIsLoggedIn = false;
+                updateLibraryTabContentVisibility();
             });
             adminPanelContent.appendChild(logoutButton);
         }
 
 
-        // --- Existing functions (kept for compatibility) ---
-        // These functions are not currently integrated with Firebase Firestore.
-        // If you need to store 'carreras', 'registros', or 'proformaData' in Firebase,
-        // you would need to create dedicated Firestore collections for them.
-        function calculateHours(startTime, endTime) {
-            if (!startTime || !endTime) return 0;
-            const [startHour, startMinute] = startTime.split(':').map(Number);
-            const [endHour, endMinute] = endTime.split(':').map(Number);
-            const startDate = new Date(0, 0, 0, startHour, startMinute);
-            const endDate = new Date(0, 0, 0, endHour, endMinute);
-            if (endDate < startDate) {
-                endDate.setDate(endDate.getDate() + 1);
-            }
-            const diffMilliseconds = endDate / (1000 * 60 * 60) - startDate / (1000 * 60 * 60);
-            return diffMilliseconds;
-        }
-        function formatDate(dateString) {
-            const date = new Date(dateString + 'T00:00:00');
-            const day = String(date.getDate()).padStart(2, '0');
-            const monthNames = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
-            const month = monthNames[date.getMonth()];
-            const year = String(date.getFullYear()).slice(-2);
-            return `${day}/${month}/${year}`;
-        }
-        function numberToText(num) {
-            const unidades = ['', 'un', 'dos', 'tres', 'cuatro', 'cinco', 'seis', 'siete', 'ocho', 'nueve'];
-            const diez = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince', 'dieciséis', 'diecisiete', 'dieciocho', 'diecinueve'];
-            const decenas = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
-            const centenas = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
-            function toText(n) {
-                if (n === 0) return '';
-                if (n < 10) return unidades[n];
-                if (n < 20) return diez[n - 10];
-                if (n < 100) {
-                    const d = Math.floor(n / 10);
-                    const u = n % 10;
-                    if (u === 0) return decenas[d];
-                    return decenas[d] + ' y ' + unidades[u];
-                }
-                if (n < 1000) {
-                    const c = Math.floor(n / 100);
-                    const rest = n % 100;
-                    let text = centenas[c];
-                    if (c === 1 && rest !== 0) text = 'ciento';
-                    if (rest === 0) return text;
-                    return text + ' ' + toText(rest);
-                }
-                if (n === 1000) return 'mil';
-                if (n < 2000) return 'mil ' + toText(n - 1000);
-                if (n < 1000000) {
-                    const m = Math.floor(n / 1000);
-                    const rest = n % 1000;
-                    let text = toText(m) + ' mil';
-                    if (rest === 0) return text;
-                    return text + ' ' + toText(rest);
-                }
-                return 'número demasiado grande';
-            }
-            const parts = num.toFixed(2).split('.');
-            const enteros = parseInt(parts[0]);
-            const centavos = parseInt(parts[1]);
-            let textoEnteros = toText(enteros);
-            if (enteros === 1) textoEnteros = 'un';
-            let textoCentavos = toText(centavos);
-            if (centavos === 0) textoCentavos = 'cero';
-            return `Total a cancelar: **${textoEnteros}** bolivianos con **${textoCentavos}** centavos`;
-        }
-        function generateProformaHTML() {
-            const today = new Date().toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' });
-            let tbodyHTML = '';
-            let totalGeneralProforma = 0;
-            // Note: proformaData is not linked to Firestore in this version.
-            // If needed, it would require a Firestore collection for proformas.
-            // This section uses a placeholder 'proformaData' which is not managed by Firebase.
-            const proformaData = []; // Placeholder, replace with actual data if needed
-            proformaData.forEach(item => {
-                tbodyHTML += `
-                    <tr>
-                        <td>${item.instituto}</td>
-                        <td>${item.carrera}</td>
-                        <td>${item.materia}</td>
-                        <td style="text-align: right;">${item.horasTotales.toFixed(2)}</td>
-                        <td style="text-align: right;">${item.precioPorHora.toFixed(2)}</td>
-                        <td style="text-align: right;">${item.total.toFixed(2)}</td>
-                    </tr>
-                `;
-                totalGeneralProforma += item.total;
-            });
-            const tfootHTML = `
-                <tr class="consulta-total-row">
-                    <td colspan="5" style="text-align: left; font-weight: bold;">TOTAL DE LA PROFORMA</td>
-                    <td style="text-align: right; font-weight: bold;">${totalGeneralProforma.toFixed(2)}</td>
-                </tr>
-            `;
-            const totalText = `Total a cancelar: <strong>${totalGeneralProforma.toFixed(2)}</strong> Bolivianos`;
-            const literalText = numberToText(totalGeneralProforma);
-            return `
-                <div class="pdf-content">
-                    <div class="pdf-header">
-                        <h1>PROFORMA E INFORME DE TRABAJO</h1>
-                        <p>Fecha de emisión: ${today}</p>
-                        <p>Generado por: El sistema de gestión de trabajo</p>
-                    </div>
-                    <div class="pdf-section">
-                        <h2>Detalle de la Proforma</h2>
-                        <table class="registros-table for-pdf consulta-table">
-                            <thead>
-                                <tr>
-                                    <th>Instituto</th>
-                                    <th>Carrera</th>
-                                    <th>Materia</th>
-                                    <th style="text-align: right;">Horas Totales</th>
-                                    <th style="text-align: right;">Precio por Hora</th>
-                                    <th style="text-align: right;">Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tbodyHTML}
-                            </tbody>
-                            <tfoot>
-                                ${tfootHTML}
-                            </tfoot>
-                        </table>
-                        <div class="proforma-total-container">
-                            <p>${totalText}</p>
-                            <p class="proforma-total-literal">${literalText}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-        function generateRegistrosHTML() {
-            let tbodyHTML = '';
-            let totalHorasTrabajadas = 0;
-            // Note: savedData.registros is not linked to Firestore in this version.
-            // If needed, it would require a Firestore collection for registros.
-            // This section uses a placeholder 'savedData.registros' which is not managed by Firebase.
-            const registros = []; // Placeholder, replace with actual data if needed
-            const registrosAgrupados = registros.reduce((acc, reg, index) => {
-                const materia = reg.materia;
-                if (!acc[materia]) {
-                    acc[materia] = [];
-                }
-                acc[materia].push({...reg, originalIndex: index});
-                return acc;
-            }, {});
-            const materiasOrdenadas = Object.keys(registrosAgrupados).sort();
-            materiasOrdenadas.forEach(materia => {
-                const registrosDeMateria = registrosAgrupados[materia];
-                registrosDeMateria.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-                tbodyHTML += `<tr><td class="materia-group-header" colspan="9">${materia.toUpperCase()}</td></tr>`;
-                registrosDeMateria.forEach((reg, index) => {
-                    // Note: savedData.carreras is not linked to Firestore in this version.
-                    const carreras = {}; // Placeholder, replace with actual data if needed
-                    const carreraInfo = carreras[reg.instituto]?.carreras[reg.carrera];
-                    const carreraNombre = carreraInfo?.nombre || reg.carrera;
-                    const modalidad = carreraInfo?.modalidad || 'N/A';
-                    const horasTrabajadas = calculateHours(reg.hora_ingreso, reg.hora_salida);
-                    totalHorasTrabajadas += horasTrabajadas;
-                    tbodyHTML += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${carreraNombre}</td>
-                            <td>${formatDate(reg.fecha)}</td>
-                            <td>${reg.hora_ingreso}</td>
-                            <td>${reg.hora_salida}</td>
-                            <td style="text-align: right;">${horasTrabajadas.toFixed(2)}</td>
-                            <td>${reg.reemplazo ? 'Sí' : 'No'}</td>
-                            <td>${modalidad}</td>
-                            <td>${reg.descripcion || 'Sin descripción'}</td>
-                        </tr>
-                    `;
-                });
-            });
-            const tfootHTML = `
-                <tr class="consulta-total-row">
-                    <td colspan="5" style="text-align: left; font-weight: bold;">TOTAL DE HORAS</td>
-                    <td style="text-align: right; font-weight: bold;">${totalHorasTrabajadas.toFixed(2)}</td>
-                    <td colspan="3"></td>
-                </tr>
-            `;
-            return `
-                <div class="pdf-content">
-                    <div class="pdf-section">
-                        <h2>Registro Detallado de Horas Trabajadas</h2>
-                        <table class="registros-table for-pdf">
-                            <thead>
-                                <tr>
-                                    <th>Nro.</th>
-                                    <th>Carrera</th>
-                                    <th>Fecha</th>
-                                    <th>Hora Ingreso</th>
-                                    <th>Hora Salida</th>
-                                    <th style="text-align: right;">Horas Trabajadas</th>
-                                    <th>Reemplazo</th>
-                                    <th>Modalidad</th>
-                                    <th>Descripción</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tbodyHTML}
-                            </tbody>
-                            <tfoot>
-                                ${tfootHTML}
-                            </tfoot>
-                        </table>
-                    </div>
-                </div>
-            `;
-        }
-
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize DOM elements here
             navItems = document.querySelectorAll('.nav-item');
             tabContents = document.querySelectorAll('.tab-content');
             actionButtons = document.querySelectorAll('.action-button');
@@ -2530,7 +2204,7 @@
             manageLibraryModal = document.getElementById('manageLibraryModal');
             libraryItemForm = document.getElementById('library-item-form');
             libraryItemIdInput = document.getElementById('library-item-id');
-            libraryItemCodeSelect = document.getElementById('library-item-code');
+            libraryItemCodeDisplay = document.getElementById('library-item-code-display');
             libraryItemTitleInput = document.getElementById('library-item-title');
             libraryItemTypeSelect = document.getElementById('library-item-type');
             libraryItemLinkInput = document.getElementById('library-item-link');
@@ -2575,20 +2249,16 @@
             detailMateriaName = document.getElementById('detail-materia-name');
             gradeDetailsContent = document.getElementById('grade-details-content');
 
-            // Library search inputs
             practicasSearchInput = document.getElementById('practicas-search');
             librosSearchInput = document.getElementById('libros-search');
             videosSearchInput = document.getElementById('videos-search');
             softwareSearchInput = document.getElementById('software-search');
 
-            // Library access control DOM elements
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
 
-            // Initial state: hide library content, show access required message
             updateLibraryTabContentVisibility();
 
-            // --- Event Listeners ---
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     navItems.forEach(nav => nav.classList.remove('active'));
@@ -2605,64 +2275,50 @@
                     const modal = document.querySelector(modalTargetId);
                     if (modal) {
                         modal.style.display = 'block';
-                        // Call the rendering function specifically for library modals
                         if (modalTargetId === '#practicasModal') {
-                            practicasSearchInput.value = ''; // Clear search input
-                            filterLibraryItems('practica', ''); // Show all initially
+                            practicasSearchInput.value = '';
+                            filterLibraryItems('practica', '');
                         } else if (modalTargetId === '#librosModal') {
-                            librosSearchInput.value = ''; // Clear search input
-                            filterLibraryItems('libro', ''); // Show all initially
+                            librosSearchInput.value = '';
+                            filterLibraryItems('libro', '');
                         } else if (modalTargetId === '#videosModal') {
-                            videosSearchInput.value = ''; // Clear search input
-                            filterLibraryItems('video', ''); // Show all initially
+                            videosSearchInput.value = '';
+                            filterLibraryItems('video', '');
                         } else if (modalTargetId === '#softwareModal') {
-                            softwareSearchInput.value = ''; // Clear search input
-                            filterLibraryItems('software', ''); // Show all initially
+                            softwareSearchInput.value = '';
+                            filterLibraryItems('software', '');
                         }
                     }
                 });
             });
 
-            // Close buttons for all modals
             closeButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const modal = button.closest('.modal');
                     if (modal) {
                         modal.style.display = 'none';
-                        // Reset forms when closing modals
-                        if (modal.id === 'news-event-form') newsEventForm.reset();
-                        if (modal.id === 'library-item-form') libraryItemForm.reset();
-                        if (modal.id === 'create-materia-form') createMateriaForm.reset();
-                        if (modal.id === 'register-student-form') registerStudentForm.reset();
-                        // Also reset hidden IDs
-                        newsEventIdInput.value = '';
-                        libraryItemIdInput.value = '';
-                        materiaIdInput.value = '';
-                        studentIdInput.value = '';
+                        const form = modal.querySelector('form');
+                        if (form) form.reset();
+                        
+                        const hiddenId = modal.querySelector('input[type="hidden"]');
+                        if(hiddenId) hiddenId.value = '';
                     }
                 });
             });
 
-            // Close modals by clicking outside (except for the custom message box)
             window.addEventListener('click', (event) => {
                 modals.forEach(modal => {
                     if (event.target == modal && modal.id !== 'messageBoxModal') {
                         modal.style.display = 'none';
-                        // Reset forms when closing modals by clicking outside
-                        if (modal.id === 'news-event-form') newsEventForm.reset();
-                        if (modal.id === 'library-item-form') libraryItemForm.reset();
-                        if (modal.id === 'create-materia-form') createMateriaForm.reset();
-                        if (modal.id === 'register-student-form') registerStudentForm.reset();
-                        // Also reset hidden IDs
-                        newsEventIdInput.value = '';
-                        libraryItemIdInput.value = '';
-                        materiaIdInput.value = '';
-                        studentIdInput.value = '';
+                        const form = modal.querySelector('form');
+                        if (form) form.reset();
+                        
+                        const hiddenId = modal.querySelector('input[type="hidden"]');
+                        if(hiddenId) hiddenId.value = '';
                     }
                 });
             });
 
-            // --- Admin/Student Login and Logout ---
             if (togglePassword && passwordInput) {
                 togglePassword.addEventListener('click', function () {
                     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -2678,23 +2334,20 @@
                     const username = document.getElementById('username').value;
                     const password = document.getElementById('password').value;
 
-                    // Admin credentials (case-insensitive)
                     const adminUsername = 'douglas';
                     const adminPassword = 'd5720';
 
                     if (username.toLowerCase() === adminUsername.toLowerCase() && password.toLowerCase() === adminPassword.toLowerCase()) {
-                        // Admin Login
-                        userIsLoggedIn = true; // Set logged in flag
+                        userIsLoggedIn = true;
                         loginCard.style.display = 'none';
                         portalIntroText.style.display = 'none';
                         portalTitle.textContent = 'Panel de Administración';
-                        adminPanelContent.style.display = 'flex'; // Use flex for button group
-                        studentPortalContent.style.display = 'none'; // Hide student portal if visible
-                        renderAdminPanelButtons(); // Render buttons directly in the content area
-                        loginForm.reset(); // Clear login form
-                        updateLibraryTabContentVisibility(); // Update library tab content visibility
+                        adminPanelContent.style.display = 'flex';
+                        studentPortalContent.style.display = 'none';
+                        renderAdminPanelButtons();
+                        loginForm.reset();
+                        updateLibraryTabContentVisibility();
                     } else {
-                        // Try Student Login
                         const studentQuery = query(studentsCollection, where("nombres", "==", username), where("celular", "==", password));
                         try {
                             const studentSnapshot = await getDocs(studentQuery);
@@ -2702,16 +2355,16 @@
                                 const studentDoc = studentSnapshot.docs[0];
                                 currentLoggedInStudent = { id: studentDoc.id, ...studentDoc.data() };
 
-                                userIsLoggedIn = true; // Set logged in flag
+                                userIsLoggedIn = true;
                                 loginCard.style.display = 'none';
                                 portalIntroText.style.display = 'none';
-                                adminPanelContent.style.display = 'none'; // Hide admin panel if visible
+                                adminPanelContent.style.display = 'none';
                                 portalTitle.textContent = 'Portal del Estudiante';
-                                studentPortalContent.style.display = 'flex'; // Show student portal
+                                studentPortalContent.style.display = 'flex';
                                 studentPortalName.textContent = `${currentLoggedInStudent.nombres} ${currentLoggedInStudent.paterno}`;
-                                renderStudentPortal(); // Render student's enrolled materias and grades
-                                loginForm.reset(); // Clear login form
-                                updateLibraryTabContentVisibility(); // Update library tab content visibility
+                                renderStudentPortal();
+                                loginForm.reset();
+                                updateLibraryTabContentVisibility();
                             } else {
                                 showMessageBox('Error de Inicio de Sesión', 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.');
                             }
@@ -2723,18 +2376,16 @@
                 });
             }
 
-            // Student Logout Button
             studentLogoutButton.addEventListener('click', () => {
-                currentLoggedInStudent = null; // Clear logged-in student
-                userIsLoggedIn = false; // Set logged out flag
-                studentPortalContent.style.display = 'none'; // Hide student portal
-                loginCard.style.display = 'block'; // Show login form
+                currentLoggedInStudent = null;
+                userIsLoggedIn = false;
+                studentPortalContent.style.display = 'none';
+                loginCard.style.display = 'block';
                 portalIntroText.style.display = 'block';
                 portalTitle.textContent = 'Portal de Acceso';
-                updateLibraryTabContentVisibility(); // Update library tab content visibility
+                updateLibraryTabContentVisibility();
             });
 
-            // Function to toggle library content visibility
             function updateLibraryTabContentVisibility() {
                 if (userIsLoggedIn) {
                     libraryContentDiv.style.display = 'block';
@@ -2745,16 +2396,16 @@
                 }
             }
 
-            // Form submissions
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
             libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
             registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
             gradeForm.addEventListener('submit', handleGradeFormSubmit);
 
-            // Call setupFirebaseAndAuth to initialize everything
             setupFirebaseAndAuth();
         });
     </script>
 </body>
 </html>
+
+
