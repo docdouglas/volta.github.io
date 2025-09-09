@@ -34,7 +34,6 @@
             min-height: 100vh;
             background-color: var(--secondary-color);
         }
-
         /* Ajustes para tabletas y laptops */
         @media (min-width: 768px) {
             body {
@@ -47,7 +46,6 @@
                 margin: auto; /* Centra la aplicación en pantallas grandes */
             }
         }
-
         .app-container {
             width: 100%;
             max-width: 380px; /* Ancho máximo reducido para simular móvil por defecto */
@@ -58,7 +56,6 @@
             box-shadow: 0 0 25px var(--shadow-color);
             position: relative;
         }
-
         .content {
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
             overflow-y: auto; /* Habilita el scroll si el contenido es largo */
@@ -286,7 +283,6 @@
             background-color: #c9c9c9;
             transform: translateY(-2px);
         }
-
         /* Estilos específicos para el formulario de inicio de sesión (Pestaña Portal) */
         .login-card {
             background-color: #fff;
@@ -361,7 +357,6 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
         }
-
         /* Estilo para la imagen en la sección de inicio */
         .hero-image {
             max-width: 100%;
@@ -374,7 +369,6 @@
             margin-bottom: 20px; /* Espacio reducido debajo de la imagen */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra suave para la imagen */
         }
-
         /* Estilos para botones de admin */
         .admin-button-group {
             display: flex;
@@ -409,7 +403,6 @@
             background-color: #d32f2f;
             box-shadow: 0 5px 15px rgba(244, 67, 54, 0.3);
         }
-
         /* Estilos para tablas de contenido */
         .table-responsive {
             overflow-x: auto; /* Permite el desplazamiento horizontal */
@@ -417,7 +410,6 @@
             border-radius: 8px; /* Bordes redondeados para el contenedor de la tabla */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra ligera */
         }
-
         .content-table {
             width: 100%;
             border-collapse: collapse;
@@ -462,7 +454,6 @@
         }
         .content-table .actions-column .edit-btn:hover { background-color: #e68a00; }
         .content-table .actions-column .delete-btn:hover { background-color: #d32f2f; }
-
         /* Estilos para el formulario de crear materia y registro de alumnos */
         .form-group {
             margin-bottom: 15px;
@@ -505,7 +496,6 @@
         .form-group button:hover {
             background-color: var(--button-hover-bg);
         }
-
         /* Estilos para el recuadro de materias con checkboxes */
         .materias-checkbox-group {
             border: 1px solid #ccc;
@@ -528,7 +518,6 @@
             transform: scale(1.2); /* Make checkbox slightly larger */
             cursor: pointer;
         }
-
         /* Alineación para noticias y eventos */
         .news-event-title {
             text-align: center;
@@ -542,7 +531,6 @@
             font-size: 1em;
             color: var(--text-color);
         }
-
         /* Estilos para el portal del estudiante */
         .student-portal-section {
             display: flex;
@@ -616,14 +604,12 @@
         <main class="content">
             <section id="inicio" class="tab-content active">
                 <h2><i class="fas fa-home" style="margin-right: 10px;"></i>Bienvenido a Volta</h2>
-                
                 <img src="novell.png" alt="Imagen de Novell" class="hero-image">
                 <div id="news-events-display">
                     </div>
             </section>
             <section id="biblioteca" class="tab-content">
                 <h2><i class="fas fa-book-open" style="margin-right: 10px;"></i>Biblioteca Digital</h2>
-                
                 <div id="library-access-required" style="text-align: center; padding: 5px;">
                     <img src="volta.png" alt="Volta Logo" style="max-width: 200px; margin-bottom: 5px; border-radius: 5px;">
                     <p style="color: var(--primary-color); font-weight: bold; font-size: 1.1em;">
@@ -634,7 +620,6 @@
                         desde la pestaña **"Portal"**. Una vez que hayas iniciado sesión, podrás explorar todos nuestros recursos.
                     </p>
                 </div>
-
                 <div id="library-content" style="display: none;">
                     <p>Explora nuestros recursos digitales: libros, videos y software.</p>
                     <div class="button-group">
@@ -666,7 +651,6 @@
                         <div class="input-group">
                             <input type="text" id="username" name="username" placeholder="Tu nombre de usuario" required>
                         </div>
-
                         <label for="password">Contraseña</label>
                         <div class="input-group">
                             <input type="password" id="password" name="password" placeholder="Tu contraseña" required>
@@ -677,10 +661,8 @@
                         <button type="submit">Iniciar Sesión</button>
                     </form>
                 </div>
-
                 <div id="admin-panel-content" class="admin-button-group" style="display: none;">
                     </div>
-
                 <div id="student-portal-content" class="student-portal-section" style="display: none;">
                     <h3>Bienvenido, <span id="student-portal-name"></span>!</h3>
                     <p>Tus materias registradas y calificaciones:</p>
@@ -707,7 +689,6 @@
             </button>
         </nav>
     </div>
-
     <div id="noticiasModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -720,7 +701,6 @@
             </div>
         </div>
     </div>
-
     <div id="eventosModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -733,7 +713,6 @@
             </div>
         </div>
     </div>
-
     <div id="practicasModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -750,7 +729,6 @@
             </div>
         </div>
     </div>
-
     <div id="librosModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -767,7 +745,6 @@
             </div>
         </div>
     </div>
-
     <div id="videosModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -784,7 +761,6 @@
             </div>
         </div>
     </div>
-
     <div id="softwareModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -801,7 +777,6 @@
             </div>
         </div>
     </div>
-
     <div id="manageNewsEventsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -838,7 +813,6 @@
             </div>
         </div>
     </div>
-
     <div id="manageLibraryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -882,7 +856,6 @@
             </div>
         </div>
     </div>
-
     <div id="createMateriaModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -919,7 +892,6 @@
             </div>
         </div>
     </div>
-
     <div id="registerStudentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -958,7 +930,6 @@
             </div>
         </div>
     </div>
-
     <div id="listMateriasModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -969,7 +940,6 @@
                 </div>
         </div>
     </div>
-
     <div id="studentGradesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -978,20 +948,16 @@
             </div>
             <p>Alumno: <strong id="current-student-name-grades-modal"></strong></p>
             <p>Materia: <strong id="current-materia-name-grades-modal"></strong></p>
-
             <form id="grade-form" class="form-group">
                 <input type="hidden" id="grade-student-id">
                 <input type="hidden" id="grade-materia-name">
-
                 <label for="grade-asistencia">Asistencia:</label>
                 <input type="number" id="grade-asistencia" min="0" max="100" placeholder="Puntaje de Asistencia">
-
                 <div style="margin-top: 15px;">
                     <label>Prácticas (Puntaje 0-100):</label>
                     <div id="practicas-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                         </div>
                 </div>
-
                 <div style="margin-top: 15px;">
                     <label>Parciales (Puntaje 0-100):</label>
                     <div id="parciales-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
@@ -1001,7 +967,6 @@
             </form>
         </div>
     </div>
-
     <div id="studentGradeDetailModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1017,7 +982,6 @@
             </div>
         </div>
     </div>
-
     <div id="messageBoxModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1030,14 +994,11 @@
             </div>
         </div>
     </div>
-
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, where, getDocs, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
         console.log("Script loaded and DOMContentLoaded event fired.");
-
         // Global variables provided by the Canvas environment
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
@@ -1050,34 +1011,28 @@
         };
         // FIX: Corrected typo from __initialAuthToken to __initial_auth_token
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-
         let userId = null; // Will store the authenticated user ID
         let currentLoggedInStudent = null; // To store the currently logged-in student object
         let userIsLoggedIn = false; // New flag to track login status
-
         // --- Firebase Collections References ---
         const getCollectionRef = (collectionName) => {
             return collection(db, `artifacts/${appId}/public/data/${collectionName}`);
         };
-
         const newsCollection = getCollectionRef('news');
         const eventsCollection = getCollectionRef('events');
         const libraryItemsCollection = getCollectionRef('libraryItems');
         const materiasCollection = getCollectionRef('materias');
         const studentsCollection = getCollectionRef('students');
-
         // --- Data Storage (will be populated by Firestore listeners) ---
         let allNews = [];
         let allEvents = [];
         let allLibraryItems = [];
         let allMaterias = {}; // Keyed by lowercased materia name
         let allStudents = [];
-
         // --- DOM Elements (Declared globally) ---
         let navItems, tabContents, actionButtons, modals, closeButtons;
         let portalTitle, portalIntroText, loginCard, togglePassword, passwordInput, loginForm, adminPanelContent;
@@ -1092,8 +1047,6 @@
         let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
-
-
         // Custom message box function (updated to include a callback for confirmation)
         function showMessageBox(title, message, type = 'alert', callback = null) {
             const modal = document.getElementById('messageBoxModal');
@@ -1101,16 +1054,13 @@
             document.getElementById('messageBoxContent').textContent = message;
             const confirmBtn = document.getElementById('messageBoxConfirmBtn');
             const closeBtn = document.getElementById('messageBoxCloseBtn');
-
             // Reset event listeners to prevent multiple bindings
             const cloneConfirmBtn = confirmBtn.cloneNode(true);
             confirmBtn.parentNode.replaceChild(cloneConfirmBtn, confirmBtn);
             const newConfirmBtn = cloneConfirmBtn;
-
             const cloneCloseBtn = closeBtn.cloneNode(true);
             closeBtn.parentNode.replaceChild(cloneCloseBtn, closeBtn);
             const newCloseBtn = cloneCloseBtn;
-
             // Show/hide confirm button based on type
             if (type === 'confirm') {
                 newConfirmBtn.style.display = 'inline-block';
@@ -1119,40 +1069,33 @@
                 newConfirmBtn.style.display = 'inline-block'; // Always show for 'alert'
                 newConfirmBtn.textContent = 'Aceptar';
             }
-
             const closeHandler = () => {
                 modal.style.display = 'none';
                 newConfirmBtn.removeEventListener('click', confirmClickHandler);
                 newCloseBtn.removeEventListener('click', closeClickHandler);
                 modal.onclick = null; // Remove outside click listener
             };
-
             const confirmClickHandler = () => {
                 closeHandler();
                 if (callback) {
                     callback(true); // Indicate confirmation
                 }
             };
-
             const closeClickHandler = () => {
                 closeHandler();
                 if (callback && type === 'confirm') {
                     callback(false); // Indicate cancellation for confirm type
                 }
             };
-
             newConfirmBtn.addEventListener('click', confirmClickHandler);
             newCloseBtn.addEventListener('click', closeClickHandler);
-
             modal.onclick = (event) => {
                 if (event.target === modal && modal.id !== 'messageBoxModal') { 
                     closeHandler();
                 }
             };
-
             modal.style.display = 'block';
         }
-
         // --- Firebase Setup and Auth ---
         async function setupFirebaseAndAuth() {
             try {
@@ -1163,7 +1106,6 @@
                     await signInAnonymously(auth);
                     console.log("Signed in anonymously.");
                 }
-
                 onAuthStateChanged(auth, (user) => {
                     if (user) {
                         userId = user.uid;
@@ -1179,86 +1121,134 @@
                 showMessageBox('Error de Autenticación', 'No se pudo iniciar sesión en Firebase. Algunas funciones podrían no estar disponibles.');
             }
         }
-
         // --- Firestore Listeners ---
         function setupFirestoreListeners() {
+            // Listener for News
             onSnapshot(newsCollection, (snapshot) => {
-                allNews = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log("News updated:", allNews);
-                renderNewsEvents();
-                renderAdminNewsEventsTable();
+                try {
+                    allNews = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return { id: doc.id, ...data };
+                    });
+                    console.log("✅ News loaded successfully. Count:", allNews.length);
+                    renderNewsEvents();
+                    renderAdminNewsEventsTable();
+                } catch (error) {
+                    console.error("❌ Error processing news data:", error);
+                    showMessageBox('Error de Carga', 'No se pudieron cargar las noticias.');
+                }
             }, (error) => {
-                console.error("Error fetching news:", error);
+                console.error("❌ Error fetching news from Firestore:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar las noticias.');
             });
-
+            // Listener for Events
             onSnapshot(eventsCollection, (snapshot) => {
-                allEvents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log("Events updated:", allEvents);
-                renderNewsEvents();
-                renderAdminNewsEventsTable();
+                try {
+                    allEvents = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return { id: doc.id, ...data };
+                    });
+                    console.log("✅ Events loaded successfully. Count:", allEvents.length);
+                    renderNewsEvents();
+                    renderAdminNewsEventsTable();
+                } catch (error) {
+                    console.error("❌ Error processing events data:", error);
+                    showMessageBox('Error de Carga', 'No se pudieron cargar los eventos.');
+                }
             }, (error) => {
-                console.error("Error fetching events:", error);
+                console.error("❌ Error fetching events from Firestore:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar los eventos.');
             });
-
+            // Listener for Library Items
             onSnapshot(libraryItemsCollection, (snapshot) => {
-                allLibraryItems = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                // Sort by the new numerical code
-                allLibraryItems.sort((a, b) => a.code - b.code);
-                console.log("Library Items updated and sorted:", allLibraryItems);
-                renderAdminLibraryItemsTable();
-                renderLibraryItemsInModals();
+                try {
+                    allLibraryItems = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        return { id: doc.id, ...data };
+                    });
+                    // Sort by the new numerical code
+                    allLibraryItems.sort((a, b) => a.code - b.code);
+                    console.log("✅ Library Items loaded and sorted. Count:", allLibraryItems.length);
+                    renderAdminLibraryItemsTable();
+                    renderLibraryItemsInModals();
+                } catch (error) {
+                    console.error("❌ Error processing library items data:", error);
+                    showMessageBox('Error de Carga', 'No se pudieron cargar los ítems de la biblioteca.');
+                }
             }, (error) => {
-                console.error("Error fetching library items:", error);
+                console.error("❌ Error fetching library items from Firestore:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar los ítems de la biblioteca.');
             });
-
+            // Listener for Materias (Subjects)
             onSnapshot(materiasCollection, (snapshot) => {
-                allMaterias = {}; // Clear previous data
-                snapshot.docs.forEach(doc => {
-                    const materiaData = { id: doc.id, ...doc.data() };
-                    allMaterias[materiaData.name.toLowerCase()] = materiaData;
-                });
-                console.log("Materias updated:", allMaterias);
-                renderAdminMateriasTable();
-                populateStudentMateriasCheckboxes();
-                renderMateriasListButtons();
-                if (currentLoggedInStudent) {
-                    renderStudentPortal();
+                try {
+                    allMaterias = {}; // Clear previous data
+                    snapshot.docs.forEach(doc => {
+                        const materiaData = { id: doc.id, ...doc.data() };
+                        // Robust handling: Only add if 'name' field exists and is a string
+                        if (materiaData.name && typeof materiaData.name === 'string') {
+                            allMaterias[materiaData.name.toLowerCase()] = materiaData;
+                        } else {
+                            console.warn("⚠️ Documento de materia sin nombre válido encontrado:", doc.id, materiaData);
+                        }
+                    });
+                    console.log("✅ Materias loaded successfully. Count:", Object.keys(allMaterias).length);
+                    renderAdminMateriasTable();
+                    populateStudentMateriasCheckboxes();
+                    renderMateriasListButtons();
+                    if (currentLoggedInStudent) {
+                        renderStudentPortal();
+                    }
+                } catch (error) {
+                    console.error("❌ Error processing materias data:", error);
+                    showMessageBox('Error de Carga', 'No se pudieron cargar las materias.');
                 }
             }, (error) => {
-                console.error("Error fetching materias:", error);
+                console.error("❌ Error fetching materias from Firestore:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar las materias.');
             });
-
+            // Listener for Students
             onSnapshot(studentsCollection, (snapshot) => {
-                allStudents = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                console.log("Students updated:", allStudents);
-                renderAdminStudentsTable();
-                if (currentLoggedInStudent) {
-                    const updatedStudent = allStudents.find(s => s.id === currentLoggedInStudent.id);
-                    if (updatedStudent) {
-                        currentLoggedInStudent = updatedStudent;
-                        renderStudentPortal();
-                    } else {
-                        currentLoggedInStudent = null;
-                        studentPortalContent.style.display = 'none';
-                        loginCard.style.display = 'block';
-                        portalIntroText.style.display = 'block';
-                        portalTitle.textContent = 'Portal de Acceso';
-                        userIsLoggedIn = false;
-                        updateLibraryTabContentVisibility();
-                        showMessageBox('Sesión Terminada', 'Tu cuenta de estudiante ha sido eliminada o modificada. Por favor, inicia sesión de nuevo.');
+                try {
+                    allStudents = snapshot.docs.map(doc => {
+                        const data = doc.data();
+                        // Ensure 'enrolledMaterias' is always an array
+                        if (!Array.isArray(data.enrolledMaterias)) {
+                            data.enrolledMaterias = [];
+                        }
+                        // Ensure 'grades' is always an object
+                        if (typeof data.grades !== 'object' || data.grades === null) {
+                            data.grades = {};
+                        }
+                        return { id: doc.id, ...data };
+                    });
+                    console.log("✅ Students loaded successfully. Count:", allStudents.length);
+                    renderAdminStudentsTable();
+                    if (currentLoggedInStudent) {
+                        const updatedStudent = allStudents.find(s => s.id === currentLoggedInStudent.id);
+                        if (updatedStudent) {
+                            currentLoggedInStudent = updatedStudent;
+                            renderStudentPortal();
+                        } else {
+                            currentLoggedInStudent = null;
+                            studentPortalContent.style.display = 'none';
+                            loginCard.style.display = 'block';
+                            portalIntroText.style.display = 'block';
+                            portalTitle.textContent = 'Portal de Acceso';
+                            userIsLoggedIn = false;
+                            updateLibraryTabContentVisibility();
+                            showMessageBox('Sesión Terminada', 'Tu cuenta de estudiante ha sido eliminada o modificada. Por favor, inicia sesión de nuevo.');
+                        }
                     }
+                } catch (error) {
+                    console.error("❌ Error processing students data:", error);
+                    showMessageBox('Error de Carga', 'No se pudieron cargar los datos de los alumnos.');
                 }
             }, (error) => {
-                console.error("Error fetching students:", error);
+                console.error("❌ Error fetching students from Firestore:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar los datos de los alumnos.');
             });
         }
-
-
         // --- Admin: Manage News and Events ---
         async function handleNewsEventFormSubmit(e) {
             e.preventDefault();
@@ -1266,10 +1256,8 @@
             const type = newsEventTypeInput.value;
             const title = newsEventTitleInput.value;
             const heading = newsEventHeadingInput.value;
-
             const newItem = { type, title, heading };
             console.log("Intentando guardar/actualizar noticia/evento:", newItem);
-
             try {
                 const targetCollection = type === 'news' ? newsCollection : eventsCollection;
                 if (id) {
@@ -1285,7 +1273,6 @@
                 showMessageBox('Error', 'Error al guardar la noticia/evento. Por favor, inténtalo de nuevo.');
             }
         }
-
         function renderAdminNewsEventsTable() {
             newsEventsAdminTbody.innerHTML = '';
             const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => {
@@ -1294,12 +1281,10 @@
                 }
                 return a.type === 'news' ? -1 : 1;
             });
-
             if (allCombinedNewsEvents.length === 0) {
                 newsEventsAdminTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-text-color);">No hay noticias o eventos registrados.</td></tr>';
                 return;
             }
-
             allCombinedNewsEvents.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1313,7 +1298,6 @@
                 `;
                 newsEventsAdminTbody.appendChild(tr);
             });
-
             newsEventsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1326,7 +1310,6 @@
                     }
                 });
             });
-
             newsEventsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1346,11 +1329,9 @@
                 });
             });
         }
-
         function renderNewsEvents() {
             newsEventsDisplay.innerHTML = '';
             const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => a.id.localeCompare(b.id));
-
             if (allCombinedNewsEvents.length === 0) {
                 newsEventsDisplay.innerHTML = '<p style="text-align: center; color: var(--muted-text-color);">No hay noticias o eventos para mostrar.</p>';
             } else {
@@ -1365,8 +1346,6 @@
                 });
             }
         }
-
-
         // --- Admin: Manage Library Items ---
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
@@ -1375,7 +1354,6 @@
             const type = libraryItemTypeSelect.value;
             const link = libraryItemLinkInput.value;
             const description = libraryItemDescriptionInput.value;
-
             let code;
             if (id) {
                 const existingItem = allLibraryItems.find(item => item.id === id);
@@ -1387,10 +1365,8 @@
             } else {
                 code = allLibraryItems.length > 0 ? Math.max(...allLibraryItems.map(item => item.code)) + 1 : 1;
             }
-
             const newItem = { code, title, type, link, description };
             console.log("Intentando guardar/actualizar ítem de biblioteca:", newItem);
-
             try {
                 if (id) {
                     await setDoc(doc(libraryItemsCollection, id), newItem);
@@ -1407,7 +1383,6 @@
                 showMessageBox('Error', 'Error al guardar el ítem de biblioteca. Por favor, inténtalo de nuevo.');
             }
         }
-
         function renderAdminLibraryItemsTable() {
             libraryItemsAdminTbody.innerHTML = '';
             if (allLibraryItems.length === 0) {
@@ -1428,7 +1403,6 @@
                 `;
                 libraryItemsAdminTbody.appendChild(tr);
             });
-
             libraryItemsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1443,7 +1417,6 @@
                     }
                 });
             });
-
             libraryItemsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1455,20 +1428,16 @@
                                 return;
                             }
                             const deletedItemCode = itemToDelete.code;
-
                             try {
                                 const batch = writeBatch(db);
-
                                 const docToDeleteRef = doc(libraryItemsCollection, id);
                                 batch.delete(docToDeleteRef);
-
                                 const itemsToUpdate = allLibraryItems.filter(item => item.code > deletedItemCode);
                                 itemsToUpdate.forEach(item => {
                                     const itemRef = doc(libraryItemsCollection, item.id);
                                     const newCode = item.code - 1;
                                     batch.update(itemRef, { code: newCode });
                                 });
-
                                 await batch.commit();
                                 showMessageBox('Éxito', 'Ítem eliminado y re-enumerado con éxito.');
                             } catch (error) {
@@ -1480,32 +1449,26 @@
                 });
             });
         }
-        
         window.filterLibraryItems = function(type, searchQuery) {
             renderLibraryItemsInModals(type, searchQuery);
         };
-
         function renderLibraryItemsInModals(targetType = null, searchQuery = '') {
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
             document.getElementById('videos-list').innerHTML = '';
             document.getElementById('software-list').innerHTML = '';
-
             const groupedItems = { practica: [], libro: [], video: [], software: [] };
             allLibraryItems.forEach(item => {
                 if (groupedItems[item.type]) {
                     groupedItems[item.type].push(item);
                 }
             });
-
             for (const type in groupedItems) {
                 const containerId = `${type}s-list`;
                 const container = document.getElementById(containerId);
-                
                 if (targetType && targetType !== type) {
                     continue;
                 }
-
                 let itemsToRender = groupedItems[type];
                 if (searchQuery) {
                     const lowerCaseQuery = searchQuery.toLowerCase();
@@ -1514,7 +1477,6 @@
                         (item.description && item.description.toLowerCase().includes(lowerCaseQuery))
                     );
                 }
-
                 if (container) {
                     if (itemsToRender.length === 0) {
                         container.innerHTML = `<p style="text-align: center; color: var(--muted-text-color);">No hay ${type}s para mostrar.</p>`;
@@ -1553,8 +1515,6 @@
                 }
             }
         }
-
-
         // --- Admin: Create Materia ---
         async function handleCreateMateriaFormSubmit(e) {
             e.preventDefault();
@@ -1564,12 +1524,10 @@
             const ponderacionAsistencia = parseInt(ponderacionAsistenciaInput.value);
             const ponderacionPracticas = parseInt(ponderacionPracticasInput.value);
             const ponderacionParciales = parseInt(ponderacionParcialesInput.value);
-
             if (ponderacionAsistencia + ponderacionPracticas + ponderacionParciales !== 100) {
                 showMessageBox('Error de Ponderación', 'La suma de las ponderaciones debe ser 100%.');
                 return;
             }
-
             const newMateriaData = {
                 name: name,
                 ponderaciones: {
@@ -1578,7 +1536,6 @@
                     parciales: ponderacionParciales
                 }
             };
-            
             try {
                 if (id) {
                     await setDoc(doc(materiasCollection, id), newMateriaData);
@@ -1597,7 +1554,6 @@
                 showMessageBox('Error', 'Error al guardar la materia. Por favor, inténtalo de nuevo.');
             }
         }
-
         function renderAdminMateriasTable() {
             materiasAdminTbody.innerHTML = '';
             const materiasArray = Object.values(allMaterias);
@@ -1605,7 +1561,6 @@
                 materiasAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No hay materias registradas.</td></tr>';
                 return;
             }
-
             materiasArray.forEach(materia => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
@@ -1620,7 +1575,6 @@
                 `;
                 materiasAdminTbody.appendChild(tr);
             });
-
             materiasAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1634,7 +1588,6 @@
                     }
                 });
             });
-
             materiasAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1645,13 +1598,11 @@
                             if (confirmed) {
                                 try {
                                     await deleteDoc(doc(materiasCollection, id));
-                                    
                                     for (const student of allStudents) {
                                         if (student.enrolledMaterias.includes(materiaNameKey)) {
                                             const updatedEnrolledMaterias = student.enrolledMaterias.filter(m => m !== materiaNameKey);
                                             const updatedGrades = { ...student.grades };
                                             delete updatedGrades[materiaNameKey];
-
                                             await updateDoc(doc(studentsCollection, student.id), {
                                                 enrolledMaterias: updatedEnrolledMaterias,
                                                 grades: updatedGrades
@@ -1669,8 +1620,6 @@
                 });
             });
         }
-
-
         // --- Admin: Register Student ---
         function populateStudentMateriasCheckboxes() {
             studentMateriasCheckboxGroup.innerHTML = '';
@@ -1690,7 +1639,6 @@
                 studentMateriasCheckboxGroup.appendChild(label);
             });
         }
-
         async function handleRegisterStudentFormSubmit(e) {
             e.preventDefault();
             const id = studentIdInput.value;
@@ -1698,10 +1646,8 @@
             const materno = studentMaternoInput.value.trim();
             const nombres = studentNombresInput.value.trim();
             const celular = studentCelularInput.value.trim();
-            
             const selectedMateriasCheckboxes = Array.from(studentMateriasCheckboxGroup.querySelectorAll('input[type="checkbox"]:checked'));
             const selectedMaterias = selectedMateriasCheckboxes.map(checkbox => checkbox.value);
-
             let studentGrades = {};
             if (id) {
                 const existingStudent = allStudents.find(s => s.id === id);
@@ -1709,7 +1655,6 @@
                     studentGrades = existingStudent.grades;
                 }
             }
-
             selectedMaterias.forEach(materiaName => {
                 if (!studentGrades[materiaName]) {
                     studentGrades[materiaName] = {
@@ -1724,7 +1669,6 @@
                     delete studentGrades[materiaName];
                 }
             });
-
             const newStudentData = {
                 paterno,
                 materno,
@@ -1733,7 +1677,6 @@
                 enrolledMaterias: selectedMaterias,
                 grades: studentGrades
             };
-
             try {
                 if (id) {
                     await setDoc(doc(studentsCollection, id), newStudentData);
@@ -1751,7 +1694,6 @@
                 showMessageBox('Error', 'Error al guardar el alumno. Por favor, inténtalo de nuevo.');
             }
         }
-
         function renderAdminStudentsTable() {
             studentsAdminTbody.innerHTML = '';
             if (allStudents.length === 0) {
@@ -1763,7 +1705,6 @@
                     const materiaData = allMaterias[materiaKey];
                     return materiaData ? materiaData.name : materiaKey;
                 }).join(', ');
-
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${student.nombres} ${student.paterno} ${student.materno}</td>
@@ -1776,7 +1717,6 @@
                 `;
                 studentsAdminTbody.appendChild(tr);
             });
-
             studentsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1787,7 +1727,6 @@
                         studentMaternoInput.value = student.materno;
                         studentNombresInput.value = student.nombres;
                         studentCelularInput.value = student.celular;
-
                         populateStudentMateriasCheckboxes();
                         student.enrolledMaterias.forEach(enrolledMateria => {
                             const checkbox = studentMateriasCheckboxGroup.querySelector(`input[type="checkbox"][value="${enrolledMateria}"]`);
@@ -1798,7 +1737,6 @@
                     }
                 });
             });
-
             studentsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.dataset.id;
@@ -1817,8 +1755,6 @@
                 });
             });
         }
-
-
         // --- Admin: List Materias and Grades ---
         function renderMateriasListButtons() {
             materiasListButtons.innerHTML = '';
@@ -1836,16 +1772,13 @@
                 materiasListButtons.appendChild(button);
             });
         }
-
         function openStudentListForMateria(e) {
             const materiaName = e.currentTarget.dataset.materiaName;
             const materiaData = allMaterias[materiaName];
-
             if (!materiaData) {
                 showMessageBox('Error', 'No se encontró la materia.');
                 return;
             }
-
             const studentListModal = document.createElement('div');
             studentListModal.className = 'modal';
             studentListModal.innerHTML = `
@@ -1872,14 +1805,10 @@
             `;
             document.body.appendChild(studentListModal);
             studentListModal.style.display = 'block';
-
             studentListModal.querySelector('.close-button').onclick = () => document.body.removeChild(studentListModal);
             studentListModal.querySelector('.close-btn').onclick = () => document.body.removeChild(studentListModal);
-
-
             const materiaStudentsTbody = studentListModal.querySelector('#materia-students-tbody');
             const studentsInMateria = allStudents.filter(student => student.enrolledMaterias.includes(materiaName));
-
             if (studentsInMateria.length === 0) {
                 materiaStudentsTbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados en esta materia.</td></tr>';
             } else {
@@ -1893,7 +1822,6 @@
                     `;
                     materiaStudentsTbody.appendChild(tr);
                 });
-
                 studentListModal.querySelectorAll('.grade-student-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
                         const studentId = e.target.dataset.studentId;
@@ -1904,26 +1832,20 @@
                 });
             }
         }
-
         function openStudentGradesModal(studentId, materiaName) {
             const student = allStudents.find(s => s.id === studentId);
             const materia = allMaterias[materiaName];
-
             if (!student || !materia) {
                 showMessageBox('Error', 'Error: Alumno o materia no encontrados.');
                 return;
             }
-
             studentGradesModal.style.display = 'block';
             currentStudentNameGradesModal.textContent = `${student.nombres} ${student.paterno} ${student.materno}`;
             currentMateriaNameGradesModal.textContent = materia.name;
             gradeStudentIdInput.value = studentId;
             gradeMateriaNameInput.value = materiaName;
-
             const studentMateriaGrades = student.grades[materiaName] || { asistencia: null, practicas: Array(6).fill(null), parciales: Array(2).fill(null) };
-
             gradeAsistenciaInput.value = studentMateriaGrades.asistencia !== null ? studentMateriaGrades.asistencia : '';
-
             practicasInputsDiv.innerHTML = '';
             for (let i = 0; i < 6; i++) {
                 const input = document.createElement('input');
@@ -1935,7 +1857,6 @@
                 input.value = studentMateriaGrades.practicas[i] !== null ? studentMateriaGrades.practicas[i] : '';
                 practicasInputsDiv.appendChild(input);
             }
-
             parcialesInputsDiv.innerHTML = '';
             for (let i = 0; i < 2; i++) {
                 const input = document.createElement('input');
@@ -1948,18 +1869,15 @@
                 parcialesInputsDiv.appendChild(input);
             }
         }
-
         async function handleGradeFormSubmit(e) {
             e.preventDefault();
             const studentId = gradeStudentIdInput.value;
             const materiaName = gradeMateriaNameInput.value;
             const student = allStudents.find(s => s.id === studentId);
-
             if (!student) {
                 showMessageBox('Error', 'Alumno no encontrado.');
                 return;
             }
-
             const newAsistencia = gradeAsistenciaInput.value !== '' ? parseInt(gradeAsistenciaInput.value) : null;
             const newPracticas = [];
             for (let i = 0; i < 6; i++) {
@@ -1971,7 +1889,6 @@
                 const input = document.getElementById(`parcial-${i}`);
                 newParciales.push(input.value !== '' ? parseInt(input.value) : null);
             }
-
             const updatedGrades = {
                 ...student.grades,
                 [materiaName]: {
@@ -1980,7 +1897,6 @@
                     parciales: newParciales
                 }
             };
-
             try {
                 await updateDoc(doc(studentsCollection, student.id), {
                     grades: updatedGrades
@@ -1992,23 +1908,19 @@
                 showMessageBox('Error', 'Error al guardar las calificaciones. Por favor, inténtalo de nuevo.');
             }
         }
-
         // --- Student Portal Functions ---
         function renderStudentPortal() {
             studentMateriasGrades.innerHTML = '';
             if (!currentLoggedInStudent) return;
-
             if (currentLoggedInStudent.enrolledMaterias.length === 0) {
                 studentMateriasGrades.innerHTML = '<p style="text-align: center; color: var(--muted-text-color);">No estás inscrito en ninguna materia.</p>';
                 return;
             }
-
             currentLoggedInStudent.enrolledMaterias.forEach(materiaNameKey => {
                 const materia = allMaterias[materiaNameKey];
                 if (materia) {
                     const overallGrade = calculateOverallGrade(currentLoggedInStudent, materiaNameKey);
                     const gradeDisplay = overallGrade !== null ? overallGrade.toFixed(2) : 'N/A';
-
                     const card = document.createElement('div');
                     card.className = 'materia-grade-card';
                     card.innerHTML = `
@@ -2021,7 +1933,6 @@
                     studentMateriasGrades.appendChild(card);
                 }
             });
-
             document.querySelectorAll('.view-grades-detail-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const materiaName = e.target.dataset.materiaName;
@@ -2029,54 +1940,42 @@
                 });
             });
         }
-
         function calculateOverallGrade(student, materiaNameKey) {
             const materia = allMaterias[materiaNameKey];
             const studentGrades = student.grades[materiaNameKey];
-
             if (!materia || !studentGrades) {
                 return null;
             }
-
             let totalGrade = 0;
             let hasValidGrades = false;
-
             if (studentGrades.asistencia !== null) {
                 totalGrade += (studentGrades.asistencia * (materia.ponderaciones.asistencia / 100));
                 hasValidGrades = true;
             }
-
             const validPracticas = studentGrades.practicas.filter(grade => grade !== null);
             if (validPracticas.length > 0) {
                 const avgPracticas = validPracticas.reduce((sum, grade) => sum + grade, 0) / validPracticas.length;
                 totalGrade += (avgPracticas * (materia.ponderaciones.practicas / 100));
                 hasValidGrades = true;
             }
-
             const validParciales = studentGrades.parciales.filter(grade => grade !== null);
             if (validParciales.length > 0) {
                 const avgParciales = validParciales.reduce((sum, grade) => sum + grade, 0) / validParciales.length;
                 totalGrade += (avgParciales * (materia.ponderaciones.parciales / 100));
                 hasValidGrades = true;
             }
-
             return hasValidGrades ? totalGrade : null;
         }
-
         function openStudentGradeDetailModal(studentId, materiaName) {
             const student = allStudents.find(s => s.id === studentId);
             const materia = allMaterias[materiaName];
-
             if (!student || !materia) {
                 showMessageBox('Error', 'Alumno o materia no encontrados para el detalle de calificaciones.');
                 return;
             }
-
             const studentMateriaGrades = student.grades[materiaName] || { asistencia: null, practicas: Array(6).fill(null), parciales: Array(2).fill(null) };
-
             detailStudentName.textContent = `${student.nombres} ${student.paterno} ${student.materno}`;
             detailMateriaName.textContent = materia.name;
-
             let detailsHTML = `
                 <p><strong>Asistencia:</strong> ${studentMateriaGrades.asistencia !== null ? studentMateriaGrades.asistencia : 'N/A'}</p>
                 <h4>Detalle de Prácticas:</h4>
@@ -2094,23 +1993,17 @@
                 detailsHTML += `<li>Parcial ${index + 1}: ${grade !== null ? grade : 'N/A'}</li>`;
             });
             detailsHTML += `</ul>`;
-
             const overallGrade = calculateOverallGrade(student, materiaName);
             if (overallGrade !== null) {
                 detailsHTML += `<p><strong>Calificación General:</strong> ${overallGrade.toFixed(2)}</p>`;
             } else {
                 detailsHTML += `<p><strong>Calificación General:</strong> N/A (faltan notas)</p>`;
             }
-
-
             gradeDetailsContent.innerHTML = detailsHTML;
             studentGradeDetailModal.style.display = 'block';
         }
-
-
         function renderAdminPanelButtons() {
             adminPanelContent.innerHTML = ''; 
-
             const buttonsConfig = [
                 { text: 'Gestionar Noticias y Eventos', icon: 'fas fa-bullhorn', target: '#manageNewsEventsModal' },
                 { text: 'Gestionar Biblioteca', icon: 'fas fa-book-reader', target: '#manageLibraryModal' },
@@ -2118,7 +2011,6 @@
                 { text: 'Registrar Alumno', icon: 'fas fa-user-plus', target: '#registerStudentModal' },
                 { text: 'Lista de Materias y Calificaciones', icon: 'fas fa-list-alt', target: '#listMateriasModal' }
             ];
-
             buttonsConfig.forEach(btn => {
                 const button = document.createElement('button');
                 button.className = 'admin-button';
@@ -2153,7 +2045,6 @@
                 });
                 adminPanelContent.appendChild(button);
             });
-
             const logoutButton = document.createElement('button');
             logoutButton.className = 'admin-button logout-button';
             logoutButton.id = 'adminLogoutButton';
@@ -2169,15 +2060,12 @@
             });
             adminPanelContent.appendChild(logoutButton);
         }
-
-
         document.addEventListener('DOMContentLoaded', () => {
             navItems = document.querySelectorAll('.nav-item');
             tabContents = document.querySelectorAll('.tab-content');
             actionButtons = document.querySelectorAll('.action-button');
             modals = document.querySelectorAll('.modal');
             closeButtons = document.querySelectorAll('.close-button');
-
             portalTitle = document.getElementById('portal-title');
             portalIntroText = document.getElementById('portal-intro-text');
             loginCard = document.getElementById('login-card');
@@ -2185,12 +2073,10 @@
             passwordInput = document.getElementById('password');
             loginForm = document.getElementById('login-form');
             adminPanelContent = document.getElementById('admin-panel-content');
-
             studentPortalContent = document.getElementById('student-portal-content');
             studentPortalName = document.getElementById('student-portal-name');
             studentMateriasGrades = document.getElementById('student-materias-grades');
             studentLogoutButton = document.getElementById('studentLogoutButton');
-
             manageNewsEventsModal = document.getElementById('manageNewsEventsModal');
             newsEventForm = document.getElementById('news-event-form');
             newsEventIdInput = document.getElementById('news-event-id');
@@ -2199,7 +2085,6 @@
             newsEventHeadingInput = document.getElementById('news-event-heading-input');
             newsEventsAdminTbody = document.getElementById('news-events-admin-tbody');
             newsEventsDisplay = document.getElementById('news-events-display');
-
             manageLibraryModal = document.getElementById('manageLibraryModal');
             libraryItemForm = document.getElementById('library-item-form');
             libraryItemIdInput = document.getElementById('library-item-id');
@@ -2209,7 +2094,6 @@
             libraryItemLinkInput = document.getElementById('library-item-link');
             libraryItemDescriptionInput = document.getElementById('library-item-description');
             libraryItemsAdminTbody = document.getElementById('library-items-admin-tbody');
-
             createMateriaModal = document.getElementById('createMateriaModal');
             createMateriaForm = document.getElementById('create-materia-form');
             materiaIdInput = document.getElementById('materia-id');
@@ -2218,7 +2102,6 @@
             ponderacionPracticasInput = document.getElementById('ponderacion-practicas');
             ponderacionParcialesInput = document.getElementById('ponderacion-parciales');
             materiasAdminTbody = document.getElementById('materias-admin-tbody');
-
             registerStudentModal = document.getElementById('registerStudentModal');
             registerStudentForm = document.getElementById('register-student-form');
             studentIdInput = document.getElementById('student-id');
@@ -2228,10 +2111,8 @@
             studentCelularInput = document.getElementById('student-celular');
             studentMateriasCheckboxGroup = document.getElementById('student-materias-checkbox-group');
             studentsAdminTbody = document.getElementById('students-admin-tbody');
-
             listMateriasModal = document.getElementById('listMateriasModal');
             materiasListButtons = document.getElementById('materias-list-buttons');
-
             studentGradesModal = document.getElementById('studentGradesModal');
             studentGradesTitle = document.getElementById('student-grades-title');
             currentStudentNameGradesModal = document.getElementById('current-student-name-grades-modal');
@@ -2242,22 +2123,17 @@
             gradeAsistenciaInput = document.getElementById('grade-asistencia');
             practicasInputsDiv = document.getElementById('practicas-inputs');
             parcialesInputsDiv = document.getElementById('parciales-inputs');
-
             studentGradeDetailModal = document.getElementById('studentGradeDetailModal');
             detailStudentName = document.getElementById('detail-student-name');
             detailMateriaName = document.getElementById('detail-materia-name');
             gradeDetailsContent = document.getElementById('grade-details-content');
-
             practicasSearchInput = document.getElementById('practicas-search');
             librosSearchInput = document.getElementById('libros-search');
             videosSearchInput = document.getElementById('videos-search');
             softwareSearchInput = document.getElementById('software-search');
-
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
-
             updateLibraryTabContentVisibility();
-
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     navItems.forEach(nav => nav.classList.remove('active'));
@@ -2267,7 +2143,6 @@
                     document.getElementById(tabId).classList.add('active');
                 });
             });
-
             actionButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const modalTargetId = button.getAttribute('data-modal-target');
@@ -2290,7 +2165,6 @@
                     }
                 });
             });
-
             closeButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const modal = button.closest('.modal');
@@ -2298,26 +2172,22 @@
                         modal.style.display = 'none';
                         const form = modal.querySelector('form');
                         if (form) form.reset();
-                        
                         const hiddenId = modal.querySelector('input[type="hidden"]');
                         if(hiddenId) hiddenId.value = '';
                     }
                 });
             });
-
             window.addEventListener('click', (event) => {
                 modals.forEach(modal => {
                     if (event.target == modal && modal.id !== 'messageBoxModal') {
                         modal.style.display = 'none';
                         const form = modal.querySelector('form');
                         if (form) form.reset();
-                        
                         const hiddenId = modal.querySelector('input[type="hidden"]');
                         if(hiddenId) hiddenId.value = '';
                     }
                 });
             });
-
             if (togglePassword && passwordInput) {
                 togglePassword.addEventListener('click', function () {
                     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -2326,16 +2196,13 @@
                     this.querySelector('i').classList.toggle('fa-eye-slash');
                 });
             }
-
             if (loginForm) {
                 loginForm.addEventListener('submit', async (e) => {
                     e.preventDefault();
                     const username = document.getElementById('username').value;
                     const password = document.getElementById('password').value;
-
                     const adminUsername = 'douglas';
                     const adminPassword = 'd5720';
-
                     if (username.toLowerCase() === adminUsername.toLowerCase() && password.toLowerCase() === adminPassword.toLowerCase()) {
                         userIsLoggedIn = true;
                         loginCard.style.display = 'none';
@@ -2351,7 +2218,6 @@
                             const studentQuery = query(studentsCollection, where("nombres", "==", username));
                             const studentSnapshot = await getDocs(studentQuery);
                             let studentFound = false;
-
                             if (!studentSnapshot.empty) {
                                 studentSnapshot.forEach(studentDoc => {
                                     const studentData = studentDoc.data();
@@ -2371,7 +2237,6 @@
                                     }
                                 });
                             }
-
                             if (!studentFound) {
                                 showMessageBox('Error de Inicio de Sesión', 'Usuario o contraseña incorrectos. Por favor, inténtalo de nuevo.');
                             }
@@ -2382,7 +2247,6 @@
                     }
                 });
             }
-
             studentLogoutButton.addEventListener('click', () => {
                 currentLoggedInStudent = null;
                 userIsLoggedIn = false;
@@ -2392,7 +2256,6 @@
                 portalTitle.textContent = 'Portal de Acceso';
                 updateLibraryTabContentVisibility();
             });
-
             function updateLibraryTabContentVisibility() {
                 if (userIsLoggedIn) {
                     libraryContentDiv.style.display = 'block';
@@ -2402,16 +2265,13 @@
                     libraryAccessRequiredDiv.style.display = 'block';
                 }
             }
-
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
             libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
             registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
             gradeForm.addEventListener('submit', handleGradeFormSubmit);
-
             setupFirebaseAndAuth();
         });
     </script>
 </body>
 </html>
-
