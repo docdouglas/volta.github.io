@@ -227,13 +227,14 @@
         .modal-content {
             background-color: #fefefe;
             margin: 5% auto;
-            padding: 12px; /* Padding reducido */
+            padding: 8px; /* Padding reducido para pantallas pequeñas */
             border-radius: 10px;
             width: 90%;
-            max-width: 360px;
+            max-width: 320px; /* Ancho máximo reducido para pantallas pequeñas */
             box-shadow: 0 10px 30px var(--dark-shadow-color);
             animation: slideIn 0.3s ease-out;
             padding-bottom: 15px;
+            font-size: 0.85em; /* Tamaño de fuente reducido para ahorrar espacio */
         }
         .modal-header {
             display: flex;
@@ -246,11 +247,11 @@
         .modal-header h3 {
             margin: 0;
             color: var(--primary-color);
-            font-size: 1.3em; /* Tamaño de fuente reducido */
+            font-size: 1.2em; /* Tamaño de fuente reducido */
         }
         .close-button {
             color: var(--muted-text-color);
-            font-size: 24px; /* Tamaño de fuente reducido */
+            font-size: 20px; /* Tamaño de fuente reducido */
             font-weight: bold;
             cursor: pointer;
             transition: color 0.3s ease;
@@ -267,10 +268,10 @@
         }
         .modal-actions button {
             flex-grow: 1;
-            padding: 10px; /* Padding reducido */
+            padding: 8px; /* Padding reducido */
             border: none;
             border-radius: 8px;
-            font-size: 0.9em; /* Tamaño de fuente reducido */
+            font-size: 0.85em; /* Tamaño de fuente reducido */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -414,7 +415,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 0.8em; /* Tamaño de fuente reducido */
-            min-width: 500px; /* Asegura que la tabla tenga un ancho mínimo para activar el scroll si es necesario */
+            min-width: 400px; /* Asegura que la tabla tenga un ancho mínimo para activar el scroll si es necesario */
         }
         .content-table th, .content-table td {
             border: 1px solid #ddd;
