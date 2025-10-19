@@ -1365,24 +1365,64 @@
                 });
             });
         }
+
+        // ✅ FUNCIÓN CORREGIDA: renderNewsEvents con botón de eliminar para admin
         function renderNewsEvents() {
             newsEventsDisplay.innerHTML = '';
             const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => a.id.localeCompare(b.id));
             if (allCombinedNewsEvents.length === 0) {
                 newsEventsDisplay.innerHTML = '<p style="text-align: center; color: var(--muted-text-color);">No hay noticias o eventos para mostrar.</p>';
-            } else {
-                allCombinedNewsEvents.forEach(item => {
-                    const div = document.createElement('div');
-                    div.style.marginBottom = '20px';
-                    div.innerHTML = `
-                        <h3 class="news-event-title">${item.title}</h3>
-                        <p class="news-event-heading">${item.heading}</p>
+                return;
+            }
+
+            allCombinedNewsEvents.forEach(item => {
+                const div = document.createElement('div');
+                div.style.marginBottom = '20px';
+                div.style.position = 'relative';
+
+                let deleteButton = '';
+                if (userIsLoggedIn && !currentLoggedInStudent) {
+                    deleteButton = `
+                        <button class="delete-news-btn"
+                                data-id="${item.id}"
+                                data-type="${item.type}"
+                                style="position: absolute; top: 0; right: 0; background: #f44336; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">
+                            🗑️
+                        </button>
                     `;
-                    newsEventsDisplay.appendChild(div);
+                }
+
+                div.innerHTML = `
+                    ${deleteButton}
+                    <h3 class="news-event-title">${item.title}</h3>
+                    <p class="news-event-heading">${item.heading}</p>
+                `;
+                newsEventsDisplay.appendChild(div);
+            });
+
+            if (userIsLoggedIn && !currentLoggedInStudent) {
+                newsEventsDisplay.querySelectorAll('.delete-news-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const id = e.target.dataset.id;
+                        const type = e.target.dataset.type;
+                        showMessageBox('Confirmar', '¿Eliminar este elemento?', 'confirm', async (confirmed) => {
+                            if (confirmed) {
+                                try {
+                                    const collectionRef = type === 'news' ? newsCollection : eventsCollection;
+                                    await deleteDoc(doc(collectionRef, id));
+                                    showMessageBox('Éxito', 'Elemento eliminado con éxito.');
+                                } catch (error) {
+                                    console.error("Error al eliminar:", error);
+                                    showMessageBox('Error', 'No se pudo eliminar el elemento.');
+                                }
+                            }
+                        });
+                    });
                 });
             }
         }
-        // --- Admin: Manage Library Items ---
+
+        // --- Resto del código sin cambios ---
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
             const id = libraryItemIdInput.value;
@@ -1397,12 +1437,11 @@
                     showMessageBox('Error', 'No se encontró el ítem para actualizar.');
                     return;
                 }
-                code = existingItem.code; // Keep same code when editing
+                code = existingItem.code;
             } else {
-                code = allLibraryItems.length + 1; // Always next sequential number
+                code = allLibraryItems.length + 1;
             }
             const newItem = { code, title, type, link, description };
-            console.log("Intentando guardar/actualizar ítem de biblioteca:", newItem);
             try {
                 if (id) {
                     await setDoc(doc(libraryItemsCollection, id), newItem);
@@ -1419,6 +1458,7 @@
                 showMessageBox('Error', 'Error al guardar el ítem de biblioteca. Por favor, inténtalo de nuevo.');
             }
         }
+
         function renderAdminLibraryItemsTable() {
             libraryItemsAdminTbody.innerHTML = '';
             if (allLibraryItems.length === 0) {
@@ -1459,11 +1499,8 @@
                     showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este ítem? Los ítems restantes se renumerarán.', 'confirm', async (confirmed) => {
                         if (confirmed) {
                             try {
-                                // 1. Delete the item
                                 await deleteDoc(doc(libraryItemsCollection, id));
-                                // 2. Get remaining items
                                 const remainingItems = allLibraryItems.filter(item => item.id !== id);
-                                // 3. Renumber all remaining items from 1
                                 if (remainingItems.length > 0) {
                                     const batch = writeBatch(db);
                                     remainingItems.forEach((item, index) => {
@@ -1485,9 +1522,11 @@
                 });
             });
         }
+
         window.filterLibraryItems = function(type, searchQuery) {
             renderLibraryItemsInModals(type, searchQuery);
         };
+
         function renderLibraryItemsInModals(targetType = null, searchQuery = '') {
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
@@ -1551,7 +1590,7 @@
                 }
             }
         }
-        // --- Admin: Create Materia ---
+
         async function handleCreateMateriaFormSubmit(e) {
             e.preventDefault();
             const id = materiaIdInput.value;
@@ -1590,6 +1629,7 @@
                 showMessageBox('Error', 'Error al guardar la materia. Por favor, inténtalo de nuevo.');
             }
         }
+
         function renderAdminMateriasTable() {
             materiasAdminTbody.innerHTML = '';
             const materiasArray = Object.values(allMaterias);
@@ -1656,7 +1696,7 @@
                 });
             });
         }
-        // --- Admin: Register Student ---
+
         function populateStudentMateriasCheckboxes() {
             studentMateriasCheckboxGroup.innerHTML = '';
             const materiasArray = Object.values(allMaterias);
@@ -1675,6 +1715,7 @@
                 studentMateriasCheckboxGroup.appendChild(label);
             });
         }
+
         async function handleRegisterStudentFormSubmit(e) {
             e.preventDefault();
             const id = studentIdInput.value;
@@ -1730,6 +1771,7 @@
                 showMessageBox('Error', 'Error al guardar el alumno. Por favor, inténtalo de nuevo.');
             }
         }
+
         function renderAdminStudentsTable() {
             studentsAdminTbody.innerHTML = '';
             if (allStudents.length === 0) {
@@ -1791,7 +1833,7 @@
                 });
             });
         }
-        // --- Admin: List Materias and Grades ---
+
         function renderMateriasListButtons() {
             materiasListButtons.innerHTML = '';
             const materiasArray = Object.values(allMaterias);
@@ -1809,7 +1851,6 @@
             });
         }
 
-        // --- Corrección principal: usar modal estático ---
         function openStudentListForMateria(e) {
             const materiaName = e.currentTarget.dataset.materiaName;
             const materiaData = allMaterias[materiaName];
@@ -1835,7 +1876,6 @@
                     `;
                     tbody.appendChild(tr);
                 });
-                // Añadir listeners a los nuevos botones
                 tbody.querySelectorAll('.grade-student-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const studentId = e.currentTarget.dataset.studentId;
@@ -1884,6 +1924,7 @@
                 parcialesInputsDiv.appendChild(input);
             }
         }
+
         async function handleGradeFormSubmit(e) {
             e.preventDefault();
             const studentId = gradeStudentIdInput.value;
@@ -1923,7 +1964,7 @@
                 showMessageBox('Error', 'Error al guardar las calificaciones. Por favor, inténtalo de nuevo.');
             }
         }
-        // --- Student Portal Functions ---
+
         function renderStudentPortal() {
             studentMateriasGrades.innerHTML = '';
             if (!currentLoggedInStudent) return;
@@ -1955,6 +1996,7 @@
                 });
             });
         }
+
         function calculateOverallGrade(student, materiaNameKey) {
             const materia = allMaterias[materiaNameKey];
             const studentGrades = student.grades[materiaNameKey];
@@ -1981,6 +2023,7 @@
             }
             return hasValidGrades ? totalGrade : null;
         }
+
         function openStudentGradeDetailModal(studentId, materiaName) {
             const student = allStudents.find(s => s.id === studentId);
             const materia = allMaterias[materiaName];
@@ -2017,10 +2060,10 @@
             gradeDetailsContent.innerHTML = detailsHTML;
             studentGradeDetailModal.style.display = 'block';
         }
+
         function renderAdminPanelButtons() {
             adminPanelContent.innerHTML = ''; 
             const buttonsConfig = [
-                // REMOVIDOS: Gestionar Noticias y Eventos, Gestionar Biblioteca
                 { text: 'Crear Materia', icon: 'fas fa-chalkboard', target: '#createMateriaModal' },
                 { text: 'Registrar Alumno', icon: 'fas fa-user-plus', target: '#registerStudentModal' },
                 { text: 'Lista de Materias y Calificaciones', icon: 'fas fa-list-alt', target: '#listMateriasModal' }
@@ -2061,12 +2104,12 @@
                 portalTitle.textContent = 'Portal de Acceso';
                 userIsLoggedIn = false;
                 updateLibraryTabContentVisibility();
-                // Ocultar nuevos botones al cerrar sesión
                 adminNoticiasEventosBtn.style.display = 'none';
                 adminBibliotecaBtn.style.display = 'none';
             });
             adminPanelContent.appendChild(logoutButton);
         }
+
         document.addEventListener('DOMContentLoaded', () => {
             navItems = document.querySelectorAll('.nav-item');
             tabContents = document.querySelectorAll('.tab-content');
@@ -2120,11 +2163,9 @@
             studentsAdminTbody = document.getElementById('students-admin-tbody');
             listMateriasModal = document.getElementById('listMateriasModal');
             materiasListButtons = document.getElementById('materias-list-buttons');
-            // --- Nuevos elementos ---
             materiaStudentsModal = document.getElementById('materiaStudentsModal');
             materiaStudentsTitle = document.getElementById('materia-students-title');
             materiaStudentsTbody = document.getElementById('materia-students-tbody');
-            // ---
             studentGradesModal = document.getElementById('studentGradesModal');
             studentGradesTitle = document.getElementById('student-grades-title');
             currentStudentNameGradesModal = document.getElementById('current-student-name-grades-modal');
@@ -2145,7 +2186,6 @@
             softwareSearchInput = document.getElementById('software-search');
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
-            // Nuevos elementos
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
             updateLibraryTabContentVisibility();
@@ -2228,7 +2268,6 @@
                         renderAdminPanelButtons();
                         loginForm.reset();
                         updateLibraryTabContentVisibility();
-                        // Mostrar nuevos botones solo para admin
                         adminNoticiasEventosBtn.style.display = 'block';
                         adminBibliotecaBtn.style.display = 'block';
                     } else {
@@ -2251,7 +2290,6 @@
                                         renderStudentPortal();
                                         loginForm.reset();
                                         updateLibraryTabContentVisibility();
-                                        // Asegurar que los botones de admin no se muestren para estudiantes
                                         adminNoticiasEventosBtn.style.display = 'none';
                                         adminBibliotecaBtn.style.display = 'none';
                                         studentFound = true;
@@ -2276,7 +2314,6 @@
                 portalIntroText.style.display = 'block';
                 portalTitle.textContent = 'Portal de Acceso';
                 updateLibraryTabContentVisibility();
-                // Ocultar nuevos botones al cerrar sesión como estudiante
                 adminNoticiasEventosBtn.style.display = 'none';
                 adminBibliotecaBtn.style.display = 'none';
             });
@@ -2289,7 +2326,6 @@
                     libraryAccessRequiredDiv.style.display = 'block';
                 }
             }
-            // Listeners para los nuevos botones
             document.getElementById('btnGestionarNoticiasEventos').addEventListener('click', () => {
                 manageNewsEventsModal.style.display = 'block';
                 renderAdminNewsEventsTable();
@@ -2309,8 +2345,6 @@
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
             registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
             gradeForm.addEventListener('submit', handleGradeFormSubmit);
-
-            // --- Listener para el nuevo modal ---
             const closeMateriaStudentsModal = () => {
                 materiaStudentsModal.style.display = 'none';
             };
@@ -2319,7 +2353,6 @@
             materiaStudentsModal.onclick = (e) => {
                 if (e.target === materiaStudentsModal) closeMateriaStudentsModal();
             };
-
             setupFirebaseAndAuth();
         });
     </script>
