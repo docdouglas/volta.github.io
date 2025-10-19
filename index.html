@@ -951,6 +951,29 @@
             </div>
         </div>
     </div>
+    <!-- Nuevo modal estático para lista de alumnos por materia -->
+    <div id="materiaStudentsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-users"></i> <span id="materia-students-title">Alumnos</span></h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div class="table-responsive">
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre del Alumno</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="materia-students-tbody"></tbody>
+                </table>
+            </div>
+            <div class="modal-actions">
+                <button class="close-btn close-button">Cerrar</button>
+            </div>
+        </div>
+    </div>
     <div id="studentGradesModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1053,13 +1076,13 @@
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listMateriasModal, materiasListButtons;
+        let materiaStudentsModal, materiaStudentsTitle, materiaStudentsTbody;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let studentGradeDetailModal, detailStudentName, detailMateriaName, gradeDetailsContent;
         let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
         let adminNoticiasEventosBtn, adminBibliotecaBtn;
-
         // Custom message box function (updated to include a callback for confirmation)
         function showMessageBox(title, message, type = 'alert', callback = null) {
             const modal = document.getElementById('messageBoxModal');
@@ -1416,7 +1439,6 @@
                 `;
                 libraryItemsAdminTbody.appendChild(tr);
             });
-
             libraryItemsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
@@ -1431,7 +1453,6 @@
                     }
                 });
             });
-
             libraryItemsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
@@ -1440,10 +1461,8 @@
                             try {
                                 // 1. Delete the item
                                 await deleteDoc(doc(libraryItemsCollection, id));
-
                                 // 2. Get remaining items
                                 const remainingItems = allLibraryItems.filter(item => item.id !== id);
-
                                 // 3. Renumber all remaining items from 1
                                 if (remainingItems.length > 0) {
                                     const batch = writeBatch(db);
@@ -1456,7 +1475,6 @@
                                     });
                                     await batch.commit();
                                 }
-
                                 showMessageBox('Éxito', 'Ítem eliminado y renumeración actualizada.');
                             } catch (error) {
                                 console.error("Error al eliminar o renumerar ítems:", error);
@@ -1790,6 +1808,8 @@
                 materiasListButtons.appendChild(button);
             });
         }
+
+        // --- Corrección principal: usar modal estático ---
         function openStudentListForMateria(e) {
             const materiaName = e.currentTarget.dataset.materiaName;
             const materiaData = allMaterias[materiaName];
@@ -1797,39 +1817,14 @@
                 showMessageBox('Error', 'No se encontró la materia.');
                 return;
             }
-            const studentListModal = document.createElement('div');
-            studentListModal.className = 'modal';
-            studentListModal.innerHTML = `
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3><i class="fas fa-users"></i> Alumnos de ${materiaData.name}</h3>
-                        <span class="close-button">&times;</span>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="content-table">
-                            <thead>
-                                <tr>
-                                    <th>Nombre del Alumno</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="materia-students-tbody"></tbody>
-                        </table>
-                    </div>
-                    <div class="modal-actions">
-                        <button class="close-btn close-button">Cerrar</button>
-                    </div>
-                </div>
-            `;
-            document.body.appendChild(studentListModal);
-            studentListModal.style.display = 'block';
-            studentListModal.querySelector('.close-button').onclick = () => document.body.removeChild(studentListModal);
-            studentListModal.querySelector('.close-btn').onclick = () => document.body.removeChild(studentListModal);
-            const materiaStudentsTbody = studentListModal.querySelector('#materia-students-tbody');
+            materiaStudentsModal.style.display = 'block';
+            document.getElementById('materia-students-title').textContent = `Alumnos de ${materiaData.name}`;
             const studentsInMateria = allStudents.filter(student => student.enrolledMaterias.includes(materiaName));
+            const tbody = document.getElementById('materia-students-tbody');
             if (studentsInMateria.length === 0) {
-                materiaStudentsTbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados en esta materia.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados en esta materia.</td></tr>';
             } else {
+                tbody.innerHTML = '';
                 studentsInMateria.forEach(student => {
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
@@ -1838,18 +1833,20 @@
                             <button class="edit-btn grade-student-btn" data-student-id="${student.id}" data-materia-name="${materiaName}"><i class="fas fa-edit"></i></button>
                         </td>
                     `;
-                    materiaStudentsTbody.appendChild(tr);
+                    tbody.appendChild(tr);
                 });
-                studentListModal.querySelectorAll('.grade-student-btn').forEach(button => {
-                    button.addEventListener('click', (e) => {
-                        const studentId = e.target.dataset.studentId;
-                        const materiaName = e.target.dataset.materiaName;
+                // Añadir listeners a los nuevos botones
+                tbody.querySelectorAll('.grade-student-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const studentId = e.currentTarget.dataset.studentId;
+                        const materiaName = e.currentTarget.dataset.materiaName;
                         openStudentGradesModal(studentId, materiaName);
-                        document.body.removeChild(studentListModal);
+                        materiaStudentsModal.style.display = 'none';
                     });
                 });
             }
         }
+
         function openStudentGradesModal(studentId, materiaName) {
             const student = allStudents.find(s => s.id === studentId);
             const materia = allMaterias[materiaName];
@@ -2123,6 +2120,11 @@
             studentsAdminTbody = document.getElementById('students-admin-tbody');
             listMateriasModal = document.getElementById('listMateriasModal');
             materiasListButtons = document.getElementById('materias-list-buttons');
+            // --- Nuevos elementos ---
+            materiaStudentsModal = document.getElementById('materiaStudentsModal');
+            materiaStudentsTitle = document.getElementById('materia-students-title');
+            materiaStudentsTbody = document.getElementById('materia-students-tbody');
+            // ---
             studentGradesModal = document.getElementById('studentGradesModal');
             studentGradesTitle = document.getElementById('student-grades-title');
             currentStudentNameGradesModal = document.getElementById('current-student-name-grades-modal');
@@ -2146,7 +2148,6 @@
             // Nuevos elementos
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
-
             updateLibraryTabContentVisibility();
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
@@ -2303,12 +2304,22 @@
                 const nextCode = allLibraryItems.length + 1;
                 libraryItemCodeDisplay.value = nextCode;
             });
-
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
             libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
             registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
             gradeForm.addEventListener('submit', handleGradeFormSubmit);
+
+            // --- Listener para el nuevo modal ---
+            const closeMateriaStudentsModal = () => {
+                materiaStudentsModal.style.display = 'none';
+            };
+            materiaStudentsModal.querySelector('.close-button').onclick = closeMateriaStudentsModal;
+            materiaStudentsModal.querySelector('.close-btn').onclick = closeMateriaStudentsModal;
+            materiaStudentsModal.onclick = (e) => {
+                if (e.target === materiaStudentsModal) closeMateriaStudentsModal();
+            };
+
             setupFirebaseAndAuth();
         });
     </script>
