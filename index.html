@@ -606,11 +606,21 @@
             <section id="inicio" class="tab-content active">
                 <h2><i class="fas fa-home" style="margin-right: 10px;"></i>Bienvenido a Volta</h2>
                 <img src="novell.png" alt="Imagen de Novell" class="hero-image">
+                <div id="admin-noticias-eventos-btn" class="button-group" style="display: none; margin-top: 15px;">
+                    <button class="admin-button" id="btnGestionarNoticiasEventos">
+                        <span class="button-icon"><i class="fas fa-bullhorn"></i></span> Gestionar Noticias y Eventos
+                    </button>
+                </div>
                 <div id="news-events-display">
-                    </div>
+                </div>
             </section>
             <section id="biblioteca" class="tab-content">
                 <h2><i class="fas fa-book-open" style="margin-right: 10px;"></i>Biblioteca Digital</h2>
+                <div id="admin-biblioteca-btn" class="button-group" style="display: none; margin-top: 15px;">
+                    <button class="admin-button" id="btnGestionarBiblioteca">
+                        <span class="button-icon"><i class="fas fa-book-reader"></i></span> Gestionar Biblioteca
+                    </button>
+                </div>
                 <div id="library-access-required" style="text-align: center; padding: 5px;">
                     <img src="volta.png" alt="Volta Logo" style="max-width: 200px; margin-bottom: 5px; border-radius: 5px;">
                     <p style="color: var(--primary-color); font-weight: bold; font-size: 1.1em;">
@@ -663,12 +673,12 @@
                     </form>
                 </div>
                 <div id="admin-panel-content" class="admin-button-group" style="display: none;">
-                    </div>
+                </div>
                 <div id="student-portal-content" class="student-portal-section" style="display: none;">
                     <h3>Bienvenido, <span id="student-portal-name"></span>!</h3>
                     <p>Tus materias registradas y calificaciones:</p>
                     <div id="student-materias-grades">
-                        </div>
+                    </div>
                     <button id="studentLogoutButton" class="admin-button logout-button">
                         <span class="button-icon"><i class="fas fa-sign-out-alt"></i></span> Cerrar Sesión
                     </button>
@@ -809,7 +819,7 @@
                         </tr>
                     </thead>
                     <tbody id="news-events-admin-tbody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -847,12 +857,12 @@
                             <th>Nro.</th>
                             <th>Título</th>
                             <th>Tipo</th>
-                            <th>Link</th>
+                            <th>Recurso</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="library-items-admin-tbody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -888,7 +898,7 @@
                         </tr>
                     </thead>
                     <tbody id="materias-admin-tbody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -911,7 +921,7 @@
                 <input type="text" id="student-celular" placeholder="Ej: 77712345">
                 <label>Materias (selecciona una o más):</label>
                 <div id="student-materias-checkbox-group" class="materias-checkbox-group">
-                    </div>
+                </div>
                 <button type="submit">Guardar Alumno</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Alumnos Registrados</h4>
@@ -926,7 +936,7 @@
                         </tr>
                     </thead>
                     <tbody id="students-admin-tbody">
-                        </tbody>
+                    </tbody>
                 </table>
             </div>
         </div>
@@ -938,7 +948,7 @@
                 <span class="close-button">&times;</span>
             </div>
             <div id="materias-list-buttons" class="admin-button-group">
-                </div>
+            </div>
         </div>
     </div>
     <div id="studentGradesModal" class="modal">
@@ -957,12 +967,12 @@
                 <div style="margin-top: 15px;">
                     <label>Prácticas (Puntaje 0-100):</label>
                     <div id="practicas-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        </div>
+                    </div>
                 </div>
                 <div style="margin-top: 15px;">
                     <label>Parciales (Puntaje 0-100):</label>
                     <div id="parciales-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-                        </div>
+                    </div>
                 </div>
                 <button type="submit">Guardar Calificaciones</button>
             </form>
@@ -977,7 +987,7 @@
             <p>Alumno: <strong id="detail-student-name"></strong></p>
             <p>Materia: <strong id="detail-materia-name"></strong></p>
             <div id="grade-details-content">
-                </div>
+            </div>
             <div class="modal-actions">
                 <button class="close-btn close-button">Cerrar</button>
             </div>
@@ -1048,6 +1058,8 @@
         let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
+        let adminNoticiasEventosBtn, adminBibliotecaBtn; // Nuevos elementos
+
         // Custom message box function (updated to include a callback for confirmation)
         function showMessageBox(title, message, type = 'alert', callback = null) {
             const modal = document.getElementById('messageBoxModal');
@@ -1135,7 +1147,7 @@
                     renderNewsEvents();
                     renderAdminNewsEventsTable();
                 } catch (error) {
-                    console.error("❌ Error processing news data:", error);
+                    console.error("❌ Error processing news ", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar las noticias.');
                 }
             }, (error) => {
@@ -1153,7 +1165,7 @@
                     renderNewsEvents();
                     renderAdminNewsEventsTable();
                 } catch (error) {
-                    console.error("❌ Error processing events data:", error);
+                    console.error("❌ Error processing events ", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar los eventos.');
                 }
             }, (error) => {
@@ -1173,7 +1185,7 @@
                     renderAdminLibraryItemsTable();
                     renderLibraryItemsInModals();
                 } catch (error) {
-                    console.error("❌ Error processing library items data:", error);
+                    console.error("❌ Error processing library items ", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar los ítems de la biblioteca.');
                 }
             }, (error) => {
@@ -1201,7 +1213,7 @@
                         renderStudentPortal();
                     }
                 } catch (error) {
-                    console.error("❌ Error processing materias data:", error);
+                    console.error("❌ Error processing materias ", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar las materias.');
                 }
             }, (error) => {
@@ -1242,7 +1254,7 @@
                         }
                     }
                 } catch (error) {
-                    console.error("❌ Error processing students data:", error);
+                    console.error("❌ Error processing students ", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar los datos de los alumnos.');
                 }
             }, (error) => {
@@ -1293,8 +1305,8 @@
                     <td style="text-align: center;">${item.title}</td>
                     <td style="text-align: justify;">${item.heading}</td>
                     <td class="actions-column">
-                        <button class="edit-btn" data-id="${item.id}" data-type="${item.type}">Editar</button>
-                        <button class="delete-btn" data-id="${item.id}" data-type="${item.type}">Eliminar</button>
+                        <button class="edit-btn" data-id="${item.id}" data-type="${item.type}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" data-id="${item.id}" data-type="${item.type}"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 `;
                 newsEventsAdminTbody.appendChild(tr);
@@ -1396,10 +1408,10 @@
                     <td>${item.code}</td>
                     <td>${item.title}</td>
                     <td>${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                    <td><a href="${item.link}" target="_blank">Ver recurso</a></td>
+                    <td><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
                     <td class="actions-column">
-                        <button class="edit-btn" data-id="${item.id}">Editar</button>
-                        <button class="delete-btn" data-id="${item.id}">Eliminar</button>
+                        <button class="edit-btn" data-id="${item.id}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 `;
                 libraryItemsAdminTbody.appendChild(tr);
@@ -1496,7 +1508,7 @@
                                     <tbody>
                             `;
                         itemsToRender.forEach(item => {
-                            const displayLink = item.link ? `<a href="${item.link}" target="_blank">Ver recurso</a>` : 'N/A';
+                            const displayLink = item.link ? `<a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a>` : 'N/A';
                             tableHTML += `
                                     <tr>
                                         <td>${item.code}</td>
@@ -1570,8 +1582,8 @@
                     <td>${materia.ponderaciones.practicas}%</td>
                     <td>${materia.ponderaciones.parciales}%</td>
                     <td class="actions-column">
-                        <button class="edit-btn" data-id="${materia.id}">Editar</button>
-                        <button class="delete-btn" data-id="${materia.id}">Eliminar</button>
+                        <button class="edit-btn" data-id="${materia.id}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" data-id="${materia.id}"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 `;
                 materiasAdminTbody.appendChild(tr);
@@ -1712,8 +1724,8 @@
                     <td>${student.celular || 'N/A'}</td>
                     <td>${enrolledMateriasNames || 'Ninguna'}</td>
                     <td class="actions-column">
-                        <button class="edit-btn" data-id="${student.id}">Editar</button>
-                        <button class="delete-btn" data-id="${student.id}">Eliminar</button>
+                        <button class="edit-btn" data-id="${student.id}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" data-id="${student.id}"><i class="fas fa-trash-alt"></i></button>
                     </td>
                 `;
                 studentsAdminTbody.appendChild(tr);
@@ -1818,7 +1830,7 @@
                     tr.innerHTML = `
                         <td>${student.nombres} ${student.paterno} ${student.materno}</td>
                         <td class="actions-column">
-                            <button class="edit-btn grade-student-btn" data-student-id="${student.id}" data-materia-name="${materiaName}">Calificar</button>
+                            <button class="edit-btn grade-student-btn" data-student-id="${student.id}" data-materia-name="${materiaName}"><i class="fas fa-edit"></i></button>
                         </td>
                     `;
                     materiaStudentsTbody.appendChild(tr);
@@ -2006,8 +2018,7 @@
         function renderAdminPanelButtons() {
             adminPanelContent.innerHTML = ''; 
             const buttonsConfig = [
-                { text: 'Gestionar Noticias y Eventos', icon: 'fas fa-bullhorn', target: '#manageNewsEventsModal' },
-                { text: 'Gestionar Biblioteca', icon: 'fas fa-book-reader', target: '#manageLibraryModal' },
+                // REMOVIDOS: Gestionar Noticias y Eventos, Gestionar Biblioteca
                 { text: 'Crear Materia', icon: 'fas fa-chalkboard', target: '#createMateriaModal' },
                 { text: 'Registrar Alumno', icon: 'fas fa-user-plus', target: '#registerStudentModal' },
                 { text: 'Lista de Materias y Calificaciones', icon: 'fas fa-list-alt', target: '#listMateriasModal' }
@@ -2020,17 +2031,7 @@
                     const modal = document.querySelector(btn.target);
                     if (modal) {
                         modal.style.display = 'block';
-                        if (btn.target === '#manageNewsEventsModal') {
-                            renderAdminNewsEventsTable();
-                            newsEventForm.reset();
-                            newsEventIdInput.value = '';
-                        } else if (btn.target === '#manageLibraryModal') {
-                            renderAdminLibraryItemsTable();
-                            libraryItemForm.reset();
-                            libraryItemIdInput.value = '';
-                            const nextCode = allLibraryItems.length + 1;
-                            libraryItemCodeDisplay.value = nextCode;
-                        } else if (btn.target === '#createMateriaModal') {
+                        if (btn.target === '#createMateriaModal') {
                             renderAdminMateriasTable();
                             createMateriaForm.reset();
                             materiaIdInput.value = '';
@@ -2058,6 +2059,9 @@
                 portalTitle.textContent = 'Portal de Acceso';
                 userIsLoggedIn = false;
                 updateLibraryTabContentVisibility();
+                // Ocultar nuevos botones al cerrar sesión
+                adminNoticiasEventosBtn.style.display = 'none';
+                adminBibliotecaBtn.style.display = 'none';
             });
             adminPanelContent.appendChild(logoutButton);
         }
@@ -2134,6 +2138,10 @@
             softwareSearchInput = document.getElementById('software-search');
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
+            // Nuevos elementos
+            adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
+            adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
+
             updateLibraryTabContentVisibility();
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
@@ -2214,6 +2222,9 @@
                         renderAdminPanelButtons();
                         loginForm.reset();
                         updateLibraryTabContentVisibility();
+                        // Mostrar nuevos botones solo para admin
+                        adminNoticiasEventosBtn.style.display = 'block';
+                        adminBibliotecaBtn.style.display = 'block';
                     } else {
                         try {
                             const studentQuery = query(studentsCollection, where("nombres", "==", username));
@@ -2234,6 +2245,9 @@
                                         renderStudentPortal();
                                         loginForm.reset();
                                         updateLibraryTabContentVisibility();
+                                        // Asegurar que los botones de admin no se muestren para estudiantes
+                                        adminNoticiasEventosBtn.style.display = 'none';
+                                        adminBibliotecaBtn.style.display = 'none';
                                         studentFound = true;
                                     }
                                 });
@@ -2256,6 +2270,9 @@
                 portalIntroText.style.display = 'block';
                 portalTitle.textContent = 'Portal de Acceso';
                 updateLibraryTabContentVisibility();
+                // Ocultar nuevos botones al cerrar sesión como estudiante
+                adminNoticiasEventosBtn.style.display = 'none';
+                adminBibliotecaBtn.style.display = 'none';
             });
             function updateLibraryTabContentVisibility() {
                 if (userIsLoggedIn) {
@@ -2266,6 +2283,22 @@
                     libraryAccessRequiredDiv.style.display = 'block';
                 }
             }
+            // Listeners para los nuevos botones
+            document.getElementById('btnGestionarNoticiasEventos').addEventListener('click', () => {
+                manageNewsEventsModal.style.display = 'block';
+                renderAdminNewsEventsTable();
+                newsEventForm.reset();
+                newsEventIdInput.value = '';
+            });
+            document.getElementById('btnGestionarBiblioteca').addEventListener('click', () => {
+                manageLibraryModal.style.display = 'block';
+                renderAdminLibraryItemsTable();
+                libraryItemForm.reset();
+                libraryItemIdInput.value = '';
+                const nextCode = allLibraryItems.length + 1;
+                libraryItemCodeDisplay.value = nextCode;
+            });
+
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
             libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
