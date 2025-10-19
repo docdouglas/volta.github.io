@@ -1058,7 +1058,7 @@
         let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
-        let adminNoticiasEventosBtn, adminBibliotecaBtn; // Nuevos elementos
+        let adminNoticiasEventosBtn, adminBibliotecaBtn;
 
         // Custom message box function (updated to include a callback for confirmation)
         function showMessageBox(title, message, type = 'alert', callback = null) {
@@ -1147,7 +1147,7 @@
                     renderNewsEvents();
                     renderAdminNewsEventsTable();
                 } catch (error) {
-                    console.error("❌ Error processing news ", error);
+                    console.error("❌ Error processing news data:", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar las noticias.');
                 }
             }, (error) => {
@@ -1165,7 +1165,7 @@
                     renderNewsEvents();
                     renderAdminNewsEventsTable();
                 } catch (error) {
-                    console.error("❌ Error processing events ", error);
+                    console.error("❌ Error processing events data:", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar los eventos.');
                 }
             }, (error) => {
@@ -1185,7 +1185,7 @@
                     renderAdminLibraryItemsTable();
                     renderLibraryItemsInModals();
                 } catch (error) {
-                    console.error("❌ Error processing library items ", error);
+                    console.error("❌ Error processing library items data:", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar los ítems de la biblioteca.');
                 }
             }, (error) => {
@@ -1213,7 +1213,7 @@
                         renderStudentPortal();
                     }
                 } catch (error) {
-                    console.error("❌ Error processing materias ", error);
+                    console.error("❌ Error processing materias data:", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar las materias.');
                 }
             }, (error) => {
@@ -1254,7 +1254,7 @@
                         }
                     }
                 } catch (error) {
-                    console.error("❌ Error processing students ", error);
+                    console.error("❌ Error processing students data:", error);
                     showMessageBox('Error de Carga', 'No se pudieron cargar los datos de los alumnos.');
                 }
             }, (error) => {
@@ -1374,9 +1374,9 @@
                     showMessageBox('Error', 'No se encontró el ítem para actualizar.');
                     return;
                 }
-                code = existingItem.code;
+                code = existingItem.code; // Keep same code when editing
             } else {
-                code = allLibraryItems.length > 0 ? Math.max(...allLibraryItems.map(item => item.code)) + 1 : 1;
+                code = allLibraryItems.length + 1; // Always next sequential number
             }
             const newItem = { code, title, type, link, description };
             console.log("Intentando guardar/actualizar ítem de biblioteca:", newItem);
@@ -1416,9 +1416,10 @@
                 `;
                 libraryItemsAdminTbody.appendChild(tr);
             });
+
             libraryItemsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
+                    const id = e.target.closest('button').dataset.id;
                     const item = allLibraryItems.find(n => n.id === id);
                     if (item) {
                         libraryItemIdInput.value = item.id;
@@ -1430,32 +1431,36 @@
                     }
                 });
             });
+
             libraryItemsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
-                    showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este ítem? Los ítems restantes se re-numerarán.', 'confirm', async (confirmed) => {
+                    const id = e.target.closest('button').dataset.id;
+                    showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este ítem? Los ítems restantes se renumerarán.', 'confirm', async (confirmed) => {
                         if (confirmed) {
-                            const itemToDelete = allLibraryItems.find(item => item.id === id);
-                            if (!itemToDelete) {
-                                showMessageBox('Error', 'No se pudo encontrar el ítem a eliminar.');
-                                return;
-                            }
-                            const deletedItemCode = itemToDelete.code;
                             try {
-                                const batch = writeBatch(db);
-                                const docToDeleteRef = doc(libraryItemsCollection, id);
-                                batch.delete(docToDeleteRef);
-                                const itemsToUpdate = allLibraryItems.filter(item => item.code > deletedItemCode);
-                                itemsToUpdate.forEach(item => {
-                                    const itemRef = doc(libraryItemsCollection, item.id);
-                                    const newCode = item.code - 1;
-                                    batch.update(itemRef, { code: newCode });
-                                });
-                                await batch.commit();
-                                showMessageBox('Éxito', 'Ítem eliminado y re-enumerado con éxito.');
+                                // 1. Delete the item
+                                await deleteDoc(doc(libraryItemsCollection, id));
+
+                                // 2. Get remaining items
+                                const remainingItems = allLibraryItems.filter(item => item.id !== id);
+
+                                // 3. Renumber all remaining items from 1
+                                if (remainingItems.length > 0) {
+                                    const batch = writeBatch(db);
+                                    remainingItems.forEach((item, index) => {
+                                        const newCode = index + 1;
+                                        if (item.code !== newCode) {
+                                            const itemRef = doc(libraryItemsCollection, item.id);
+                                            batch.update(itemRef, { code: newCode });
+                                        }
+                                    });
+                                    await batch.commit();
+                                }
+
+                                showMessageBox('Éxito', 'Ítem eliminado y renumeración actualizada.');
                             } catch (error) {
-                                console.error("Error durante la eliminación en lote: ", error);
-                                showMessageBox('Error', 'Error al eliminar el ítem de la biblioteca.');
+                                console.error("Error al eliminar o renumerar ítems:", error);
+                                showMessageBox('Error', 'No se pudo completar la eliminación. Inténtalo de nuevo.');
                             }
                         }
                     });
