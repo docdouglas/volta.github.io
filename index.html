@@ -1030,12 +1030,18 @@
             </div>
         </div>
     </div>
+    
+    <!-- Modal de Registro de Alumno MODIFICADO -->
     <div id="registerStudentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-user-plus"></i> Registrar Alumno</h3>
                 <span class="close-button">&times;</span>
             </div>
+            <!-- Botón para abrir la lista de alumnos -->
+            <button id="btnVerAlumnosRegistrados" class="admin-button" style="margin-bottom: 15px; background-color: #17a2b8; border-color: #17a2b8; color: white;">
+                <span class="button-icon"><i class="fas fa-users"></i></span> Ver Lista de Alumnos Registrados
+            </button>
             <form id="register-student-form" class="form-group">
                 <input type="hidden" id="student-id">
                 <label for="student-paterno">Apellido Paterno:</label>
@@ -1051,7 +1057,16 @@
                 </div>
                 <button type="submit">Guardar Alumno</button>
             </form>
-            <h4 style="margin-top: 20px; color: var(--primary-color);">Alumnos Registrados</h4>
+        </div>
+    </div>
+
+    <!-- NUEVO Modal para la Lista de Alumnos Registrados -->
+    <div id="listStudentsModal" class="modal" style="z-index: 2010;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-users"></i> Alumnos Registrados</h3>
+                <span class="close-button">&times;</span>
+            </div>
             <div class="table-responsive">
                 <table class="content-table">
                     <thead>
@@ -1066,8 +1081,12 @@
                     </tbody>
                 </table>
             </div>
+            <div class="modal-actions">
+                <button class="close-btn close-button">Cerrar</button>
+            </div>
         </div>
     </div>
+
     <div id="listMateriasModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1206,6 +1225,7 @@
         let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
+        let listStudentsModal, btnVerAlumnosRegistrados; // Nuevas variables añadidas
         let listMateriasModal, materiasListButtons;
         let materiaStudentsModal, materiaStudentsTitle, materiaStudentsTbody;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
@@ -1505,7 +1525,7 @@
             });
             newsEventsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
+                    const id = e.target.closest('button').dataset.id;
                     const item = [...allNews, ...allEvents].find(n => n.id === id);
                     if (item) {
                         newsEventIdInput.value = item.id;
@@ -1517,8 +1537,8 @@
             });
             newsEventsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
-                    const type = e.target.dataset.type;
+                    const id = e.target.closest('button').dataset.id;
+                    const type = e.target.closest('button').dataset.type;
                     showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este elemento?', 'confirm', async (confirmed) => {
                         if (confirmed) {
                             try {
@@ -1535,7 +1555,6 @@
             });
         }
 
-        // ✅ FUNCIÓN CORREGIDA: renderNewsEvents con botón de eliminar para admin
         function renderNewsEvents() {
             newsEventsDisplay.innerHTML = '';
             const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => a.id.localeCompare(b.id));
@@ -1572,8 +1591,8 @@
             if (userIsLoggedIn && !currentLoggedInStudent) {
                 newsEventsDisplay.querySelectorAll('.delete-news-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
-                        const id = e.target.dataset.id;
-                        const type = e.target.dataset.type;
+                        const id = e.target.closest('button').dataset.id;
+                        const type = e.target.closest('button').dataset.type;
                         showMessageBox('Confirmar', '¿Eliminar este elemento?', 'confirm', async (confirmed) => {
                             if (confirmed) {
                                 try {
@@ -1591,7 +1610,7 @@
             }
         }
 
-        // --- Resto del código sin cambios ---
+        // --- Resto del código ---
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
             const id = libraryItemIdInput.value;
@@ -1822,7 +1841,7 @@
             });
             materiasAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
+                    const id = e.target.closest('button').dataset.id;
                     const materia = Object.values(allMaterias).find(m => m.id === id);
                     if (materia) {
                         materiaIdInput.value = materia.id;
@@ -1835,7 +1854,7 @@
             });
             materiasAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
+                    const id = e.target.closest('button').dataset.id;
                     const materiaToDelete = Object.values(allMaterias).find(m => m.id === id);
                     if (materiaToDelete) {
                         const materiaNameKey = materiaToDelete.name.toLowerCase();
@@ -1964,11 +1983,17 @@
                 `;
                 studentsAdminTbody.appendChild(tr);
             });
+            
+            // Lógica para el botón Editar de la nueva tabla en el modal
             studentsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
+                    const id = e.target.closest('button').dataset.id;
                     const student = allStudents.find(s => s.id === id);
                     if (student) {
+                        // Cerramos el modal de lista y abrimos el de registro para modificar
+                        listStudentsModal.style.display = 'none';
+                        registerStudentModal.style.display = 'block';
+                        
                         studentIdInput.value = student.id;
                         studentPaternoInput.value = student.paterno;
                         studentMaternoInput.value = student.materno;
@@ -1984,9 +2009,10 @@
                     }
                 });
             });
+            
             studentsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const id = e.target.dataset.id;
+                    const id = e.target.closest('button').dataset.id;
                     showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este alumno?', 'confirm', async (confirmed) => {
                         if (confirmed) {
                             try {
@@ -2321,6 +2347,7 @@
             ponderacionPracticasInput = document.getElementById('ponderacion-practicas');
             ponderacionParcialesInput = document.getElementById('ponderacion-parciales');
             materiasAdminTbody = document.getElementById('materias-admin-tbody');
+            
             registerStudentModal = document.getElementById('registerStudentModal');
             registerStudentForm = document.getElementById('register-student-form');
             studentIdInput = document.getElementById('student-id');
@@ -2329,7 +2356,12 @@
             studentNombresInput = document.getElementById('student-nombres');
             studentCelularInput = document.getElementById('student-celular');
             studentMateriasCheckboxGroup = document.getElementById('student-materias-checkbox-group');
+            
+            // Asignación de variables para el nuevo Modal
+            listStudentsModal = document.getElementById('listStudentsModal');
+            btnVerAlumnosRegistrados = document.getElementById('btnVerAlumnosRegistrados');
             studentsAdminTbody = document.getElementById('students-admin-tbody');
+
             listMateriasModal = document.getElementById('listMateriasModal');
             materiasListButtons = document.getElementById('materias-list-buttons');
             materiaStudentsModal = document.getElementById('materiaStudentsModal');
@@ -2358,6 +2390,14 @@
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
             updateLibraryTabContentVisibility();
+            
+            // Lógica del nuevo botón
+            btnVerAlumnosRegistrados.addEventListener('click', () => {
+                registerStudentModal.style.display = 'none'; // Cierra modal de registro
+                listStudentsModal.style.display = 'block'; // Abre el de la lista
+                renderAdminStudentsTable();
+            });
+
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
                     navItems.forEach(nav => nav.classList.remove('active'));
