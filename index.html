@@ -801,6 +801,43 @@
             50% { transform: scale(1.05); }
             100% { transform: scale(1); }
         }
+        
+        /* --- ESTILOS PARA EL VISOR DETALLADO EN LINEA --- */
+        .library-detail-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+        .library-detail-header h3 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+        .btn-back {
+            background-color: var(--secondary-color);
+            color: var(--text-color);
+            border: 1px solid #ddd;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-back:hover {
+            background-color: #e2e6ea;
+            transform: translateX(-3px);
+        }
+        .fade-in-section {
+            animation: fadeIn 0.4s ease-out;
+        }
     </style>
 </head>
 <body>
@@ -834,28 +871,48 @@
                 </div>
 
                 <div id="library-content" style="display: none;">
-                    <p style="text-align: center; color: var(--muted-text-color); margin-bottom: 10px; font-size: 1.05em;">Explora nuestros recursos digitales seleccionados cuidadosamente para tu aprendizaje.</p>
-                    <div class="library-grid">
-                        <button class="library-card" data-modal-target="#practicasModal">
-                            <div class="library-card-icon"><i class="fas fa-flask"></i></div>
-                            <div class="library-card-title">Prácticas</div>
-                            <div class="library-card-desc">Guías paso a paso y ejercicios de laboratorio.</div>
-                        </button>
-                        <button class="library-card" data-modal-target="#librosModal">
-                            <div class="library-card-icon"><i class="fas fa-book"></i></div>
-                            <div class="library-card-title">Libros</div>
-                            <div class="library-card-desc">Textos teóricos, manuales y referencias.</div>
-                        </button>
-                        <button class="library-card" data-modal-target="#videosModal">
-                            <div class="library-card-icon"><i class="fas fa-video"></i></div>
-                            <div class="library-card-title">Videos</div>
-                            <div class="library-card-desc">Clases grabadas, demostraciones y tutoriales.</div>
-                        </button>
-                        <button class="library-card" data-modal-target="#softwareModal">
-                            <div class="library-card-icon"><i class="fas fa-code"></i></div>
-                            <div class="library-card-title">Software</div>
-                            <div class="library-card-desc">Simuladores, herramientas y programas útiles.</div>
-                        </button>
+                    <!-- Vista Principal (Tarjetas) -->
+                    <div id="library-main-view" class="fade-in-section">
+                        <p style="text-align: center; color: var(--muted-text-color); margin-bottom: 10px; font-size: 1.05em;">Explora nuestros recursos digitales seleccionados cuidadosamente para tu aprendizaje.</p>
+                        <div class="library-grid">
+                            <button class="library-card" data-inline-type="practica">
+                                <div class="library-card-icon"><i class="fas fa-flask"></i></div>
+                                <div class="library-card-title">Prácticas</div>
+                                <div class="library-card-desc">Guías paso a paso y ejercicios de laboratorio.</div>
+                            </button>
+                            <button class="library-card" data-inline-type="libro">
+                                <div class="library-card-icon"><i class="fas fa-book"></i></div>
+                                <div class="library-card-title">Libros</div>
+                                <div class="library-card-desc">Textos teóricos, manuales y referencias.</div>
+                            </button>
+                            <button class="library-card" data-inline-type="video">
+                                <div class="library-card-icon"><i class="fas fa-video"></i></div>
+                                <div class="library-card-title">Videos</div>
+                                <div class="library-card-desc">Clases grabadas, demostraciones y tutoriales.</div>
+                            </button>
+                            <button class="library-card" data-inline-type="software">
+                                <div class="library-card-icon"><i class="fas fa-code"></i></div>
+                                <div class="library-card-title">Software</div>
+                                <div class="library-card-desc">Simuladores, herramientas y programas útiles.</div>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Vista Detallada (Lista) -->
+                    <div id="library-detail-view" class="fade-in-section" style="display: none;">
+                        <div class="library-detail-header">
+                            <button id="btn-back-library" class="btn-back"><i class="fas fa-arrow-left"></i> Volver</button>
+                            <h3 id="library-detail-title">Detalle</h3>
+                        </div>
+                        <div class="filter-group">
+                            <label for="library-inline-search">Buscar por título/descripción:</label>
+                            <input type="text" id="library-inline-search" placeholder="Escribe para buscar...">
+                        </div>
+                        <!-- Los contenedores originales se mantienen para no romper el JS -->
+                        <div id="practica-inline-container" class="inline-list-container" style="display: none;"><div id="practicas-list"></div></div>
+                        <div id="libro-inline-container" class="inline-list-container" style="display: none;"><div id="libros-list"></div></div>
+                        <div id="video-inline-container" class="inline-list-container" style="display: none;"><div id="videos-list"></div></div>
+                        <div id="software-inline-container" class="inline-list-container" style="display: none;"><div id="software-list"></div></div>
                     </div>
                 </div>
             </section>
@@ -952,70 +1009,9 @@
             </div>
         </div>
     </div>
-    <div id="practicasModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-flask"></i> Prácticas Disponibles</h3>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="filter-group">
-                <label for="practicas-search">Buscar por título/descripción:</label>
-                <input type="text" id="practicas-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('practica', this.value)">
-            </div>
-            <div id="practicas-list"></div>
-            <div class="modal-actions">
-                <button class="close-btn close-button">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    <div id="librosModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-book"></i> Libros Disponibles</h3>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="filter-group">
-                <label for="libros-search">Buscar por título/descripción:</label>
-                <input type="text" id="libros-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('libro', this.value)">
-            </div>
-            <div id="libros-list"></div>
-            <div class="modal-actions">
-                <button class="close-btn close-button">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    <div id="videosModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-video"></i> Videos Educativos</h3>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="filter-group">
-                <label for="videos-search">Buscar por título/descripción:</label>
-                <input type="text" id="videos-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('video', this.value)">
-            </div>
-            <div id="videos-list"></div>
-            <div class="modal-actions">
-                <button class="close-btn close-button">Cerrar</button>
-            </div>
-        </div>
-    </div>
-    <div id="softwareModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-code"></i> Software y Herramientas</h3>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="filter-group">
-                <label for="software-search">Buscar por título/descripción:</label>
-                <input type="text" id="software-search" placeholder="Escribe para buscar..." oninput="filterLibraryItems('software', this.value)">
-            </div>
-            <div id="software-list"></div>
-            <div class="modal-actions">
-                <button class="close-btn close-button">Cerrar</button>
-            </div>
-        </div>
-    </div>
+    
+    <!-- NOTA: Se eliminaron los 4 modales de biblioteca antiguos (practicasModal, librosModal, etc) ya que ahora están en línea -->
+    
     <div id="manageNewsEventsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1327,10 +1323,10 @@
         let materiaStudentsModal, materiaStudentsTitle, materiaStudentsTbody;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let studentGradeDetailModal, detailStudentName, detailMateriaName, gradeDetailsContent;
-        let practicasSearchInput, librosSearchInput, videosSearchInput, softwareSearchInput;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
         let adminNoticiasEventosBtn, adminBibliotecaBtn;
+        
         // Custom message box function (updated to include a callback for confirmation)
         function showMessageBox(title, message, type = 'alert', callback = null) {
             const modal = document.getElementById('messageBoxModal');
@@ -2542,10 +2538,6 @@
             detailStudentName = document.getElementById('detail-student-name');
             detailMateriaName = document.getElementById('detail-materia-name');
             gradeDetailsContent = document.getElementById('grade-details-content');
-            practicasSearchInput = document.getElementById('practicas-search');
-            librosSearchInput = document.getElementById('libros-search');
-            videosSearchInput = document.getElementById('videos-search');
-            softwareSearchInput = document.getElementById('software-search');
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
@@ -2579,25 +2571,53 @@
                 }
             });
 
+            // --- Lógica Inline para Biblioteca (Sin Modales) ---
+            const libraryMainView = document.getElementById('library-main-view');
+            const libraryDetailView = document.getElementById('library-detail-view');
+            const libraryDetailTitle = document.getElementById('library-detail-title');
+            const libraryInlineSearch = document.getElementById('library-inline-search');
+            let currentInlineLibraryType = '';
+
+            document.querySelectorAll('.library-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const type = card.getAttribute('data-inline-type');
+                    const title = card.querySelector('.library-card-title').textContent;
+                    const iconClass = card.querySelector('.library-card-icon i').className;
+
+                    currentInlineLibraryType = type;
+                    libraryDetailTitle.innerHTML = `<i class="${iconClass}" style="margin-right: 10px;"></i> ${title} Disponibles`;
+                    
+                    libraryMainView.style.display = 'none';
+                    libraryDetailView.style.display = 'block';
+                    libraryInlineSearch.value = '';
+
+                    // Ocultar todas las listas
+                    document.querySelectorAll('.inline-list-container').forEach(c => c.style.display = 'none');
+                    // Mostrar solo la correspondiente
+                    document.getElementById(`${type}-inline-container`).style.display = 'block';
+
+                    filterLibraryItems(type, '');
+                });
+            });
+
+            document.getElementById('btn-back-library').addEventListener('click', () => {
+                libraryDetailView.style.display = 'none';
+                libraryMainView.style.display = 'block';
+            });
+
+            if(libraryInlineSearch) {
+                libraryInlineSearch.addEventListener('input', (e) => {
+                    filterLibraryItems(currentInlineLibraryType, e.target.value);
+                });
+            }
+
             actionButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const modalTargetId = button.getAttribute('data-modal-target');
+                    if(!modalTargetId) return; // Si no tiene target (como las nuevas library-cards), saltar
                     const modal = document.querySelector(modalTargetId);
                     if (modal) {
                         modal.style.display = 'block';
-                        if (modalTargetId === '#practicasModal') {
-                            practicasSearchInput.value = '';
-                            filterLibraryItems('practica', '');
-                        } else if (modalTargetId === '#librosModal') {
-                            librosSearchInput.value = '';
-                            filterLibraryItems('libro', '');
-                        } else if (modalTargetId === '#videosModal') {
-                            videosSearchInput.value = '';
-                            filterLibraryItems('video', '');
-                        } else if (modalTargetId === '#softwareModal') {
-                            softwareSearchInput.value = '';
-                            filterLibraryItems('software', '');
-                        }
                     }
                 });
             });
