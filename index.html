@@ -703,6 +703,21 @@
             flex-shrink: 0;
         }
         .wa-send-btn:hover { background-color: #0d7367; }
+        
+        /* Botón de borrar chat exclusivo para admin */
+        .delete-chat-btn {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: transparent;
+            color: #b0b0b0;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 2px 6px;
+            transition: color 0.3s ease;
+        }
+        .delete-chat-btn:hover { color: #f44336; }
     </style>
 </head>
 <body>
@@ -1457,10 +1472,18 @@
                 const div = document.createElement('div');
                 const isSentByMe = chat.userId === userId;
                 div.className = `wa-message ${isSentByMe ? 'sent' : 'received'}`;
+                div.style.position = 'relative'; // Necesario para posicionar la 'x' de borrar
                 
                 const timeString = new Date(chat.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
                 
+                let deleteBtnHtml = '';
+                // Mostrar botón de borrar SÓLO si es el administrador
+                if (userIsLoggedIn && !currentLoggedInStudent) {
+                    deleteBtnHtml = `<button class="delete-chat-btn" data-id="${chat.id}"><i class="fas fa-times"></i></button>`;
+                }
+                
                 div.innerHTML = `
+                    ${deleteBtnHtml}
                     <div class="sender">${chat.senderName || 'Visitante'}</div>
                     <div class="text">${chat.text}</div>
                     <div class="time">${timeString}</div>
@@ -1468,6 +1491,24 @@
                 chatBox.appendChild(div);
             });
             chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Escuchar los clics en los botones de borrar (solo funcionales para el admin)
+            if (userIsLoggedIn && !currentLoggedInStudent) {
+                chatBox.querySelectorAll('.delete-chat-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.dataset.id;
+                        showMessageBox('Confirmar Eliminación', '¿Estás seguro de que deseas borrar este mensaje del chat?', 'confirm', async (confirmed) => {
+                            if (confirmed) {
+                                try {
+                                    await deleteDoc(doc(chatsCollection, id));
+                                } catch (error) {
+                                    console.error("Error al eliminar mensaje:", error);
+                                }
+                            }
+                        });
+                    });
+                });
+            }
         }
 
         // --- Admin: Manage News and Events ---
@@ -2335,6 +2376,7 @@
                 updateLibraryTabContentVisibility();
                 adminNoticiasEventosBtn.style.display = 'none';
                 adminBibliotecaBtn.style.display = 'none';
+                renderChats(); // Refrescar chats para ocultar las 'x'
             });
             adminPanelContent.appendChild(logoutButton);
         }
@@ -2505,6 +2547,7 @@
                         updateLibraryTabContentVisibility();
                         adminNoticiasEventosBtn.style.display = 'block';
                         adminBibliotecaBtn.style.display = 'block';
+                        renderChats(); // Refrescar chats para mostrar las 'x' de borrado
                     } else {
                         try {
                             const studentQuery = query(studentsCollection, where("nombres", "==", username));
