@@ -1708,7 +1708,7 @@
                 }
             });
             for (const type in groupedItems) {
-                const containerId = `${type}s-list`;
+                const containerId = type === 'software' ? 'software-list' : `${type}s-list`;
                 const container = document.getElementById(containerId);
                 if (targetType && targetType !== type) {
                     continue;
