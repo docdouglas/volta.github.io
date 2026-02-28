@@ -1031,17 +1031,13 @@
         </div>
     </div>
     
-    <!-- Modal de Registro de Alumno MODIFICADO -->
+    <!-- Modal de Registro de Alumno -->
     <div id="registerStudentModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-user-plus"></i> Registrar Alumno</h3>
                 <span class="close-button">&times;</span>
             </div>
-            <!-- Botón para abrir la lista de alumnos -->
-            <button id="btnVerAlumnosRegistrados" class="admin-button" style="margin-bottom: 15px; background-color: #17a2b8; border-color: #17a2b8; color: white;">
-                <span class="button-icon"><i class="fas fa-users"></i></span> Ver Lista de Alumnos Registrados
-            </button>
             <form id="register-student-form" class="form-group">
                 <input type="hidden" id="student-id">
                 <label for="student-paterno">Apellido Paterno:</label>
@@ -1060,7 +1056,7 @@
         </div>
     </div>
 
-    <!-- NUEVO Modal para la Lista de Alumnos Registrados -->
+    <!-- Modal para la Lista de Alumnos Registrados -->
     <div id="listStudentsModal" class="modal" style="z-index: 2010;">
         <div class="modal-content">
             <div class="modal-header">
@@ -1225,7 +1221,7 @@
         let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
-        let listStudentsModal, btnVerAlumnosRegistrados; // Nuevas variables añadidas
+        let listStudentsModal;
         let listMateriasModal, materiasListButtons;
         let materiaStudentsModal, materiaStudentsTitle, materiaStudentsTbody;
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
@@ -2297,6 +2293,7 @@
             const buttonsConfig = [
                 { text: 'Crear Materia', icon: 'fas fa-chalkboard', target: '#createMateriaModal' },
                 { text: 'Registrar Alumno', icon: 'fas fa-user-plus', target: '#registerStudentModal' },
+                { text: 'Lista de Alumnos', icon: 'fas fa-users', target: '#listStudentsModal' },
                 { text: 'Lista de Materias y Calificaciones', icon: 'fas fa-list-alt', target: '#listMateriasModal' }
             ];
             buttonsConfig.forEach(btn => {
@@ -2313,9 +2310,10 @@
                             materiaIdInput.value = '';
                         } else if (btn.target === '#registerStudentModal') {
                             populateStudentMateriasCheckboxes();
-                            renderAdminStudentsTable();
                             registerStudentForm.reset();
                             studentIdInput.value = '';
+                        } else if (btn.target === '#listStudentsModal') {
+                            renderAdminStudentsTable();
                         } else if (btn.target === '#listMateriasModal') {
                             renderMateriasListButtons();
                         }
@@ -2395,7 +2393,6 @@
             
             // Asignación de variables para el nuevo Modal
             listStudentsModal = document.getElementById('listStudentsModal');
-            btnVerAlumnosRegistrados = document.getElementById('btnVerAlumnosRegistrados');
             studentsAdminTbody = document.getElementById('students-admin-tbody');
 
             listMateriasModal = document.getElementById('listMateriasModal');
@@ -2426,13 +2423,6 @@
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
             updateLibraryTabContentVisibility();
-            
-            // Lógica del nuevo botón
-            btnVerAlumnosRegistrados.addEventListener('click', () => {
-                registerStudentModal.style.display = 'none'; // Cierra modal de registro
-                listStudentsModal.style.display = 'block'; // Abre el de la lista
-                renderAdminStudentsTable();
-            });
 
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
