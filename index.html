@@ -30,31 +30,32 @@
             padding: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-end; /* Alinea la app al fondo de la pantalla por defecto (móvil) */
+            align-items: center; /* Centrado en todas las pantallas */
             min-height: 100vh;
             background-color: var(--secondary-color);
         }
-        /* Ajustes para tabletas y laptops */
-        @media (min-width: 768px) {
-            body {
-                align-items: center; /* Centra la app verticalmente en pantallas grandes */
-            }
-            .app-container {
-                max-width: 700px; /* Ancho máximo para pantallas más grandes */
-                height: 90vh; /* Ocupa el 90% de la altura de la vista en pantallas grandes */
-                border-radius: 15px; /* Bordes redondeados para una apariencia de aplicación de escritorio */
-                margin: auto; /* Centra la aplicación en pantallas grandes */
-            }
-        }
         .app-container {
             width: 100%;
-            max-width: 380px; /* Ancho máximo reducido para simular móvil por defecto */
-            height: 100vh; /* Altura completa de la vista en móvil */
+            max-width: 100%; /* Adaptable a cualquier pantalla móvil sin restricción */
+            height: 100vh; /* Altura completa en móvil */
             display: flex;
             flex-direction: column;
             background-color: #fff;
             box-shadow: 0 0 25px var(--shadow-color);
             position: relative;
+            overflow: hidden; /* Asegura que el contenido no desborde los bordes redondeados en desktop */
+        }
+        /* Ajustes para tabletas y laptops */
+        @media (min-width: 768px) {
+            body {
+                padding: 20px;
+                box-sizing: border-box;
+            }
+            .app-container {
+                max-width: 1000px; /* Ancho extendido para aprovechar pantallas grandes */
+                height: calc(100vh - 40px); /* Deja margen en pantallas grandes */
+                border-radius: 15px; /* Bordes redondeados para apariencia de aplicación */
+            }
         }
         .content {
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
@@ -87,9 +88,9 @@
             line-height: 1.5; /* Altura de línea reducida */
         }
         .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 8px; /* Espacio reducido entre botones */
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Botones responsivos en grilla */
+            gap: 10px; 
             margin-top: 12px;
         }
         .action-button {
@@ -221,20 +222,20 @@
             height: 100%;
             overflow: auto; /* Permite desplazamiento vertical y horizontal en el modal si el contenido lo excede */
             background-color: var(--modal-bg-color);
-            padding-top: 60px;
+            padding-top: 40px;
+            padding-bottom: 40px;
             animation: fadeIn 0.3s ease-out;
         }
         .modal-content {
             background-color: #fefefe;
-            margin: 5% auto;
-            padding: 8px; /* Padding reducido para pantallas pequeñas */
+            margin: auto; /* Centrado mejorado */
+            padding: 20px; /* Espaciado mejorado */
             border-radius: 10px;
             width: 90%;
-            max-width: 320px; /* Ancho máximo reducido para pantallas pequeñas */
+            max-width: 600px; /* Ancho extendido para que se vea bien en pantallas grandes y pequeñas */
             box-shadow: 0 10px 30px var(--dark-shadow-color);
             animation: slideIn 0.3s ease-out;
-            padding-bottom: 15px;
-            font-size: 0.85em; /* Tamaño de fuente reducido para ahorrar espacio */
+            font-size: 0.95em;
         }
         .modal-header {
             display: flex;
@@ -287,10 +288,13 @@
         /* Estilos específicos para el formulario de inicio de sesión (Pestaña Portal) */
         .login-card {
             background-color: #fff;
-            padding: 20px; /* Padding reducido */
+            padding: 25px; /* Padding mejorado */
             border-radius: 12px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 400px; /* Evita que sea gigante en pantallas anchas */
             animation: slideInUp 0.5s ease-out;
         }
         .login-form {
@@ -372,8 +376,8 @@
         }
         /* Estilos para botones de admin */
         .admin-button-group {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsivo en desktop */
             gap: 12px;
             margin-top: 20px;
         }
