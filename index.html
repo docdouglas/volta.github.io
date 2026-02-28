@@ -919,6 +919,88 @@
             font-size: 1.1em;
             cursor: not-allowed;
         }
+
+        /* --- NUEVOS ESTILOS PARA NOTICIAS Y EVENTOS (Pestaña Inicio) --- */
+        .news-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .news-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative; /* Para el botón de eliminar absoluto */
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15);
+            border-color: var(--primary-color);
+        }
+        .news-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .news-badge {
+            background-color: var(--active-bg-color);
+            color: var(--primary-color);
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .news-badge.event {
+            background-color: #fff3cd; /* Amarillo suave para diferenciar eventos */
+            color: #856404;
+        }
+        .news-card-title {
+            font-size: 1.3em;
+            color: var(--text-color);
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .news-card-body {
+            font-size: 1.05em;
+            color: var(--muted-text-color);
+            line-height: 1.6;
+            flex-grow: 1;
+            text-align: justify;
+        }
+        .delete-news-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffebee;
+            color: #f44336;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1em;
+        }
+        .delete-news-btn:hover {
+            background: #f44336;
+            color: white;
+            transform: scale(1.1);
+        }
     </style>
 </head>
 <body>
@@ -1759,14 +1841,16 @@
             newsEventsDisplay.innerHTML = '';
             const allCombinedNewsEvents = [...allNews, ...allEvents].sort((a, b) => a.id.localeCompare(b.id));
             if (allCombinedNewsEvents.length === 0) {
-                newsEventsDisplay.innerHTML = '<p style="text-align: center; color: var(--muted-text-color);">No hay noticias o eventos para mostrar.</p>';
+                newsEventsDisplay.innerHTML = '<p style="text-align: center; color: var(--muted-text-color); font-size: 1.1em; margin-top: 30px;">No hay noticias o eventos para mostrar en este momento.</p>';
                 return;
             }
 
+            const gridContainer = document.createElement('div');
+            gridContainer.className = 'news-events-grid';
+
             allCombinedNewsEvents.forEach(item => {
-                const div = document.createElement('div');
-                div.style.marginBottom = '20px';
-                div.style.position = 'relative';
+                const card = document.createElement('div');
+                card.className = 'news-card';
 
                 let deleteButton = '';
                 if (userIsLoggedIn && !currentLoggedInStudent) {
@@ -1774,25 +1858,36 @@
                         <button class="delete-news-btn"
                                 data-id="${item.id}"
                                 data-type="${item.type}"
-                                style="position: absolute; top: 0; right: 0; background: #f44336; color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer; font-size: 12px;">
-                            🗑️
+                                title="Eliminar">
+                            <i class="fas fa-trash-alt"></i>
                         </button>
                     `;
                 }
 
-                div.innerHTML = `
+                // Determinar el estilo del badge e ícono dependiendo del tipo
+                const badgeClass = item.type === 'event' ? 'news-badge event' : 'news-badge';
+                const iconClass = item.type === 'event' ? 'fa-calendar-alt' : 'fa-newspaper';
+                const typeLabel = item.type === 'event' ? 'Evento' : 'Noticia';
+
+                card.innerHTML = `
                     ${deleteButton}
-                    <h3 class="news-event-title">${item.title}</h3>
-                    <p class="news-event-heading">${item.heading}</p>
+                    <div class="news-card-header">
+                        <i class="fas ${iconClass}" style="color: var(--primary-color); font-size: 1.3em;"></i>
+                        <span class="${badgeClass}">${typeLabel}</span>
+                    </div>
+                    <h3 class="news-card-title">${item.title}</h3>
+                    <div class="news-card-body">${item.heading}</div>
                 `;
-                newsEventsDisplay.appendChild(div);
+                gridContainer.appendChild(card);
             });
+
+            newsEventsDisplay.appendChild(gridContainer);
 
             if (userIsLoggedIn && !currentLoggedInStudent) {
                 newsEventsDisplay.querySelectorAll('.delete-news-btn').forEach(button => {
                     button.addEventListener('click', (e) => {
-                        const id = e.target.closest('button').dataset.id;
-                        const type = e.target.closest('button').dataset.type;
+                        const id = e.currentTarget.dataset.id;
+                        const type = e.currentTarget.dataset.type;
                         showMessageBox('Confirmar', '¿Eliminar este elemento?', 'confirm', async (confirmed) => {
                             if (confirmed) {
                                 try {
