@@ -2475,6 +2475,24 @@
                     document.getElementById(tabId).classList.add('active');
                 });
             });
+
+            // --- Atajos de teclado para pestañas (Alt + 1, 2, 3, 4) ---
+            document.addEventListener('keydown', (e) => {
+                // Verificar si la tecla Alt está presionada
+                if (e.altKey) {
+                    let tabIndex = -1;
+                    if (e.key === '1') tabIndex = 0; // Inicio
+                    else if (e.key === '2') tabIndex = 1; // Biblioteca
+                    else if (e.key === '3') tabIndex = 2; // Chats
+                    else if (e.key === '4') tabIndex = 3; // Portal
+
+                    if (tabIndex !== -1 && navItems[tabIndex]) {
+                        e.preventDefault(); // Previene atajos por defecto del navegador si los hay
+                        navItems[tabIndex].click(); // Simula el clic en el botón de navegación
+                    }
+                }
+            });
+
             actionButtons.forEach(button => {
                 button.addEventListener('click', () => {
                     const modalTargetId = button.getAttribute('data-modal-target');
