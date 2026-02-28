@@ -1071,9 +1071,9 @@
                 <table class="content-table">
                     <thead>
                         <tr>
+                            <th>Nro.</th>
                             <th>Nombre Completo</th>
                             <th>Celular</th>
-                            <th>Materias</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -1966,22 +1966,58 @@
                 studentsAdminTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados.</td></tr>';
                 return;
             }
+
+            // Agrupar alumnos por materia
+            const groupedStudents = {};
+            
             allStudents.forEach(student => {
-                const enrolledMateriasNames = student.enrolledMaterias.map(materiaKey => {
-                    const materiaData = allMaterias[materiaKey];
-                    return materiaData ? materiaData.name : materiaKey;
-                }).join(', ');
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${student.nombres} ${student.paterno} ${student.materno}</td>
-                    <td>${student.celular || 'N/A'}</td>
-                    <td>${enrolledMateriasNames || 'Ninguna'}</td>
-                    <td class="actions-column">
-                        <button class="edit-btn" data-id="${student.id}"><i class="fas fa-edit"></i></button>
-                        <button class="delete-btn" data-id="${student.id}"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                `;
-                studentsAdminTbody.appendChild(tr);
+                if (student.enrolledMaterias.length === 0) {
+                    if (!groupedStudents['Sin Materia']) groupedStudents['Sin Materia'] = [];
+                    groupedStudents['Sin Materia'].push(student);
+                } else {
+                    student.enrolledMaterias.forEach(materiaKey => {
+                        if (!groupedStudents[materiaKey]) groupedStudents[materiaKey] = [];
+                        groupedStudents[materiaKey].push(student);
+                    });
+                }
+            });
+
+            // Obtener nombres de materias ordenados alfabéticamente
+            const sortedMateriaKeys = Object.keys(groupedStudents).sort((a, b) => {
+                const nameA = a === 'Sin Materia' ? 'ZZZ' : (allMaterias[a] ? allMaterias[a].name : a);
+                const nameB = b === 'Sin Materia' ? 'ZZZ' : (allMaterias[b] ? allMaterias[b].name : b);
+                return nameA.localeCompare(nameB);
+            });
+
+            sortedMateriaKeys.forEach(materiaKey => {
+                const materiaName = materiaKey === 'Sin Materia' ? 'Sin Materia Asignada' : (allMaterias[materiaKey] ? allMaterias[materiaKey].name : materiaKey);
+                
+                // Fila separadora/cabecera de materia
+                const headerTr = document.createElement('tr');
+                headerTr.innerHTML = `<td colspan="4" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Materia: ${materiaName}</td>`;
+                studentsAdminTbody.appendChild(headerTr);
+
+                // Ordenar estudiantes alfabéticamente por paterno, materno, nombres
+                const studentsInMateria = groupedStudents[materiaKey].sort((a, b) => {
+                    const nameA = `${a.paterno} ${a.materno} ${a.nombres}`.toLowerCase();
+                    const nameB = `${b.paterno} ${b.materno} ${b.nombres}`.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+
+                let counter = 1;
+                studentsInMateria.forEach(student => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td style="text-align: center; font-weight: bold;">${counter++}</td>
+                        <td>${student.paterno} ${student.materno} ${student.nombres}</td>
+                        <td>${student.celular || 'N/A'}</td>
+                        <td class="actions-column">
+                            <button class="edit-btn" data-id="${student.id}"><i class="fas fa-edit"></i></button>
+                            <button class="delete-btn" data-id="${student.id}"><i class="fas fa-trash-alt"></i></button>
+                        </td>
+                    `;
+                    studentsAdminTbody.appendChild(tr);
+                });
             });
             
             // Lógica para el botón Editar de la nueva tabla en el modal
