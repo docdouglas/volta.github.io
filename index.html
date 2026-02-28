@@ -598,6 +598,107 @@
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
+        
+        /* Estilos de WhatsApp Chat */
+        #chats {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 50px;
+            display: none;
+            flex-direction: column;
+            background-color: #e5ddd5;
+            background-image: url("https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png");
+            z-index: 10;
+        }
+        #chats.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out;
+        }
+        .wa-header {
+            background-color: #075e54;
+            color: white;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .wa-header img {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+        }
+        .wa-messages {
+            flex-grow: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .wa-message {
+            max-width: 85%;
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+        .wa-message.received {
+            align-self: flex-start;
+            background-color: #fff;
+            border-top-left-radius: 0;
+        }
+        .wa-message.sent {
+            align-self: flex-end;
+            background-color: #dcf8c6;
+            border-top-right-radius: 0;
+        }
+        .wa-message .sender {
+            font-weight: bold;
+            font-size: 0.8em;
+            color: #128C7E;
+            margin-bottom: 2px;
+        }
+        .wa-message .text {
+            color: #303030;
+            word-wrap: break-word;
+            line-height: 1.3;
+        }
+        .wa-message .time {
+            font-size: 0.65em;
+            color: #999;
+            align-self: flex-end;
+            margin-top: 4px;
+        }
+        .wa-input-area {
+            background-color: #f0f0f0;
+            padding: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .wa-input-area input {
+            border: none;
+            padding: 12px 15px;
+            border-radius: 20px;
+            outline: none;
+            font-size: 0.9em;
+        }
+        .wa-send-btn {
+            background-color: #128C7E;
+            color: white;
+            border: none;
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+        .wa-send-btn:hover { background-color: #0d7367; }
     </style>
 </head>
 <body>
@@ -684,6 +785,24 @@
                     </button>
                 </div>
             </section>
+
+            <!-- Sección de Chats -->
+            <section id="chats" class="tab-content">
+                <div class="wa-header">
+                    <img src="https://ui-avatars.com/api/?name=Chat+General&background=128C7E&color=fff" alt="Avatar">
+                    <div style="font-weight: bold; font-size: 1.1em;">Chat General</div>
+                </div>
+                <div class="wa-messages" id="chat-messages">
+                    <!-- Mensajes se renderizan aquí -->
+                </div>
+                <div class="wa-input-area">
+                    <input type="text" id="chat-name-input" placeholder="Tu nombre" style="width: 30%;" value="Visitante">
+                    <input type="text" id="chat-text-input" placeholder="Escribe un mensaje..." style="flex-grow: 1;">
+                    <button id="chat-send-btn" class="wa-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </section>
         </main>
         <nav class="bottom-nav">
             <button class="nav-item active" data-tab="inicio">
@@ -693,6 +812,10 @@
             <button class="nav-item" data-tab="biblioteca">
                 <div class="icon"><i class="fas fa-book-open"></i></div>
                 <span>Biblioteca</span>
+            </button>
+            <button class="nav-item" data-tab="chats">
+                <div class="icon"><i class="fab fa-whatsapp"></i></div>
+                <span>Chats</span>
             </button>
             <button class="nav-item" data-tab="portal">
                 <div class="icon"><i class="fas fa-user-circle"></i></div>
@@ -1061,12 +1184,16 @@
         const libraryItemsCollection = getCollectionRef('libraryItems');
         const materiasCollection = getCollectionRef('materias');
         const studentsCollection = getCollectionRef('students');
+        const chatsCollection = getCollectionRef('chats');
+
         // --- Data Storage (will be populated by Firestore listeners) ---
         let allNews = [];
         let allEvents = [];
         let allLibraryItems = [];
         let allMaterias = {}; // Keyed by lowercased materia name
         let allStudents = [];
+        let allChats = [];
+
         // --- DOM Elements (Declared globally) ---
         let navItems, tabContents, actionButtons, modals, closeButtons;
         let portalTitle, portalIntroText, loginCard, togglePassword, passwordInput, loginForm, adminPanelContent;
@@ -1284,7 +1411,45 @@
                 console.error("❌ Error fetching students from Firestore:", error);
                 showMessageBox('Error de Carga', 'No se pudieron cargar los datos de los alumnos.');
             });
+
+            // Listener for Chats
+            onSnapshot(chatsCollection, (snapshot) => {
+                try {
+                    allChats = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                    renderChats();
+                } catch (error) {
+                    console.error("❌ Error processing chats data:", error);
+                }
+            }, (error) => {
+                console.error("❌ Error fetching chats from Firestore:", error);
+            });
         }
+
+        function renderChats() {
+            const chatBox = document.getElementById('chat-messages');
+            if (!chatBox) return;
+            chatBox.innerHTML = '';
+            
+            // Ordenar mensajes en memoria por timestamp (Rule 2)
+            const sortedChats = [...allChats].sort((a, b) => a.timestamp - b.timestamp);
+            
+            sortedChats.forEach(chat => {
+                const div = document.createElement('div');
+                const isSentByMe = chat.userId === userId;
+                div.className = `wa-message ${isSentByMe ? 'sent' : 'received'}`;
+                
+                const timeString = new Date(chat.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                
+                div.innerHTML = `
+                    <div class="sender">${chat.senderName || 'Visitante'}</div>
+                    <div class="text">${chat.text}</div>
+                    <div class="time">${timeString}</div>
+                `;
+                chatBox.appendChild(div);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
         // --- Admin: Manage News and Events ---
         async function handleNewsEventFormSubmit(e) {
             e.preventDefault();
@@ -2353,6 +2518,50 @@
             materiaStudentsModal.onclick = (e) => {
                 if (e.target === materiaStudentsModal) closeMateriaStudentsModal();
             };
+
+            // --- Logica Chat WhatsApp ---
+            const chatTextInput = document.getElementById('chat-text-input');
+            const chatSendBtn = document.getElementById('chat-send-btn');
+            const chatNameInput = document.getElementById('chat-name-input');
+
+            const sendMessage = async () => {
+                const text = chatTextInput.value.trim();
+                let senderName = chatNameInput.value.trim() || 'Visitante';
+                
+                if (currentLoggedInStudent) {
+                    senderName = `${currentLoggedInStudent.nombres} ${currentLoggedInStudent.paterno}`;
+                    chatNameInput.value = senderName;
+                    chatNameInput.disabled = true;
+                } else if (userIsLoggedIn) {
+                    senderName = 'Admin (Douglas)';
+                    chatNameInput.value = senderName;
+                    chatNameInput.disabled = true;
+                }
+
+                if (!text) return;
+
+                try {
+                    await addDoc(chatsCollection, {
+                        text: text,
+                        senderName: senderName,
+                        userId: userId,
+                        timestamp: Date.now()
+                    });
+                    chatTextInput.value = '';
+                } catch (e) {
+                    console.error("Error al enviar mensaje:", e);
+                }
+            };
+
+            if (chatSendBtn) {
+                chatSendBtn.addEventListener('click', sendMessage);
+            }
+            if (chatTextInput) {
+                chatTextInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendMessage();
+                });
+            }
+
             setupFirebaseAndAuth();
         });
     </script>
