@@ -718,6 +718,89 @@
             transition: color 0.3s ease;
         }
         .delete-chat-btn:hover { color: #f44336; }
+
+        /* --- NUEVOS ESTILOS ELEGANTES PARA BIBLIOTECA --- */
+        .library-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-top: 25px;
+        }
+        .library-card {
+            background: #ffffff;
+            border: 1px solid #eef2f5;
+            border-radius: 16px;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            appearance: none;
+            font-family: inherit;
+            width: 100%;
+        }
+        .library-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.15);
+            border-color: var(--primary-color);
+        }
+        .library-card-icon {
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--active-bg-color) 0%, #ffffff 100%);
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            margin-bottom: 18px;
+            transition: all 0.4s ease;
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.1);
+        }
+        .library-card:hover .library-card-icon {
+            background: var(--primary-color);
+            color: white;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 15px rgba(74, 144, 226, 0.3);
+        }
+        .library-card-title {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: var(--dark-nav-color);
+            margin-bottom: 8px;
+        }
+        .library-card-desc {
+            font-size: 0.85em;
+            color: var(--muted-text-color);
+            line-height: 1.5;
+        }
+        .restricted-access-card {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.06);
+            border-top: 5px solid var(--primary-color);
+            margin-top: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .restricted-icon {
+            font-size: 3em;
+            color: var(--gold-color);
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
@@ -741,34 +824,37 @@
                         <span class="button-icon"><i class="fas fa-book-reader"></i></span> Gestionar Biblioteca
                     </button>
                 </div>
-                <div id="library-access-required" style="text-align: center; padding: 5px;">
-                    <img src="volta.png" alt="Volta Logo" style="max-width: 200px; margin-bottom: 5px; border-radius: 5px;">
-                    <p style="color: var(--primary-color); font-weight: bold; font-size: 1.1em;">
-                        ¡Acceso Restringido!
-                    </p>
-                    <p style="color: var(--muted-text-color);">
-                        Para acceder a la biblioteca digital, por favor **inicia sesión** en tu cuenta de alumno
-                        desde la pestaña **"Portal"**. Una vez que hayas iniciado sesión, podrás explorar todos nuestros recursos.
+                
+                <div id="library-access-required" class="restricted-access-card">
+                    <div class="restricted-icon"><i class="fas fa-lock"></i></div>
+                    <h3 style="color: var(--dark-nav-color); margin-bottom: 10px; font-size: 1.3em;">Acceso Restringido</h3>
+                    <p style="color: var(--muted-text-color); line-height: 1.6;">
+                        Para acceder a nuestra exclusiva colección de materiales, por favor <strong>inicia sesión</strong> desde la pestaña "Portal".
                     </p>
                 </div>
+
                 <div id="library-content" style="display: none;">
-                    <p>Explora nuestros recursos digitales: libros, videos y software.</p>
-                    <div class="button-group">
-                        <button class="action-button" data-modal-target="#practicasModal">
-                            <span class="button-icon"><i class="fas fa-flask"></i></span>
-                            Prácticas
+                    <p style="text-align: center; color: var(--muted-text-color); margin-bottom: 10px; font-size: 1.05em;">Explora nuestros recursos digitales seleccionados cuidadosamente para tu aprendizaje.</p>
+                    <div class="library-grid">
+                        <button class="library-card" data-modal-target="#practicasModal">
+                            <div class="library-card-icon"><i class="fas fa-flask"></i></div>
+                            <div class="library-card-title">Prácticas</div>
+                            <div class="library-card-desc">Guías paso a paso y ejercicios de laboratorio.</div>
                         </button>
-                        <button class="action-button" data-modal-target="#librosModal">
-                            <span class="button-icon"><i class="fas fa-book"></i></span>
-                            Libros
+                        <button class="library-card" data-modal-target="#librosModal">
+                            <div class="library-card-icon"><i class="fas fa-book"></i></div>
+                            <div class="library-card-title">Libros</div>
+                            <div class="library-card-desc">Textos teóricos, manuales y referencias.</div>
                         </button>
-                        <button class="action-button" data-modal-target="#videosModal">
-                            <span class="button-icon"><i class="fas fa-video"></i></span>
-                            Videos
+                        <button class="library-card" data-modal-target="#videosModal">
+                            <div class="library-card-icon"><i class="fas fa-video"></i></div>
+                            <div class="library-card-title">Videos</div>
+                            <div class="library-card-desc">Clases grabadas, demostraciones y tutoriales.</div>
                         </button>
-                        <button class="action-button" data-modal-target="#softwareModal">
-                            <span class="button-icon"><i class="fas fa-code"></i></span>
-                            Software
+                        <button class="library-card" data-modal-target="#softwareModal">
+                            <div class="library-card-icon"><i class="fas fa-code"></i></div>
+                            <div class="library-card-title">Software</div>
+                            <div class="library-card-desc">Simuladores, herramientas y programas útiles.</div>
                         </button>
                     </div>
                 </div>
@@ -2384,7 +2470,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             navItems = document.querySelectorAll('.nav-item');
             tabContents = document.querySelectorAll('.tab-content');
-            actionButtons = document.querySelectorAll('.action-button');
+            actionButtons = document.querySelectorAll('.action-button, .library-card');
             modals = document.querySelectorAll('.modal');
             closeButtons = document.querySelectorAll('.close-button');
             portalTitle = document.getElementById('portal-title');
