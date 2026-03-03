@@ -2072,25 +2072,28 @@
 
             const typeLabels = { practica: 'Prácticas', libro: 'Libros', video: 'Videos', software: 'Software' };
 
-            // 2. Renderizar la tabla por grupos reiniciando la numeración
+            // 2. Renderizar la tabla por grupos reiniciando la numeración y ordenando alfabéticamente
             for (const type in groupedItems) {
                 const items = groupedItems[type];
                 if (items.length > 0) {
+                    // Ordenar alfabéticamente por título
+                    items.sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
+
                     // Fila de encabezado separador para el tipo
                     const headerTr = document.createElement('tr');
                     headerTr.innerHTML = `<td colspan="5" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Tipo: ${typeLabels[type] || type}</td>`;
                     libraryItemsAdminTbody.appendChild(headerTr);
 
-                    let counter = 1; // Reinicia el contador a 1 para cada tipo
-                    items.forEach(item => {
+                    items.forEach((item, index) => {
+                        const displayCode = index + 1; // Número visual ordenado
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
-                            <td style="text-align: center; font-weight: bold;">${counter++}</td>
+                            <td style="text-align: center; font-weight: bold;">${displayCode}</td>
                             <td>${item.title}</td>
                             <td>${typeLabels[type] || item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
                             <td style="text-align: center;"><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
                             <td class="actions-column">
-                                <button class="edit-btn" data-id="${item.id}"><i class="fas fa-edit"></i></button>
+                                <button class="edit-btn" data-id="${item.id}" data-displaycode="${displayCode}"><i class="fas fa-edit"></i></button>
                                 <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
                             </td>
                         `;
@@ -2102,6 +2105,7 @@
             libraryItemsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
+                    const displayCode = e.target.closest('button').dataset.displaycode;
                     const item = allLibraryItems.find(n => n.id === id);
                     if (item) {
                         // Abrir el modal de edición y poblar los datos
@@ -2109,7 +2113,7 @@
                         editLibraryItemModal.style.display = 'block';
                         
                         libraryItemIdInput.value = item.id;
-                        libraryItemCodeDisplay.value = item.code;
+                        libraryItemCodeDisplay.value = displayCode; // Muestra el número visual actual
                         libraryItemTitleInput.value = item.title;
                         libraryItemTypeSelect.value = item.type;
                         libraryItemLinkInput.value = item.link;
@@ -2132,7 +2136,7 @@
             libraryItemsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
-                    showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este ítem? Los ítems restantes se renumerarán.', 'confirm', async (confirmed) => {
+                    showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este ítem?', 'confirm', async (confirmed) => {
                         if (confirmed) {
                             try {
                                 await deleteDoc(doc(libraryItemsCollection, id));
@@ -2148,7 +2152,7 @@
                                     });
                                     await batch.commit();
                                 }
-                                showMessageBox('Éxito', 'Ítem eliminado y renumeración actualizada.');
+                                showMessageBox('Éxito', 'Ítem eliminado con éxito.');
                             } catch (error) {
                                 console.error("Error al eliminar o renumerar ítems:", error);
                                 showMessageBox('Error', 'No se pudo completar la eliminación. Inténtalo de nuevo.');
@@ -2180,7 +2184,16 @@
                 if (targetType && targetType !== type) {
                     continue;
                 }
+                
                 let itemsToRender = groupedItems[type];
+
+                // 1. Ordenar alfabéticamente y asignar su número visual (igual que en la tabla admin)
+                itemsToRender.sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
+                itemsToRender.forEach((item, index) => {
+                    item.displayCode = index + 1;
+                });
+
+                // 2. Aplicar filtro si el usuario busca algo
                 if (searchQuery) {
                     const lowerCaseQuery = searchQuery.toLowerCase();
                     itemsToRender = itemsToRender.filter(item =>
@@ -2188,6 +2201,7 @@
                         (item.description && item.description.toLowerCase().includes(lowerCaseQuery))
                     );
                 }
+                
                 if (container) {
                     if (itemsToRender.length === 0) {
                         container.innerHTML = `<p style="text-align: center; color: var(--muted-text-color); font-size: 1.1em; margin-top: 30px;">No hay recursos disponibles que coincidan con tu búsqueda.</p>`;
@@ -2214,7 +2228,7 @@
                                     <div class="resource-card-info">
                                         <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
                                         <p class="resource-card-desc" title="${item.description || 'Sin descripción'}">${item.description || 'Sin descripción'}</p>
-                                        <p class="resource-card-meta">Nro. ${item.code} - ${tipoCapitalizado}</p>
+                                        <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado}</p>
                                         ${displayLink}
                                     </div>
                                 </div>
@@ -3218,8 +3232,7 @@
                 libraryItemImageBase64Input.value = '';
                 libraryItemImagePreview.style.display = 'none';
                 libraryItemImagePreview.src = '';
-                const nextCode = allLibraryItems.length + 1;
-                libraryItemCodeDisplay.value = nextCode;
+                libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
             });
 
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
