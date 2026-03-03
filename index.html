@@ -472,6 +472,7 @@
         .form-group input[type="text"],
         .form-group input[type="url"],
         .form-group input[type="number"],
+        .form-group input[type="file"],
         .form-group select,
         .form-group textarea {
             width: 100%;
@@ -941,11 +942,11 @@
         .resource-card-img {
             width: 100%;
             height: 180px; /* Un poco más alto para mejor visualización */
-            object-fit: contain; /* Mantiene la proporción de la imagen para que se vea completa */
+            object-fit: cover; /* Cambiado a cover para que llene el recuadro elegantemente sin blancos */
             object-position: center;
             border-radius: 8px;
             margin-bottom: 15px;
-            background-color: #f9f9f9; /* Fondo suave por si la imagen no ocupa todo el ancho */
+            background-color: #f9f9f9; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
             display: block;
             box-sizing: border-box;
@@ -1313,9 +1314,13 @@
                 </select>
                 <label for="library-item-link">Link del Recurso:</label>
                 <input type="url" id="library-item-link" placeholder="URL del recurso" required>
-                <!-- NUEVO CAMPO: URL DE LA IMAGEN -->
-                <label for="library-item-image">URL de la Imagen (Opcional):</label>
-                <input type="url" id="library-item-image" placeholder="https://ejemplo.com/imagen.jpg">
+                
+                <!-- NUEVO CAMPO: SUBIR ARCHIVO DE IMAGEN -->
+                <label for="library-item-image-file">Subir Imagen (Opcional):</label>
+                <input type="file" id="library-item-image-file" accept="image/*">
+                <input type="hidden" id="library-item-image-base64">
+                <img id="library-item-image-preview" src="" alt="Previsualización" style="display:none; max-width: 100%; height: 120px; object-fit: cover; margin-top: 10px; border-radius: 8px; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                
                 <label for="library-item-description">Descripción:</label>
                 <textarea id="library-item-description" rows="3" placeholder="Descripción del recurso"></textarea>
                 <button type="submit">Guardar</button>
@@ -1556,7 +1561,7 @@
         let studentMainView, studentDetailView, studentDetailTitle, studentGradeDetailsContent, btnBackStudent;
 
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventsAdminTbody, newsEventsDisplay;
-        let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemImageInput, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listStudentsModal;
@@ -1982,14 +1987,14 @@
             }
         }
 
-        // --- Gestión de la Biblioteca (Añadiendo opción de imagen) ---
+        // --- Gestión de la Biblioteca (Añadiendo compresión en subida de imagen) ---
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
             const id = libraryItemIdInput.value;
             const title = libraryItemTitleInput.value;
             const type = libraryItemTypeSelect.value;
             const link = libraryItemLinkInput.value;
-            const imageUrl = libraryItemImageInput.value.trim(); // Se añade la imagen
+            const imageUrl = libraryItemImageBase64Input.value; // Se toma el valor procesado en Base64
             const description = libraryItemDescriptionInput.value;
             let code;
             if (id) {
@@ -2002,15 +2007,21 @@
             } else {
                 code = allLibraryItems.length + 1;
             }
-            const newItem = { code, title, type, link, imageUrl, description }; // Imagen guardada en el objeto
+            const newItem = { code, title, type, link, imageUrl, description }; 
             try {
                 if (id) {
                     await setDoc(doc(libraryItemsCollection, id), newItem);
                 } else {
                     await addDoc(libraryItemsCollection, newItem);
                 }
+                
+                // Reiniciar el formulario manual al guardar
                 libraryItemForm.reset();
                 libraryItemIdInput.value = '';
+                libraryItemImageBase64Input.value = '';
+                libraryItemImagePreview.style.display = 'none';
+                libraryItemImagePreview.src = '';
+
                 const nextCode = allLibraryItems.length + 1;
                 libraryItemCodeDisplay.value = nextCode;
                 showMessageBox('Éxito', 'Ítem de biblioteca guardado con éxito.');
@@ -2050,8 +2061,19 @@
                         libraryItemTitleInput.value = item.title;
                         libraryItemTypeSelect.value = item.type;
                         libraryItemLinkInput.value = item.link;
-                        libraryItemImageInput.value = item.imageUrl || ''; // Carga el valor de la imagen si existe
                         libraryItemDescriptionInput.value = item.description;
+
+                        // Resetea el input de archivo para que no guarde estados pasados
+                        libraryItemImageFileInput.value = ''; 
+                        if(item.imageUrl) {
+                            libraryItemImageBase64Input.value = item.imageUrl;
+                            libraryItemImagePreview.src = item.imageUrl;
+                            libraryItemImagePreview.style.display = 'block';
+                        } else {
+                            libraryItemImageBase64Input.value = '';
+                            libraryItemImagePreview.style.display = 'none';
+                            libraryItemImagePreview.src = '';
+                        }
                     }
                 });
             });
@@ -2125,7 +2147,7 @@
                                 ? `<a href="${item.link}" target="_blank" class="resource-action-btn"><i class="fas fa-external-link-alt" style="margin-right: 8px;"></i> Acceder</a>` 
                                 : `<span class="resource-action-disabled"><i class="fas fa-ban" style="margin-right: 8px;"></i> No disponible</span>`;
                             
-                            // Integrar la imagen solo si el recurso tiene una URL guardada (con fallback visual si el enlace falla)
+                            // Integrar la imagen solo si el recurso tiene un string Base64/Url guardado
                             const imageHTML = item.imageUrl ? `<img src="${item.imageUrl}" alt="Imagen de ${item.title}" class="resource-card-img" onerror="this.onerror=null; this.src='https://placehold.co/400x300/f0f4f8/4a90e2?text=Imagen+No+Disponible';">` : '';
 
                             gridHTML += `
@@ -2820,7 +2842,12 @@
             libraryItemTitleInput = document.getElementById('library-item-title');
             libraryItemTypeSelect = document.getElementById('library-item-type');
             libraryItemLinkInput = document.getElementById('library-item-link');
-            libraryItemImageInput = document.getElementById('library-item-image'); // Instancia del nuevo input
+            
+            // Asignar los nuevos elementos del subidor de imágenes
+            libraryItemImageFileInput = document.getElementById('library-item-image-file');
+            libraryItemImageBase64Input = document.getElementById('library-item-image-base64');
+            libraryItemImagePreview = document.getElementById('library-item-image-preview');
+
             libraryItemDescriptionInput = document.getElementById('library-item-description');
             libraryItemsAdminTbody = document.getElementById('library-items-admin-tbody');
             createMateriaModal = document.getElementById('createMateriaModal');
@@ -2866,6 +2893,56 @@
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
             updateLibraryTabContentVisibility();
+
+            // --- Lógica del subidor de imágenes ---
+            libraryItemImageFileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) {
+                    libraryItemImageBase64Input.value = '';
+                    libraryItemImagePreview.style.display = 'none';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        // Redimensionamos a un máximo de 800px para evitar superar el límite de 1MB de Firestore
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+                        const maxDim = 800;
+
+                        if (width > height) {
+                            if (width > maxDim) {
+                                height *= maxDim / width;
+                                width = maxDim;
+                            }
+                        } else {
+                            if (height > maxDim) {
+                                width *= maxDim / height;
+                                height = maxDim;
+                            }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Comprimimos el JPEG al 70% de calidad, esto mantendrá la imagen pequeña
+                        const base64String = canvas.toDataURL('image/jpeg', 0.7);
+                        libraryItemImageBase64Input.value = base64String;
+                        
+                        // Mostramos la previsualización
+                        libraryItemImagePreview.src = base64String;
+                        libraryItemImagePreview.style.display = 'block';
+                    }
+                    img.src = event.target.result;
+                }
+                reader.readAsDataURL(file);
+            });
+
 
             navItems.forEach(item => {
                 item.addEventListener('click', () => {
@@ -2950,6 +3027,12 @@
                         if (form) form.reset();
                         const hiddenId = modal.querySelector('input[type="hidden"]');
                         if(hiddenId) hiddenId.value = '';
+                        // Reiniciar la vista previa del archivo si es el modal de biblioteca
+                        if(modal.id === 'manageLibraryModal') {
+                            libraryItemImageBase64Input.value = '';
+                            libraryItemImagePreview.style.display = 'none';
+                            libraryItemImagePreview.src = '';
+                        }
                     }
                 });
             });
@@ -2961,6 +3044,11 @@
                         if (form) form.reset();
                         const hiddenId = modal.querySelector('input[type="hidden"]');
                         if(hiddenId) hiddenId.value = '';
+                        if(modal.id === 'manageLibraryModal') {
+                            libraryItemImageBase64Input.value = '';
+                            libraryItemImagePreview.style.display = 'none';
+                            libraryItemImagePreview.src = '';
+                        }
                     }
                 });
             });
@@ -3059,6 +3147,9 @@
                 renderAdminLibraryItemsTable();
                 libraryItemForm.reset();
                 libraryItemIdInput.value = '';
+                libraryItemImageBase64Input.value = '';
+                libraryItemImagePreview.style.display = 'none';
+                libraryItemImagePreview.src = '';
                 const nextCode = allLibraryItems.length + 1;
                 libraryItemCodeDisplay.value = nextCode;
             });
