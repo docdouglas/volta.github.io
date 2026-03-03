@@ -1297,10 +1297,42 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Principal de Biblioteca (Solo Tabla) -->
     <div id="manageLibraryModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h3><i class="fas fa-book-reader"></i> Gestionar Biblioteca</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            
+            <button id="btnAddNewLibraryItem" class="admin-button" style="margin-bottom: 15px; width: auto; padding: 8px 15px; display: inline-flex;">
+                <i class="fas fa-plus" style="margin-right: 8px;"></i> Añadir Nuevo Recurso
+            </button>
+            
+            <div class="table-responsive">
+                <table class="content-table">
+                    <thead>
+                        <tr>
+                            <th>Nro.</th>
+                            <th>Título</th>
+                            <th>Tipo</th>
+                            <th>Recurso</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="library-items-admin-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Secundario de Biblioteca (Formulario superpuesto) -->
+    <div id="editLibraryItemModal" class="modal" style="z-index: 2010;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="editLibraryItemModalTitle"><i class="fas fa-edit"></i> Recurso de Biblioteca</h3>
                 <span class="close-button">&times;</span>
             </div>
             <form id="library-item-form" class="form-group">
@@ -1329,24 +1361,9 @@
                 <textarea id="library-item-description" rows="3" placeholder="Descripción del recurso"></textarea>
                 <button type="submit">Guardar</button>
             </form>
-            <h4 style="margin-top: 20px; color: var(--primary-color);">Ítems de Biblioteca</h4>
-            <div class="table-responsive">
-                <table class="content-table">
-                    <thead>
-                        <tr>
-                            <th>Nro.</th>
-                            <th>Título</th>
-                            <th>Tipo</th>
-                            <th>Recurso</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="library-items-admin-tbody">
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
+
     <div id="createMateriaModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1565,7 +1582,7 @@
         let studentMainView, studentDetailView, studentDetailTitle, studentGradeDetailsContent, btnBackStudent;
 
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventsAdminTbody, newsEventsDisplay;
-        let manageLibraryModal, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listStudentsModal;
@@ -2026,8 +2043,9 @@
                 libraryItemImagePreview.style.display = 'none';
                 libraryItemImagePreview.src = '';
 
-                const nextCode = allLibraryItems.length + 1;
-                libraryItemCodeDisplay.value = nextCode;
+                // Ocultar el modal de edición
+                editLibraryItemModal.style.display = 'none';
+
                 showMessageBox('Éxito', 'Ítem de biblioteca guardado con éxito.');
             } catch (e) {
                 console.error("Error al añadir/actualizar ítem de biblioteca: ", e);
@@ -2060,6 +2078,10 @@
                     const id = e.target.closest('button').dataset.id;
                     const item = allLibraryItems.find(n => n.id === id);
                     if (item) {
+                        // Abrir el modal de edición y poblar los datos
+                        editLibraryItemModalTitle.innerHTML = '<i class="fas fa-edit"></i> Editar Recurso';
+                        editLibraryItemModal.style.display = 'block';
+                        
                         libraryItemIdInput.value = item.id;
                         libraryItemCodeDisplay.value = item.code;
                         libraryItemTitleInput.value = item.title;
@@ -2843,6 +2865,12 @@
             newsEventsAdminTbody = document.getElementById('news-events-admin-tbody');
             newsEventsDisplay = document.getElementById('news-events-display');
             manageLibraryModal = document.getElementById('manageLibraryModal');
+            
+            // Asignación de variables del nuevo modal
+            editLibraryItemModal = document.getElementById('editLibraryItemModal');
+            btnAddNewLibraryItem = document.getElementById('btnAddNewLibraryItem');
+            editLibraryItemModalTitle = document.getElementById('editLibraryItemModalTitle');
+
             libraryItemForm = document.getElementById('library-item-form');
             libraryItemIdInput = document.getElementById('library-item-id');
             libraryItemCodeDisplay = document.getElementById('library-item-code-display');
@@ -3051,7 +3079,7 @@
                         if (form) form.reset();
                         const hiddenId = modal.querySelector('input[type="hidden"]');
                         if(hiddenId) hiddenId.value = '';
-                        if(modal.id === 'manageLibraryModal') {
+                        if(modal.id === 'editLibraryItemModal') { // Actualizado para el nuevo ID
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
@@ -3152,6 +3180,13 @@
             document.getElementById('btnGestionarBiblioteca').addEventListener('click', () => {
                 manageLibraryModal.style.display = 'block';
                 renderAdminLibraryItemsTable();
+                // Ahora el reseteo del form pasa al botón de "Añadir Nuevo"
+            });
+            
+            // Evento para el botón de "Añadir Nuevo Recurso" dentro del modal
+            btnAddNewLibraryItem.addEventListener('click', () => {
+                editLibraryItemModalTitle.innerHTML = '<i class="fas fa-plus"></i> Añadir Nuevo Recurso';
+                editLibraryItemModal.style.display = 'block';
                 libraryItemForm.reset();
                 libraryItemIdInput.value = '';
                 libraryItemImageBase64Input.value = '';
@@ -3160,6 +3195,7 @@
                 const nextCode = allLibraryItems.length + 1;
                 libraryItemCodeDisplay.value = nextCode;
             });
+
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
             libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
