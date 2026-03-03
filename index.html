@@ -900,144 +900,108 @@
             animation: fadeIn 0.4s ease-out;
         }
 
-        /* --- ESTILOS PARA LA BIBLIOTECA VIRTUAL (Tarjetas de Recursos) --- */
+        /* --- ESTILOS PARA LA BIBLIOTECA VIRTUAL (Diseño inspirado en la imagen) --- */
         .virtual-library-grid {
             display: grid;
-            grid-template-columns: 1fr; /* Una columna por defecto para que la tarjeta horizontal respire */
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* Columnas responsivas */
+            gap: 15px;
             margin-top: 20px;
         }
-        @media (min-width: 900px) {
-            .virtual-library-grid {
-                grid-template-columns: repeat(2, 1fr); /* Dos columnas en pantallas grandes */
-            }
-        }
         .resource-card {
-            background: #fff;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid #eaeaea;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 4px;
             display: flex;
-            flex-direction: column; /* En móvil: imagen arriba, texto abajo */
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        @media (min-width: 600px) {
-            .resource-card {
-                flex-direction: row; /* En PC/Tablet: Imagen a la izquierda, Texto a la derecha */
-                align-items: stretch;
-            }
+            flex-direction: row; /* Imagen a la izq, texto a la der SIEMPRE */
+            align-items: center; /* Alineación vertical centrada */
+            padding: 8px;
+            gap: 15px;
+            transition: background-color 0.2s ease, border-color 0.2s ease;
+            text-decoration: none;
         }
         .resource-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15);
-            border-color: var(--primary-color);
-        }
-        .resource-card-info {
-            flex: 1;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
+            background-color: #f0f5fa; /* Color suave al pasar el ratón */
+            border-color: #d8e6f3;
         }
         .resource-card-img-wrapper {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            width: 85px; /* Tamaño tipo ícono grande */
+            height: 85px;
+            min-width: 85px;
+            background: linear-gradient(180deg, #ffffff 0%, #e4e9f0 100%); /* Fondo emulando el icono de la foto */
+            border: 1px solid #b0b5b9; /* Borde oscuro y sutil */
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.15); /* Sombre 3D */
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 15px;
-            border-bottom: 1px solid #eaeaea; /* Borde para móvil */
+            border-radius: 2px;
+            overflow: hidden;
+            position: relative;
         }
-        @media (min-width: 600px) {
-            .resource-card-img-wrapper {
-                width: 250px; /* Tamaño más grande para dar protagonismo a la imagen a la izquierda */
-                min-width: 250px;
-                border-bottom: none;
-                border-right: 1px solid #eaeaea; /* Separador vertical a la derecha de la imagen */
-            }
-        }
-        .resource-card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            border-bottom: 1px solid #f0f0f0;
-            padding-bottom: 8px;
-        }
-        .resource-badge {
-            background-color: var(--active-bg-color);
-            color: var(--primary-color);
-            font-weight: 700;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-        }
-        /* Estilo para la imagen representativa del recurso */
         .resource-card-img {
             width: 100%;
-            height: 170px; /* Un poco más alta para un mejor aspecto en el recuadro izquierdo */
-            object-fit: contain;
-            object-position: center;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.15)); /* Sombra a la imagen para efecto 3D llamativo */
-            display: block;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Animación suave */
-        }
-        .resource-card:hover .resource-card-img {
-            transform: scale(1.08); /* La imagen crece un poco al pasar el ratón */
+            height: 100%;
+            object-fit: cover;
         }
         .resource-card-no-img {
-            font-size: 4em;
-            color: #d1d9e6;
-            transition: transform 0.4s ease;
+            font-size: 3em;
+            color: #6a85a3; /* Tono azul grisáceo del icono musical de la foto */
         }
-        .resource-card:hover .resource-card-no-img {
-            transform: scale(1.1);
+        .resource-card-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-width: 0; /* Crucial para que el texto largo se acorte con '...' */
+            gap: 2px; /* Espaciado ajustado entre textos */
         }
         .resource-card-title {
-            font-size: 1.25em; 
-            color: var(--text-color);
-            margin: 0 0 10px 0;
-            font-weight: 700;
-            line-height: 1.3;
+            font-size: 1.05em;
+            color: #000;
+            margin: 0;
+            font-weight: 500;
+            white-space: nowrap; /* Evita saltos de línea */
+            overflow: hidden;
+            text-overflow: ellipsis; /* Pone los "..." */
         }
-        .resource-card-desc {
-            font-size: 1em; /* Tamaño normal */
-            color: var(--muted-text-color);
-            line-height: 1.5;
-            flex-grow: 1; 
-            margin-bottom: 20px;
+        .resource-card-desc, .resource-card-meta {
+            font-size: 0.9em;
+            color: #333;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .resource-action-btn {
-            display: inline-block;
-            text-align: center;
-            background-color: var(--primary-color);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            margin-top: 5px;
+            padding: 4px 12px;
+            background-color: transparent;
+            color: var(--primary-color);
+            font-size: 0.85em;
             font-weight: 600;
-            font-size: 1em; /* Tamaño normal */
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            border: none;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
             cursor: pointer;
-            align-self: flex-start; /* Fuerza al botón a quedarse a la izquierda sin ocupar todo el ancho */
+            display: inline-block;
+            align-self: flex-start; /* Evita que crezca a lo ancho */
+            text-decoration: none;
+            transition: all 0.2s ease;
         }
         .resource-action-btn:hover {
-            background-color: var(--button-hover-bg);
+            background-color: var(--primary-color);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
         }
         .resource-action-disabled {
-            display: inline-block;
-            text-align: center;
-            background-color: #e0e0e0;
-            color: #888;
-            padding: 10px 20px;
-            border-radius: 8px;
+            margin-top: 5px;
+            padding: 4px 12px;
+            background-color: transparent;
+            color: #999;
+            font-size: 0.85em;
             font-weight: 600;
-            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: inline-block;
+            align-self: flex-start;
             cursor: not-allowed;
-            align-self: flex-start; /* Fuerza al span a quedarse a la izquierda */
         }
 
         /* --- NUEVOS ESTILOS PARA NOTICIAS Y EVENTOS (Pestaña Inicio) --- */
@@ -2180,17 +2144,19 @@
                     if (itemsToRender.length === 0) {
                         container.innerHTML = `<p style="text-align: center; color: var(--muted-text-color); font-size: 1.1em; margin-top: 30px;">No hay recursos disponibles que coincidan con tu búsqueda.</p>`;
                     } else {
-                        // REEMPLAZO: Diseño horizontal de tarjetas
+                        // REEMPLAZO: Diseño horizontal inspirado en la imagen
                         let gridHTML = `<div class="virtual-library-grid">`;
                         itemsToRender.forEach(item => {
                             const displayLink = item.link 
-                                ? `<a href="${item.link}" target="_blank" class="resource-action-btn"><i class="fas fa-download" style="margin-right: 8px;"></i> Acceder / Descargar</a>` 
-                                : `<span class="resource-action-disabled"><i class="fas fa-ban" style="margin-right: 8px;"></i> No disponible</span>`;
+                                ? `<a href="${item.link}" target="_blank" class="resource-action-btn"><i class="fas fa-download" style="margin-right: 5px;"></i> Acceder</a>` 
+                                : `<span class="resource-action-disabled"><i class="fas fa-ban" style="margin-right: 5px;"></i> No disponible</span>`;
                             
                             // Integrar la imagen o el icono por defecto
                             const imageHTML = item.imageUrl 
-                                ? `<img src="${item.imageUrl}" alt="Imagen de ${item.title}" class="resource-card-img" onerror="this.onerror=null; this.src='https://placehold.co/400x300/f0f4f8/4a90e2?text=Imagen+No+Disponible';">` 
+                                ? `<img src="${item.imageUrl}" alt="Imagen" class="resource-card-img" onerror="this.onerror=null; this.src='https://placehold.co/100x100/f0f4f8/4a90e2?text=Sin+Imagen';">` 
                                 : `<div class="resource-card-no-img"><i class="fas ${getIconForType(item.type)}"></i></div>`;
+
+                            const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
 
                             gridHTML += `
                                 <div class="resource-card">
@@ -2198,12 +2164,9 @@
                                         ${imageHTML}
                                     </div>
                                     <div class="resource-card-info">
-                                        <div class="resource-card-header">
-                                            <span class="resource-badge">Nro. ${item.code}</span>
-                                            <i class="fas ${getIconForType(item.type)}" style="color: var(--primary-color); font-size: 1.2em;"></i>
-                                        </div>
-                                        <h4 class="resource-card-title">${item.title}</h4>
-                                        <p class="resource-card-desc">${item.description || 'Sin descripción detallada.'}</p>
+                                        <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
+                                        <p class="resource-card-desc" title="${item.description || 'Sin descripción'}">${item.description || 'Sin descripción'}</p>
+                                        <p class="resource-card-meta">Nro. ${item.code} - ${tipoCapitalizado}</p>
                                         ${displayLink}
                                     </div>
                                 </div>
