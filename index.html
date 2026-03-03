@@ -411,9 +411,12 @@
         /* Estilos para tablas de contenido */
         .table-responsive {
             overflow-x: auto; /* Permite el desplazamiento horizontal */
+            overflow-y: auto; /* Permite el desplazamiento vertical */
+            max-height: 60vh; /* Altura máxima para activar el scroll vertical en móviles (60% de la pantalla) */
             margin-top: 20px; /* Espacio para separar de elementos anteriores */
             border-radius: 8px; /* Bordes redondeados para el contenedor de la tabla */
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05); /* Sombra ligera */
+            -webkit-overflow-scrolling: touch; /* Scroll suave en dispositivos táctiles */
         }
         .content-table {
             width: 100%;
@@ -431,6 +434,9 @@
         .content-table th {
             background-color: var(--primary-color);
             color: white;
+            position: sticky; /* Fija el encabezado */
+            top: 0; /* Lo mantiene en la parte superior al deslizar */
+            z-index: 10; /* Asegura que el contenido pase por debajo del encabezado al hacer scroll */
         }
         .content-table tr:nth-child(even) {
             background-color: #f2f2f2;
