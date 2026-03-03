@@ -2059,20 +2059,46 @@
                 libraryItemsAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No hay ítems de biblioteca registrados.</td></tr>';
                 return;
             }
+
+            // 1. Agrupar los ítems por tipo
+            const groupedItems = { practica: [], libro: [], video: [], software: [] };
             allLibraryItems.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${item.code}</td>
-                    <td>${item.title}</td>
-                    <td>${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                    <td><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
-                    <td class="actions-column">
-                        <button class="edit-btn" data-id="${item.id}"><i class="fas fa-edit"></i></button>
-                        <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
-                    </td>
-                `;
-                libraryItemsAdminTbody.appendChild(tr);
+                if (groupedItems[item.type]) {
+                    groupedItems[item.type].push(item);
+                } else {
+                    groupedItems[item.type] = [item]; // Por si hay algún tipo antiguo/distinto
+                }
             });
+
+            const typeLabels = { practica: 'Prácticas', libro: 'Libros', video: 'Videos', software: 'Software' };
+
+            // 2. Renderizar la tabla por grupos reiniciando la numeración
+            for (const type in groupedItems) {
+                const items = groupedItems[type];
+                if (items.length > 0) {
+                    // Fila de encabezado separador para el tipo
+                    const headerTr = document.createElement('tr');
+                    headerTr.innerHTML = `<td colspan="5" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Tipo: ${typeLabels[type] || type}</td>`;
+                    libraryItemsAdminTbody.appendChild(headerTr);
+
+                    let counter = 1; // Reinicia el contador a 1 para cada tipo
+                    items.forEach(item => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td style="text-align: center; font-weight: bold;">${counter++}</td>
+                            <td>${item.title}</td>
+                            <td>${typeLabels[type] || item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
+                            <td style="text-align: center;"><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
+                            <td class="actions-column">
+                                <button class="edit-btn" data-id="${item.id}"><i class="fas fa-edit"></i></button>
+                                <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        `;
+                        libraryItemsAdminTbody.appendChild(tr);
+                    });
+                }
+            }
+
             libraryItemsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
