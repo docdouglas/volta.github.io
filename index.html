@@ -357,8 +357,10 @@
             
             /* --- LIMITAR TAMAÑO DE LA IMAGEN DE INICIO EN ESCRITORIO --- */
             .hero-image {
-                max-width: 500px; /* Limita el ancho de la imagen principal en PC para mayor elegancia */
-                width: 100%;
+                max-width: 350px; /* Tamaño mucho más sutil para monitores */
+                max-height: 250px; /* Limita la altura para no ocupar toda la pantalla */
+                object-fit: contain; /* Asegura que la imagen no se deforme */
+                width: auto;
             }
         }
 
