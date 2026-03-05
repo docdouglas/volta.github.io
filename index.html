@@ -232,7 +232,7 @@
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Sombra 3D profunda */
             }
             .bottom-nav {
-                position: static; /* Deja de estar flotando abajo */
+                position: relative; /* CAMBIO CLAVE: relative en lugar de static para que el z-index funcione y no sea tapada */
                 order: -1; /* POSICIONA LA BARRA A LA IZQUIERDA */
                 width: 260px; /* Ancho fijo para la barra lateral */
                 min-width: 260px; /* Garantiza que la barra no se encoja */
@@ -245,7 +245,7 @@
                 border-right: 1px solid #1a252f;
                 border-radius: 20px 0 0 20px; /* Curvas solo a la izquierda */
                 box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Sombra hacia la derecha */
-                z-index: 10;
+                z-index: 1000; /* Garantiza estar siempre por encima de cualquier otro contenido */
             }
             .sidebar-brand {
                 display: flex; /* Aparece en escritorio */
@@ -314,11 +314,12 @@
             }
             #chats {
                 position: relative; /* Evita que cubra elementos como modal en escritorio */
+                top: 0; left: 0; right: auto; bottom: auto; width: 100%; /* Neutraliza el anclaje absoluto que usa en celulares */
                 height: calc(100vh - 120px); /* Altura interna controlada */
-                bottom: auto;
                 border-radius: 15px;
                 overflow: hidden;
                 box-shadow: 0 5px 25px rgba(0,0,0,0.05); /* Le da aspecto de App independiente adentro */
+                z-index: 10; /* Un z-index más bajo para asegurar que quede por debajo de la barra */
             }
             .login-card {
                 max-width: 450px; /* Evita que el formulario sea inmensamente ancho en escritorio */
