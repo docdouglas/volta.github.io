@@ -233,7 +233,10 @@
             }
             .bottom-nav {
                 position: static; /* Deja de estar flotando abajo */
+                order: -1; /* POSICIONA LA BARRA A LA IZQUIERDA */
                 width: 260px; /* Ancho fijo para la barra lateral */
+                min-width: 260px; /* Garantiza que la barra no se encoja */
+                flex-shrink: 0; /* Obliga a mantener el ancho fijo */
                 height: 100%; /* Toma todo el alto */
                 flex-direction: column; /* Apila los botones verticalmente */
                 justify-content: flex-start; /* Alinea hacia arriba */
@@ -256,9 +259,12 @@
                 letter-spacing: 2px;
             }
             .content {
+                flex-grow: 1; /* Toma todo el espacio restante a la derecha */
+                width: calc(100% - 260px); /* Ocupa el resto de la pantalla menos el ancho de la barra */
                 padding: 40px; /* Más aire y respiración para el contenido en pantallas grandes */
                 padding-bottom: 40px; /* Resetea el padding inferior del móvil */
                 border-radius: 0 20px 20px 0;
+                overflow-y: auto; /* Permite el scroll independiente solo para el contenido */
             }
             .nav-item {
                 flex-direction: row; /* Icono a la izq, texto a la der */
