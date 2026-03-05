@@ -45,6 +45,17 @@
             position: relative;
             overflow: hidden; /* Asegura que el contenido no desborde los bordes redondeados en desktop */
         }
+        
+        /* --- ESTILOS DEL BACKDROP PARA EL MODAL DE CHAT EN ESCRITORIO --- */
+        .chat-modal-backdrop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2999;
+            backdrop-filter: blur(2px);
+        }
+
         /* Ajustes para tabletas y laptops */
         @media (min-width: 768px) {
             body {
@@ -312,15 +323,33 @@
                 height: 60%;
                 border-radius: 4px;
             }
-            #chats {
-                position: relative; /* Evita que cubra elementos como modal en escritorio */
-                top: 0; left: 0; right: auto; bottom: auto; width: 100%; /* Neutraliza el anclaje absoluto que usa en celulares */
-                height: calc(100vh - 120px); /* Altura interna controlada */
-                border-radius: 15px;
-                overflow: hidden;
-                box-shadow: 0 5px 25px rgba(0,0,0,0.05); /* Le da aspecto de App independiente adentro */
-                z-index: 10; /* Un z-index más bajo para asegurar que quede por debajo de la barra */
+            
+            /* --- NUEVO COMPORTAMIENTO MODAL PARA CHATS EN ESCRITORIO --- */
+            .chat-modal-backdrop.active {
+                display: block;
+                animation: fadeIn 0.3s ease-out;
             }
+            #chats {
+                display: none !important; /* Ocultar el comportamiento normal de pestaña en PC */
+            }
+            #chats.desktop-modal-active {
+                display: flex !important;
+                position: fixed !important;
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                width: 400px !important; /* Ancho fijo elegante para el chat */
+                height: 85vh !important;
+                max-height: 750px !important;
+                z-index: 3001 !important;
+                border-radius: 20px !important;
+                box-shadow: 0 15px 50px rgba(0,0,0,0.4) !important;
+                animation: slideInUp 0.3s ease-out !important;
+            }
+            #close-chat-modal-btn {
+                display: block !important;
+            }
+            
             .login-card {
                 max-width: 450px; /* Evita que el formulario sea inmensamente ancho en escritorio */
                 padding: 40px;
@@ -1345,11 +1374,15 @@
                 </div>
             </section>
 
+            <!-- Telón de fondo oscuro para el Modal de Chats en PC -->
+            <div id="chat-modal-backdrop" class="chat-modal-backdrop"></div>
+
             <!-- Sección de Chats -->
             <section id="chats" class="tab-content">
                 <div class="wa-header">
                     <img src="https://ui-avatars.com/api/?name=Chat+General&background=128C7E&color=fff" alt="Avatar">
-                    <div style="font-weight: bold; font-size: 1.1em;">Chat General</div>
+                    <div style="font-weight: bold; font-size: 1.1em; flex-grow: 1;">Chat General</div>
+                    <button id="close-chat-modal-btn" style="display: none; background: transparent; border: none; color: white; font-size: 2em; cursor: pointer; padding: 0 5px; line-height: 0.5;">&times;</button>
                 </div>
                 <div class="wa-messages" id="chat-messages">
                     <!-- Mensajes se renderizan aquí -->
@@ -1642,8 +1675,6 @@
             </form>
         </div>
     </div>
-
-    <!-- EL MODAL ANTIGUO DEL ESTUDIANTE HA SIDO ELIMINADO COMPLETAMENTE -->
 
     <div id="messageBoxModal" class="modal">
         <div class="modal-content">
@@ -3153,14 +3184,108 @@
             });
 
 
+            // --- LÓGICA DE NAVEGACIÓN MODIFICADA PARA EL MODAL DE CHAT EN ESCRITORIO ---
+            let lastActiveTabId = 'inicio';
+
             navItems.forEach(item => {
-                item.addEventListener('click', () => {
+                item.addEventListener('click', (e) => {
+                    const tabId = item.getAttribute('data-tab');
+
+                    // SI ESTAMOS EN COMPUTADORA Y SE HIZO CLIC EN CHATS
+                    if (window.innerWidth >= 768 && tabId === 'chats') {
+                        e.preventDefault(); // Evitamos comportamiento por defecto
+                        document.getElementById('chats').classList.add('desktop-modal-active');
+                        
+                        const backdrop = document.getElementById('chat-modal-backdrop');
+                        if(backdrop) backdrop.classList.add('active');
+                        
+                        return; // IMPORTANTE: Detenemos la ejecución aquí para no desactivar la pestaña de fondo
+                    }
+
+                    // --- COMPORTAMIENTO NORMAL PARA MÓVILES O PARA OTRAS PESTAÑAS EN ESCRITORIO ---
+                    
+                    // Cerramos el modal de chat si estaba abierto al cambiar a otra pestaña
+                    document.getElementById('chats').classList.remove('desktop-modal-active');
+                    const backdrop = document.getElementById('chat-modal-backdrop');
+                    if(backdrop) backdrop.classList.remove('active');
+
                     navItems.forEach(nav => nav.classList.remove('active'));
                     tabContents.forEach(content => content.classList.remove('active'));
+                    
                     item.classList.add('active');
-                    const tabId = item.getAttribute('data-tab');
                     document.getElementById(tabId).classList.add('active');
+                    
+                    if (tabId !== 'chats') {
+                        lastActiveTabId = tabId; // Guardamos la última pestaña usada (fondo)
+                    }
                 });
+            });
+
+            // Función para cerrar el modal de chat en computadora
+            const closeDesktopChatModal = () => {
+                document.getElementById('chats').classList.remove('desktop-modal-active');
+                const backdrop = document.getElementById('chat-modal-backdrop');
+                if(backdrop) backdrop.classList.remove('active');
+            };
+
+            // Cerrar modal de chat con el botón "X"
+            const closeChatBtn = document.getElementById('close-chat-modal-btn');
+            if (closeChatBtn) {
+                closeChatBtn.addEventListener('click', closeDesktopChatModal);
+            }
+
+            // Cerrar modal de chat al hacer clic en el fondo oscuro
+            const chatBackdrop = document.getElementById('chat-modal-backdrop');
+            if (chatBackdrop) {
+                chatBackdrop.addEventListener('click', closeDesktopChatModal);
+            }
+
+            // Cerrar modal de chat al presionar "Escape"
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && window.innerWidth >= 768) {
+                    const chatsModal = document.getElementById('chats');
+                    if (chatsModal.classList.contains('desktop-modal-active')) {
+                        closeDesktopChatModal();
+                    }
+                }
+            });
+
+            // Lógica inteligente para cuando se redimensiona la ventana (pasar de PC a móvil o viceversa)
+            window.addEventListener('resize', () => {
+                const chats = document.getElementById('chats');
+                const backdrop = document.getElementById('chat-modal-backdrop');
+                
+                if (window.innerWidth < 768) {
+                    // Pasando a Móvil: Si el modal estaba abierto, convertirlo en pestaña activa
+                    if (chats.classList.contains('desktop-modal-active')) {
+                        closeDesktopChatModal(); // Limpiamos clases de PC
+                        
+                        // Activamos como pestaña móvil normal
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        tabContents.forEach(content => content.classList.remove('active'));
+                        
+                        const chatNav = document.querySelector('.nav-item[data-tab="chats"]');
+                        if(chatNav) chatNav.classList.add('active');
+                        chats.classList.add('active');
+                    }
+                } else {
+                    // Pasando a Escritorio: Si el chat era la pestaña activa, convertirlo a Modal
+                    if (chats.classList.contains('active')) {
+                        chats.classList.remove('active');
+                        const chatNav = document.querySelector('.nav-item[data-tab="chats"]');
+                        if(chatNav) chatNav.classList.remove('active');
+
+                        // Restaurar la pestaña de fondo que había antes
+                        const prevNav = document.querySelector(`.nav-item[data-tab="${lastActiveTabId}"]`);
+                        const prevTab = document.getElementById(lastActiveTabId);
+                        if(prevNav) prevNav.classList.add('active');
+                        if(prevTab) prevTab.classList.add('active');
+
+                        // Abrir como modal
+                        chats.classList.add('desktop-modal-active');
+                        if(backdrop) backdrop.classList.add('active');
+                    }
+                }
             });
 
             // --- Atajos de teclado para pestañas (Alt + 1, 2, 3, 4) ---
