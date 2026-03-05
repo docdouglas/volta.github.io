@@ -1284,6 +1284,8 @@
                 <input type="text" id="news-event-title-input" placeholder="Título de la noticia/evento" required>
                 <label for="news-event-heading-input">Encabezado/Contenido:</label>
                 <textarea id="news-event-heading-input" rows="4" placeholder="Contenido detallado" required></textarea>
+                <label for="news-event-link-input">Enlace (Opcional):</label>
+                <input type="url" id="news-event-link-input" placeholder="Ej: https://mi-enlace.com">
                 <button type="submit">Guardar</button>
             </form>
             <h4 style="margin-top: 20px; color: var(--primary-color);">Noticias y Eventos Publicados</h4>
@@ -1587,7 +1589,7 @@
         // Nuevas variables para vistas inline del alumno
         let studentMainView, studentDetailView, studentDetailTitle, studentGradeDetailsContent, btnBackStudent;
 
-        let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventsAdminTbody, newsEventsDisplay;
+        let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventLinkInput, newsEventsAdminTbody, newsEventsDisplay;
         let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
@@ -1872,7 +1874,8 @@
             const type = newsEventTypeInput.value;
             const title = newsEventTitleInput.value;
             const heading = newsEventHeadingInput.value;
-            const newItem = { type, title, heading };
+            const link = newsEventLinkInput.value.trim();
+            const newItem = { type, title, heading, link };
             console.log("Intentando guardar/actualizar noticia/evento:", newItem);
             try {
                 const targetCollection = type === 'news' ? newsCollection : eventsCollection;
@@ -1883,6 +1886,7 @@
                 }
                 newsEventForm.reset();
                 newsEventIdInput.value = '';
+                newsEventLinkInput.value = '';
                 showMessageBox('Éxito', 'Noticia/Evento guardado con éxito.');
             } catch (e) {
                 console.error("Error al añadir/actualizar documento: ", e);
@@ -1923,6 +1927,7 @@
                         newsEventTypeInput.value = item.type;
                         newsEventTitleInput.value = item.title;
                         newsEventHeadingInput.value = item.heading;
+                        if (newsEventLinkInput) newsEventLinkInput.value = item.link || '';
                     }
                 });
             });
@@ -1978,6 +1983,8 @@
                 const iconClass = item.type === 'event' ? 'fa-calendar-alt' : 'fa-newspaper';
                 const typeLabel = item.type === 'event' ? 'Evento' : 'Noticia';
 
+                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" style="margin-top: 15px; align-self: flex-start; text-decoration: none;"><i class="fas fa-external-link-alt" style="margin-right: 5px;"></i> Ver enlace</a>` : '';
+
                 card.innerHTML = `
                     ${deleteButton}
                     <div class="news-card-header">
@@ -1986,6 +1993,7 @@
                     </div>
                     <h3 class="news-card-title">${item.title}</h3>
                     <div class="news-card-body">${item.heading}</div>
+                    ${linkHtml}
                 `;
                 gridContainer.appendChild(card);
             });
@@ -2908,6 +2916,7 @@
             newsEventTypeInput = document.getElementById('news-event-type');
             newsEventTitleInput = document.getElementById('news-event-title-input');
             newsEventHeadingInput = document.getElementById('news-event-heading-input');
+            newsEventLinkInput = document.getElementById('news-event-link-input');
             newsEventsAdminTbody = document.getElementById('news-events-admin-tbody');
             newsEventsDisplay = document.getElementById('news-events-display');
             manageLibraryModal = document.getElementById('manageLibraryModal');
