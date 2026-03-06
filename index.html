@@ -187,7 +187,7 @@
             background-color: var(--gold-color);
             transition: width 0.3s ease;
         }
-        .nav-item:not(.active)::before {
+        .nav-item:not(.active):before {
             content: '';
             position: absolute;
             top: 0;
@@ -851,6 +851,23 @@
             border-radius: 50%;
             background-color: #ccc;
         }
+        
+        /* Nuevo botón para borrar todos los chats (solo admin) */
+        .wa-delete-all-btn {
+            display: none;
+            background: transparent;
+            border: none;
+            color: #ffcccc;
+            font-size: 1.2em;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: color 0.3s ease, transform 0.2s ease;
+        }
+        .wa-delete-all-btn:hover {
+            color: #ff4d4d;
+            transform: scale(1.1);
+        }
+
         .wa-messages {
             flex-grow: 1;
             padding: 15px;
@@ -1390,6 +1407,10 @@
                 <div class="wa-header">
                     <img src="https://ui-avatars.com/api/?name=Chat+General&background=128C7E&color=fff" alt="Avatar">
                     <div style="font-weight: bold; font-size: 1.1em; flex-grow: 1;">Chat General</div>
+                    
+                    <!-- NUEVO BOTÓN: Eliminar todos los chats (solo visible para admin) -->
+                    <button id="delete-all-chats-btn" class="wa-delete-all-btn" title="Vaciar todo el historial del chat"><i class="fas fa-trash-alt"></i></button>
+                    
                     <button id="close-chat-modal-btn" style="display: none; background: transparent; border: none; color: white; font-size: 2em; cursor: pointer; padding: 0 5px; line-height: 0.5;">&times;</button>
                 </div>
                 <div class="wa-messages" id="chat-messages">
@@ -1758,6 +1779,7 @@
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
         let adminNoticiasEventosBtn, adminBibliotecaBtn;
+        let deleteAllChatsBtn;
         
         // Custom message box function (updated to include a callback for confirmation)
         function showMessageBox(title, message, type = 'alert', callback = null) {
@@ -1776,7 +1798,7 @@
             // Show/hide confirm button based on type
             if (type === 'confirm') {
                 newConfirmBtn.style.display = 'inline-block';
-                newConfirmBtn.textContent = 'Sí, eliminar'; // Specific text for delete confirmation
+                newConfirmBtn.textContent = 'Sí, continuar'; // Specific text for delete confirmation
             } else {
                 newConfirmBtn.style.display = 'inline-block'; // Always show for 'alert'
                 newConfirmBtn.textContent = 'Aceptar';
@@ -3031,6 +3053,7 @@
                 updateLibraryTabContentVisibility();
                 adminNoticiasEventosBtn.style.display = 'none';
                 adminBibliotecaBtn.style.display = 'none';
+                if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'none';
                 renderChats(); // Refrescar chats para ocultar las 'x'
             });
             adminPanelContent.appendChild(logoutButton);
@@ -3140,6 +3163,8 @@
             libraryContentDiv = document.getElementById('library-content');
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
+            deleteAllChatsBtn = document.getElementById('delete-all-chats-btn');
+            
             updateLibraryTabContentVisibility();
 
             // --- Lógica del subidor de imágenes ---
@@ -3421,6 +3446,7 @@
                         updateLibraryTabContentVisibility();
                         adminNoticiasEventosBtn.style.display = 'block';
                         adminBibliotecaBtn.style.display = 'block';
+                        if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'block';
                         renderChats(); // Refrescar chats para mostrar las 'x' de borrado
                     } else {
                         try {
@@ -3468,6 +3494,7 @@
                 updateLibraryTabContentVisibility();
                 adminNoticiasEventosBtn.style.display = 'none';
                 adminBibliotecaBtn.style.display = 'none';
+                if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'none';
             });
             function updateLibraryTabContentVisibility() {
                 if (userIsLoggedIn) {
@@ -3520,6 +3547,37 @@
             const chatTextInput = document.getElementById('chat-text-input');
             const chatSendBtn = document.getElementById('chat-send-btn');
             const chatNameInput = document.getElementById('chat-name-input');
+
+            // --- NUEVO: FUNCIONALIDAD DE ELIMINAR TODOS LOS CHATS (SOLO ADMIN) ---
+            if (deleteAllChatsBtn) {
+                deleteAllChatsBtn.addEventListener('click', () => {
+                    showMessageBox('Confirmar Eliminación Masiva', '¿Estás seguro de que deseas borrar TODOS los mensajes del chat? Esta acción es irreversible.', 'confirm', async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const batch = writeBatch(db);
+                                let count = 0;
+                                
+                                // Iterar sobre todos los chats actualmente cargados en memoria
+                                allChats.forEach(chat => {
+                                    const chatRef = doc(chatsCollection, chat.id);
+                                    batch.delete(chatRef);
+                                    count++;
+                                });
+                                
+                                if (count > 0) {
+                                    await batch.commit(); // Ejecuta las eliminaciones de Firebase de una sola vez
+                                    showMessageBox('Éxito', `Se han eliminado los ${count} mensajes del chat de forma exitosa.`);
+                                } else {
+                                    showMessageBox('Aviso', 'No hay mensajes en el chat para eliminar.');
+                                }
+                            } catch (error) {
+                                console.error("Error al intentar eliminar todos los chats:", error);
+                                showMessageBox('Error', 'Ocurrió un problema al intentar vaciar el chat. Por favor, revisa la conexión.');
+                            }
+                        }
+                    });
+                });
+            }
 
             const sendMessage = async () => {
                 const text = chatTextInput.value.trim();
