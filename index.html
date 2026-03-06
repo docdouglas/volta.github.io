@@ -357,10 +357,24 @@
             
             /* --- LIMITAR TAMAÑO DE LA IMAGEN DE INICIO EN ESCRITORIO --- */
             .hero-image {
-                max-width: 350px; /* Tamaño mucho más sutil para monitores */
-                max-height: 250px; /* Limita la altura para no ocupar toda la pantalla */
+                max-width: 220px; /* Aún más reducido para monitores grandes */
+                max-height: 160px; /* Limita la altura drásticamente */
                 object-fit: contain; /* Asegura que la imagen no se deforme */
                 width: auto;
+                margin-bottom: 30px; /* Añade respiro debajo de la imagen */
+            }
+
+            /* --- MEJORAS PARA NOTICIAS EN ESCRITORIO --- */
+            .news-events-grid {
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Tarjetas más anchas y elegantes */
+                gap: 35px; /* Más espacio respirable entre tarjetas */
+            }
+            .news-card {
+                padding: 30px 35px; /* Más espacio interior */
+                border-radius: 16px; /* Bordes un poco más suaves */
+            }
+            .news-card-title {
+                font-size: 1.45em; /* Títulos con más jerarquía */
             }
         }
 
