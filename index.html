@@ -355,12 +355,12 @@
                 padding: 40px;
             }
             
-            /* --- LIMITAR TAMAÑO DE LA IMAGEN DE INICIO EN ESCRITORIO --- */
+            /* --- TAMAÑO DE LA IMAGEN DE INICIO EN ESCRITORIO --- */
             .hero-image {
-                max-width: 220px; /* Aún más reducido para monitores grandes */
-                max-height: 160px; /* Limita la altura drásticamente */
-                object-fit: contain; /* Asegura que la imagen no se deforme */
-                width: auto;
+                max-width: 600px; /* Imagen mucho más grande para monitores grandes */
+                max-height: 400px; /* Altura máxima permitida */
+                object-fit: contain; /* Asegura que la imagen no se deforme al crecer */
+                width: 100%;
                 margin-bottom: 30px; /* Añade respiro debajo de la imagen */
             }
 
