@@ -357,21 +357,30 @@
             
             /* --- MEJORAS PARA HERO Y NOTICIAS EN ESCRITORIO (ESTILO NETFLIX CLARO) --- */
             .netflix-hero-light {
-                height: 380px !important;
-                padding: 50px !important;
+                height: 280px !important; /* Altura más elegante y controlada */
+                padding: 40px 50px !important;
+                align-items: center !important; /* Centra el texto verticalmente */
             }
-            .netflix-hero-title {
-                font-size: 3em !important;
-            }
-            /* CORRECCIÓN: Centrado y ancho completo para evitar el desplazamiento a la derecha */
             .netflix-hero-bg {
-                object-position: center !important; 
-                width: 100% !important; 
-                left: 0 !important; 
+                object-fit: contain !important; /* Garantiza que no se corte */
+                object-position: right center !important; /* Acomodada a la derecha */
+                width: 40% !important; /* Reducimos el ancho para que no ocupe todo */
+                max-width: 350px !important; /* Límite de tamaño para elegancia */
+                height: 70% !important; /* Deja espacio arriba y abajo */
+                left: auto !important; 
+                right: 40px !important; /* Margen desde la derecha */
+                top: 15% !important;
             }
-            /* CORRECCIÓN: Degradado suave de abajo hacia arriba para mantener la visibilidad */
             .netflix-hero-overlay {
-                background: linear-gradient(to top, rgba(255,255,255,1) 10%, rgba(255,255,255,0.6) 50%, rgba(255,255,255,0) 100%) !important;
+                /* Degradado de izquierda a derecha: texto legible a la izq, imagen clara a la der */
+                background: linear-gradient(to right, rgba(248,249,250,1) 40%, rgba(248,249,250,0.85) 60%, rgba(248,249,250,0) 100%) !important;
+            }
+            .netflix-hero-content {
+                max-width: 60% !important; /* Evita que el texto pise la imagen */
+            }
+            .netflix-hero-desc {
+                font-size: 1.25em !important; /* Texto un poco más grande y legible en PC */
+                line-height: 1.6;
             }
             .news-card {
                 flex: 0 0 350px !important; /* Tarjetas más anchas en PC */
