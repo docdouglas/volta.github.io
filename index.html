@@ -2591,7 +2591,7 @@
                                     </div>
                                     <div class="resource-card-info">
                                         <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
-                                        <p class="resource-card-desc" title="${item.description || 'Sin descripción'}">${item.description || 'Sin descripción'}</p>
+                                        <p class="resource-card-desc" title="${(item.description || 'Sin descripción').replace(/"/g, '&quot;')}">${formatWhatsAppBold(item.description || 'Sin descripción')}</p>
                                         <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado}</p>
                                     </div>
                                 </div>
@@ -2624,6 +2624,14 @@
             }
         }
 
+        // --- NUEVA FUNCIÓN: Formato *negrilla* estilo WhatsApp ---
+        function formatWhatsAppBold(text) {
+            if (!text) return '';
+            // Primero se escapan los caracteres HTML por seguridad, luego se aplica la negrilla
+            const escaped = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            return escaped.replace(/\*(.*?)\*/g, '<strong>$1</strong>');
+        }
+
         // --- NUEVA FUNCIÓN: Abrir Modal Estilo Netflix ---
         function openNetflixModal(item) {
             const modal = document.getElementById('netflixStyleModal');
@@ -2642,7 +2650,8 @@
             const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
             title.textContent = item.title;
             meta.textContent = `Nro. ${item.displayCode} - ${tipoCapitalizado}`;
-            desc.textContent = item.description || 'Este recurso no tiene una descripción detallada.';
+            // Se usa innerHTML junto con la función de formato para renderizar la negrilla
+            desc.innerHTML = formatWhatsAppBold(item.description || 'Este recurso no tiene una descripción detallada.');
 
             if (item.link) {
                 actionContainer.innerHTML = `<a href="${item.link}" target="_blank" class="netflix-modal-action"><i class="fas fa-external-link-alt" style="margin-right: 10px;"></i> Acceder al Recurso</a>`;
