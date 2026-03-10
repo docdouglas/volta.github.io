@@ -1174,9 +1174,124 @@
             overflow: hidden;
             transition: all 0.3s ease; /* Transición suave */
         }
-        /* NUEVO: Expande el texto completo al pasar el ratón o tocar la tarjeta */
-        .resource-card:hover .resource-card-desc {
-            -webkit-line-clamp: unset;
+        
+        /* Efecto visual al pasar el mouse por la imagen indicando que se puede hacer clic */
+        .resource-card-img-wrapper {
+            cursor: pointer;
+            position: relative;
+        }
+        .resource-card-img-wrapper::after {
+            content: '\f06e'; /* Icono de ojo de FontAwesome */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .resource-card-img-wrapper:hover::after {
+            opacity: 1;
+        }
+
+        /* --- ESTILOS DEL MODAL TIPO NETFLIX --- */
+        .netflix-modal {
+            display: none;
+            position: fixed;
+            z-index: 4500; /* Alto para que esté por encima de todo */
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.3s ease-out;
+        }
+        .netflix-modal-content {
+            background-color: #fff;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            animation: slideInUp 0.4s ease-out;
+            display: flex;
+            flex-direction: column;
+        }
+        .netflix-modal-close {
+            position: absolute;
+            top: 15px; right: 20px;
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.4);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            transition: background 0.2s;
+            line-height: 1;
+        }
+        .netflix-modal-close:hover { background: rgba(0,0,0,0.8); }
+        .netflix-modal-hero {
+            width: 100%;
+            height: 250px;
+            background-color: #1a252f;
+            display: flex; justify-content: center; align-items: center;
+            position: relative;
+        }
+        .netflix-modal-hero img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.9;
+        }
+        .netflix-modal-hero .no-img-icon {
+            font-size: 5em; color: #fff;
+        }
+        .netflix-modal-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0; height: 80px;
+            background: linear-gradient(to bottom, transparent, #fff);
+        }
+        .netflix-modal-body {
+            padding: 10px 30px 30px 30px;
+            position: relative;
+            z-index: 2;
+        }
+        .netflix-modal-title {
+            font-size: 1.8em; color: var(--dark-nav-color);
+            margin: 0 0 10px 0; font-weight: 800; line-height: 1.2;
+        }
+        .netflix-modal-meta {
+            color: var(--primary-color);
+            font-weight: 600; font-size: 0.9em;
+            margin-bottom: 20px; display: inline-block;
+            background: var(--active-bg-color);
+            padding: 5px 12px; border-radius: 20px;
+        }
+        .netflix-modal-desc {
+            font-size: 1.05em; color: #444;
+            line-height: 1.6; margin-bottom: 25px; text-align: justify;
+        }
+        .netflix-modal-action {
+            display: inline-flex; align-items: center;
+            padding: 12px 25px; background-color: var(--primary-color);
+            color: white; font-size: 1.1em; font-weight: 600;
+            border-radius: 8px; text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .netflix-modal-action:hover {
+            background-color: var(--button-hover-bg);
+            transform: scale(1.05);
         }
         .resource-action-btn {
             margin-top: 5px;
@@ -1753,6 +1868,25 @@
             </div>
         </div>
     </div>
+    
+    <!-- MODAL ESTILO NETFLIX PARA DETALLES DE RECURSOS -->
+    <div id="netflixStyleModal" class="netflix-modal">
+        <div class="netflix-modal-content">
+            <span class="netflix-modal-close" id="closeNetflixModal">&times;</span>
+            <div class="netflix-modal-hero" id="netflix-modal-hero-content">
+                <!-- Imagen o icono inyectado por JS -->
+            </div>
+            <div class="netflix-modal-body">
+                <h2 class="netflix-modal-title" id="netflix-modal-title">Título del Recurso</h2>
+                <div class="netflix-modal-meta" id="netflix-modal-meta">Tipo de Recurso</div>
+                <p class="netflix-modal-desc" id="netflix-modal-desc">Descripción...</p>
+                <div id="netflix-modal-action-container">
+                    <!-- Botón de acción -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -2452,7 +2586,7 @@
 
                             gridHTML += `
                                 <div class="resource-card">
-                                    <div class="resource-card-img-wrapper">
+                                    <div class="resource-card-img-wrapper" data-item-id="${item.id}" title="Clic para ver detalles">
                                         ${imageHTML}
                                     </div>
                                     <div class="resource-card-info">
@@ -2466,6 +2600,15 @@
                         });
                         gridHTML += `</div>`;
                         container.innerHTML = gridHTML;
+
+                        // NUEVO: Evento click en la imagen para abrir el modal estilo Netflix
+                        container.querySelectorAll('.resource-card-img-wrapper').forEach(wrapper => {
+                            wrapper.addEventListener('click', () => {
+                                const itemId = wrapper.getAttribute('data-item-id');
+                                const item = allLibraryItems.find(i => i.id === itemId);
+                                if (item) openNetflixModal(item);
+                            });
+                        });
                     }
                 }
             }
@@ -2480,6 +2623,35 @@
                 case 'software': return 'fa-code';
                 default: return 'fa-file-alt';
             }
+        }
+
+        // --- NUEVA FUNCIÓN: Abrir Modal Estilo Netflix ---
+        function openNetflixModal(item) {
+            const modal = document.getElementById('netflixStyleModal');
+            const hero = document.getElementById('netflix-modal-hero-content');
+            const title = document.getElementById('netflix-modal-title');
+            const meta = document.getElementById('netflix-modal-meta');
+            const desc = document.getElementById('netflix-modal-desc');
+            const actionContainer = document.getElementById('netflix-modal-action-container');
+
+            if (item.imageUrl) {
+                hero.innerHTML = `<img src="${item.imageUrl}" alt="${item.title}" onerror="this.onerror=null; this.src='https://placehold.co/800x400/1a252f/fff?text=Sin+Imagen';">`;
+            } else {
+                hero.innerHTML = `<i class="fas ${getIconForType(item.type)} no-img-icon"></i>`;
+            }
+
+            const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
+            title.textContent = item.title;
+            meta.textContent = `Nro. ${item.displayCode} - ${tipoCapitalizado}`;
+            desc.textContent = item.description || 'Este recurso no tiene una descripción detallada.';
+
+            if (item.link) {
+                actionContainer.innerHTML = `<a href="${item.link}" target="_blank" class="netflix-modal-action"><i class="fas fa-external-link-alt" style="margin-right: 10px;"></i> Acceder al Recurso</a>`;
+            } else {
+                actionContainer.innerHTML = `<span class="resource-action-disabled" style="font-size: 1.1em; padding: 12px 25px;"><i class="fas fa-ban" style="margin-right: 10px;"></i> No disponible en línea</span>`;
+            }
+
+            modal.style.display = 'flex'; // Usar flex para centrar
         }
 
         async function handleCreateMateriaFormSubmit(e) {
@@ -3202,6 +3374,22 @@
             deleteAllChatsBtn = document.getElementById('delete-all-chats-btn');
             
             updateLibraryTabContentVisibility();
+
+            // Configurar el cierre del modal Netflix
+            const netflixModal = document.getElementById('netflixStyleModal');
+            const closeNetflixBtn = document.getElementById('closeNetflixModal');
+            if(closeNetflixBtn) {
+                closeNetflixBtn.addEventListener('click', () => {
+                    netflixModal.style.display = 'none';
+                });
+            }
+            if(netflixModal) {
+                netflixModal.addEventListener('click', (e) => {
+                    if (e.target === netflixModal) {
+                        netflixModal.style.display = 'none';
+                    }
+                });
+            }
 
             // --- Lógica del subidor de imágenes ---
             libraryItemImageFileInput.addEventListener('change', function(e) {
