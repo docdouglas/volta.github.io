@@ -1165,7 +1165,8 @@
             font-size: 0.9em;
             color: #444;
             margin: 0;
-            white-space: normal; /* Permite múltiples líneas para poder leer todo */
+            white-space: pre-line; /* Respeta los saltos de línea como en Word */
+            text-align: justify; /* Texto justificado */
             word-wrap: break-word;
             line-height: 1.4; /* Mejora la lectura del texto en varias líneas */
             display: -webkit-box;
@@ -1281,6 +1282,7 @@
         .netflix-modal-desc {
             font-size: 1.05em; color: #444;
             line-height: 1.6; margin-bottom: 25px; text-align: justify;
+            white-space: pre-line; /* Respeta los saltos de línea en el modal */
         }
         .netflix-modal-action {
             display: inline-flex; align-items: center;
