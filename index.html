@@ -3122,7 +3122,7 @@
             document.querySelectorAll('.view-grades-detail-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const materiaName = e.target.dataset.materiaName;
-                    openStudentGradeDetailInline(currentLoggedInStudent.id, materiaName);
+                    openStudentGradeDetailModal(currentLoggedInStudent.id, materiaName);
                 });
             });
         }
@@ -3154,7 +3154,7 @@
             return hasValidGrades ? totalGrade : null;
         }
 
-        function openStudentGradeDetailInline(studentId, materiaName) {
+        function openStudentGradeDetailModal(studentId, materiaName) {
             const student = allStudents.find(s => s.id === studentId);
             const materia = allMaterias[materiaName];
             if (!student || !materia) {
@@ -3162,19 +3162,29 @@
                 return;
             }
 
-            studentDetailTitle.innerHTML = `<i class="fas fa-book" style="margin-right: 10px;"></i> ${materia.name}`;
-
             const studentMateriaGrades = student.grades[materiaName] || { asistencia: null, practicas: Array(6).fill(null), parciales: Array(2).fill(null) };
             const overallGrade = calculateOverallGrade(student, materiaName);
             const overallGradeDisplay = overallGrade !== null ? overallGrade.toFixed(2) : '--';
 
+            // Seleccionar el modal Netflix existente
+            const modal = document.getElementById('netflixStyleModal');
+            const hero = document.getElementById('netflix-modal-hero-content');
+            const title = document.getElementById('netflix-modal-title');
+            const meta = document.getElementById('netflix-modal-meta');
+            const desc = document.getElementById('netflix-modal-desc');
+            const actionContainer = document.getElementById('netflix-modal-action-container');
+
+            // Configurar cabecera
+            hero.style.backgroundColor = '#1a252f';
+            hero.innerHTML = `<i class="fas fa-graduation-cap no-img-icon"></i>`;
+
+            title.textContent = materia.name;
+            meta.innerHTML = `<i class="fas fa-star" style="color: var(--gold-color); margin-right: 5px;"></i> Calificación Final Ponderada: ${overallGradeDisplay}`;
+
+            // Inyectar grilla de notas en la descripción envolviéndola en white-space: normal para no romper la cuadrícula
             let detailsHTML = `
-                <div style="background: var(--active-bg-color); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 1px solid var(--primary-color);">
-                    <h3 style="margin: 0; color: var(--primary-color); font-size: 3em;">${overallGradeDisplay}</h3>
-                    <span style="color: var(--dark-nav-color); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1em;">Calificación Final Ponderada</span>
-                </div>
-                
-                <div class="grade-detail-grid">
+                <div style="white-space: normal;">
+                <div class="grade-detail-grid" style="margin-top: 0;">
                     <div class="grade-section-box">
                         <h5><i class="fas fa-hand-paper"></i> Asistencia (${materia.ponderaciones.asistencia}%)</h5>
                         <div class="grade-list-item">
@@ -3215,11 +3225,12 @@
             detailsHTML += `
                     </div>
                 </div>
+                </div>
             `;
 
-            studentGradeDetailsContent.innerHTML = detailsHTML;
-            studentMainView.style.display = 'none';
-            studentDetailView.style.display = 'block';
+            desc.innerHTML = detailsHTML;
+            actionContainer.innerHTML = ''; 
+            modal.style.display = 'flex';
         }
 
         function renderAdminPanelButtons() {
