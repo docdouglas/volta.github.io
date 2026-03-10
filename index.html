@@ -1168,6 +1168,15 @@
             white-space: normal; /* Permite múltiples líneas para poder leer todo */
             word-wrap: break-word;
             line-height: 1.4; /* Mejora la lectura del texto en varias líneas */
+            display: -webkit-box;
+            -webkit-line-clamp: 3; /* Limita a un máximo de 3 líneas */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            transition: all 0.3s ease; /* Transición suave */
+        }
+        /* NUEVO: Expande el texto completo al pasar el ratón o tocar la tarjeta */
+        .resource-card:hover .resource-card-desc {
+            -webkit-line-clamp: unset;
         }
         .resource-action-btn {
             margin-top: 5px;
