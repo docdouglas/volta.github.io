@@ -783,7 +783,7 @@
         .grade-section-box h5 {
             margin: 0 0 15px 0;
             color: var(--primary-color);
-            font-size: 1.15em;
+            font-size: 1.3em; /* Aumentado de 1.15em */
             border-bottom: 2px solid var(--active-bg-color);
             padding-bottom: 10px;
             display: flex;
@@ -794,9 +794,9 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 0;
+            padding: 12px 0; /* Aumentado padding para acompañar la letra más grande */
             color: var(--text-color);
-            font-size: 1em;
+            font-size: 1.2em; /* Aumentado de 1em */
             border-bottom: 1px dashed #e2e8f0;
         }
         .grade-list-item:last-child {
@@ -806,8 +806,9 @@
             font-weight: bold;
             color: var(--dark-nav-color);
             background: #f1f5f9;
-            padding: 4px 10px;
+            padding: 6px 12px; /* Aumentado de 4px 10px */
             border-radius: 6px;
+            font-size: 1.05em; /* Ligeramente más grande respecto al texto */
         }
 
         .filter-group {
@@ -3160,8 +3161,8 @@
 
             let detailsHTML = `
                 <div style="background: var(--active-bg-color); padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 20px; border: 1px solid var(--primary-color);">
-                    <h3 style="margin: 0; color: var(--primary-color); font-size: 2.5em;">${overallGradeDisplay}</h3>
-                    <span style="color: var(--dark-nav-color); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 0.85em;">Calificación Final Ponderada</span>
+                    <h3 style="margin: 0; color: var(--primary-color); font-size: 3em;">${overallGradeDisplay}</h3>
+                    <span style="color: var(--dark-nav-color); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; font-size: 1.1em;">Calificación Final Ponderada</span>
                 </div>
                 
                 <div class="grade-detail-grid">
