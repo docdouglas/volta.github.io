@@ -1153,13 +1153,21 @@
             overflow: hidden;
             text-overflow: ellipsis; /* Pone los "..." */
         }
-        .resource-card-desc, .resource-card-meta {
+        .resource-card-meta {
             font-size: 0.9em;
             color: #333;
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+        .resource-card-desc {
+            font-size: 0.9em;
+            color: #444;
+            margin: 0;
+            white-space: normal; /* Permite múltiples líneas para poder leer todo */
+            word-wrap: break-word;
+            line-height: 1.4; /* Mejora la lectura del texto en varias líneas */
         }
         .resource-action-btn {
             margin-top: 5px;
