@@ -2445,16 +2445,6 @@
                     <div class="news-card-body">${item.heading}</div>
                     ${linkHtml}
                 `;
-                
-                // NUEVO: Evento click para abrir el modal estilo Netflix con la descripción completa
-                card.addEventListener('click', (e) => {
-                    // Evitar abrir el modal si se hace clic en el botón de eliminar o en el enlace
-                    if (e.target.closest('.delete-news-btn') || e.target.closest('.resource-action-btn')) {
-                        return;
-                    }
-                    openNewsEventModal(item);
-                });
-
                 gridContainer.appendChild(card);
             });
 
@@ -2480,37 +2470,6 @@
                     });
                 });
             }
-        }
-
-        // --- NUEVA FUNCIÓN: Abrir Modal Estilo Netflix para Noticias/Eventos ---
-        function openNewsEventModal(item) {
-            const modal = document.getElementById('netflixStyleModal');
-            const hero = document.getElementById('netflix-modal-hero-content');
-            const title = document.getElementById('netflix-modal-title');
-            const meta = document.getElementById('netflix-modal-meta');
-            const desc = document.getElementById('netflix-modal-desc');
-            const actionContainer = document.getElementById('netflix-modal-action-container');
-
-            const iconClass = item.type === 'event' ? 'fa-calendar-alt' : 'fa-newspaper';
-            const typeLabel = item.type === 'event' ? 'Evento' : 'Noticia';
-
-            // Restaurar color de fondo oscuro por defecto
-            hero.style.backgroundColor = '#1a252f';
-            hero.innerHTML = `<i class="fas ${iconClass} no-img-icon"></i>`;
-
-            title.textContent = item.title;
-            meta.textContent = typeLabel;
-            
-            // Reutilizamos la función de formateo de WhatsApp para respetar las negrillas y los saltos de línea
-            desc.innerHTML = formatWhatsAppBold(item.heading || 'Sin descripción detallada.');
-
-            if (item.link) {
-                actionContainer.innerHTML = `<a href="${item.link}" target="_blank" class="netflix-modal-action"><i class="fas fa-external-link-alt" style="margin-right: 10px;"></i> Ver Enlace</a>`;
-            } else {
-                actionContainer.innerHTML = ''; // Limpiar contenedor si no hay enlace extra
-            }
-
-            modal.style.display = 'flex';
         }
 
         // --- Gestión de la Biblioteca (Añadiendo compresión en subida de imagen) ---
