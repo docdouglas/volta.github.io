@@ -354,11 +354,27 @@
                 max-width: 450px; /* Evita que el formulario sea inmensamente ancho en escritorio */
                 padding: 40px;
             }
+            
+            /* --- TAMAÑO DE LA IMAGEN DE INICIO EN ESCRITORIO --- */
+            .hero-image {
+                max-width: 300px; /* Reducida a la mitad (antes 600px) */
+                max-height: 200px; /* Reducida a la mitad (antes 400px) */
+                object-fit: contain; /* Asegura que la imagen no se deforme al crecer */
+                width: 100%;
+                margin-bottom: 30px; /* Añade respiro debajo de la imagen */
+            }
 
             /* --- MEJORAS PARA NOTICIAS EN ESCRITORIO --- */
             .news-events-grid {
-                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)) !important; /* Tarjetas más anchas y elegantes en PC */
-                gap: 30px !important; /* Más espacio respirable entre tarjetas */
+                grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); /* Tarjetas más anchas y elegantes */
+                gap: 35px; /* Más espacio respirable entre tarjetas */
+            }
+            .news-card {
+                padding: 30px 35px; /* Más espacio interior */
+                border-radius: 16px; /* Bordes un poco más suaves */
+            }
+            .news-card-title {
+                font-size: 1.45em; /* Títulos con más jerarquía */
             }
         }
 
@@ -512,6 +528,18 @@
             background-color: var(--button-hover-bg);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(0, 123, 255, 0.3);
+        }
+        /* Estilo para la imagen en la sección de inicio */
+        .hero-image {
+            max-width: 100%;
+            width: auto; /* Permitir que la imagen se ajuste automáticamente */
+            height: auto;
+            display: block; /* Para centrarla con margin auto */
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 10px; /* Bordes redondeados para la imagen */
+            margin-bottom: 20px; /* Espacio reducido debajo de la imagen */
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Sombra suave para la imagen */
         }
         /* Estilos para botones de admin */
         .admin-button-group {
@@ -671,330 +699,19 @@
             transform: scale(1.2); /* Make checkbox slightly larger */
             cursor: pointer;
         }
-
-        /* --- NUEVOS ESTILOS ELEGANTES PARA INICIO (TEMA CLARO FUNCIONAL) --- */
-        .elegant-hero {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: linear-gradient(135deg, #ffffff 0%, #eef5fc 100%);
-            border-radius: 24px;
-            padding: 50px 40px;
-            box-shadow: 0 15px 35px rgba(74, 144, 226, 0.08);
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            position: relative;
-            overflow: hidden;
-        }
-        .elegant-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(74,144,226,0.04) 0%, transparent 60%);
-            z-index: 0;
-            pointer-events: none;
-        }
-        .elegant-hero::after {
-            content: '';
-            position: absolute;
-            bottom: -30px; right: -30px;
-            width: 180px; height: 180px;
-            background: linear-gradient(135deg, var(--gold-color) 0%, transparent 100%);
-            border-radius: 50%;
-            opacity: 0.15;
-            z-index: 0;
-        }
-        .elegant-hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 55%;
-        }
-        .hero-badge {
-            display: inline-block;
-            background: rgba(74, 144, 226, 0.12);
-            color: var(--primary-color);
-            padding: 6px 16px;
-            border-radius: 30px;
-            font-size: 0.85em;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 20px;
-            border: 1px solid rgba(74, 144, 226, 0.2);
-        }
-        .elegant-hero-title {
-            font-size: 2.8em;
-            font-weight: 800;
-            color: var(--dark-nav-color);
-            margin: 0 0 15px 0;
-            line-height: 1.1;
-            letter-spacing: -0.5px;
-        }
-        .elegant-hero-title span {
-            background: linear-gradient(135deg, var(--primary-color), #2bc0e4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .elegant-hero-subtitle {
-            font-size: 1.1em;
-            color: var(--muted-text-color);
-            line-height: 1.6;
-            margin: 0;
-        }
-        .hero-actions {
-            margin-top: 30px;
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .hero-btn-primary {
-            background: linear-gradient(135deg, var(--primary-color) 0%, #3876c7 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .hero-btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(74, 144, 226, 0.4);
-        }
-        .hero-btn-secondary {
-            background: white;
-            color: var(--primary-color);
-            border: 2px solid #e2e8f0;
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .hero-btn-secondary:hover {
-            border-color: var(--primary-color);
-            background: #f8fbff;
-            transform: translateY(-3px);
-        }
-        .elegant-hero-image-wrapper {
-            position: relative;
-            z-index: 1;
-            width: 40%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .elegant-hero-image {
-            max-width: 100%;
-            max-height: 240px;
-            object-fit: contain;
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
-            transition: transform 0.5s ease;
-        }
-        .elegant-hero:hover .elegant-hero-image {
-            transform: translateY(-5px) scale(1.02);
-        }
-
-        .quick-features {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 40px;
-            flex-wrap: wrap;
-        }
-        .feature-item {
-            background: #fff;
-            padding: 12px 25px;
-            border-radius: 16px;
-            box-shadow: 0 6px 15px rgba(0,0,0,0.03);
-            border: 1px solid #f0f4f8;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            color: var(--dark-nav-color);
-            font-weight: 600;
-            font-size: 0.95em;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .feature-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.1);
-            border-color: #e6f0ff;
-        }
-        .feature-icon-wrapper {
-            background: var(--active-bg-color);
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--primary-color);
-            font-size: 1.1em;
-        }
-
-        .elegant-section-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            margin-top: 10px;
-        }
-        .elegant-section-header h3 {
-            margin: 0;
-            font-size: 1.5em;
-            font-weight: 800;
-            background: linear-gradient(90deg, var(--dark-nav-color), var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .elegant-section-header h3 i {
-            -webkit-text-fill-color: var(--gold-color);
-        }
-        .elegant-line {
-            flex-grow: 1;
-            height: 2px;
-            background: linear-gradient(to right, #e2e8f0 0%, transparent 100%);
-        }
-
-        .news-events-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 10px;
-        }
-        .news-card {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            border: 1px solid #f0f4f8;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-        .news-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), #80bdff);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
-        .news-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 18px 40px rgba(74, 144, 226, 0.12);
-            border-color: #e6f0ff;
-        }
-        .news-card:hover::before {
-            transform: scaleX(1);
-        }
-        .news-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-        .news-badge {
-            background-color: var(--active-bg-color);
-            color: var(--primary-color);
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.75em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 2px 10px rgba(74,144,226,0.1);
-        }
-        .news-badge.event {
-            background-color: #fff9e6; 
-            color: #b08d00;
-            box-shadow: 0 2px 10px rgba(176,141,0,0.1);
-        }
-        .news-card-title {
+        /* Alineación para noticias y eventos */
+        .news-event-title {
+            text-align: center;
             font-size: 1.3em;
-            color: var(--dark-nav-color);
-            margin: 0 0 12px 0;
-            font-weight: 800;
-            line-height: 1.3;
+            color: var(--primary-color);
+            margin-bottom: 10px;
         }
-        .news-card-body {
-            font-size: 1em;
-            color: var(--muted-text-color);
-            line-height: 1.6;
-            flex-grow: 1;
+        .news-event-heading {
             text-align: justify;
-            white-space: pre-line; 
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .delete-news-btn {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #ffebee;
-            color: #f44336;
-            border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            font-weight: normal;
             font-size: 1em;
-            z-index: 10;
+            color: var(--text-color);
         }
-        .delete-news-btn:hover {
-            background: #f44336;
-            color: white;
-            transform: scale(1.1);
-        }
-
-        /* Ajustes responsivos para el hero */
-        @media (max-width: 767px) {
-            .elegant-hero {
-                flex-direction: column;
-                text-align: center;
-                padding: 40px 25px;
-            }
-            .elegant-hero-content {
-                max-width: 100%;
-                margin-bottom: 30px;
-            }
-            .elegant-hero-title {
-                font-size: 2.2em;
-            }
-            .hero-actions {
-                justify-content: center;
-            }
-            .elegant-hero-image-wrapper {
-                width: 70%;
-            }
-            .news-card {
-                padding: 20px;
-            }
-        }
-
         /* Estilos para el portal del estudiante - ELEGANTES Y SIN MODALES */
         .student-portal-section {
             display: flex;
@@ -1611,6 +1328,89 @@
             align-self: flex-start;
             cursor: not-allowed;
         }
+
+        /* --- NUEVOS ESTILOS PARA NOTICIAS Y EVENTOS (Pestaña Inicio) --- */
+        .news-events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        .news-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid #eaeaea;
+            padding: 25px 20px;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative; /* Para el botón de eliminar absoluto */
+        }
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15);
+            border-color: var(--primary-color);
+        }
+        .news-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+        .news-badge {
+            background-color: var(--active-bg-color);
+            color: var(--primary-color);
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .news-badge.event {
+            background-color: #fff3cd; /* Amarillo suave para diferenciar eventos */
+            color: #856404;
+        }
+        .news-card-title {
+            font-size: 1.3em;
+            color: var(--text-color);
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            line-height: 1.3;
+        }
+        .news-card-body {
+            font-size: 1.05em;
+            color: var(--muted-text-color);
+            line-height: 1.6;
+            flex-grow: 1;
+            text-align: justify;
+            white-space: pre-line; /* NUEVO: Respeta los saltos de línea (puntos aparte) como en Word */
+        }
+        .delete-news-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #ffebee;
+            color: #f44336;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1em;
+        }
+        .delete-news-btn:hover {
+            background: #f44336;
+            color: white;
+            transform: scale(1.1);
+        }
         
         /* Asegurar que el cuadro de mensajes y confirmaciones siempre esté encima de todo */
         #messageBoxModal {
@@ -1621,57 +1421,16 @@
 <body>
     <div class="app-container">
         <main class="content">
-            <!-- PESTAÑA INICIO REDISEÑADA ELEGANTEMENTE -->
             <section id="inicio" class="tab-content active">
-                
-                <div class="elegant-hero">
-                    <div class="elegant-hero-content">
-                        <span class="hero-badge"><i class="fas fa-star" style="margin-right: 5px;"></i> Plataforma Educativa</span>
-                        <h2 class="elegant-hero-title">Impulsa tu futuro con <span>Volta</span></h2>
-                        <p class="elegant-hero-subtitle">Descubre nuestras últimas novedades, eventos y accede a recursos educativos exclusivos diseñados para tu aprendizaje continuo.</p>
-                        <div class="hero-actions">
-                            <button class="hero-btn-primary" onclick="document.querySelector('.nav-item[data-tab=biblioteca]').click()">
-                                Explorar Biblioteca <i class="fas fa-arrow-right"></i>
-                            </button>
-                            <button class="hero-btn-secondary" onclick="document.querySelector('.nav-item[data-tab=portal]').click()">
-                                <i class="fas fa-user-graduate"></i> Portal Estudiantil
-                            </button>
-                        </div>
-                    </div>
-                    <div class="elegant-hero-image-wrapper">
-                        <img src="novell.png" alt="Volta" class="elegant-hero-image">
-                    </div>
-                </div>
-
-                <div class="quick-features">
-                    <div class="feature-item">
-                        <div class="feature-icon-wrapper"><i class="fas fa-laptop-code"></i></div>
-                        <span>Recursos 24/7</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon-wrapper"><i class="fas fa-chalkboard-teacher"></i></div>
-                        <span>Clases Interactivas</span>
-                    </div>
-                    <div class="feature-item">
-                        <div class="feature-icon-wrapper"><i class="fas fa-comments"></i></div>
-                        <span>Soporte en Vivo</span>
-                    </div>
-                </div>
-
-                <div id="admin-noticias-eventos-btn" class="button-group" style="display: none; margin-bottom: 25px; justify-content: center;">
-                    <button class="admin-button" id="btnGestionarNoticiasEventos" style="max-width: 300px;">
+                <h2><i class="fas fa-home" style="margin-right: 10px;"></i>Bienvenido a Volta</h2>
+                <img src="novell.png" alt="Imagen de Novell" class="hero-image">
+                <div id="admin-noticias-eventos-btn" class="button-group" style="display: none; margin-top: 15px;">
+                    <button class="admin-button" id="btnGestionarNoticiasEventos">
                         <span class="button-icon"><i class="fas fa-bullhorn"></i></span> Gestionar Noticias y Eventos
                     </button>
                 </div>
-                
-                <div class="elegant-section-header">
-                    <h3><i class="fas fa-bolt" style="color: var(--gold-color);"></i> Tendencias y Novedades</h3>
-                    <div class="elegant-line"></div>
-                </div>
-
                 <div id="news-events-display">
                 </div>
-
             </section>
             <section id="biblioteca" class="tab-content">
                 <h2><i class="fas fa-book-open" style="margin-right: 10px;"></i>Biblioteca Digital</h2>
@@ -1723,19 +1482,9 @@
                             <button id="btn-back-library" class="btn-back"><i class="fas fa-arrow-left"></i> Volver</button>
                             <h3 id="library-detail-title">Detalle</h3>
                         </div>
-                        <div class="filter-group" style="display: flex; gap: 15px; flex-wrap: wrap; align-items: flex-end;">
-                            <div style="flex: 1; min-width: 200px;">
-                                <label for="library-inline-search">Buscar por título/descripción:</label>
-                                <input type="text" id="library-inline-search" placeholder="Escribe para buscar..." style="width: 100%;">
-                            </div>
-                            <div style="flex: 0 0 200px;">
-                                <label for="library-career-filter">Filtrar por Carrera:</label>
-                                <select id="library-career-filter" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
-                                    <option value="todas">Todas las carreras</option>
-                                    <option value="contabilidad">Contabilidad</option>
-                                    <option value="electronica">Electrónica</option>
-                                </select>
-                            </div>
+                        <div class="filter-group">
+                            <label for="library-inline-search">Buscar por título/descripción:</label>
+                            <input type="text" id="library-inline-search" placeholder="Escribe para buscar...">
                         </div>
                         <!-- Los contenedores originales se mantienen para no romper el JS -->
                         <div id="practica-inline-container" class="inline-list-container" style="display: none;"><div id="practicas-list"></div></div>
@@ -1912,7 +1661,6 @@
                             <th>Nro.</th>
                             <th>Título</th>
                             <th>Tipo</th>
-                            <th>Carrera</th>
                             <th>Recurso</th>
                             <th>Acciones</th>
                         </tr>
@@ -1943,12 +1691,6 @@
                     <option value="libro">Libro</option>
                     <option value="video">Video</option>
                     <option value="software">Software</option>
-                </select>
-                <label for="library-item-carrera">Carrera:</label>
-                <select id="library-item-carrera" required>
-                    <option value="ambas">Ambas / General</option>
-                    <option value="contabilidad">Contabilidad</option>
-                    <option value="electronica">Electrónica</option>
                 </select>
                 <label for="library-item-link">Link del Recurso:</label>
                 <input type="url" id="library-item-link" placeholder="URL del recurso" required>
@@ -2201,7 +1943,7 @@
         let studentMainView, studentDetailView, studentDetailTitle, studentGradeDetailsContent, btnBackStudent;
 
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventLinkInput, newsEventsAdminTbody, newsEventsDisplay;
-        let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemCarreraSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listStudentsModal;
@@ -2210,7 +1952,6 @@
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
-        let libraryCareerFilter;
         let adminNoticiasEventosBtn, adminBibliotecaBtn;
         let deleteAllChatsBtn;
         
@@ -2595,37 +2336,19 @@
                 const badgeClass = item.type === 'event' ? 'news-badge event' : 'news-badge';
                 const iconClass = item.type === 'event' ? 'fa-calendar-alt' : 'fa-newspaper';
                 const typeLabel = item.type === 'event' ? 'Evento' : 'Noticia';
-                
-                // Colores para el ícono
-                const iconColor = item.type === 'event' ? '#b08d00' : 'var(--primary-color)';
-                const iconBg = item.type === 'event' ? '#fff9e6' : 'var(--active-bg-color)';
 
-                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" onclick="event.stopPropagation();" style="margin-top: 20px; align-self: flex-start; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; position: relative; z-index: 10;"><i class="fas fa-external-link-alt"></i> Ver enlace</a>` : '';
+                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" style="margin-top: 15px; align-self: flex-start; text-decoration: none;"><i class="fas fa-external-link-alt" style="margin-right: 5px;"></i> Ver enlace</a>` : '';
 
                 card.innerHTML = `
                     ${deleteButton}
                     <div class="news-card-header">
-                        <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 45px; height: 45px; border-radius: 12px; background: ${iconBg}; display: flex; align-items: center; justify-content: center; color: ${iconColor}; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                                <i class="fas ${iconClass}" style="font-size: 1.4em;"></i>
-                            </div>
-                        </div>
+                        <i class="fas ${iconClass}" style="color: var(--primary-color); font-size: 1.3em;"></i>
                         <span class="${badgeClass}">${typeLabel}</span>
                     </div>
                     <h3 class="news-card-title">${item.title}</h3>
                     <div class="news-card-body">${item.heading}</div>
                     ${linkHtml}
                 `;
-                
-                // Evento click para abrir el modal estilo Netflix con la descripción completa
-                card.addEventListener('click', (e) => {
-                    // Evitar abrir el modal si se hace clic en el botón de eliminar o en el enlace
-                    if (e.target.closest('.delete-news-btn') || e.target.closest('.resource-action-btn')) {
-                        return;
-                    }
-                    openNewsEventModal(item);
-                });
-
                 gridContainer.appendChild(card);
             });
 
@@ -2653,44 +2376,12 @@
             }
         }
 
-        // --- NUEVA FUNCIÓN: Abrir Modal Estilo Netflix para Noticias/Eventos ---
-        function openNewsEventModal(item) {
-            const modal = document.getElementById('netflixStyleModal');
-            const hero = document.getElementById('netflix-modal-hero-content');
-            const title = document.getElementById('netflix-modal-title');
-            const meta = document.getElementById('netflix-modal-meta');
-            const desc = document.getElementById('netflix-modal-desc');
-            const actionContainer = document.getElementById('netflix-modal-action-container');
-
-            const iconClass = item.type === 'event' ? 'fa-calendar-alt' : 'fa-newspaper';
-            const typeLabel = item.type === 'event' ? 'Evento' : 'Noticia';
-
-            // Restaurar color de fondo oscuro por defecto
-            hero.style.backgroundColor = '#1a252f';
-            hero.innerHTML = `<i class="fas ${iconClass} no-img-icon"></i>`;
-
-            title.textContent = item.title;
-            meta.textContent = typeLabel;
-            
-            // Reutilizamos la función de formateo de WhatsApp para respetar las negrillas y los saltos de línea
-            desc.innerHTML = formatWhatsAppBold(item.heading || 'Sin descripción detallada.');
-
-            if (item.link) {
-                actionContainer.innerHTML = `<a href="${item.link}" target="_blank" class="netflix-modal-action"><i class="fas fa-external-link-alt" style="margin-right: 10px;"></i> Ver Enlace</a>`;
-            } else {
-                actionContainer.innerHTML = ''; // Limpiar contenedor si no hay enlace extra
-            }
-
-            modal.style.display = 'flex';
-        }
-
         // --- Gestión de la Biblioteca (Añadiendo compresión en subida de imagen) ---
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
             const id = libraryItemIdInput.value;
             const title = libraryItemTitleInput.value;
             const type = libraryItemTypeSelect.value;
-            const carrera = libraryItemCarreraSelect.value;
             const link = libraryItemLinkInput.value;
             const imageUrl = libraryItemImageBase64Input.value; // Se toma el valor procesado en Base64
             const description = libraryItemDescriptionInput.value;
@@ -2705,7 +2396,7 @@
             } else {
                 code = allLibraryItems.length + 1;
             }
-            const newItem = { code, title, type, carrera, link, imageUrl, description }; 
+            const newItem = { code, title, type, link, imageUrl, description }; 
             try {
                 if (id) {
                     await setDoc(doc(libraryItemsCollection, id), newItem);
@@ -2733,7 +2424,7 @@
         function renderAdminLibraryItemsTable() {
             libraryItemsAdminTbody.innerHTML = '';
             if (allLibraryItems.length === 0) {
-                libraryItemsAdminTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-text-color);">No hay ítems de biblioteca registrados.</td></tr>';
+                libraryItemsAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No hay ítems de biblioteca registrados.</td></tr>';
                 return;
             }
 
@@ -2758,19 +2449,16 @@
 
                     // Fila de encabezado separador para el tipo
                     const headerTr = document.createElement('tr');
-                    headerTr.innerHTML = `<td colspan="6" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Tipo: ${typeLabels[type] || type}</td>`;
+                    headerTr.innerHTML = `<td colspan="5" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Tipo: ${typeLabels[type] || type}</td>`;
                     libraryItemsAdminTbody.appendChild(headerTr);
 
                     items.forEach((item, index) => {
                         const displayCode = index + 1; // Número visual ordenado
-                        const carreraFormat = item.carrera === 'ambas' ? 'Ambas/General' : (item.carrera ? item.carrera.charAt(0).toUpperCase() + item.carrera.slice(1) : 'Ambas/General');
-                        
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td style="text-align: center; font-weight: bold;">${displayCode}</td>
                             <td>${item.title}</td>
                             <td>${typeLabels[type] || item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                            <td>${carreraFormat}</td>
                             <td style="text-align: center;"><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
                             <td class="actions-column">
                                 <button class="edit-btn" data-id="${item.id}" data-displaycode="${displayCode}"><i class="fas fa-edit"></i></button>
@@ -2796,7 +2484,6 @@
                         libraryItemCodeDisplay.value = displayCode; // Muestra el número visual actual
                         libraryItemTitleInput.value = item.title;
                         libraryItemTypeSelect.value = item.type;
-                        libraryItemCarreraSelect.value = item.carrera || 'ambas';
                         libraryItemLinkInput.value = item.link;
                         libraryItemDescriptionInput.value = item.description;
 
@@ -2844,11 +2531,11 @@
             });
         }
 
-        window.filterLibraryItems = function(type, searchQuery, targetCareer = 'todas') {
-            renderLibraryItemsInModals(type, searchQuery, targetCareer);
+        window.filterLibraryItems = function(type, searchQuery) {
+            renderLibraryItemsInModals(type, searchQuery);
         };
 
-        function renderLibraryItemsInModals(targetType = null, searchQuery = '', targetCareer = 'todas') {
+        function renderLibraryItemsInModals(targetType = null, searchQuery = '') {
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
             document.getElementById('videos-list').innerHTML = '';
@@ -2874,14 +2561,7 @@
                     item.displayCode = index + 1;
                 });
 
-                // 2. Aplicar filtro por Carrera
-                if (targetCareer !== 'todas') {
-                    itemsToRender = itemsToRender.filter(item => 
-                        (item.carrera === targetCareer) || (!item.carrera && targetCareer === 'ambas') || (item.carrera === 'ambas')
-                    );
-                }
-
-                // 3. Aplicar filtro si el usuario busca algo
+                // 2. Aplicar filtro si el usuario busca algo
                 if (searchQuery) {
                     const lowerCaseQuery = searchQuery.toLowerCase();
                     itemsToRender = itemsToRender.filter(item =>
@@ -2903,7 +2583,6 @@
                                 : `<div class="resource-card-no-img"><i class="fas ${getIconForType(item.type)}"></i></div>`;
 
                             const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-                            const carreraCapitalizada = item.carrera === 'ambas' ? 'Ambas/General' : (item.carrera ? item.carrera.charAt(0).toUpperCase() + item.carrera.slice(1) : 'Ambas/General');
 
                             gridHTML += `
                                 <div class="resource-card">
@@ -2913,7 +2592,7 @@
                                     <div class="resource-card-info">
                                         <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
                                         <p class="resource-card-desc" title="${(item.description || 'Sin descripción').replace(/"/g, '&quot;')}">${formatWhatsAppBold(item.description || 'Sin descripción')}</p>
-                                        <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado} | ${carreraCapitalizada}</p>
+                                        <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado}</p>
                                     </div>
                                 </div>
                             `;
@@ -2969,10 +2648,8 @@
             }
 
             const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-            const carreraCapitalizada = item.carrera === 'ambas' ? 'Ambas/General' : (item.carrera ? item.carrera.charAt(0).toUpperCase() + item.carrera.slice(1) : 'Ambas/General');
-            
             title.textContent = item.title;
-            meta.textContent = `Nro. ${item.displayCode} - ${tipoCapitalizado} | Carrera: ${carreraCapitalizada}`;
+            meta.textContent = `Nro. ${item.displayCode} - ${tipoCapitalizado}`;
             // Se usa innerHTML junto con la función de formato para renderizar la negrilla
             desc.innerHTML = formatWhatsAppBold(item.description || 'Este recurso no tiene una descripción detallada.');
 
@@ -3444,7 +3121,7 @@
 
             document.querySelectorAll('.view-grades-detail-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const materiaName = e.currentTarget.dataset.materiaName;
+                    const materiaName = e.target.dataset.materiaName;
                     openStudentGradeDetailModal(currentLoggedInStudent.id, materiaName);
                 });
             });
@@ -3662,7 +3339,6 @@
             libraryItemCodeDisplay = document.getElementById('library-item-code-display');
             libraryItemTitleInput = document.getElementById('library-item-title');
             libraryItemTypeSelect = document.getElementById('library-item-type');
-            libraryItemCarreraSelect = document.getElementById('library-item-carrera');
             libraryItemLinkInput = document.getElementById('library-item-link');
             
             // Asignar los nuevos elementos del subidor de imágenes
@@ -3712,7 +3388,6 @@
             
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
-            libraryCareerFilter = document.getElementById('library-career-filter');
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
             deleteAllChatsBtn = document.getElementById('delete-all-chats-btn');
@@ -3911,7 +3586,6 @@
             const libraryDetailTitle = document.getElementById('library-detail-title');
             const libraryInlineSearch = document.getElementById('library-inline-search');
             let currentInlineLibraryType = '';
-            let currentInlineLibraryCareer = 'todas';
 
             document.querySelectorAll('.library-card').forEach(card => {
                 card.addEventListener('click', () => {
@@ -3925,13 +3599,11 @@
                     libraryMainView.style.display = 'none';
                     libraryDetailView.style.display = 'block';
                     libraryInlineSearch.value = '';
-                    if(libraryCareerFilter) libraryCareerFilter.value = 'todas';
-                    currentInlineLibraryCareer = 'todas';
 
                     document.querySelectorAll('.inline-list-container').forEach(c => c.style.display = 'none');
                     document.getElementById(`${type}-inline-container`).style.display = 'block';
 
-                    filterLibraryItems(type, '', 'todas');
+                    filterLibraryItems(type, '');
                 });
             });
 
@@ -3942,13 +3614,7 @@
 
             if(libraryInlineSearch) {
                 libraryInlineSearch.addEventListener('input', (e) => {
-                    filterLibraryItems(currentInlineLibraryType, e.target.value, currentInlineLibraryCareer);
-                });
-            }
-            if(libraryCareerFilter) {
-                libraryCareerFilter.addEventListener('change', (e) => {
-                    currentInlineLibraryCareer = e.target.value;
-                    filterLibraryItems(currentInlineLibraryType, libraryInlineSearch.value, currentInlineLibraryCareer);
+                    filterLibraryItems(currentInlineLibraryType, e.target.value);
                 });
             }
 
@@ -3976,7 +3642,6 @@
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
-                            libraryItemCarreraSelect.value = 'ambas';
                         }
                     }
                 });
@@ -3993,7 +3658,6 @@
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
-                            libraryItemCarreraSelect.value = 'ambas';
                         }
                     }
                 });
@@ -4084,4 +3748,120 @@
                     libraryAccessRequiredDiv.style.display = 'block';
                 }
             }
-            document.getElementById('btnGestionarNoticiasEventos').addEventListener('click',
+            document.getElementById('btnGestionarNoticiasEventos').addEventListener('click', () => {
+                manageNewsEventsModal.style.display = 'block';
+                renderAdminNewsEventsTable();
+                newsEventForm.reset();
+                newsEventIdInput.value = '';
+            });
+            document.getElementById('btnGestionarBiblioteca').addEventListener('click', () => {
+                manageLibraryModal.style.display = 'block';
+                renderAdminLibraryItemsTable();
+                // Ahora el reseteo del form pasa al botón de "Añadir Nuevo"
+            });
+            
+            // Evento para el botón de "Añadir Nuevo Recurso" dentro del modal
+            btnAddNewLibraryItem.addEventListener('click', () => {
+                editLibraryItemModalTitle.innerHTML = '<i class="fas fa-plus"></i> Añadir Nuevo Recurso';
+                editLibraryItemModal.style.display = 'block';
+                libraryItemForm.reset();
+                libraryItemIdInput.value = '';
+                libraryItemImageBase64Input.value = '';
+                libraryItemImagePreview.style.display = 'none';
+                libraryItemImagePreview.src = '';
+                libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
+            });
+
+            newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
+            libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
+            createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
+            registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
+            gradeForm.addEventListener('submit', handleGradeFormSubmit);
+            const closeMateriaStudentsModal = () => {
+                materiaStudentsModal.style.display = 'none';
+            };
+            materiaStudentsModal.querySelector('.close-button').onclick = closeMateriaStudentsModal;
+            materiaStudentsModal.querySelector('.close-btn').onclick = closeMateriaStudentsModal;
+            materiaStudentsModal.onclick = (e) => {
+                if (e.target === materiaStudentsModal) closeMateriaStudentsModal();
+            };
+
+            // --- Logica Chat WhatsApp ---
+            const chatTextInput = document.getElementById('chat-text-input');
+            const chatSendBtn = document.getElementById('chat-send-btn');
+            const chatNameInput = document.getElementById('chat-name-input');
+
+            // --- NUEVO: FUNCIONALIDAD DE ELIMINAR TODOS LOS CHATS (SOLO ADMIN) ---
+            if (deleteAllChatsBtn) {
+                deleteAllChatsBtn.addEventListener('click', () => {
+                    showMessageBox('Confirmar Eliminación Masiva', '¿Estás seguro de que deseas borrar TODOS los mensajes del chat? Esta acción es irreversible.', 'confirm', async (confirmed) => {
+                        if (confirmed) {
+                            try {
+                                const batch = writeBatch(db);
+                                let count = 0;
+                                
+                                // Iterar sobre todos los chats actualmente cargados en memoria
+                                allChats.forEach(chat => {
+                                    const chatRef = doc(chatsCollection, chat.id);
+                                    batch.delete(chatRef);
+                                    count++;
+                                });
+                                
+                                if (count > 0) {
+                                    await batch.commit(); // Ejecuta las eliminaciones de Firebase de una sola vez
+                                    showMessageBox('Éxito', `Se han eliminado los ${count} mensajes del chat de forma exitosa.`);
+                                } else {
+                                    showMessageBox('Aviso', 'No hay mensajes en el chat para eliminar.');
+                                }
+                            } catch (error) {
+                                console.error("Error al intentar eliminar todos los chats:", error);
+                                showMessageBox('Error', 'Ocurrió un problema al intentar vaciar el chat. Por favor, revisa la conexión.');
+                            }
+                        }
+                    });
+                });
+            }
+
+            const sendMessage = async () => {
+                const text = chatTextInput.value.trim();
+                let senderName = chatNameInput.value.trim() || 'Visitante';
+                
+                if (currentLoggedInStudent) {
+                    senderName = `${currentLoggedInStudent.nombres} ${currentLoggedInStudent.paterno}`;
+                    chatNameInput.value = senderName;
+                    chatNameInput.disabled = true;
+                } else if (userIsLoggedIn) {
+                    senderName = 'Admin (Douglas)';
+                    chatNameInput.value = senderName;
+                    chatNameInput.disabled = true;
+                }
+
+                if (!text) return;
+
+                try {
+                    await addDoc(chatsCollection, {
+                        text: text,
+                        senderName: senderName,
+                        userId: userId,
+                        timestamp: Date.now()
+                    });
+                    chatTextInput.value = '';
+                } catch (e) {
+                    console.error("Error al enviar mensaje:", e);
+                }
+            };
+
+            if (chatSendBtn) {
+                chatSendBtn.addEventListener('click', sendMessage);
+            }
+            if (chatTextInput) {
+                chatTextInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') sendMessage();
+                });
+            }
+
+            setupFirebaseAndAuth();
+        });
+    </script>
+</body>
+</html>
