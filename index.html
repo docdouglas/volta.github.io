@@ -677,22 +677,12 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(135deg, #f4f7f9 0%, #ffffff 100%);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            margin-bottom: 30px;
-            border: 1px solid #eef2f5;
-            position: relative;
-            overflow: hidden;
-        }
-        .elegant-hero::before {
-            content: '';
-            position: absolute;
-            top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(74,144,226,0.04) 0%, transparent 60%);
-            z-index: 0;
-            pointer-events: none;
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 40px 50px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03), 0 1px 3px rgba(0, 0, 0, 0.02);
+            margin-bottom: 35px;
+            border: 1px solid #f1f5f9;
         }
         .elegant-hero-content {
             position: relative;
@@ -700,21 +690,23 @@
             max-width: 55%;
         }
         .elegant-hero-title {
-            font-size: 2.5em;
-            font-weight: 800;
-            color: var(--dark-nav-color);
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1e293b;
             margin: 0 0 15px 0;
             line-height: 1.2;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.02em;
         }
         .elegant-hero-title span {
             color: var(--primary-color);
+            font-weight: 800;
         }
         .elegant-hero-subtitle {
-            font-size: 1.1em;
-            color: var(--muted-text-color);
+            font-size: 1.1rem;
+            color: #64748b;
             line-height: 1.6;
             margin: 0;
+            font-weight: 400;
         }
         .elegant-hero-image-wrapper {
             position: relative;
@@ -726,32 +718,29 @@
         }
         .elegant-hero-image {
             max-width: 100%;
-            max-height: 220px;
+            max-height: 200px;
             object-fit: contain;
-            filter: drop-shadow(0 15px 25px rgba(0,0,0,0.1));
-            transition: transform 0.5s ease;
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.05));
+            transition: transform 0.4s ease;
         }
         .elegant-hero:hover .elegant-hero-image {
-            transform: translateY(-5px) scale(1.02);
+            transform: translateY(-3px);
         }
 
         .elegant-section-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            margin-top: 10px;
+            margin-bottom: 25px;
+            margin-top: 15px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e2e8f0;
         }
         .elegant-section-header h3 {
             margin: 0;
-            font-size: 1.4em;
-            color: var(--dark-nav-color);
-            font-weight: 800;
-        }
-        .elegant-line {
-            flex-grow: 1;
-            height: 2px;
-            background: linear-gradient(to right, #e2e8f0 0%, transparent 100%);
+            font-size: 1.25rem;
+            color: #334155;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .news-events-grid {
@@ -761,34 +750,21 @@
             margin-top: 10px;
         }
         .news-card {
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
-            border: 1px solid #f0f4f8;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+            border: 1px solid #e2e8f0;
             padding: 25px;
             display: flex;
             flex-direction: column;
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            transition: all 0.2s ease;
             position: relative;
-            overflow: hidden;
             cursor: pointer;
         }
-        .news-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 4px;
-            background: linear-gradient(90deg, var(--primary-color), #80bdff);
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform 0.4s ease;
-        }
         .news-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 15px 35px rgba(74, 144, 226, 0.12);
-            border-color: #e6f0ff;
-        }
-        .news-card:hover::before {
-            transform: scaleX(1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.04);
+            border-color: #cbd5e1;
         }
         .news-card-header {
             display: flex;
@@ -797,31 +773,29 @@
             margin-bottom: 18px;
         }
         .news-badge {
-            background-color: var(--active-bg-color);
-            color: var(--primary-color);
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-size: 0.75em;
+            background-color: #f1f5f9;
+            color: #475569;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 2px 10px rgba(74,144,226,0.1);
+            letter-spacing: 0.5px;
         }
         .news-badge.event {
-            background-color: #fff9e6; 
-            color: #b08d00;
-            box-shadow: 0 2px 10px rgba(176,141,0,0.1);
+            background-color: #fffbeb; 
+            color: #b45309;
         }
         .news-card-title {
-            font-size: 1.3em;
-            color: var(--dark-nav-color);
-            margin: 0 0 12px 0;
-            font-weight: 800;
-            line-height: 1.3;
+            font-size: 1.2rem;
+            color: #1e293b;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            line-height: 1.4;
         }
         .news-card-body {
-            font-size: 1em;
-            color: var(--muted-text-color);
+            font-size: 0.95rem;
+            color: #64748b;
             line-height: 1.6;
             flex-grow: 1;
             text-align: justify;
@@ -833,26 +807,26 @@
         }
         .delete-news-btn {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #ffebee;
-            color: #f44336;
+            top: 15px;
+            right: 15px;
+            background: #fee2e2;
+            color: #ef4444;
             border: none;
-            border-radius: 50%;
-            width: 35px;
-            height: 35px;
+            border-radius: 8px;
+            width: 32px;
+            height: 32px;
             display: flex;
             justify-content: center;
             align-items: center;
             cursor: pointer;
             transition: all 0.2s ease;
-            font-size: 1em;
+            font-size: 0.9em;
             z-index: 10;
         }
         .delete-news-btn:hover {
-            background: #f44336;
+            background: #ef4444;
             color: white;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         /* Ajustes responsivos para el hero */
@@ -1517,14 +1491,13 @@
                 </div>
 
                 <div id="admin-noticias-eventos-btn" class="button-group" style="display: none; margin-bottom: 25px; justify-content: center;">
-                    <button class="admin-button" id="btnGestionarNoticiasEventos" style="max-width: 300px;">
-                        <span class="button-icon"><i class="fas fa-bullhorn"></i></span> Gestionar Noticias y Eventos
+                    <button class="admin-button" id="btnGestionarNoticiasEventos" style="max-width: 300px; background-color: #ffffff; border: 1px solid #e2e8f0; color: #334155; box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                        <span class="button-icon" style="color: var(--primary-color);"><i class="fas fa-bullhorn"></i></span> Gestionar Noticias y Eventos
                     </button>
                 </div>
                 
                 <div class="elegant-section-header">
-                    <h3><i class="fas fa-bolt" style="color: var(--gold-color);"></i> Tendencias y Novedades</h3>
-                    <div class="elegant-line"></div>
+                    <h3><i class="fas fa-bolt" style="color: var(--primary-color); opacity: 0.8;"></i> Tendencias y Novedades</h3>
                 </div>
 
                 <div id="news-events-display">
@@ -2451,18 +2424,18 @@
                 const iconClass = item.type === 'event' ? 'fa-calendar-alt' : 'fa-newspaper';
                 const typeLabel = item.type === 'event' ? 'Evento' : 'Noticia';
                 
-                // Colores para el ícono
-                const iconColor = item.type === 'event' ? '#b08d00' : 'var(--primary-color)';
-                const iconBg = item.type === 'event' ? '#fff9e6' : 'var(--active-bg-color)';
+                // Colores limpios y elegantes para el ícono
+                const iconColor = item.type === 'event' ? '#b45309' : '#475569';
+                const iconBg = item.type === 'event' ? '#fffbeb' : '#f1f5f9';
 
-                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" style="margin-top: 20px; align-self: flex-start; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px;"><i class="fas fa-external-link-alt"></i> Ver enlace</a>` : '';
+                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" style="margin-top: 15px; align-self: flex-start; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 6px; font-weight: 500; border: 1px solid #e2e8f0; color: #475569;"><i class="fas fa-external-link-alt"></i> Ver enlace</a>` : '';
 
                 card.innerHTML = `
                     ${deleteButton}
                     <div class="news-card-header">
                         <div style="display: flex; align-items: center; gap: 12px;">
-                            <div style="width: 45px; height: 45px; border-radius: 12px; background: ${iconBg}; display: flex; align-items: center; justify-content: center; color: ${iconColor}; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-                                <i class="fas ${iconClass}" style="font-size: 1.4em;"></i>
+                            <div style="width: 40px; height: 40px; border-radius: 10px; background: ${iconBg}; display: flex; align-items: center; justify-content: center; color: ${iconColor};">
+                                <i class="fas ${iconClass}" style="font-size: 1.2em;"></i>
                             </div>
                         </div>
                         <span class="${badgeClass}">${typeLabel}</span>
