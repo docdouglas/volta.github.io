@@ -3757,15 +3757,110 @@
                 chatBackdrop.addEventListener('click', closeDesktopChatModal);
             }
 
-            // Cerrar modal de chat al presionar "Escape"
+            // --- NUEVA LÓGICA: Cerrar cualquier modal al presionar "Escape" ---
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && window.innerWidth >= 768) {
-                    const chatsModal = document.getElementById('chats');
-                    if (chatsModal.classList.contains('desktop-modal-active')) {
-                        closeDesktopChatModal();
+                if (e.key === 'Escape') {
+                    const anyOpen = document.querySelector('.modal[style*="display: block"], .modal[style*="display: flex"], .netflix-modal[style*="display: block"], .netflix-modal[style*="display: flex"], #chats.desktop-modal-active');
+                    if (anyOpen) {
+                        closeAllModals();
                     }
                 }
             });
+
+            // --- NUEVA LÓGICA: GESTIÓN DE HISTORIAL PARA "ATRÁS" Y MODALES ---
+            if (!history.state || !history.state.base) {
+                history.replaceState({ base: true }, "");
+            }
+
+            let isNavigatingBack = false;
+
+            window.addEventListener('popstate', (e) => {
+                isNavigatingBack = true;
+                closeAllModals();
+                // Permitir que los eventos de clic terminen de procesarse antes de liberar la bandera
+                setTimeout(() => { isNavigatingBack = false; }, 50);
+            });
+
+            function closeAllModals() {
+                // Cerramos Modales Estándar simulando un clic en su botón de cerrar para activar rutinas de limpieza seguras
+                const openModals = document.querySelectorAll('.modal[style*="display: block"], .modal[style*="display: flex"]');
+                openModals.forEach(modal => {
+                    const closeBtn = modal.querySelector('.close-button');
+                    if (closeBtn) closeBtn.click();
+                    else modal.style.display = 'none'; // Fallback
+                });
+
+                // Cerramos Modal Estilo Netflix
+                const netflixModal = document.getElementById('netflixStyleModal');
+                if (netflixModal && (netflixModal.style.display === 'block' || netflixModal.style.display === 'flex')) {
+                    const netflixCloseBtn = document.getElementById('closeNetflixModal');
+                    if (netflixCloseBtn) netflixCloseBtn.click();
+                    else netflixModal.style.display = 'none';
+                }
+
+                // Cerramos Chat Modal en Escritorio
+                const chatsModal = document.getElementById('chats');
+                if (chatsModal && chatsModal.classList.contains('desktop-modal-active')) {
+                    const chatCloseBtn = document.getElementById('close-chat-modal-btn');
+                    if (chatCloseBtn) chatCloseBtn.click();
+                    else {
+                        chatsModal.classList.remove('desktop-modal-active');
+                        const backdrop = document.getElementById('chat-modal-backdrop');
+                        if (backdrop) backdrop.classList.remove('active');
+                    }
+                }
+            }
+
+            const modalObserver = new MutationObserver((mutations) => {
+                for (let mutation of mutations) {
+                    if (mutation.type === 'attributes') {
+                        const target = mutation.target;
+                        let isModalOpening = false;
+                        let isModalClosing = false;
+
+                        // Detectar cambios en modales normales y de Netflix
+                        if (target.classList.contains('modal') || target.classList.contains('netflix-modal')) {
+                            if (mutation.attributeName === 'style') {
+                                if (target.style.display === 'block' || target.style.display === 'flex') {
+                                    isModalOpening = true;
+                                } else if (target.style.display === 'none' || target.style.display === '') {
+                                    isModalClosing = true;
+                                }
+                            }
+                        } 
+                        // Detectar cambios en el chat estilo escritorio
+                        else if (target.id === 'chats') {
+                            if (mutation.attributeName === 'class') {
+                                if (target.classList.contains('desktop-modal-active')) {
+                                    isModalOpening = true;
+                                } else if (!target.classList.contains('desktop-modal-active')) {
+                                    isModalClosing = true;
+                                }
+                            }
+                        }
+
+                        // Si un modal se abre, agregamos un punto al historial (para que "Atrás" funcione)
+                        if (isModalOpening && !isNavigatingBack) {
+                            if (!history.state || !history.state.modalOpen) {
+                                history.pushState({ modalOpen: true }, "");
+                            }
+                        } 
+                        // Si un modal se cierra manualmente (por el usuario tocando la X o Escape), limpiamos el historial
+                        else if (isModalClosing && !isNavigatingBack) {
+                            if (history.state && history.state.modalOpen) {
+                                // Solo removemos del historial si ya no queda NINGÚN modal abierto
+                                const anyOpen = document.querySelector('.modal[style*="display: block"], .modal[style*="display: flex"], .netflix-modal[style*="display: block"], .netflix-modal[style*="display: flex"], #chats.desktop-modal-active');
+                                if (!anyOpen) {
+                                    history.back();
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Iniciar la observación del DOM para rastrear la apertura de ventanas
+            modalObserver.observe(document.body, { attributes: true, subtree: true, attributeFilter: ['style', 'class'] });
 
             // Lógica inteligente para cuando se redimensiona la ventana (pasar de PC a móvil o viceversa)
             window.addEventListener('resize', () => {
