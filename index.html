@@ -1587,11 +1587,9 @@
                                 <input type="text" id="library-inline-search" placeholder="Escribe para buscar..." style="width: 100%;">
                             </div>
                             <div style="flex: 0 0 200px;">
-                                <label for="library-career-filter">Filtrar por Carrera:</label>
-                                <select id="library-career-filter" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
-                                    <option value="todas">Todas las carreras</option>
-                                    <option value="contabilidad">Contabilidad</option>
-                                    <option value="electronica">Electrónica</option>
+                                <label for="library-materia-filter">Filtrar por Materia:</label>
+                                <select id="library-materia-filter" style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc;">
+                                    <option value="todas">Todas las materias</option>
                                 </select>
                             </div>
                         </div>
@@ -1770,7 +1768,7 @@
                             <th>Nro.</th>
                             <th>Título</th>
                             <th>Tipo</th>
-                            <th>Carrera</th>
+                            <th>Materia</th>
                             <th>Recurso</th>
                             <th>Acciones</th>
                         </tr>
@@ -1802,11 +1800,9 @@
                     <option value="video">Video</option>
                     <option value="software">Software</option>
                 </select>
-                <label for="library-item-carrera">Carrera:</label>
-                <select id="library-item-carrera" required>
-                    <option value="ambas">Ambas / General</option>
-                    <option value="contabilidad">Contabilidad</option>
-                    <option value="electronica">Electrónica</option>
+                <label for="library-item-materia">Materia:</label>
+                <select id="library-item-materia" required>
+                    <option value="general">General / Todas</option>
                 </select>
                 <label for="library-item-link">Link del Recurso:</label>
                 <input type="url" id="library-item-link" placeholder="URL del recurso" required>
@@ -2059,7 +2055,7 @@
         let studentMainView, studentDetailView, studentDetailTitle, studentGradeDetailsContent, btnBackStudent;
 
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventLinkInput, newsEventsAdminTbody, newsEventsDisplay;
-        let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemCarreraSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemMateriaSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listStudentsModal;
@@ -2068,7 +2064,7 @@
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
-        let libraryCareerFilter;
+        let libraryMateriaFilter;
         let adminNoticiasEventosBtn, adminBibliotecaBtn;
         let deleteAllChatsBtn;
         
@@ -2221,6 +2217,7 @@
                     renderAdminMateriasTable();
                     populateStudentMateriasCheckboxes();
                     renderMateriasListButtons();
+                    populateLibraryMateriaSelects();
                     if (currentLoggedInStudent) {
                         renderStudentPortal();
                     }
@@ -2543,12 +2540,43 @@
         }
 
         // --- Gestión de la Biblioteca (Añadiendo compresión en subida de imagen) ---
+        function populateLibraryMateriaSelects() {
+            const currentFilterVal = libraryMateriaFilter ? libraryMateriaFilter.value : 'todas';
+            const currentFormVal = libraryItemMateriaSelect ? libraryItemMateriaSelect.value : 'general';
+
+            if (libraryMateriaFilter) {
+                libraryMateriaFilter.innerHTML = '<option value="todas">Todas las materias</option>';
+            }
+            if (libraryItemMateriaSelect) {
+                libraryItemMateriaSelect.innerHTML = '<option value="general">General / Todas</option>';
+            }
+
+            const materiasArray = Object.values(allMaterias).sort((a, b) => a.name.localeCompare(b.name));
+            
+            materiasArray.forEach(materia => {
+                const val = materia.name.toLowerCase();
+                if (libraryMateriaFilter) {
+                    const opt1 = document.createElement('option');
+                    opt1.value = val; opt1.textContent = materia.name;
+                    libraryMateriaFilter.appendChild(opt1);
+                }
+                if (libraryItemMateriaSelect) {
+                    const opt2 = document.createElement('option');
+                    opt2.value = val; opt2.textContent = materia.name;
+                    libraryItemMateriaSelect.appendChild(opt2);
+                }
+            });
+
+            if (libraryMateriaFilter) libraryMateriaFilter.value = currentFilterVal;
+            if (libraryItemMateriaSelect) libraryItemMateriaSelect.value = currentFormVal;
+        }
+
         async function handleLibraryItemFormSubmit(e) {
             e.preventDefault();
             const id = libraryItemIdInput.value;
             const title = libraryItemTitleInput.value;
             const type = libraryItemTypeSelect.value;
-            const carrera = libraryItemCarreraSelect.value;
+            const materia = libraryItemMateriaSelect.value;
             const link = libraryItemLinkInput.value;
             const imageUrl = libraryItemImageBase64Input.value; // Se toma el valor procesado en Base64
             const description = libraryItemDescriptionInput.value;
@@ -2563,7 +2591,7 @@
             } else {
                 code = allLibraryItems.length + 1;
             }
-            const newItem = { code, title, type, carrera, link, imageUrl, description }; 
+            const newItem = { code, title, type, materia, link, imageUrl, description }; 
             try {
                 if (id) {
                     await setDoc(doc(libraryItemsCollection, id), newItem);
@@ -2621,14 +2649,16 @@
 
                     items.forEach((item, index) => {
                         const displayCode = index + 1; // Número visual ordenado
-                        const carreraFormat = item.carrera === 'ambas' ? 'Ambas/General' : (item.carrera ? item.carrera.charAt(0).toUpperCase() + item.carrera.slice(1) : 'Ambas/General');
+                        const itemVal = item.materia || item.carrera || 'general';
+                        const isGeneral = itemVal === 'general' || itemVal === 'ambas';
+                        const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
                         
                         const tr = document.createElement('tr');
                         tr.innerHTML = `
                             <td style="text-align: center; font-weight: bold;">${displayCode}</td>
                             <td>${item.title}</td>
                             <td>${typeLabels[type] || item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                            <td>${carreraFormat}</td>
+                            <td>${subjectName}</td>
                             <td style="text-align: center;"><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
                             <td class="actions-column">
                                 <button class="edit-btn" data-id="${item.id}" data-displaycode="${displayCode}"><i class="fas fa-edit"></i></button>
@@ -2654,7 +2684,8 @@
                         libraryItemCodeDisplay.value = displayCode; // Muestra el número visual actual
                         libraryItemTitleInput.value = item.title;
                         libraryItemTypeSelect.value = item.type;
-                        libraryItemCarreraSelect.value = item.carrera || 'ambas';
+                        libraryItemMateriaSelect.value = item.materia || item.carrera || 'general';
+                        if (libraryItemMateriaSelect.value === 'ambas') libraryItemMateriaSelect.value = 'general';
                         libraryItemLinkInput.value = item.link;
                         libraryItemDescriptionInput.value = item.description;
 
@@ -2702,11 +2733,11 @@
             });
         }
 
-        window.filterLibraryItems = function(type, searchQuery, targetCareer = 'todas') {
-            renderLibraryItemsInModals(type, searchQuery, targetCareer);
+        window.filterLibraryItems = function(type, searchQuery, targetMateria = 'todas') {
+            renderLibraryItemsInModals(type, searchQuery, targetMateria);
         };
 
-        function renderLibraryItemsInModals(targetType = null, searchQuery = '', targetCareer = 'todas') {
+        function renderLibraryItemsInModals(targetType = null, searchQuery = '', targetMateria = 'todas') {
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
             document.getElementById('videos-list').innerHTML = '';
@@ -2732,11 +2763,12 @@
                     item.displayCode = index + 1;
                 });
 
-                // 2. Aplicar filtro por Carrera
-                if (targetCareer !== 'todas') {
-                    itemsToRender = itemsToRender.filter(item => 
-                        (item.carrera === targetCareer) || (!item.carrera && targetCareer === 'ambas') || (item.carrera === 'ambas')
-                    );
+                // 2. Aplicar filtro por Materia
+                if (targetMateria !== 'todas') {
+                    itemsToRender = itemsToRender.filter(item => {
+                        const itemVal = item.materia || item.carrera || 'general';
+                        return itemVal === targetMateria || itemVal === 'general' || itemVal === 'ambas';
+                    });
                 }
 
                 // 3. Aplicar filtro si el usuario busca algo
@@ -2761,7 +2793,9 @@
                                 : `<div class="resource-card-no-img"><i class="fas ${getIconForType(item.type)}"></i></div>`;
 
                             const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-                            const carreraCapitalizada = item.carrera === 'ambas' ? 'Ambas/General' : (item.carrera ? item.carrera.charAt(0).toUpperCase() + item.carrera.slice(1) : 'Ambas/General');
+                            const itemVal = item.materia || item.carrera || 'general';
+                            const isGeneral = itemVal === 'general' || itemVal === 'ambas';
+                            const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
 
                             gridHTML += `
                                 <div class="resource-card">
@@ -2771,7 +2805,7 @@
                                     <div class="resource-card-info">
                                         <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
                                         <p class="resource-card-desc" title="${(item.description || 'Sin descripción').replace(/"/g, '&quot;')}">${formatWhatsAppBold(item.description || 'Sin descripción')}</p>
-                                        <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado} | ${carreraCapitalizada}</p>
+                                        <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado} | ${subjectName}</p>
                                     </div>
                                 </div>
                             `;
@@ -2827,10 +2861,12 @@
             }
 
             const tipoCapitalizado = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-            const carreraCapitalizada = item.carrera === 'ambas' ? 'Ambas/General' : (item.carrera ? item.carrera.charAt(0).toUpperCase() + item.carrera.slice(1) : 'Ambas/General');
+            const itemVal = item.materia || item.carrera || 'general';
+            const isGeneral = itemVal === 'general' || itemVal === 'ambas';
+            const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
             
             title.textContent = item.title;
-            meta.textContent = `Nro. ${item.displayCode} - ${tipoCapitalizado} | Carrera: ${carreraCapitalizada}`;
+            meta.textContent = `Nro. ${item.displayCode} - ${tipoCapitalizado} | Materia: ${subjectName}`;
             // Se usa innerHTML junto con la función de formato para renderizar la negrilla
             desc.innerHTML = formatWhatsAppBold(item.description || 'Este recurso no tiene una descripción detallada.');
 
@@ -3520,7 +3556,7 @@
             libraryItemCodeDisplay = document.getElementById('library-item-code-display');
             libraryItemTitleInput = document.getElementById('library-item-title');
             libraryItemTypeSelect = document.getElementById('library-item-type');
-            libraryItemCarreraSelect = document.getElementById('library-item-carrera');
+            libraryItemMateriaSelect = document.getElementById('library-item-materia');
             libraryItemLinkInput = document.getElementById('library-item-link');
             
             // Asignar los nuevos elementos del subidor de imágenes
@@ -3570,7 +3606,7 @@
             
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
-            libraryCareerFilter = document.getElementById('library-career-filter');
+            libraryMateriaFilter = document.getElementById('library-materia-filter');
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
             deleteAllChatsBtn = document.getElementById('delete-all-chats-btn');
@@ -3769,7 +3805,7 @@
             const libraryDetailTitle = document.getElementById('library-detail-title');
             const libraryInlineSearch = document.getElementById('library-inline-search');
             let currentInlineLibraryType = '';
-            let currentInlineLibraryCareer = 'todas';
+            let currentInlineLibraryMateria = 'todas';
 
             document.querySelectorAll('.library-card').forEach(card => {
                 card.addEventListener('click', () => {
@@ -3783,8 +3819,8 @@
                     libraryMainView.style.display = 'none';
                     libraryDetailView.style.display = 'block';
                     libraryInlineSearch.value = '';
-                    if(libraryCareerFilter) libraryCareerFilter.value = 'todas';
-                    currentInlineLibraryCareer = 'todas';
+                    if(libraryMateriaFilter) libraryMateriaFilter.value = 'todas';
+                    currentInlineLibraryMateria = 'todas';
 
                     document.querySelectorAll('.inline-list-container').forEach(c => c.style.display = 'none');
                     document.getElementById(`${type}-inline-container`).style.display = 'block';
@@ -3800,13 +3836,13 @@
 
             if(libraryInlineSearch) {
                 libraryInlineSearch.addEventListener('input', (e) => {
-                    filterLibraryItems(currentInlineLibraryType, e.target.value, currentInlineLibraryCareer);
+                    filterLibraryItems(currentInlineLibraryType, e.target.value, currentInlineLibraryMateria);
                 });
             }
-            if(libraryCareerFilter) {
-                libraryCareerFilter.addEventListener('change', (e) => {
-                    currentInlineLibraryCareer = e.target.value;
-                    filterLibraryItems(currentInlineLibraryType, libraryInlineSearch.value, currentInlineLibraryCareer);
+            if(libraryMateriaFilter) {
+                libraryMateriaFilter.addEventListener('change', (e) => {
+                    currentInlineLibraryMateria = e.target.value;
+                    filterLibraryItems(currentInlineLibraryType, libraryInlineSearch.value, currentInlineLibraryMateria);
                 });
             }
 
@@ -3834,7 +3870,7 @@
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
-                            libraryItemCarreraSelect.value = 'ambas';
+                            libraryItemMateriaSelect.value = 'general';
                         }
                     }
                 });
@@ -3851,7 +3887,7 @@
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
-                            libraryItemCarreraSelect.value = 'ambas';
+                            libraryItemMateriaSelect.value = 'general';
                         }
                     }
                 });
@@ -3964,7 +4000,7 @@
                 libraryItemImagePreview.style.display = 'none';
                 libraryItemImagePreview.src = '';
                 libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
-                libraryItemCarreraSelect.value = 'ambas'; // Valor por defecto
+                libraryItemMateriaSelect.value = 'general'; // Valor por defecto
             });
 
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
