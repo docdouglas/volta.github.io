@@ -1630,10 +1630,10 @@
                         <h2 class="elegant-hero-title">Impulsa tu futuro con <span>Volta</span></h2>
                         <p class="elegant-hero-subtitle">Descubre nuestras últimas novedades, eventos y accede a recursos educativos exclusivos diseñados para tu aprendizaje continuo.</p>
                         <div class="hero-actions">
-                            <button class="hero-btn-primary" onclick="document.querySelector('.nav-item[data-tab=\'biblioteca\']').click()">
+                            <button class="hero-btn-primary" onclick="document.querySelector('.nav-item[data-tab=biblioteca]').click()">
                                 Explorar Biblioteca <i class="fas fa-arrow-right"></i>
                             </button>
-                            <button class="hero-btn-secondary" onclick="document.querySelector('.nav-item[data-tab=\'portal\']').click()">
+                            <button class="hero-btn-secondary" onclick="document.querySelector('.nav-item[data-tab=portal]').click()">
                                 <i class="fas fa-user-graduate"></i> Portal Estudiantil
                             </button>
                         </div>
@@ -2600,7 +2600,7 @@
                 const iconColor = item.type === 'event' ? '#b08d00' : 'var(--primary-color)';
                 const iconBg = item.type === 'event' ? '#fff9e6' : 'var(--active-bg-color)';
 
-                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" style="margin-top: 20px; align-self: flex-start; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px;"><i class="fas fa-external-link-alt"></i> Ver enlace</a>` : '';
+                const linkHtml = item.link ? `<a href="${item.link}" target="_blank" class="resource-action-btn" onclick="event.stopPropagation();" style="margin-top: 20px; align-self: flex-start; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 8px; position: relative; z-index: 10;"><i class="fas fa-external-link-alt"></i> Ver enlace</a>` : '';
 
                 card.innerHTML = `
                     ${deleteButton}
@@ -3444,7 +3444,7 @@
 
             document.querySelectorAll('.view-grades-detail-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
-                    const materiaName = e.target.dataset.materiaName;
+                    const materiaName = e.currentTarget.dataset.materiaName;
                     openStudentGradeDetailModal(currentLoggedInStudent.id, materiaName);
                 });
             });
@@ -4084,41 +4084,4 @@
                     libraryAccessRequiredDiv.style.display = 'block';
                 }
             }
-            document.getElementById('btnGestionarNoticiasEventos').addEventListener('click', () => {
-                manageNewsEventsModal.style.display = 'block';
-                renderAdminNewsEventsTable();
-                newsEventForm.reset();
-                newsEventIdInput.value = '';
-            });
-            document.getElementById('btnGestionarBiblioteca').addEventListener('click', () => {
-                manageLibraryModal.style.display = 'block';
-                renderAdminLibraryItemsTable();
-                // Ahora el reseteo del form pasa al botón de "Añadir Nuevo"
-            });
-            
-            // Evento para el botón de "Añadir Nuevo Recurso" dentro del modal
-            btnAddNewLibraryItem.addEventListener('click', () => {
-                editLibraryItemModalTitle.innerHTML = '<i class="fas fa-plus"></i> Añadir Nuevo Recurso';
-                editLibraryItemModal.style.display = 'block';
-                libraryItemForm.reset();
-                libraryItemIdInput.value = '';
-                libraryItemImageBase64Input.value = '';
-                libraryItemImagePreview.style.display = 'none';
-                libraryItemImagePreview.src = '';
-                libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
-                libraryItemCarreraSelect.value = 'ambas'; // Valor por defecto
-            });
-
-            newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
-            libraryItemForm.addEventListener('submit', handleLibraryItemFormSubmit);
-            createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
-            registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
-            gradeForm.addEventListener('submit', handleGradeFormSubmit);
-            const closeMateriaStudentsModal = () => {
-                materiaStudentsModal.style.display = 'none';
-            };
-            materiaStudentsModal.querySelector('.close-button').onclick = closeMateriaStudentsModal;
-            materiaStudentsModal.querySelector('.close-btn').onclick = closeMateriaStudentsModal;
-            materiaStudentsModal.onclick = (e) => {
-                if (e.target === materiaStudentsModal) closeMateriaStudentsModal();
-            };
+            document.getElementById('btnGestionarNoticiasEventos').addEventListener('click',
