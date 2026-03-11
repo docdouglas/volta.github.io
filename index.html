@@ -2798,8 +2798,8 @@
                             const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
 
                             gridHTML += `
-                                <div class="resource-card">
-                                    <div class="resource-card-img-wrapper" data-item-id="${item.id}" title="Clic para ver detalles">
+                                <div class="resource-card" data-item-id="${item.id}" title="Clic para ver detalles" style="cursor: pointer;">
+                                    <div class="resource-card-img-wrapper">
                                         ${imageHTML}
                                     </div>
                                     <div class="resource-card-info">
@@ -2813,10 +2813,10 @@
                         gridHTML += `</div>`;
                         container.innerHTML = gridHTML;
 
-                        // NUEVO: Evento click en la imagen para abrir el modal estilo Netflix
-                        container.querySelectorAll('.resource-card-img-wrapper').forEach(wrapper => {
-                            wrapper.addEventListener('click', () => {
-                                const itemId = wrapper.getAttribute('data-item-id');
+                        // NUEVO: Evento click en la tarjeta completa para abrir el modal estilo Netflix
+                        container.querySelectorAll('.resource-card').forEach(card => {
+                            card.addEventListener('click', () => {
+                                const itemId = card.getAttribute('data-item-id');
                                 const item = allLibraryItems.find(i => i.id === itemId);
                                 if (item) openNetflixModal(item);
                             });
