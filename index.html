@@ -2090,60 +2090,6 @@
             };
             modal.style.display = 'block';
         }
-
-        // --- FUNCIONES DE SESIÓN PARA PERSISTENCIA ---
-        function activateAdminSession() {
-            userIsLoggedIn = true;
-            currentLoggedInStudent = null;
-            if(loginCard) loginCard.style.display = 'none';
-            if(portalIntroText) portalIntroText.style.display = 'none';
-            if(portalTitle) portalTitle.textContent = 'Panel de Administración';
-            if(adminPanelContent) adminPanelContent.style.display = 'flex';
-            if(studentPortalContent) studentPortalContent.style.display = 'none';
-            renderAdminPanelButtons();
-            if(loginForm) loginForm.reset();
-            updateLibraryTabContentVisibility();
-            if(adminNoticiasEventosBtn) adminNoticiasEventosBtn.style.display = 'block';
-            if(adminBibliotecaBtn) adminBibliotecaBtn.style.display = 'block';
-            if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'block';
-            renderChats();
-        }
-
-        function activateStudentSession(student) {
-            currentLoggedInStudent = student;
-            userIsLoggedIn = true;
-            if(loginCard) loginCard.style.display = 'none';
-            if(portalIntroText) portalIntroText.style.display = 'none';
-            if(adminPanelContent) adminPanelContent.style.display = 'none';
-            if(portalTitle) portalTitle.textContent = 'Panel Estudiantil';
-            if(studentPortalContent) studentPortalContent.style.display = 'flex';
-            if(studentPortalName) studentPortalName.textContent = `${currentLoggedInStudent.nombres}`;
-            renderStudentPortal();
-            if(loginForm) loginForm.reset();
-            updateLibraryTabContentVisibility();
-            if(adminNoticiasEventosBtn) adminNoticiasEventosBtn.style.display = 'none';
-            if(adminBibliotecaBtn) adminBibliotecaBtn.style.display = 'none';
-            if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'none';
-            renderChats();
-        }
-
-        function handleLogout() {
-            localStorage.removeItem('volta_session_type');
-            localStorage.removeItem('volta_student_id');
-            currentLoggedInStudent = null;
-            userIsLoggedIn = false;
-            if(adminPanelContent) adminPanelContent.style.display = 'none';
-            if(studentPortalContent) studentPortalContent.style.display = 'none';
-            if(loginCard) loginCard.style.display = 'block';
-            if(portalIntroText) portalIntroText.style.display = 'block';
-            if(portalTitle) portalTitle.textContent = 'Portal de Acceso';
-            updateLibraryTabContentVisibility();
-            if(adminNoticiasEventosBtn) adminNoticiasEventosBtn.style.display = 'none';
-            if(adminBibliotecaBtn) adminBibliotecaBtn.style.display = 'none';
-            if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'none';
-            renderChats();
-        }
-
         // --- Firebase Setup and Auth ---
         async function setupFirebaseAndAuth() {
             try {
@@ -2273,25 +2219,19 @@
                     });
                     console.log("✅ Students loaded successfully. Count:", allStudents.length);
                     renderAdminStudentsTable();
-
-                    // --- RESTAURAR SESIÓN DEL ALUMNO SI EXISTE ---
-                    const sessionType = localStorage.getItem('volta_session_type');
-                    const storedStudentId = localStorage.getItem('volta_student_id');
-
-                    if (sessionType === 'student' && storedStudentId && !userIsLoggedIn) {
-                        const studentToRestore = allStudents.find(s => s.id === storedStudentId);
-                        if (studentToRestore) {
-                            activateStudentSession(studentToRestore);
-                        } else {
-                            handleLogout(); // Limpiar sesión inválida si el alumno fue eliminado
-                        }
-                    } else if (currentLoggedInStudent) {
+                    if (currentLoggedInStudent) {
                         const updatedStudent = allStudents.find(s => s.id === currentLoggedInStudent.id);
                         if (updatedStudent) {
                             currentLoggedInStudent = updatedStudent;
                             renderStudentPortal();
                         } else {
-                            handleLogout();
+                            currentLoggedInStudent = null;
+                            studentPortalContent.style.display = 'none';
+                            loginCard.style.display = 'block';
+                            portalIntroText.style.display = 'block';
+                            portalTitle.textContent = 'Portal de Acceso';
+                            userIsLoggedIn = false;
+                            updateLibraryTabContentVisibility();
                             showMessageBox('Sesión Terminada', 'Tu cuenta de estudiante ha sido eliminada o modificada. Por favor, inicia sesión de nuevo.');
                         }
                     }
@@ -3520,7 +3460,19 @@
             logoutButton.className = 'admin-button logout-button';
             logoutButton.id = 'adminLogoutButton';
             logoutButton.innerHTML = `<span class="button-icon"><i class="fas fa-sign-out-alt"></i></span> Cerrar Sesión Admin`;
-            logoutButton.addEventListener('click', handleLogout);
+            logoutButton.addEventListener('click', () => {
+                adminPanelContent.innerHTML = '';
+                adminPanelContent.style.display = 'none';
+                loginCard.style.display = 'block';
+                portalIntroText.style.display = 'block';
+                portalTitle.textContent = 'Portal de Acceso';
+                userIsLoggedIn = false;
+                updateLibraryTabContentVisibility();
+                adminNoticiasEventosBtn.style.display = 'none';
+                adminBibliotecaBtn.style.display = 'none';
+                if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'none';
+                renderChats(); // Refrescar chats para ocultar las 'x'
+            });
             adminPanelContent.appendChild(logoutButton);
         }
 
@@ -3929,8 +3881,19 @@
                     const adminUsername = 'douglas';
                     const adminPassword = 'd5720';
                     if (username.toLowerCase() === adminUsername.toLowerCase() && password.toLowerCase() === adminPassword.toLowerCase()) {
-                        localStorage.setItem('volta_session_type', 'admin');
-                        activateAdminSession();
+                        userIsLoggedIn = true;
+                        loginCard.style.display = 'none';
+                        portalIntroText.style.display = 'none';
+                        portalTitle.textContent = 'Panel de Administración';
+                        adminPanelContent.style.display = 'flex';
+                        studentPortalContent.style.display = 'none';
+                        renderAdminPanelButtons();
+                        loginForm.reset();
+                        updateLibraryTabContentVisibility();
+                        adminNoticiasEventosBtn.style.display = 'block';
+                        adminBibliotecaBtn.style.display = 'block';
+                        if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'block';
+                        renderChats(); // Refrescar chats para mostrar las 'x' de borrado
                     } else {
                         try {
                             const studentQuery = query(studentsCollection, where("nombres", "==", username));
@@ -3940,9 +3903,19 @@
                                 studentSnapshot.forEach(studentDoc => {
                                     const studentData = studentDoc.data();
                                     if (studentData.celular === password) {
-                                        localStorage.setItem('volta_session_type', 'student');
-                                        localStorage.setItem('volta_student_id', studentDoc.id);
-                                        activateStudentSession({ id: studentDoc.id, ...studentData });
+                                        currentLoggedInStudent = { id: studentDoc.id, ...studentData };
+                                        userIsLoggedIn = true;
+                                        loginCard.style.display = 'none';
+                                        portalIntroText.style.display = 'none';
+                                        adminPanelContent.style.display = 'none';
+                                        portalTitle.textContent = 'Panel Estudiantil';
+                                        studentPortalContent.style.display = 'flex';
+                                        studentPortalName.textContent = `${currentLoggedInStudent.nombres}`;
+                                        renderStudentPortal();
+                                        loginForm.reset();
+                                        updateLibraryTabContentVisibility();
+                                        adminNoticiasEventosBtn.style.display = 'none';
+                                        adminBibliotecaBtn.style.display = 'none';
                                         studentFound = true;
                                     }
                                 });
@@ -3957,7 +3930,18 @@
                     }
                 });
             }
-            studentLogoutButton.addEventListener('click', handleLogout);
+            studentLogoutButton.addEventListener('click', () => {
+                currentLoggedInStudent = null;
+                userIsLoggedIn = false;
+                studentPortalContent.style.display = 'none';
+                loginCard.style.display = 'block';
+                portalIntroText.style.display = 'block';
+                portalTitle.textContent = 'Portal de Acceso';
+                updateLibraryTabContentVisibility();
+                adminNoticiasEventosBtn.style.display = 'none';
+                adminBibliotecaBtn.style.display = 'none';
+                if(deleteAllChatsBtn) deleteAllChatsBtn.style.display = 'none';
+            });
             function updateLibraryTabContentVisibility() {
                 if (userIsLoggedIn) {
                     libraryContentDiv.style.display = 'block';
@@ -4078,12 +4062,6 @@
                 chatTextInput.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') sendMessage();
                 });
-            }
-
-            // --- INICIAR RECUPERACIÓN DE SESIÓN (ADMINISTRADOR) ---
-            const sessionType = localStorage.getItem('volta_session_type');
-            if (sessionType === 'admin') {
-                activateAdminSession();
             }
 
             setupFirebaseAndAuth();
