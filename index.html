@@ -1800,16 +1800,36 @@
         </div>
     </div>
 
-    <!-- Modal Principal de Biblioteca (Solo Tabla) -->
-    <div id="manageLibraryModal" class="modal">
-        <div class="modal-content">
+    <!-- Modal Menú de Biblioteca -->
+    <div id="libraryAdminMenuModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
             <div class="modal-header">
                 <h3><i class="fas fa-book-reader"></i> Gestionar Biblioteca</h3>
                 <span class="close-button">&times;</span>
             </div>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <button class="admin-button lib-menu-btn" data-lib-type="practica"><i class="fas fa-flask" style="width: 25px;"></i> Gestionar Prácticas</button>
+                <button class="admin-button lib-menu-btn" data-lib-type="libro"><i class="fas fa-book" style="width: 25px;"></i> Gestionar Libros</button>
+                <button class="admin-button lib-menu-btn" data-lib-type="video"><i class="fas fa-video" style="width: 25px;"></i> Gestionar Videos</button>
+                <button class="admin-button lib-menu-btn" data-lib-type="software"><i class="fas fa-code" style="width: 25px;"></i> Gestionar Software</button>
+                <hr style="border: 0; border-top: 1px solid #ddd; margin: 5px 0;">
+                <button id="btnAddNewLibraryItem" class="admin-button" style="background-color: #28a745; border-color: #28a745; color: white;">
+                    <i class="fas fa-plus" style="width: 25px;"></i> Añadir Nuevo Recurso
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Principal de Biblioteca (Solo Tabla) -->
+    <div id="manageLibraryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="manageLibraryModalTitle"><i class="fas fa-list"></i> Lista de Recursos</h3>
+                <span class="close-button">&times;</span>
+            </div>
             
-            <button id="btnAddNewLibraryItem" class="admin-button" style="margin-bottom: 15px; width: auto; padding: 8px 15px; display: inline-flex;">
-                <i class="fas fa-plus" style="margin-right: 8px;"></i> Añadir Nuevo Recurso
+            <button id="btnBackToLibraryMenu" class="btn-back" style="margin-bottom: 15px; display: inline-flex;">
+                <i class="fas fa-arrow-left"></i> Volver al Menú
             </button>
             
             <div class="table-responsive">
@@ -2107,6 +2127,8 @@
 
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventLinkInput, newsEventsAdminTbody, newsEventsDisplay;
         let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemMateriaSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let libraryAdminMenuModal, manageLibraryModalTitle, btnBackToLibraryMenu;
+        let currentAdminLibraryFilterType = null;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let listStudentsModal;
@@ -2669,57 +2691,42 @@
 
         function renderAdminLibraryItemsTable() {
             libraryItemsAdminTbody.innerHTML = '';
-            if (allLibraryItems.length === 0) {
-                libraryItemsAdminTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-text-color);">No hay ítems de biblioteca registrados.</td></tr>';
+            
+            let itemsToRender = allLibraryItems;
+            if (currentAdminLibraryFilterType) {
+                itemsToRender = allLibraryItems.filter(item => item.type === currentAdminLibraryFilterType);
+            }
+
+            if (itemsToRender.length === 0) {
+                libraryItemsAdminTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-text-color);">No hay ítems registrados en esta categoría.</td></tr>';
                 return;
             }
 
-            // 1. Agrupar los ítems por tipo
-            const groupedItems = { practica: [], libro: [], video: [], software: [] };
-            allLibraryItems.forEach(item => {
-                if (groupedItems[item.type]) {
-                    groupedItems[item.type].push(item);
-                } else {
-                    groupedItems[item.type] = [item]; // Por si hay algún tipo antiguo/distinto
-                }
-            });
-
             const typeLabels = { practica: 'Prácticas', libro: 'Libros', video: 'Videos', software: 'Software' };
 
-            // 2. Renderizar la tabla por grupos reiniciando la numeración y ordenando alfabéticamente
-            for (const type in groupedItems) {
-                const items = groupedItems[type];
-                if (items.length > 0) {
-                    // Ordenar alfabéticamente por título
-                    items.sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
+            // Ordenar alfabéticamente por título
+            itemsToRender.sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
 
-                    // Fila de encabezado separador para el tipo
-                    const headerTr = document.createElement('tr');
-                    headerTr.innerHTML = `<td colspan="6" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Tipo: ${typeLabels[type] || type}</td>`;
-                    libraryItemsAdminTbody.appendChild(headerTr);
-
-                    items.forEach((item, index) => {
-                        const displayCode = index + 1; // Número visual ordenado
-                        const itemVal = item.materia || item.carrera || 'general';
-                        const isGeneral = itemVal === 'general' || itemVal === 'ambas';
-                        const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
-                        
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td style="text-align: center; font-weight: bold;">${displayCode}</td>
-                            <td>${item.title}</td>
-                            <td>${typeLabels[type] || item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
-                            <td>${subjectName}</td>
-                            <td style="text-align: center;"><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
-                            <td class="actions-column">
-                                <button class="edit-btn" data-id="${item.id}" data-displaycode="${displayCode}"><i class="fas fa-edit"></i></button>
-                                <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
-                            </td>
-                        `;
-                        libraryItemsAdminTbody.appendChild(tr);
-                    });
-                }
-            }
+            itemsToRender.forEach((item, index) => {
+                const displayCode = index + 1; // Número visual ordenado
+                const itemVal = item.materia || item.carrera || 'general';
+                const isGeneral = itemVal === 'general' || itemVal === 'ambas';
+                const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
+                
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td style="text-align: center; font-weight: bold;">${displayCode}</td>
+                    <td>${item.title}</td>
+                    <td>${typeLabels[item.type] || item.type.charAt(0).toUpperCase() + item.type.slice(1)}</td>
+                    <td>${subjectName}</td>
+                    <td style="text-align: center;"><a href="${item.link}" target="_blank"><i class="fas fa-download"></i></a></td>
+                    <td class="actions-column">
+                        <button class="edit-btn" data-id="${item.id}" data-displaycode="${displayCode}"><i class="fas fa-edit"></i></button>
+                        <button class="delete-btn" data-id="${item.id}"><i class="fas fa-trash-alt"></i></button>
+                    </td>
+                `;
+                libraryItemsAdminTbody.appendChild(tr);
+            });
 
             libraryItemsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
@@ -3597,7 +3604,11 @@
             newsEventsDisplay = document.getElementById('news-events-display');
             manageLibraryModal = document.getElementById('manageLibraryModal');
             
-            // Asignación de variables del nuevo modal
+            // Asignación de variables de los nuevos modales de menú
+            libraryAdminMenuModal = document.getElementById('libraryAdminMenuModal');
+            manageLibraryModalTitle = document.getElementById('manageLibraryModalTitle');
+            btnBackToLibraryMenu = document.getElementById('btnBackToLibraryMenu');
+
             editLibraryItemModal = document.getElementById('editLibraryItemModal');
             btnAddNewLibraryItem = document.getElementById('btnAddNewLibraryItem');
             editLibraryItemModalTitle = document.getElementById('editLibraryItemModalTitle');
@@ -4151,10 +4162,29 @@
                 newsEventIdInput.value = '';
             });
             document.getElementById('btnGestionarBiblioteca').addEventListener('click', () => {
-                manageLibraryModal.style.display = 'block';
-                renderAdminLibraryItemsTable();
-                // Ahora el reseteo del form pasa al botón de "Añadir Nuevo"
+                libraryAdminMenuModal.style.display = 'block';
             });
+            
+            document.querySelectorAll('.lib-menu-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const type = e.currentTarget.getAttribute('data-lib-type');
+                    currentAdminLibraryFilterType = type;
+                    const icon = e.currentTarget.querySelector('i').className;
+                    const text = e.currentTarget.textContent.trim();
+                    manageLibraryModalTitle.innerHTML = `<i class="${icon}"></i> ${text}`;
+                    
+                    libraryAdminMenuModal.style.display = 'none';
+                    manageLibraryModal.style.display = 'block';
+                    renderAdminLibraryItemsTable();
+                });
+            });
+
+            if (btnBackToLibraryMenu) {
+                btnBackToLibraryMenu.addEventListener('click', () => {
+                    manageLibraryModal.style.display = 'none';
+                    libraryAdminMenuModal.style.display = 'block';
+                });
+            }
             
             // Evento para el botón de "Añadir Nuevo Recurso" dentro del modal
             btnAddNewLibraryItem.addEventListener('click', () => {
