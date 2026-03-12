@@ -136,12 +136,12 @@
             width: calc(100% - 30px); /* Restamos el margen para centrar */
             margin: 0 auto; /* FIX: Centrado horizontal automático */
             height: 65px; /* Altura suficiente para texto e ícono */
-            background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco transparente difuminado */
-            backdrop-filter: blur(12px); /* Efecto cristal difuminado */
-            -webkit-backdrop-filter: blur(12px); /* Soporte para Safari */
+            background-color: rgba(255, 255, 255, 0.4); /* Fondo mucho más transparente */
+            backdrop-filter: blur(16px); /* Mayor difuminado para compensar la transparencia */
+            -webkit-backdrop-filter: blur(16px); /* Soporte para Safari */
             border-radius: 20px; /* Bordes muy redondeados (Píldora) */
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Sombra más suave y elegante */
-            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil cristalino */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Borde aún más sutil cristalino */
             position: fixed; /* FIX CLAVE: 'fixed' en vez de 'absolute' pega la barra a la pantalla de cristal del celular */
             bottom: 15px; /* Separación estricta desde el borde del celular */
             left: 0; /* Para garantizar el centrado con margin: auto */
