@@ -72,7 +72,7 @@
             flex-grow: 1; /* Permite que el contenido ocupe el espacio restante */
             overflow-y: auto; /* Habilita el scroll si el contenido es largo */
             padding: 12px; /* Padding reducido */
-            padding-bottom: 60px; /* Espacio reducido para la barra de navegación inferior */
+            padding-bottom: 95px; /* Aumentado sustancialmente para evitar que la nueva barra flotante tape el contenido */
         }
         .tab-content {
             display: none; /* Oculta las pestañas por defecto */
@@ -128,20 +128,25 @@
             font-size: 1.2em; /* Tamaño de ícono reducido */
             margin-right: 10px; /* Margen reducido */
         }
-        /* Estilos de la barra de navegación inferior */
+        /* Estilos de la barra de navegación inferior (Diseño Móvil tipo Píldora Flotante) */
         .bottom-nav {
             display: flex;
-            width: 100%;
-            height: 50px; /* Altura disminuida */
-            background-color: var(--dark-nav-color);
-            border-top: 1px solid #34495e;
-            box-shadow: 0 -5px 15px var(--dark-shadow-color);
+            width: calc(100% - 30px); /* Restamos el margen para centrar */
+            margin: 0 15px 15px 15px; /* Efecto flotante separándolo del borde inferior */
+            height: 65px; /* Altura suficiente para texto e ícono */
+            background-color: #ffffff; /* Fondo blanco idéntico al de la imagen */
+            border-radius: 20px; /* Bordes muy redondeados (Píldora) */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); /* Sombra elegante que le da profundidad */
             position: absolute;
             bottom: 0;
             z-index: 1000;
+            justify-content: space-around;
+            padding: 0 5px;
+            box-sizing: border-box;
+            border: 1px solid #f1f5f9;
         }
         .nav-item {
-            flex: 1; /* Distribuye los ítems equitativamente */
+            flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -151,83 +156,63 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: var(--text-color-light);
+            color: #64748b; /* Color gris oscuro para inactivos como en la imagen */
             position: relative;
-            padding: 2px; /* Padding reducido */
-            margin: 0 1px;
+            padding: 5px 0;
+            margin: 0;
         }
         .nav-item:not(.active) {
-            opacity: 0.8; /* Menos opacidad para ítems inactivos */
+            opacity: 1; /* Sin desvanecimiento, siempre visible */
         }
-        .nav-item:not(.active) .icon { /* Estilo para el ícono inactivo */
-            color: var(--pearl-color); /* Color perla para íconos inactivos */
+        .nav-item:not(.active) .icon { 
+            color: #64748b; /* Iconos inactivos en gris oscuro */
         }
         .nav-item.active {
-            color: var(--gold-color);
-            font-weight: 600;
-            opacity: 1;
-            background-color: #34495e; /* Fondo ligeramente diferente para activo */
-            border-radius: 8px 8px 0 0; /* Bordes redondeados superiores */
-            border-bottom: 3px solid var(--button-3d-shadow); /* Sombra inferior reducida */
-            transform: translateY(-3px); /* Efecto de elevación reducido */
-            padding-bottom: 6px; /* Padding reducido */
+            color: var(--primary-color); /* Azul principal de tu app */
+            font-weight: 700;
+            background-color: transparent; 
+            border-radius: 0; 
+            border-bottom: none; /* Quitamos el borde plano antiguo */
+            transform: none; /* Quitamos el salto 3D antiguo */
+            padding-bottom: 5px; 
         }
-        .nav-item.active:hover {
-            transform: translateY(0); /* Vuelve a la posición normal al pasar el ratón */
-            border-bottom: 0; /* Quita la sombra inferior al pasar el ratón */
-        }
-        .nav-item.active::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%; /* Ancho reducido */
-            height: 3px;
-            background-color: var(--gold-color);
-            transition: width 0.3s ease;
-        }
-        .nav-item:not(.active):before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0; /* Sin línea para inactivos */
-            height: 3px;
-            background-color: var(--gold-color);
-            transition: width 0.3s ease;
+        .nav-item.active::before, .nav-item:not(.active):before {
+            display: none; /* Quitamos la rayita dorada superior en el móvil */
         }
         .icon {
-            font-size: 1.7em; /* Tamaño de ícono disminuido */
+            font-size: 1.4em; 
             line-height: 1;
             transition: transform 0.3s ease-in-out, color 0.3s ease;
+            margin-bottom: 4px; /* Espaciado con el texto inferior */
         }
         .nav-item.active .icon {
-            transform: scale(1.1); /* Icono ligeramente más grande al estar activo */
+            transform: scale(1.15); /* Crece ligeramente al hacer tap */
+            color: var(--primary-color);
         }
-        span {
-            font-size: 0.7em; /* Tamaño de fuente reducido */
-            font-weight: 500;
+        .bottom-nav span {
+            font-size: 0.75em; 
+            font-weight: 600;
             white-space: nowrap;
+            opacity: 1; /* El texto se ve SIEMPRE, igual a la imagen */
+            height: auto;
+            color: inherit;
+            margin-top: 2px; 
             transition: opacity 0.3s ease;
-            margin-top: 2px; /* Margen reducido */
         }
         .nav-item:not(.active) span {
-            opacity: 0; /* Oculta el texto para inactivos */
-            height: 0;
-            overflow: hidden;
+            opacity: 1; 
+            height: auto;
+            overflow: visible;
         }
         .nav-item.active span {
-            color: var(--text-color-light);
-            opacity: 1; /* Muestra el texto para activos */
+            color: var(--primary-color);
         }
         
         .sidebar-brand {
             display: none; /* Oculto en móviles, se muestra en escritorio */
         }
 
-        /* Ajustes para tabletas y laptops (Diseño de Escritorio Elegante) */
+        /* Ajustes para tabletas y laptops (Diseño de Escritorio Elegante MANTENIDO) */
         @media (min-width: 768px) {
             body {
                 padding: 20px;
@@ -269,6 +254,26 @@
                 margin-bottom: 40px;
                 letter-spacing: 2px;
             }
+            .bottom-nav {
+                position: relative; /* CAMBIO CLAVE: relative en lugar de static para que el z-index funcione y no sea tapada */
+                order: -1; /* POSICIONA LA BARRA A LA IZQUIERDA */
+                width: 260px; /* Ancho fijo para la barra lateral */
+                min-width: 260px; /* Garantiza que la barra no se encoja */
+                margin: 0; /* SE ELIMINA EL EFECTO FLOTANTE DE MÓVIL EN ESCRITORIO */
+                background-color: var(--dark-nav-color); /* SE RESTAURA EL COLOR OSCURO ORIGINAL */
+                flex-shrink: 0; /* Obliga a mantener el ancho fijo */
+                height: 100%; /* Toma todo el alto */
+                flex-direction: column; /* Apila los botones verticalmente */
+                justify-content: flex-start; /* Alinea hacia arriba */
+                padding-top: 30px;
+                padding-left: 0;
+                padding-right: 0;
+                border-top: none;
+                border-right: 1px solid #1a252f;
+                border-radius: 20px 0 0 20px; /* Curvas solo a la izquierda */
+                box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Sombra hacia la derecha */
+                z-index: 1000; /* Garantiza estar siempre por encima de cualquier otro contenido */
+            }
             .content {
                 flex-grow: 1; /* Toma todo el espacio restante a la derecha */
                 width: calc(100% - 260px); /* Ocupa el resto de la pantalla menos el ancho de la barra */
@@ -286,41 +291,54 @@
                 height: auto;
                 flex: none; /* Evita que crezcan proporcionalmente */
                 transition: all 0.3s ease;
+                color: var(--text-color-light); /* SE RESTAURA EL TEXTO BLANCO */
             }
             .nav-item:not(.active):hover {
                 background-color: rgba(255, 255, 255, 0.05); /* Efecto hover elegante para inactivos */
+            }
+            .nav-item:not(.active) .icon {
+                color: var(--pearl-color); /* SE RESTAURA EL COLOR PERLA */
             }
             .nav-item:not(.active) span {
                 opacity: 0.8;
                 height: auto; /* Muestra siempre el texto en escritorio */
                 margin-left: 15px; /* Espacio entre icono y texto */
                 font-size: 1.05em;
+                color: var(--text-color-light); /* SE RESTAURA EL TEXTO BLANCO */
+            }
+            .nav-item.active {
+                color: var(--gold-color); /* SE RESTAURA EL COLOR DORADO */
+                background-color: rgba(255, 255, 255, 0.1); /* Fondo de selección */
+                border-bottom: none; /* Quita formato móvil */
+                padding-bottom: 14px;
+                transform: translateX(8px); /* Salto de selección a la derecha */
+            }
+            .nav-item.active .icon {
+                color: var(--gold-color);
             }
             .nav-item.active span {
                 margin-left: 15px;
                 font-size: 1.1em;
+                color: var(--text-color-light);
             }
             .nav-item .icon {
                 width: 30px; /* Fija ancho de icono para alinear los textos */
                 text-align: center;
                 font-size: 1.5em;
             }
-            .nav-item.active {
-                background-color: rgba(255, 255, 255, 0.1); /* Fondo de selección */
-                border-bottom: none; /* Quita formato móvil */
-                padding-bottom: 14px;
-                transform: translateX(8px); /* Salto de selección a la derecha */
-            }
             .nav-item.active:hover {
                 transform: translateX(8px); /* Mantiene la posición al pasar el ratón */
             }
             .nav-item.active::before {
-                /* Transformar la barra superior en un indicador lateral elegante */
+                display: block; /* SE RESTAURA LA RAYA LATERAL EN ESCRITORIO */
+                content: '';
+                position: absolute;
                 top: 50%;
                 left: -12px;
                 transform: translateY(-50%);
                 width: 5px;
                 height: 60%;
+                background-color: var(--gold-color);
                 border-radius: 4px;
             }
             
