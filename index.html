@@ -248,7 +248,7 @@
                 width: 260px; /* Ancho fijo para la barra lateral */
                 min-width: 260px; /* Garantiza que la barra no se encoja */
                 margin: 0; /* SE ELIMINA EL EFECTO FLOTANTE DE MÓVIL EN ESCRITORIO */
-                background-color: var(--dark-nav-color); /* SE RESTAURA EL COLOR OSCURO ORIGINAL */
+                background-color: #2b3a4a; /* NUEVO: AZUL PIZARRA OSCURO DE LA IMAGEN */
                 flex-shrink: 0; /* Obliga a mantener el ancho fijo */
                 height: 100%; /* Toma todo el alto */
                 flex-direction: column; /* Apila los botones verticalmente */
@@ -257,7 +257,7 @@
                 padding-left: 0;
                 padding-right: 0;
                 border-top: none;
-                border-right: 1px solid #1a252f;
+                border-right: none; /* Sin borde para coincidir con la imagen */
                 border-radius: 20px 0 0 20px; /* Curvas solo a la izquierda */
                 box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Sombra hacia la derecha */
                 z-index: 1000; /* Garantiza estar siempre por encima de cualquier otro contenido */
@@ -284,35 +284,36 @@
                 height: auto;
                 flex: none; /* Evita que crezcan proporcionalmente */
                 transition: all 0.3s ease;
-                color: var(--text-color-light); /* SE RESTAURA EL TEXTO BLANCO */
+                color: #ffffff; /* TEXTO BLANCO */
             }
             .nav-item:not(.active):hover {
                 background-color: rgba(255, 255, 255, 0.05); /* Efecto hover elegante para inactivos */
             }
             .nav-item:not(.active) .icon {
-                color: var(--pearl-color); /* SE RESTAURA EL COLOR PERLA */
+                color: #e2e8f0; /* COLOR BLANCO/GRIS CLARO PARA ÍCONOS INACTIVOS */
             }
             .nav-item:not(.active) span {
-                opacity: 0.8;
+                opacity: 0.9;
                 height: auto; /* Muestra siempre el texto en escritorio */
                 margin-left: 15px; /* Espacio entre icono y texto */
                 font-size: 1.05em;
-                color: var(--text-color-light); /* SE RESTAURA EL TEXTO BLANCO */
+                color: #e2e8f0; /* COLOR BLANCO/GRIS CLARO PARA TEXTO INACTIVO */
+                font-weight: 600;
             }
             .nav-item.active {
-                color: var(--gold-color); /* SE RESTAURA EL COLOR DORADO */
-                background-color: rgba(255, 255, 255, 0.1); /* Fondo de selección */
+                background-color: #3d4d5e; /* NUEVO: FONDO GRIS AZULADO CLARO DE LA IMAGEN PARA PESTAÑA ACTIVA */
                 border-bottom: none; /* Quita formato móvil */
                 padding-bottom: 14px;
                 transform: translateX(8px); /* Salto de selección a la derecha */
             }
             .nav-item.active .icon {
-                color: var(--gold-color);
+                color: #eab332; /* NUEVO: AMARILLO MOSTAZA DE LA IMAGEN */
             }
             .nav-item.active span {
                 margin-left: 15px;
                 font-size: 1.1em;
-                color: var(--text-color-light);
+                color: #ffffff; /* NUEVO: TEXTO BLANCO PURO PARA PESTAÑA ACTIVA COMO EN LA IMAGEN */
+                font-weight: 700;
             }
             .nav-item .icon {
                 width: 30px; /* Fija ancho de icono para alinear los textos */
@@ -329,9 +330,9 @@
                 top: 50%;
                 left: -12px;
                 transform: translateY(-50%);
-                width: 5px;
-                height: 60%;
-                background-color: var(--gold-color);
+                width: 4px; /* Más fina para que sea idéntica a la imagen */
+                height: 50%; /* Más corta para que sea idéntica a la imagen */
+                background-color: #eab332; /* NUEVO: AMARILLO MOSTAZA DE LA IMAGEN */
                 border-radius: 4px;
             }
             
