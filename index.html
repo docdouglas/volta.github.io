@@ -3806,6 +3806,17 @@
             window.addEventListener('popstate', (e) => {
                 isNavigatingBack = true;
                 closeAllModals();
+                
+                // --- NUEVA LÓGICA PARA VOLVER ATRÁS EN BIBLIOTECA ---
+                const libDetailView = document.getElementById('library-detail-view');
+                const libMainView = document.getElementById('library-main-view');
+                if (libDetailView && libDetailView.style.display === 'block') {
+                    if (!e.state || !e.state.libraryDetailOpen) {
+                        libDetailView.style.display = 'none';
+                        libMainView.style.display = 'block';
+                    }
+                }
+                
                 // Permitir que los eventos de clic terminen de procesarse antes de liberar la bandera
                 setTimeout(() => { isNavigatingBack = false; }, 50);
             });
@@ -3959,6 +3970,11 @@
                     const title = card.querySelector('.library-card-title').textContent;
                     const iconClass = card.querySelector('.library-card-icon i').className;
 
+                    // --- REGISTRAR EN EL HISTORIAL DEL NAVEGADOR ---
+                    if (!history.state || !history.state.libraryDetailOpen) {
+                        history.pushState({ ...history.state, libraryDetailOpen: true }, "");
+                    }
+
                     currentInlineLibraryType = type;
                     libraryDetailTitle.innerHTML = `<i class="${iconClass}" style="margin-right: 10px;"></i> ${title} Disponibles`;
                     
@@ -3976,8 +3992,12 @@
             });
 
             document.getElementById('btn-back-library').addEventListener('click', () => {
-                libraryDetailView.style.display = 'none';
-                libraryMainView.style.display = 'block';
+                if (history.state && history.state.libraryDetailOpen) {
+                    history.back(); // Utiliza el botón atrás del navegador internamente
+                } else {
+                    libraryDetailView.style.display = 'none';
+                    libraryMainView.style.display = 'block';
+                }
             });
 
             if(libraryInlineSearch) {
