@@ -32,12 +32,14 @@
             justify-content: center;
             align-items: center; /* Centrado en todas las pantallas */
             min-height: 100vh;
+            min-height: 100dvh; /* FIX: Asegura que el alto respete la barra dinámica del navegador móvil */
             background-color: var(--secondary-color);
         }
         .app-container {
             width: 100%;
             max-width: 100%; /* Adaptable a cualquier pantalla móvil sin restricción */
             height: 100vh; /* Altura completa en móvil */
+            height: 100dvh; /* FIX: Altura dinámica para navegadores móviles */
             display: flex;
             flex-direction: column;
             background-color: #fff;
@@ -132,13 +134,15 @@
         .bottom-nav {
             display: flex;
             width: calc(100% - 30px); /* Restamos el margen para centrar */
-            margin: 0 15px 15px 15px; /* Efecto flotante separándolo del borde inferior */
+            margin: 0 auto; /* FIX: Centrado horizontal automático */
             height: 65px; /* Altura suficiente para texto e ícono */
             background-color: #ffffff; /* Fondo blanco idéntico al de la imagen */
             border-radius: 20px; /* Bordes muy redondeados (Píldora) */
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); /* Sombra elegante que le da profundidad */
-            position: absolute;
-            bottom: 0;
+            position: fixed; /* FIX CLAVE: 'fixed' en vez de 'absolute' pega la barra a la pantalla de cristal del celular */
+            bottom: 15px; /* Separación estricta desde el borde del celular */
+            left: 0; /* Para garantizar el centrado con margin: auto */
+            right: 0; /* Para garantizar el centrado con margin: auto */
             z-index: 1000;
             justify-content: space-around;
             padding: 0 5px;
@@ -227,22 +231,6 @@
                 flex-direction: row; /* CAMBIO CLAVE: Panel horizontal (Navegación Izquierda, Contenido Derecha) */
                 box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Sombra 3D profunda */
             }
-            .bottom-nav {
-                position: relative; /* CAMBIO CLAVE: relative en lugar de static para que el z-index funcione y no sea tapada */
-                order: -1; /* POSICIONA LA BARRA A LA IZQUIERDA */
-                width: 260px; /* Ancho fijo para la barra lateral */
-                min-width: 260px; /* Garantiza que la barra no se encoja */
-                flex-shrink: 0; /* Obliga a mantener el ancho fijo */
-                height: 100%; /* Toma todo el alto */
-                flex-direction: column; /* Apila los botones verticalmente */
-                justify-content: flex-start; /* Alinea hacia arriba */
-                padding-top: 30px;
-                border-top: none;
-                border-right: 1px solid #1a252f;
-                border-radius: 20px 0 0 20px; /* Curvas solo a la izquierda */
-                box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Sombra hacia la derecha */
-                z-index: 1000; /* Garantiza estar siempre por encima de cualquier otro contenido */
-            }
             .sidebar-brand {
                 display: flex; /* Aparece en escritorio */
                 align-items: center;
@@ -273,6 +261,11 @@
                 border-radius: 20px 0 0 20px; /* Curvas solo a la izquierda */
                 box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Sombra hacia la derecha */
                 z-index: 1000; /* Garantiza estar siempre por encima de cualquier otro contenido */
+                
+                /* FIX: Resetear valores de posicionamiento fixed de móvil para no afectar el panel lateral */
+                left: auto;
+                right: auto;
+                bottom: auto;
             }
             .content {
                 flex-grow: 1; /* Toma todo el espacio restante a la derecha */
