@@ -136,9 +136,9 @@
             width: calc(100% - 30px); /* Restamos el margen para centrar */
             margin: 0 auto; /* FIX: Centrado horizontal automático */
             height: 65px; /* Altura suficiente para texto e ícono */
-            background-color: #ffffff; /* Fondo blanco idéntico al de la imagen */
+            background-color: #2b3a4a; /* CORRECCIÓN: Fondo azul pizarra oscuro para móviles también */
             border-radius: 20px; /* Bordes muy redondeados (Píldora) */
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12); /* Sombra elegante que le da profundidad */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Sombra elegante que le da profundidad */
             position: fixed; /* FIX CLAVE: 'fixed' en vez de 'absolute' pega la barra a la pantalla de cristal del celular */
             bottom: 15px; /* Separación estricta desde el borde del celular */
             left: 0; /* Para garantizar el centrado con margin: auto */
@@ -147,7 +147,7 @@
             justify-content: space-around;
             padding: 0 5px;
             box-sizing: border-box;
-            border: 1px solid #f1f5f9;
+            border: none; /* Quitamos el borde para el diseño oscuro */
         }
         .nav-item {
             flex: 1;
@@ -160,7 +160,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #64748b; /* Color gris oscuro para inactivos como en la imagen */
+            color: #e2e8f0; /* Color gris claro para textos inactivos */
             position: relative;
             padding: 5px 0;
             margin: 0;
@@ -169,10 +169,10 @@
             opacity: 1; /* Sin desvanecimiento, siempre visible */
         }
         .nav-item:not(.active) .icon { 
-            color: #64748b; /* Iconos inactivos en gris oscuro */
+            color: #e2e8f0; /* Iconos inactivos en gris claro */
         }
         .nav-item.active {
-            color: var(--primary-color); /* Azul principal de tu app */
+            color: #eab332; /* Amarillo mostaza */
             font-weight: 700;
             background-color: transparent; 
             border-radius: 0; 
@@ -191,7 +191,7 @@
         }
         .nav-item.active .icon {
             transform: scale(1.15); /* Crece ligeramente al hacer tap */
-            color: var(--primary-color);
+            color: #eab332; /* Amarillo mostaza para ícono activo */
         }
         .bottom-nav span {
             font-size: 0.75em; 
@@ -209,7 +209,7 @@
             overflow: visible;
         }
         .nav-item.active span {
-            color: var(--primary-color);
+            color: #ffffff; /* Texto blanco para el activo en la barra oscura */
         }
         
         .sidebar-brand {
@@ -1040,7 +1040,7 @@
         /* Estilos de WhatsApp Chat */
         #chats {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 50px;
+            top: 0; left: 0; right: 0; bottom: 95px; /* CORRECCIÓN: Aumentado de 50px a 95px para no taparse con la barra flotante */
             display: none;
             flex-direction: column;
             background-color: #e5ddd5;
