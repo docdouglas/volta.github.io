@@ -186,29 +186,35 @@
         .icon {
             font-size: 1.4em; 
             line-height: 1;
-            transition: transform 0.3s ease-in-out, color 0.3s ease;
-            margin-bottom: 4px; /* Espaciado con el texto inferior */
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            margin-bottom: 0; /* Centrado cuando no hay texto */
         }
         .nav-item.active .icon {
-            transform: scale(1.15); /* Crece ligeramente al hacer tap */
+            transform: scale(1.15) translateY(-2px); /* Crece y sube ligeramente para dar espacio al texto */
             color: #eab332; /* Amarillo mostaza para ícono activo */
+            margin-bottom: 2px; /* Espaciado con el texto inferior */
         }
         .bottom-nav span {
-            font-size: 0.75em; 
             font-weight: 600;
             white-space: nowrap;
-            opacity: 1; /* El texto se ve SIEMPRE, igual a la imagen */
-            height: auto;
             color: inherit;
-            margin-top: 2px; 
-            transition: opacity 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Oculto por defecto en móviles */
+            font-size: 0; 
+            opacity: 0; 
+            height: 0;
+            margin-top: 0; 
         }
         .nav-item:not(.active) span {
-            opacity: 1; 
-            height: auto;
-            overflow: visible;
+            font-size: 0;
+            opacity: 0; 
+            height: 0;
         }
         .nav-item.active span {
+            font-size: 0.75em; /* Tamaño visible */
+            opacity: 1; /* Visible */
+            height: auto;
+            margin-top: 2px;
             color: #ffffff; /* Texto blanco para el activo en la barra oscura */
         }
         
@@ -296,6 +302,7 @@
                 opacity: 0.9;
                 height: auto; /* Muestra siempre el texto en escritorio */
                 margin-left: 15px; /* Espacio entre icono y texto */
+                margin-top: 0; /* Evita heredar margen de móvil */
                 font-size: 1.05em;
                 color: #e2e8f0; /* COLOR BLANCO/GRIS CLARO PARA TEXTO INACTIVO */
                 font-weight: 600;
@@ -308,10 +315,14 @@
             }
             .nav-item.active .icon {
                 color: #eab332; /* NUEVO: AMARILLO MOSTAZA DE LA IMAGEN */
+                transform: none; /* Evita que herede la animación de elevarse de móvil */
+                margin-bottom: 0; /* Resetea el margen de móvil */
             }
             .nav-item.active span {
                 margin-left: 15px;
+                margin-top: 0; /* Evita heredar margen de móvil */
                 font-size: 1.1em;
+                height: auto; /* Evita heredar altura 0 de móvil */
                 color: #ffffff; /* NUEVO: TEXTO BLANCO PURO PARA PESTAÑA ACTIVA COMO EN LA IMAGEN */
                 font-weight: 700;
             }
@@ -319,6 +330,7 @@
                 width: 30px; /* Fija ancho de icono para alinear los textos */
                 text-align: center;
                 font-size: 1.5em;
+                margin-bottom: 0; /* Resetea margen de móvil */
             }
             .nav-item.active:hover {
                 transform: translateX(8px); /* Mantiene la posición al pasar el ratón */
