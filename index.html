@@ -136,12 +136,12 @@
             width: calc(100% - 30px); /* Restamos el margen para centrar */
             margin: 0 auto; /* FIX: Centrado horizontal automático */
             height: 65px; /* Altura suficiente para texto e ícono */
-            background-color: rgba(255, 255, 255, 0.15); /* Fondo súper transparente (15% de opacidad) */
-            backdrop-filter: blur(20px); /* Desenfoque aumentado para mantener el efecto cristalino sin fondo */
-            -webkit-backdrop-filter: blur(20px); /* Soporte para Safari */
+            background-color: rgba(0, 0, 0, 0.75); /* MODIFICADO: Fondo negro semitransparente */
+            backdrop-filter: blur(15px); /* MODIFICADO: Desenfoque difuminado */
+            -webkit-backdrop-filter: blur(15px); /* Soporte para Safari */
             border-radius: 20px; /* Bordes muy redondeados (Píldora) */
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); /* Sombra aún más suave y ligera */
-            border: 1px solid rgba(255, 255, 255, 0.15); /* Borde de cristal muy sutil */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4); /* MODIFICADO: Sombra oscurecida para fondo negro */
+            border: 1px solid rgba(255, 255, 255, 0.08); /* MODIFICADO: Borde de cristal muy sutil adaptado a lo oscuro */
             position: fixed; /* FIX CLAVE: 'fixed' en vez de 'absolute' pega la barra a la pantalla de cristal del celular */
             bottom: 15px; /* Separación estricta desde el borde del celular */
             left: 0; /* Para garantizar el centrado con margin: auto */
@@ -162,7 +162,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #64748b; /* Color gris pizarra elegante para textos inactivos */
+            color: #cbd5e1; /* MODIFICADO: Color gris claro brillante para textos inactivos */
             position: relative;
             padding: 5px 0;
             margin: 0;
@@ -171,10 +171,10 @@
             opacity: 1; /* Sin desvanecimiento, siempre visible */
         }
         .nav-item:not(.active) .icon { 
-            color: #64748b; /* Iconos inactivos en gris pizarra para contrastar con el fondo claro */
+            color: #cbd5e1; /* MODIFICADO: Iconos inactivos en gris claro para contrastar sobre negro */
         }
         .nav-item.active {
-            color: var(--primary-color); /* Azul vibrante de la app */
+            color: #60a5fa; /* MODIFICADO: Azul claro luminoso para estado activo */
             font-weight: 700;
             background-color: transparent; 
             border-radius: 0; 
@@ -193,7 +193,7 @@
         }
         .nav-item.active .icon {
             transform: scale(1.15) translateY(-2px); /* Crece y sube ligeramente para dar espacio al texto */
-            color: var(--primary-color); /* Azul principal para ícono activo */
+            color: #60a5fa; /* MODIFICADO: Azul luminoso para ícono activo */
             margin-bottom: 2px; /* Espaciado con el texto inferior */
         }
         .bottom-nav span {
@@ -217,7 +217,7 @@
             opacity: 1; /* Visible */
             height: auto;
             margin-top: 2px;
-            color: var(--primary-color); /* Texto azul para el activo combinando con el icono */
+            color: #60a5fa; /* MODIFICADO: Texto azul claro para el activo combinando con el icono */
         }
         
         .sidebar-brand {
