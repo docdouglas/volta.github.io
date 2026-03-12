@@ -136,9 +136,12 @@
             width: calc(100% - 30px); /* Restamos el margen para centrar */
             margin: 0 auto; /* FIX: Centrado horizontal automático */
             height: 65px; /* Altura suficiente para texto e ícono */
-            background-color: #2b3a4a; /* CORRECCIÓN: Fondo azul pizarra oscuro para móviles también */
+            background-color: rgba(255, 255, 255, 0.85); /* Fondo blanco transparente difuminado */
+            backdrop-filter: blur(12px); /* Efecto cristal difuminado */
+            -webkit-backdrop-filter: blur(12px); /* Soporte para Safari */
             border-radius: 20px; /* Bordes muy redondeados (Píldora) */
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2); /* Sombra elegante que le da profundidad */
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); /* Sombra más suave y elegante */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde sutil cristalino */
             position: fixed; /* FIX CLAVE: 'fixed' en vez de 'absolute' pega la barra a la pantalla de cristal del celular */
             bottom: 15px; /* Separación estricta desde el borde del celular */
             left: 0; /* Para garantizar el centrado con margin: auto */
@@ -147,7 +150,6 @@
             justify-content: space-around;
             padding: 0 5px;
             box-sizing: border-box;
-            border: none; /* Quitamos el borde para el diseño oscuro */
         }
         .nav-item {
             flex: 1;
@@ -160,7 +162,7 @@
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            color: #e2e8f0; /* Color gris claro para textos inactivos */
+            color: #64748b; /* Color gris pizarra elegante para textos inactivos */
             position: relative;
             padding: 5px 0;
             margin: 0;
@@ -169,10 +171,10 @@
             opacity: 1; /* Sin desvanecimiento, siempre visible */
         }
         .nav-item:not(.active) .icon { 
-            color: #e2e8f0; /* Iconos inactivos en gris claro */
+            color: #64748b; /* Iconos inactivos en gris pizarra para contrastar con el fondo claro */
         }
         .nav-item.active {
-            color: #eab332; /* Amarillo mostaza */
+            color: var(--primary-color); /* Azul vibrante de la app */
             font-weight: 700;
             background-color: transparent; 
             border-radius: 0; 
@@ -191,7 +193,7 @@
         }
         .nav-item.active .icon {
             transform: scale(1.15) translateY(-2px); /* Crece y sube ligeramente para dar espacio al texto */
-            color: #eab332; /* Amarillo mostaza para ícono activo */
+            color: var(--primary-color); /* Azul principal para ícono activo */
             margin-bottom: 2px; /* Espaciado con el texto inferior */
         }
         .bottom-nav span {
@@ -215,7 +217,7 @@
             opacity: 1; /* Visible */
             height: auto;
             margin-top: 2px;
-            color: #ffffff; /* Texto blanco para el activo en la barra oscura */
+            color: var(--primary-color); /* Texto azul para el activo combinando con el icono */
         }
         
         .sidebar-brand {
@@ -255,6 +257,8 @@
                 min-width: 260px; /* Garantiza que la barra no se encoja */
                 margin: 0; /* SE ELIMINA EL EFECTO FLOTANTE DE MÓVIL EN ESCRITORIO */
                 background-color: #2b3a4a; /* NUEVO: AZUL PIZARRA OSCURO DE LA IMAGEN */
+                backdrop-filter: none; /* Quita el difuminado del móvil en PC */
+                -webkit-backdrop-filter: none;
                 flex-shrink: 0; /* Obliga a mantener el ancho fijo */
                 height: 100%; /* Toma todo el alto */
                 flex-direction: column; /* Apila los botones verticalmente */
@@ -264,6 +268,7 @@
                 padding-right: 0;
                 border-top: none;
                 border-right: none; /* Sin borde para coincidir con la imagen */
+                border: none; /* Resetea el borde de cristal del móvil */
                 border-radius: 20px 0 0 20px; /* Curvas solo a la izquierda */
                 box-shadow: 4px 0 15px rgba(0,0,0,0.1); /* Sombra hacia la derecha */
                 z-index: 1000; /* Garantiza estar siempre por encima de cualquier otro contenido */
