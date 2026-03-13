@@ -2013,15 +2013,15 @@
             <form id="grade-form" class="form-group">
                 <input type="hidden" id="grade-student-id">
                 <input type="hidden" id="grade-materia-name">
-                <label for="grade-asistencia">Asistencia:</label>
+                <label for="grade-asistencia" id="label-grade-asistencia">Asistencia:</label>
                 <input type="number" id="grade-asistencia" min="0" max="100" placeholder="Puntaje de Asistencia">
                 <div style="margin-top: 15px;">
-                    <label>Prácticas (Puntaje 0-100):</label>
+                    <label id="label-grade-practicas">Prácticas (Puntaje 0-100):</label>
                     <div id="practicas-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                     </div>
                 </div>
                 <div style="margin-top: 15px;">
-                    <label>Parciales (Puntaje 0-100):</label>
+                    <label id="label-grade-parciales">Parciales (Puntaje 0-100):</label>
                     <div id="parciales-inputs" class="form-group" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
                     </div>
                 </div>
@@ -3291,6 +3291,12 @@
             currentMateriaNameGradesModal.textContent = materia.name;
             gradeStudentIdInput.value = studentId;
             gradeMateriaNameInput.value = materiaName;
+
+            // Actualizar las etiquetas para mostrar los porcentajes dinámicamente
+            document.getElementById('label-grade-asistencia').textContent = `Asistencia (${materia.ponderaciones.asistencia}%):`;
+            document.getElementById('label-grade-practicas').textContent = `Prácticas (${materia.ponderaciones.practicas}%) - Puntaje 0-100:`;
+            document.getElementById('label-grade-parciales').textContent = `Parciales (${materia.ponderaciones.parciales}%) - Puntaje 0-100:`;
+
             const studentMateriaGrades = student.grades[materiaName] || { asistencia: null, practicas: Array(6).fill(null), parciales: Array(2).fill(null) };
             gradeAsistenciaInput.value = studentMateriaGrades.asistencia !== null ? studentMateriaGrades.asistencia : '';
             practicasInputsDiv.innerHTML = '';
