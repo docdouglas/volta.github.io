@@ -1957,16 +1957,29 @@
         </div>
     </div>
 
+    <!-- Nuevo Modal Menú de Alumnos -->
+    <div id="studentsAdminMenuModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-graduate"></i> Gestión de Alumnos</h3>
+                <span class="close-button">&times;</span>
+            </div>
+            <div id="students-menu-buttons" style="display: flex; flex-direction: column; gap: 12px; margin-top: 15px;">
+                <!-- Botones generados dinámicamente -->
+            </div>
+        </div>
+    </div>
+
     <!-- Modal para la Lista de Alumnos Registrados -->
     <div id="listStudentsModal" class="modal" style="z-index: 2010;">
         <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
-                <h3><i class="fas fa-user-graduate"></i> Gestión de Alumnos y Calificaciones</h3>
+                <h3 id="listStudentsModalTitle"><i class="fas fa-list"></i> Lista de Alumnos</h3>
                 <span class="close-button">&times;</span>
             </div>
-            <div id="merged-materias-filter-buttons" class="admin-button-group" style="margin-bottom: 20px;">
-                <!-- Botones de filtro por materia generados dinámicamente -->
-            </div>
+            <button id="btnBackToStudentsMenu" class="btn-back" style="margin-bottom: 15px; display: inline-flex;">
+                <i class="fas fa-arrow-left"></i> Volver al Menú
+            </button>
             <div class="table-responsive">
                 <table class="content-table">
                     <thead>
@@ -2105,7 +2118,8 @@
         let currentAdminLibraryFilterType = null;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
-        let listStudentsModal, mergedMateriasFilterButtons;
+        let studentsAdminMenuModal, studentsMenuButtons, btnBackToStudentsMenu, listStudentsModalTitle;
+        let listStudentsModal;
         let currentAdminStudentsFilter = 'all';
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let libraryAccessRequiredDiv;
@@ -2262,7 +2276,7 @@
                     console.log("✅ Materias loaded successfully. Count:", Object.keys(allMaterias).length);
                     renderAdminMateriasTable();
                     populateStudentMateriasCheckboxes();
-                    if (mergedMateriasFilterButtons) renderMateriasFilterButtons();
+                    if (studentsMenuButtons) renderMateriasFilterButtons();
                     populateLibraryMateriaSelects();
                     if (currentLoggedInStudent) {
                         renderStudentPortal();
@@ -3092,37 +3106,37 @@
         }
 
         function renderMateriasFilterButtons() {
-            if (!mergedMateriasFilterButtons) return;
-            mergedMateriasFilterButtons.innerHTML = '';
+            if (!studentsMenuButtons) return;
+            studentsMenuButtons.innerHTML = '';
 
             // Botón "Todas las Materias"
             const btnAll = document.createElement('button');
-            btnAll.className = `admin-button ${currentAdminStudentsFilter === 'all' ? 'active-filter' : ''}`;
-            btnAll.style.backgroundColor = currentAdminStudentsFilter === 'all' ? 'var(--primary-color)' : '#fff';
-            btnAll.style.color = currentAdminStudentsFilter === 'all' ? '#fff' : 'var(--primary-color)';
+            btnAll.className = 'admin-button';
             btnAll.innerHTML = `<span class="button-icon"><i class="fas fa-users"></i></span> Todas las Materias`;
             btnAll.addEventListener('click', () => {
                 currentAdminStudentsFilter = 'all';
-                renderMateriasFilterButtons();
+                if(listStudentsModalTitle) listStudentsModalTitle.innerHTML = '<i class="fas fa-list"></i> Todas las Materias';
+                studentsAdminMenuModal.style.display = 'none';
+                listStudentsModal.style.display = 'block';
                 renderAdminStudentsTable();
             });
-            mergedMateriasFilterButtons.appendChild(btnAll);
+            studentsMenuButtons.appendChild(btnAll);
 
             // Botones por cada materia
             const materiasArray = Object.values(allMaterias).sort((a,b) => a.name.localeCompare(b.name));
             materiasArray.forEach(materia => {
                 const materiaKey = materia.name.toLowerCase();
                 const btn = document.createElement('button');
-                btn.className = `admin-button ${currentAdminStudentsFilter === materiaKey ? 'active-filter' : ''}`;
-                btn.style.backgroundColor = currentAdminStudentsFilter === materiaKey ? 'var(--primary-color)' : '#fff';
-                btn.style.color = currentAdminStudentsFilter === materiaKey ? '#fff' : 'var(--primary-color)';
+                btn.className = 'admin-button';
                 btn.innerHTML = `<span class="button-icon"><i class="fas fa-book"></i></span> ${materia.name}`;
                 btn.addEventListener('click', () => {
                     currentAdminStudentsFilter = materiaKey;
-                    renderMateriasFilterButtons();
+                    if(listStudentsModalTitle) listStudentsModalTitle.innerHTML = `<i class="fas fa-list"></i> Materia: ${materia.name}`;
+                    studentsAdminMenuModal.style.display = 'none';
+                    listStudentsModal.style.display = 'block';
                     renderAdminStudentsTable();
                 });
-                mergedMateriasFilterButtons.appendChild(btn);
+                studentsMenuButtons.appendChild(btn);
             });
         }
 
@@ -3502,7 +3516,7 @@
             const buttonsConfig = [
                 { text: 'Crear Materia', icon: 'fas fa-chalkboard', target: '#createMateriaModal' },
                 { text: 'Registrar Alumno', icon: 'fas fa-user-plus', target: '#registerStudentModal' },
-                { text: 'Alumnos y Calificaciones', icon: 'fas fa-user-graduate', target: '#listStudentsModal' }
+                { text: 'Alumnos y Calificaciones', icon: 'fas fa-user-graduate', target: '#studentsAdminMenuModal' }
             ];
             buttonsConfig.forEach(btn => {
                 const button = document.createElement('button');
@@ -3520,10 +3534,8 @@
                             populateStudentMateriasCheckboxes();
                             registerStudentForm.reset();
                             studentIdInput.value = '';
-                        } else if (btn.target === '#listStudentsModal') {
-                            currentAdminStudentsFilter = 'all'; // Resetea a mostrar todas
+                        } else if (btn.target === '#studentsAdminMenuModal') {
                             renderMateriasFilterButtons();
-                            renderAdminStudentsTable();
                         }
                     }
                 });
@@ -3636,7 +3648,18 @@
             
             listStudentsModal = document.getElementById('listStudentsModal');
             studentsAdminTbody = document.getElementById('students-admin-tbody');
-            mergedMateriasFilterButtons = document.getElementById('merged-materias-filter-buttons');
+            
+            studentsAdminMenuModal = document.getElementById('studentsAdminMenuModal');
+            studentsMenuButtons = document.getElementById('students-menu-buttons');
+            listStudentsModalTitle = document.getElementById('listStudentsModalTitle');
+            btnBackToStudentsMenu = document.getElementById('btnBackToStudentsMenu');
+
+            if (btnBackToStudentsMenu) {
+                btnBackToStudentsMenu.addEventListener('click', () => {
+                    listStudentsModal.style.display = 'none';
+                    studentsAdminMenuModal.style.display = 'block';
+                });
+            }
             
             studentGradesModal = document.getElementById('studentGradesModal');
             studentGradesTitle = document.getElementById('student-grades-title');
