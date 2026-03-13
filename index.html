@@ -628,10 +628,14 @@
         .content-table .actions-column .edit-btn {
             background-color: #ff9800;
         }
+        .content-table .actions-column .grade-btn {
+            background-color: #28a745;
+        }
         .content-table .actions-column .delete-btn {
             background-color: #f44336;
         }
         .content-table .actions-column .edit-btn:hover { background-color: #e68a00; }
+        .content-table .actions-column .grade-btn:hover { background-color: #218838; }
         .content-table .actions-column .delete-btn:hover { background-color: #d32f2f; }
         /* Estilos para el formulario de crear materia y registro de alumnos */
         .form-group {
@@ -1955,10 +1959,13 @@
 
     <!-- Modal para la Lista de Alumnos Registrados -->
     <div id="listStudentsModal" class="modal" style="z-index: 2010;">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
-                <h3><i class="fas fa-users"></i> Alumnos Registrados</h3>
+                <h3><i class="fas fa-user-graduate"></i> Gestión de Alumnos y Calificaciones</h3>
                 <span class="close-button">&times;</span>
+            </div>
+            <div id="merged-materias-filter-buttons" class="admin-button-group" style="margin-bottom: 20px;">
+                <!-- Botones de filtro por materia generados dinámicamente -->
             </div>
             <div class="table-responsive">
                 <table class="content-table">
@@ -1967,45 +1974,12 @@
                             <th>Nro.</th>
                             <th>Nombre Completo</th>
                             <th>Celular</th>
+                            <th>Nota Final</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
                     <tbody id="students-admin-tbody">
                     </tbody>
-                </table>
-            </div>
-            <div class="modal-actions">
-                <button class="close-btn close-button">Cerrar</button>
-            </div>
-        </div>
-    </div>
-
-    <div id="listMateriasModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-list-alt"></i> Lista de Materias</h3>
-                <span class="close-button">&times;</span>
-            </div>
-            <div id="materias-list-buttons" class="admin-button-group">
-            </div>
-        </div>
-    </div>
-    <!-- Nuevo modal estático para lista de alumnos por materia -->
-    <div id="materiaStudentsModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-users"></i> <span id="materia-students-title">Alumnos</span></h3>
-                <span class="close-button">&times;</span>
-            </div>
-            <div class="table-responsive">
-                <table class="content-table">
-                    <thead>
-                        <tr>
-                            <th>Nombre del Alumno</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody id="materia-students-tbody"></tbody>
                 </table>
             </div>
             <div class="modal-actions">
@@ -2131,9 +2105,8 @@
         let currentAdminLibraryFilterType = null;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
-        let listStudentsModal;
-        let listMateriasModal, materiasListButtons;
-        let materiaStudentsModal, materiaStudentsTitle, materiaStudentsTbody;
+        let listStudentsModal, mergedMateriasFilterButtons;
+        let currentAdminStudentsFilter = 'all';
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
@@ -2289,7 +2262,7 @@
                     console.log("✅ Materias loaded successfully. Count:", Object.keys(allMaterias).length);
                     renderAdminMateriasTable();
                     populateStudentMateriasCheckboxes();
-                    renderMateriasListButtons();
+                    if (mergedMateriasFilterButtons) renderMateriasFilterButtons();
                     populateLibraryMateriaSelects();
                     if (currentLoggedInStudent) {
                         renderStudentPortal();
@@ -3118,10 +3091,45 @@
             }
         }
 
+        function renderMateriasFilterButtons() {
+            if (!mergedMateriasFilterButtons) return;
+            mergedMateriasFilterButtons.innerHTML = '';
+
+            // Botón "Todas las Materias"
+            const btnAll = document.createElement('button');
+            btnAll.className = `admin-button ${currentAdminStudentsFilter === 'all' ? 'active-filter' : ''}`;
+            btnAll.style.backgroundColor = currentAdminStudentsFilter === 'all' ? 'var(--primary-color)' : '#fff';
+            btnAll.style.color = currentAdminStudentsFilter === 'all' ? '#fff' : 'var(--primary-color)';
+            btnAll.innerHTML = `<span class="button-icon"><i class="fas fa-users"></i></span> Todas las Materias`;
+            btnAll.addEventListener('click', () => {
+                currentAdminStudentsFilter = 'all';
+                renderMateriasFilterButtons();
+                renderAdminStudentsTable();
+            });
+            mergedMateriasFilterButtons.appendChild(btnAll);
+
+            // Botones por cada materia
+            const materiasArray = Object.values(allMaterias).sort((a,b) => a.name.localeCompare(b.name));
+            materiasArray.forEach(materia => {
+                const materiaKey = materia.name.toLowerCase();
+                const btn = document.createElement('button');
+                btn.className = `admin-button ${currentAdminStudentsFilter === materiaKey ? 'active-filter' : ''}`;
+                btn.style.backgroundColor = currentAdminStudentsFilter === materiaKey ? 'var(--primary-color)' : '#fff';
+                btn.style.color = currentAdminStudentsFilter === materiaKey ? '#fff' : 'var(--primary-color)';
+                btn.innerHTML = `<span class="button-icon"><i class="fas fa-book"></i></span> ${materia.name}`;
+                btn.addEventListener('click', () => {
+                    currentAdminStudentsFilter = materiaKey;
+                    renderMateriasFilterButtons();
+                    renderAdminStudentsTable();
+                });
+                mergedMateriasFilterButtons.appendChild(btn);
+            });
+        }
+
         function renderAdminStudentsTable() {
             studentsAdminTbody.innerHTML = '';
             if (allStudents.length === 0) {
-                studentsAdminTbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados.</td></tr>';
+                studentsAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados.</td></tr>';
                 return;
             }
 
@@ -3141,21 +3149,32 @@
             });
 
             // Obtener nombres de materias ordenados alfabéticamente
-            const sortedMateriaKeys = Object.keys(groupedStudents).sort((a, b) => {
+            let sortedMateriaKeys = Object.keys(groupedStudents).sort((a, b) => {
                 const nameA = a === 'Sin Materia' ? 'ZZZ' : (allMaterias[a] ? allMaterias[a].name : a);
                 const nameB = b === 'Sin Materia' ? 'ZZZ' : (allMaterias[b] ? allMaterias[b].name : b);
                 return nameA.localeCompare(nameB);
             });
 
+            // Aplicar el filtro de botones
+            if (currentAdminStudentsFilter !== 'all') {
+                sortedMateriaKeys = sortedMateriaKeys.filter(key => key === currentAdminStudentsFilter);
+                if (sortedMateriaKeys.length === 0) {
+                    studentsAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados en esta materia.</td></tr>';
+                    return;
+                }
+            }
+
             sortedMateriaKeys.forEach(materiaKey => {
                 const materiaName = materiaKey === 'Sin Materia' ? 'Sin Materia Asignada' : (allMaterias[materiaKey] ? allMaterias[materiaKey].name : materiaKey);
                 
                 // Fila separadora/cabecera de materia
-                const headerTr = document.createElement('tr');
-                headerTr.innerHTML = `<td colspan="4" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Materia: ${materiaName}</td>`;
-                studentsAdminTbody.appendChild(headerTr);
+                if (currentAdminStudentsFilter === 'all' || materiaKey === 'Sin Materia') {
+                    const headerTr = document.createElement('tr');
+                    headerTr.innerHTML = `<td colspan="5" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Materia: ${materiaName}</td>`;
+                    studentsAdminTbody.appendChild(headerTr);
+                }
 
-                // Ordenar estudiantes alfabéticamente por paterno, materno, nombres
+                // Ordenar estudiantes alfabéticamente
                 const studentsInMateria = groupedStudents[materiaKey].sort((a, b) => {
                     const nameA = `${a.paterno} ${a.materno} ${a.nombres}`.toLowerCase();
                     const nameB = `${b.paterno} ${b.materno} ${b.nombres}`.toLowerCase();
@@ -3164,27 +3183,39 @@
 
                 let counter = 1;
                 studentsInMateria.forEach(student => {
+                    let notaFinal = '--';
+                    let gradeBtnHtml = '';
+                    
+                    if (materiaKey !== 'Sin Materia') {
+                        const overallGrade = calculateOverallGrade(student, materiaKey);
+                        if (overallGrade !== null) {
+                            notaFinal = overallGrade.toFixed(2);
+                        }
+                        gradeBtnHtml = `<button class="grade-btn" data-id="${student.id}" data-materia="${materiaKey}" title="Calificar Alumno"><i class="fas fa-graduation-cap"></i></button>`;
+                    }
+
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td style="text-align: center; font-weight: bold;">${counter++}</td>
                         <td>${student.paterno} ${student.materno} ${student.nombres}</td>
-                        <td>${student.celular || 'N/A'}</td>
+                        <td style="text-align: center;">${student.celular || 'N/A'}</td>
+                        <td style="text-align: center; font-weight: bold; color: ${notaFinal !== '--' ? 'var(--primary-color)' : 'inherit'};">${notaFinal}</td>
                         <td class="actions-column">
-                            <button class="edit-btn" data-id="${student.id}"><i class="fas fa-edit"></i></button>
-                            <button class="delete-btn" data-id="${student.id}"><i class="fas fa-trash-alt"></i></button>
+                            <button class="edit-btn edit-student-btn" data-id="${student.id}" title="Editar Alumno"><i class="fas fa-edit"></i></button>
+                            ${gradeBtnHtml}
+                            <button class="delete-btn delete-student-btn" data-id="${student.id}" title="Eliminar Alumno"><i class="fas fa-trash-alt"></i></button>
                         </td>
                     `;
                     studentsAdminTbody.appendChild(tr);
                 });
             });
             
-            // Lógica para el botón Editar de la nueva tabla en el modal
-            studentsAdminTbody.querySelectorAll('.edit-btn').forEach(button => {
+            // Lógica para Editar Estudiante
+            studentsAdminTbody.querySelectorAll('.edit-student-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
                     const student = allStudents.find(s => s.id === id);
                     if (student) {
-                        // Cerramos el modal de lista y abrimos el de registro para modificar
                         listStudentsModal.style.display = 'none';
                         registerStudentModal.style.display = 'block';
                         
@@ -3203,8 +3234,19 @@
                     }
                 });
             });
+
+            // Lógica para Calificar Estudiante
+            studentsAdminTbody.querySelectorAll('.grade-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const btn = e.target.closest('button');
+                    const studentId = btn.dataset.id;
+                    const materiaName = btn.dataset.materia;
+                    openStudentGradesModal(studentId, materiaName);
+                });
+            });
             
-            studentsAdminTbody.querySelectorAll('.delete-btn').forEach(button => {
+            // Lógica para Eliminar Estudiante
+            studentsAdminTbody.querySelectorAll('.delete-student-btn').forEach(button => {
                 button.addEventListener('click', (e) => {
                     const id = e.target.closest('button').dataset.id;
                     showMessageBox('Confirmar Eliminación', '¿Estás seguro de que quieres eliminar este alumno?', 'confirm', async (confirmed) => {
@@ -3221,59 +3263,6 @@
                     });
                 });
             });
-        }
-
-        function renderMateriasListButtons() {
-            materiasListButtons.innerHTML = '';
-            const materiasArray = Object.values(allMaterias);
-            if (materiasArray.length === 0) {
-                materiasListButtons.innerHTML = '<p style="text-align: center; color: var(--muted-text-color);">No hay materias para gestionar calificaciones.</p>';
-                return;
-            }
-            materiasArray.forEach(materia => {
-                const button = document.createElement('button');
-                button.className = 'admin-button';
-                button.innerHTML = `<span class="button-icon"><i class="fas fa-chalkboard"></i></span> ${materia.name}`;
-                button.dataset.materiaName = materia.name.toLowerCase();
-                button.addEventListener('click', openStudentListForMateria);
-                materiasListButtons.appendChild(button);
-            });
-        }
-
-        function openStudentListForMateria(e) {
-            const materiaName = e.currentTarget.dataset.materiaName;
-            const materiaData = allMaterias[materiaName];
-            if (!materiaData) {
-                showMessageBox('Error', 'No se encontró la materia.');
-                return;
-            }
-            materiaStudentsModal.style.display = 'block';
-            document.getElementById('materia-students-title').textContent = `Alumnos de ${materiaData.name}`;
-            const studentsInMateria = allStudents.filter(student => student.enrolledMaterias.includes(materiaName));
-            const tbody = document.getElementById('materia-students-tbody');
-            if (studentsInMateria.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="2" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados en esta materia.</td></tr>';
-            } else {
-                tbody.innerHTML = '';
-                studentsInMateria.forEach(student => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td>${student.nombres} ${student.paterno} ${student.materno}</td>
-                        <td class="actions-column">
-                            <button class="edit-btn grade-student-btn" data-student-id="${student.id}" data-materia-name="${materiaName}"><i class="fas fa-edit"></i></button>
-                        </td>
-                    `;
-                    tbody.appendChild(tr);
-                });
-                tbody.querySelectorAll('.grade-student-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const studentId = e.currentTarget.dataset.studentId;
-                        const materiaName = e.currentTarget.dataset.materiaName;
-                        openStudentGradesModal(studentId, materiaName);
-                        materiaStudentsModal.style.display = 'none';
-                    });
-                });
-            }
         }
 
         function openStudentGradesModal(studentId, materiaName) {
@@ -3513,8 +3502,7 @@
             const buttonsConfig = [
                 { text: 'Crear Materia', icon: 'fas fa-chalkboard', target: '#createMateriaModal' },
                 { text: 'Registrar Alumno', icon: 'fas fa-user-plus', target: '#registerStudentModal' },
-                { text: 'Lista de Alumnos', icon: 'fas fa-users', target: '#listStudentsModal' },
-                { text: 'Lista de Materias y Calificaciones', icon: 'fas fa-list-alt', target: '#listMateriasModal' }
+                { text: 'Alumnos y Calificaciones', icon: 'fas fa-user-graduate', target: '#listStudentsModal' }
             ];
             buttonsConfig.forEach(btn => {
                 const button = document.createElement('button');
@@ -3533,9 +3521,9 @@
                             registerStudentForm.reset();
                             studentIdInput.value = '';
                         } else if (btn.target === '#listStudentsModal') {
+                            currentAdminStudentsFilter = 'all'; // Resetea a mostrar todas
+                            renderMateriasFilterButtons();
                             renderAdminStudentsTable();
-                        } else if (btn.target === '#listMateriasModal') {
-                            renderMateriasListButtons();
                         }
                     }
                 });
@@ -3648,12 +3636,7 @@
             
             listStudentsModal = document.getElementById('listStudentsModal');
             studentsAdminTbody = document.getElementById('students-admin-tbody');
-
-            listMateriasModal = document.getElementById('listMateriasModal');
-            materiasListButtons = document.getElementById('materias-list-buttons');
-            materiaStudentsModal = document.getElementById('materiaStudentsModal');
-            materiaStudentsTitle = document.getElementById('materia-students-title');
-            materiaStudentsTbody = document.getElementById('materia-students-tbody');
+            mergedMateriasFilterButtons = document.getElementById('merged-materias-filter-buttons');
             
             studentGradesModal = document.getElementById('studentGradesModal');
             studentGradesTitle = document.getElementById('student-grades-title');
@@ -4204,14 +4187,6 @@
             createMateriaForm.addEventListener('submit', handleCreateMateriaFormSubmit);
             registerStudentForm.addEventListener('submit', handleRegisterStudentFormSubmit);
             gradeForm.addEventListener('submit', handleGradeFormSubmit);
-            const closeMateriaStudentsModal = () => {
-                materiaStudentsModal.style.display = 'none';
-            };
-            materiaStudentsModal.querySelector('.close-button').onclick = closeMateriaStudentsModal;
-            materiaStudentsModal.querySelector('.close-btn').onclick = closeMateriaStudentsModal;
-            materiaStudentsModal.onclick = (e) => {
-                if (e.target === materiaStudentsModal) closeMateriaStudentsModal();
-            };
 
             // --- Logica Chat WhatsApp ---
             const chatTextInput = document.getElementById('chat-text-input');
