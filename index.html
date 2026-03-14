@@ -3852,6 +3852,35 @@
             // --- NUEVA LÓGICA: Cerrar cualquier modal al presionar "Escape" ---
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
+                    // Prioridad 1: Cerrar modales superpuestos primero (Alertas, Calificaciones, Edición)
+                    const messageBox = document.getElementById('messageBoxModal');
+                    if (messageBox && messageBox.style.display === 'block') {
+                        const closeBtn = document.getElementById('messageBoxCloseBtn');
+                        if (closeBtn) closeBtn.click();
+                        return;
+                    }
+                    if (studentGradesModal && studentGradesModal.style.display === 'block') {
+                        const closeBtn = studentGradesModal.querySelector('.close-button');
+                        if (closeBtn) closeBtn.click();
+                        return;
+                    }
+                    if (editLibraryItemModal && editLibraryItemModal.style.display === 'block') {
+                        const closeBtn = editLibraryItemModal.querySelector('.close-button');
+                        if (closeBtn) closeBtn.click();
+                        return;
+                    }
+
+                    // Prioridad 2: Modales que actúan como "sub-menús" deben volver a su menú padre
+                    if (listStudentsModal && listStudentsModal.style.display === 'block') {
+                        if (btnBackToStudentsMenu) btnBackToStudentsMenu.click();
+                        return;
+                    }
+                    if (manageLibraryModal && manageLibraryModal.style.display === 'block') {
+                        if (btnBackToLibraryMenu) btnBackToLibraryMenu.click();
+                        return;
+                    }
+
+                    // Comportamiento por defecto: Cerrar el resto de modales abiertos
                     const anyOpen = document.querySelector('.modal[style*="display: block"], .modal[style*="display: flex"], .netflix-modal[style*="display: block"], .netflix-modal[style*="display: flex"], #chats.desktop-modal-active');
                     if (anyOpen) {
                         closeAllModals();
