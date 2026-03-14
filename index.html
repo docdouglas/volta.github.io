@@ -1832,9 +1832,16 @@
                 <span class="close-button">&times;</span>
             </div>
             
-            <button id="btnBackToLibraryMenu" class="btn-back" style="margin-bottom: 15px; display: inline-flex;">
-                <i class="fas fa-arrow-left"></i> Volver al Menú
-            </button>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                <button id="btnBackToLibraryMenu" class="btn-back" style="display: inline-flex; margin-bottom: 0;">
+                    <i class="fas fa-arrow-left"></i> Volver al Menú
+                </button>
+                
+                <!-- NUEVO: BUSCADOR DINÁMICO -->
+                <div style="flex-grow: 1; max-width: 350px;">
+                    <input type="text" id="admin-library-search-input" placeholder="Buscar por título, descripción o materia..." style="width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #ccc; font-size: 0.95em;">
+                </div>
+            </div>
             
             <div class="table-responsive">
                 <table class="content-table">
@@ -2121,6 +2128,8 @@
         let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemMateriaSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
         let libraryAdminMenuModal, manageLibraryModalTitle, btnBackToLibraryMenu;
         let currentAdminLibraryFilterType = null;
+        let adminLibrarySearchQuery = '';
+        let adminLibrarySearchInput;
         let createMateriaModal, createMateriaForm, materiaIdInput, materiaNameInput, ponderacionAsistenciaInput, ponderacionPracticasInput, ponderacionParcialesInput, materiasAdminTbody;
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let studentsAdminMenuModal, studentsMenuButtons, btnBackToStudentsMenu, listStudentsModalTitle;
@@ -2691,8 +2700,20 @@
                 itemsToRender = allLibraryItems.filter(item => item.type === currentAdminLibraryFilterType);
             }
 
+            // NUEVO FILTRO DINÁMICO POR BÚSQUEDA
+            if (adminLibrarySearchQuery.trim() !== '') {
+                const query = adminLibrarySearchQuery.toLowerCase();
+                itemsToRender = itemsToRender.filter(item => {
+                    const titleMatch = item.title && item.title.toLowerCase().includes(query);
+                    const descMatch = item.description && item.description.toLowerCase().includes(query);
+                    const itemVal = item.materia || item.carrera || 'general';
+                    const materiaMatch = itemVal.toLowerCase().includes(query) || (allMaterias[itemVal] && allMaterias[itemVal].name.toLowerCase().includes(query));
+                    return titleMatch || descMatch || materiaMatch;
+                });
+            }
+
             if (itemsToRender.length === 0) {
-                libraryItemsAdminTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-text-color);">No hay ítems registrados en esta categoría.</td></tr>';
+                libraryItemsAdminTbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--muted-text-color);">No se encontraron ítems que coincidan con la búsqueda.</td></tr>';
                 return;
             }
 
@@ -3642,6 +3663,7 @@
             libraryAdminMenuModal = document.getElementById('libraryAdminMenuModal');
             manageLibraryModalTitle = document.getElementById('manageLibraryModalTitle');
             btnBackToLibraryMenu = document.getElementById('btnBackToLibraryMenu');
+            adminLibrarySearchInput = document.getElementById('admin-library-search-input');
 
             editLibraryItemModal = document.getElementById('editLibraryItemModal');
             btnAddNewLibraryItem = document.getElementById('btnAddNewLibraryItem');
@@ -4149,10 +4171,34 @@
                         if(hiddenId) hiddenId.value = '';
                         // Reiniciar la vista previa del archivo si es el modal de biblioteca
                         if(modal.id === 'manageLibraryModal') {
+                            adminLibrarySearchQuery = '';
+                            if (adminLibrarySearchInput) adminLibrarySearchInput.value = '';
+                            
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
                             libraryItemMateriaSelect.value = 'general';
+                        }
+                    }
+                });
+            });
+            window.addEventListener('click', (event) => {
+                modals.forEach(modal => {
+                    if (event.target == modal && modal.id !== 'messageBoxModal') {
+                        modal.style.display = 'none';
+                        const form = modal.querySelector('form');
+                        if (form) form.reset();
+                        const hiddenId = modal.querySelector('input[type="hidden"]');
+                        if(hiddenId) hiddenId.value = '';
+                        if(modal.id === 'editLibraryItemModal') { // Actualizado para el nuevo ID
+                            libraryItemImageBase64Input.value = '';
+                            libraryItemImagePreview.style.display = 'none';
+                            libraryItemImagePreview.src = '';
+                            libraryItemMateriaSelect.value = 'general';
+                        }
+                        if(modal.id === 'manageLibraryModal') {
+                            adminLibrarySearchQuery = '';
+                            if (adminLibrarySearchInput) adminLibrarySearchInput.value = '';
                         }
                     }
                 });
@@ -4278,6 +4324,10 @@
                     const text = e.currentTarget.textContent.trim();
                     manageLibraryModalTitle.innerHTML = `<i class="${icon}"></i> ${text}`;
                     
+                    // Resetear la búsqueda al entrar
+                    adminLibrarySearchQuery = '';
+                    if (adminLibrarySearchInput) adminLibrarySearchInput.value = '';
+                    
                     libraryAdminMenuModal.style.display = 'none';
                     manageLibraryModal.style.display = 'block';
                     renderAdminLibraryItemsTable();
@@ -4288,6 +4338,17 @@
                 btnBackToLibraryMenu.addEventListener('click', () => {
                     manageLibraryModal.style.display = 'none';
                     libraryAdminMenuModal.style.display = 'block';
+                    // Resetear búsqueda al salir
+                    adminLibrarySearchQuery = '';
+                    if (adminLibrarySearchInput) adminLibrarySearchInput.value = '';
+                });
+            }
+            
+            // Lógica del buscador en tiempo real
+            if (adminLibrarySearchInput) {
+                adminLibrarySearchInput.addEventListener('input', (e) => {
+                    adminLibrarySearchQuery = e.target.value;
+                    renderAdminLibraryItemsTable();
                 });
             }
             
