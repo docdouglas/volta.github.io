@@ -1980,6 +1980,11 @@
             <button id="btnBackToStudentsMenu" class="btn-back" style="margin-bottom: 15px; display: inline-flex;">
                 <i class="fas fa-arrow-left"></i> Volver al Menú
             </button>
+            
+            <div id="student-search-container" style="display: none; margin-bottom: 15px;">
+                <input type="text" id="student-search-input" placeholder="Buscar alumno por nombre o apellido..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 1em;">
+            </div>
+
             <div class="table-responsive">
                 <table class="content-table">
                     <thead>
@@ -2120,6 +2125,8 @@
         let registerStudentModal, registerStudentForm, studentIdInput, studentPaternoInput, studentMaternoInput, studentNombresInput, studentCelularInput, studentMateriasCheckboxGroup, studentsAdminTbody;
         let studentsAdminMenuModal, studentsMenuButtons, btnBackToStudentsMenu, listStudentsModalTitle;
         let listStudentsModal;
+        let studentSearchContainer, studentSearchInput;
+        let studentSearchQuery = '';
         let currentAdminStudentsFilter = 'all';
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let libraryAccessRequiredDiv;
@@ -3115,6 +3122,8 @@
             btnAll.innerHTML = `<span class="button-icon"><i class="fas fa-users"></i></span> Todas las Materias`;
             btnAll.addEventListener('click', () => {
                 currentAdminStudentsFilter = 'all';
+                studentSearchQuery = '';
+                if(studentSearchInput) studentSearchInput.value = '';
                 if(listStudentsModalTitle) listStudentsModalTitle.innerHTML = '<i class="fas fa-list"></i> Todas las Materias';
                 studentsAdminMenuModal.style.display = 'none';
                 listStudentsModal.style.display = 'block';
@@ -3142,6 +3151,11 @@
 
         function renderAdminStudentsTable() {
             studentsAdminTbody.innerHTML = '';
+            
+            if (studentSearchContainer) {
+                studentSearchContainer.style.display = currentAdminStudentsFilter === 'all' ? 'block' : 'none';
+            }
+
             if (allStudents.length === 0) {
                 studentsAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No hay alumnos registrados.</td></tr>';
                 return;
@@ -3181,19 +3195,29 @@
             sortedMateriaKeys.forEach(materiaKey => {
                 const materiaName = materiaKey === 'Sin Materia' ? 'Sin Materia Asignada' : (allMaterias[materiaKey] ? allMaterias[materiaKey].name : materiaKey);
                 
+                // Ordenar estudiantes alfabéticamente
+                let studentsInMateria = groupedStudents[materiaKey].sort((a, b) => {
+                    const nameA = `${a.paterno} ${a.materno} ${a.nombres}`.toLowerCase();
+                    const nameB = `${b.paterno} ${b.materno} ${b.nombres}`.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                });
+
+                if (currentAdminStudentsFilter === 'all' && studentSearchQuery.trim() !== '') {
+                    const query = studentSearchQuery.toLowerCase();
+                    studentsInMateria = studentsInMateria.filter(s => {
+                        const fullName = `${s.paterno} ${s.materno} ${s.nombres}`.toLowerCase();
+                        return fullName.includes(query);
+                    });
+                }
+
+                if (studentsInMateria.length === 0) return;
+
                 // Fila separadora/cabecera de materia
                 if (currentAdminStudentsFilter === 'all' || materiaKey === 'Sin Materia') {
                     const headerTr = document.createElement('tr');
                     headerTr.innerHTML = `<td colspan="5" style="background-color: var(--primary-color); color: white; text-align: center; font-weight: bold; padding: 8px; font-size: 1.1em;">Materia: ${materiaName}</td>`;
                     studentsAdminTbody.appendChild(headerTr);
                 }
-
-                // Ordenar estudiantes alfabéticamente
-                const studentsInMateria = groupedStudents[materiaKey].sort((a, b) => {
-                    const nameA = `${a.paterno} ${a.materno} ${a.nombres}`.toLowerCase();
-                    const nameB = `${b.paterno} ${b.materno} ${b.nombres}`.toLowerCase();
-                    return nameA.localeCompare(nameB);
-                });
 
                 let counter = 1;
                 studentsInMateria.forEach(student => {
@@ -3277,6 +3301,10 @@
                     });
                 });
             });
+
+            if (studentsAdminTbody.children.length === 0) {
+                studentsAdminTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--muted-text-color);">No se encontraron alumnos que coincidan con la búsqueda.</td></tr>';
+            }
         }
 
         function openStudentGradesModal(studentId, materiaName) {
@@ -3660,10 +3688,22 @@
             listStudentsModalTitle = document.getElementById('listStudentsModalTitle');
             btnBackToStudentsMenu = document.getElementById('btnBackToStudentsMenu');
 
+            studentSearchContainer = document.getElementById('student-search-container');
+            studentSearchInput = document.getElementById('student-search-input');
+
+            if (studentSearchInput) {
+                studentSearchInput.addEventListener('input', (e) => {
+                    studentSearchQuery = e.target.value;
+                    renderAdminStudentsTable();
+                });
+            }
+
             if (btnBackToStudentsMenu) {
                 btnBackToStudentsMenu.addEventListener('click', () => {
                     listStudentsModal.style.display = 'none';
                     studentsAdminMenuModal.style.display = 'block';
+                    studentSearchQuery = '';
+                    if (studentSearchInput) studentSearchInput.value = '';
                 });
             }
             
