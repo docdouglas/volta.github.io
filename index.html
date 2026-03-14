@@ -3880,6 +3880,30 @@
                         return;
                     }
 
+                    // Prioridad 3: Modal de detalles de recurso (estilo Netflix) se cierra antes de retroceder en la biblioteca
+                    const netflixModal = document.getElementById('netflixStyleModal');
+                    if (netflixModal && (netflixModal.style.display === 'block' || netflixModal.style.display === 'flex')) {
+                        const netflixCloseBtn = document.getElementById('closeNetflixModal');
+                        if (netflixCloseBtn) netflixCloseBtn.click();
+                        else netflixModal.style.display = 'none';
+                        return;
+                    }
+
+                    // Prioridad 4: Vistas inline en el contenido principal (Regresar en Biblioteca y Portal)
+                    const libDetailView = document.getElementById('library-detail-view');
+                    if (libDetailView && libDetailView.style.display === 'block') {
+                        const btnBackLib = document.getElementById('btn-back-library');
+                        if (btnBackLib) btnBackLib.click();
+                        return;
+                    }
+
+                    const studentDetailViewDom = document.getElementById('student-detail-view');
+                    if (studentDetailViewDom && studentDetailViewDom.style.display === 'block') {
+                        const btnBackStd = document.getElementById('btn-back-student');
+                        if (btnBackStd) btnBackStd.click();
+                        return;
+                    }
+
                     // Comportamiento por defecto: Cerrar el resto de modales abiertos
                     const anyOpen = document.querySelector('.modal[style*="display: block"], .modal[style*="display: flex"], .netflix-modal[style*="display: block"], .netflix-modal[style*="display: flex"], #chats.desktop-modal-active');
                     if (anyOpen) {
