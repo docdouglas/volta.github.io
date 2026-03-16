@@ -2840,7 +2840,8 @@
                 if (targetMateria !== 'todas') {
                     itemsToRender = itemsToRender.filter(item => {
                         const itemVal = item.materia || item.carrera || 'general';
-                        return itemVal === targetMateria || itemVal === 'general' || itemVal === 'ambas';
+                        // FIX: Retirar la inclusión forzada de 'general' y 'ambas'. Ahora el filtro es estricto.
+                        return itemVal === targetMateria;
                     });
                 }
 
