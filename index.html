@@ -2845,6 +2845,17 @@
         };
 
         function renderLibraryItemsInModals(targetType = null, searchQuery = '', targetMateria = 'todas') {
+            // Función auxiliar para formatear fechas a "dd-mm-yy nombreDelDia"
+            const formatCustomDate = (dateString) => {
+                if (!dateString) return 'No definida';
+                const parts = dateString.split('-');
+                if (parts.length !== 3) return dateString;
+                // Crear objeto de fecha asegurando la zona horaria local
+                const dateObj = new Date(parts[0], parseInt(parts[1]) - 1, parts[2]);
+                const dayName = dateObj.toLocaleDateString('es-ES', { weekday: 'long' });
+                return `${parts[2]}-${parts[1]}-${parts[0].slice(-2)} ${dayName}`;
+            };
+
             document.getElementById('practicas-list').innerHTML = '';
             document.getElementById('libros-list').innerHTML = '';
             document.getElementById('videos-list').innerHTML = '';
@@ -2907,9 +2918,9 @@
 
                             let infoHTML = '';
                             if (item.type === 'practica') {
-                                // Intenta obtener las fechas de Firebase, si no existen muestra 'No definida'
-                                const fechaPub = item.fechaPublicacion || 'No definida';
-                                const fechaEnt = item.fechaEntrega || 'No definida';
+                                // Formatear las fechas obtenidas de Firebase
+                                const fechaPub = formatCustomDate(item.fechaPublicacion);
+                                const fechaEnt = formatCustomDate(item.fechaEntrega);
                                 
                                 infoHTML = `
                                     <div class="resource-card-info">
