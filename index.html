@@ -1673,13 +1673,24 @@
             <!-- NUEVA PESTAÑA: BUSCAR -->
             <section id="buscar" class="tab-content">
                 <h2><i class="fas fa-search" style="margin-right: 10px;"></i>Buscador Global</h2>
-                <div class="search-container">
-                    <div class="search-box-wrapper">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="global-search-input" placeholder="Busca noticias, libros, prácticas, software...">
-                    </div>
-                    <div id="search-results-container" class="search-results-list">
-                        <p style="text-align: center; color: #94a3b8; margin-top: 40px;">Escribe algo arriba para empezar a buscar en toda la plataforma.</p>
+                
+                <div id="search-access-required" class="restricted-access-card">
+                    <div class="restricted-icon"><i class="fas fa-lock"></i></div>
+                    <h3 style="color: var(--dark-nav-color); margin-bottom: 10px; font-size: 1.3em;">Acceso Restringido</h3>
+                    <p style="color: var(--muted-text-color); line-height: 1.6;">
+                        Para utilizar el buscador global, por favor <strong>inicia sesión</strong> desde la pestaña "Portal".
+                    </p>
+                </div>
+
+                <div id="search-content" style="display: none;">
+                    <div class="search-container">
+                        <div class="search-box-wrapper">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="global-search-input" placeholder="Busca noticias, libros, prácticas, software...">
+                        </div>
+                        <div id="search-results-container" class="search-results-list">
+                            <p style="text-align: center; color: #94a3b8; margin-top: 40px;">Escribe algo arriba para empezar a buscar en toda la plataforma.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -2253,6 +2264,8 @@
         let studentGradesModal, studentGradesTitle, currentStudentNameGradesModal, currentMateriaNameGradesModal, gradeForm, gradeStudentIdInput, gradeMateriaNameInput, gradeAsistenciaInput, practicasInputsDiv, parcialesInputsDiv;
         let libraryAccessRequiredDiv;
         let libraryContentDiv;
+        let searchAccessRequiredDiv;
+        let searchContentDiv;
         let libraryMateriaFilter;
         let adminNoticiasEventosBtn, adminBibliotecaBtn;
         let deleteAllChatsBtn;
@@ -3929,6 +3942,8 @@
             
             libraryAccessRequiredDiv = document.getElementById('library-access-required');
             libraryContentDiv = document.getElementById('library-content');
+            searchAccessRequiredDiv = document.getElementById('search-access-required');
+            searchContentDiv = document.getElementById('search-content');
             libraryMateriaFilter = document.getElementById('library-materia-filter');
             adminNoticiasEventosBtn = document.getElementById('admin-noticias-eventos-btn');
             adminBibliotecaBtn = document.getElementById('admin-biblioteca-btn');
@@ -4264,15 +4279,15 @@
                     }
                 }
             });
-
-            // --- Atajos de teclado para pestañas (Alt + 1, 2, 3, 4) ---
+            // --- Atajos de teclado para pestañas (Alt + 1, 2, 3, 4, 5) ---
             document.addEventListener('keydown', (e) => {
                 if (e.altKey) {
                     let tabIndex = -1;
                     if (e.key === '1') tabIndex = 0; // Inicio
-                    else if (e.key === '2') tabIndex = 1; // Biblioteca
-                    else if (e.key === '3') tabIndex = 2; // Chats
-                    else if (e.key === '4') tabIndex = 3; // Portal
+                    else if (e.key === '2') tabIndex = 1; // Buscar
+                    else if (e.key === '3') tabIndex = 2; // Biblioteca
+                    else if (e.key === '4') tabIndex = 3; // Chats
+                    else if (e.key === '5') tabIndex = 4; // Portal
 
                     if (tabIndex !== -1 && navItems[tabIndex]) {
                         e.preventDefault(); 
@@ -4486,11 +4501,15 @@
             });
             function updateLibraryTabContentVisibility() {
                 if (userIsLoggedIn) {
-                    libraryContentDiv.style.display = 'block';
-                    libraryAccessRequiredDiv.style.display = 'none';
+                    if (libraryContentDiv) libraryContentDiv.style.display = 'block';
+                    if (libraryAccessRequiredDiv) libraryAccessRequiredDiv.style.display = 'none';
+                    if (searchContentDiv) searchContentDiv.style.display = 'block';
+                    if (searchAccessRequiredDiv) searchAccessRequiredDiv.style.display = 'none';
                 } else {
-                    libraryContentDiv.style.display = 'none';
-                    libraryAccessRequiredDiv.style.display = 'block';
+                    if (libraryContentDiv) libraryContentDiv.style.display = 'none';
+                    if (libraryAccessRequiredDiv) libraryAccessRequiredDiv.style.display = 'block';
+                    if (searchContentDiv) searchContentDiv.style.display = 'none';
+                    if (searchAccessRequiredDiv) searchAccessRequiredDiv.style.display = 'block';
                 }
             }
             document.getElementById('btnGestionarNoticiasEventos').addEventListener('click', () => {
