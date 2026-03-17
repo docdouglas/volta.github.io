@@ -1643,14 +1643,14 @@
             position: fixed;
             bottom: 95px; /* Por encima de la barra móvil */
             right: 20px;
-            width: 40px; /* Tamaño aún más reducido (antes 45px) */
-            height: 40px; /* Tamaño aún más reducido (antes 45px) */
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
             background-color: var(--primary-color);
             color: white;
             border: none;
             box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
-            font-size: 1.1em; /* Ícono aún más reducido (antes 1.2em) */
+            font-size: 1.5em;
             cursor: pointer;
             z-index: 2500;
             transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -1667,9 +1667,9 @@
             .floating-search-btn {
                 bottom: 40px;
                 right: 40px;
-                width: 45px; /* Tamaño aún más reducido en PC (antes 50px) */
-                height: 45px; /* Tamaño aún más reducido en PC (antes 50px) */
-                font-size: 1.2em; /* Ícono aún más reducido en PC (antes 1.3em) */
+                width: 65px;
+                height: 65px;
+                font-size: 1.6em;
             }
         }
     </style>
@@ -4093,16 +4093,6 @@
                     if (tabId !== 'chats') {
                         lastActiveTabId = tabId; // Guardamos la última pestaña usada (fondo)
                     }
-
-                    // NUEVO: Ocultar botón flotante de búsqueda en móvil si se entra a chats
-                    const searchBtn = document.getElementById('floating-search-btn');
-                    if (searchBtn) {
-                        if (tabId === 'chats' && window.innerWidth < 768) {
-                            searchBtn.style.display = 'none';
-                        } else {
-                            searchBtn.style.display = 'flex';
-                        }
-                    }
                 });
             });
 
@@ -4298,7 +4288,6 @@
             window.addEventListener('resize', () => {
                 const chats = document.getElementById('chats');
                 const backdrop = document.getElementById('chat-modal-backdrop');
-                const searchBtn = document.getElementById('floating-search-btn'); // NUEVO
                 
                 if (window.innerWidth < 768) {
                     // Pasando a Móvil: Si el modal estaba abierto, convertirlo en pestaña activa
@@ -4312,11 +4301,6 @@
                         const chatNav = document.querySelector('.nav-item[data-tab="chats"]');
                         if(chatNav) chatNav.classList.add('active');
                         chats.classList.add('active');
-                    }
-
-                    // NUEVO: Ocultar botón de búsqueda si la pestaña chats está activa al redimensionar a móvil
-                    if (chats.classList.contains('active') && searchBtn) {
-                        searchBtn.style.display = 'none';
                     }
                 } else {
                     // Pasando a Escritorio: Si el chat era la pestaña activa, convertirlo a Modal
@@ -4334,11 +4318,6 @@
                         // Abrir como modal
                         chats.classList.add('desktop-modal-active');
                         if(backdrop) backdrop.classList.add('active');
-                    }
-
-                    // NUEVO: Asegurar que el botón de búsqueda siempre esté visible en escritorio
-                    if (searchBtn) {
-                        searchBtn.style.display = 'flex';
                     }
                 }
             });
