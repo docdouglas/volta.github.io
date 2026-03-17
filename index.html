@@ -4093,6 +4093,16 @@
                     if (tabId !== 'chats') {
                         lastActiveTabId = tabId; // Guardamos la última pestaña usada (fondo)
                     }
+
+                    // NUEVO: Ocultar botón flotante de búsqueda en móvil si se entra a chats
+                    const searchBtn = document.getElementById('floating-search-btn');
+                    if (searchBtn) {
+                        if (tabId === 'chats' && window.innerWidth < 768) {
+                            searchBtn.style.display = 'none';
+                        } else {
+                            searchBtn.style.display = 'flex';
+                        }
+                    }
                 });
             });
 
@@ -4288,6 +4298,7 @@
             window.addEventListener('resize', () => {
                 const chats = document.getElementById('chats');
                 const backdrop = document.getElementById('chat-modal-backdrop');
+                const searchBtn = document.getElementById('floating-search-btn'); // NUEVO
                 
                 if (window.innerWidth < 768) {
                     // Pasando a Móvil: Si el modal estaba abierto, convertirlo en pestaña activa
@@ -4301,6 +4312,11 @@
                         const chatNav = document.querySelector('.nav-item[data-tab="chats"]');
                         if(chatNav) chatNav.classList.add('active');
                         chats.classList.add('active');
+                    }
+
+                    // NUEVO: Ocultar botón de búsqueda si la pestaña chats está activa al redimensionar a móvil
+                    if (chats.classList.contains('active') && searchBtn) {
+                        searchBtn.style.display = 'none';
                     }
                 } else {
                     // Pasando a Escritorio: Si el chat era la pestaña activa, convertirlo a Modal
@@ -4318,6 +4334,11 @@
                         // Abrir como modal
                         chats.classList.add('desktop-modal-active');
                         if(backdrop) backdrop.classList.add('active');
+                    }
+
+                    // NUEVO: Asegurar que el botón de búsqueda siempre esté visible en escritorio
+                    if (searchBtn) {
+                        searchBtn.style.display = 'flex';
                     }
                 }
             });
