@@ -1886,6 +1886,16 @@
                 <select id="library-item-materia" required>
                     <option value="general">General / Todas</option>
                 </select>
+                
+                <!-- NUEVOS CAMPOS PARA FECHAS (Solo para Prácticas) -->
+                <div id="practica-dates-container" style="display: none; background: #f8fafc; padding: 12px; border-radius: 8px; border: 1px dashed #cbd5e1; margin-bottom: 15px;">
+                    <label for="library-item-fecha-pub" style="font-size: 0.9em; color: #475569;">Fecha de Publicación:</label>
+                    <input type="date" id="library-item-fecha-pub" style="margin-bottom: 10px;">
+                    
+                    <label for="library-item-fecha-ent" style="font-size: 0.9em; color: #475569;">Fecha de Entrega:</label>
+                    <input type="date" id="library-item-fecha-ent">
+                </div>
+
                 <label for="library-item-link">Link del Recurso:</label>
                 <input type="url" id="library-item-link" placeholder="URL del recurso" required>
                 
@@ -2126,6 +2136,7 @@
 
         let manageNewsEventsModal, newsEventForm, newsEventIdInput, newsEventTypeInput, newsEventTitleInput, newsEventHeadingInput, newsEventLinkInput, newsEventsAdminTbody, newsEventsDisplay;
         let manageLibraryModal, editLibraryItemModal, btnAddNewLibraryItem, editLibraryItemModalTitle, libraryItemForm, libraryItemIdInput, libraryItemCodeDisplay, libraryItemTitleInput, libraryItemTypeSelect, libraryItemMateriaSelect, libraryItemLinkInput, libraryItemImageFileInput, libraryItemImageBase64Input, libraryItemImagePreview, libraryItemDescriptionInput, libraryItemsAdminTbody;
+        let practicaDatesContainer, libraryItemFechaPubInput, libraryItemFechaEntInput;
         let libraryAdminMenuModal, manageLibraryModalTitle, btnBackToLibraryMenu;
         let currentAdminLibraryFilterType = null;
         let adminLibrarySearchQuery = '';
@@ -2656,6 +2667,9 @@
             const link = libraryItemLinkInput.value;
             const imageUrl = libraryItemImageBase64Input.value; // Se toma el valor procesado en Base64
             const description = libraryItemDescriptionInput.value;
+            const fechaPublicacion = libraryItemFechaPubInput ? libraryItemFechaPubInput.value : '';
+            const fechaEntrega = libraryItemFechaEntInput ? libraryItemFechaEntInput.value : '';
+            
             let code;
             if (id) {
                 const existingItem = allLibraryItems.find(item => item.id === id);
@@ -2668,6 +2682,12 @@
                 code = allLibraryItems.length + 1;
             }
             const newItem = { code, title, type, materia, link, imageUrl, description }; 
+            
+            // Guardar fechas solo si es de tipo practica
+            if (type === 'practica') {
+                newItem.fechaPublicacion = fechaPublicacion;
+                newItem.fechaEntrega = fechaEntrega;
+            }
             try {
                 if (id) {
                     await setDoc(doc(libraryItemsCollection, id), newItem);
@@ -2759,6 +2779,20 @@
                         libraryItemTypeSelect.value = item.type;
                         libraryItemMateriaSelect.value = item.materia || item.carrera || 'general';
                         if (libraryItemMateriaSelect.value === 'ambas') libraryItemMateriaSelect.value = 'general';
+                        
+                        // Mostrar u ocultar contenedor de fechas dependiendo del tipo
+                        if (practicaDatesContainer) {
+                            if (item.type === 'practica') {
+                                practicaDatesContainer.style.display = 'block';
+                                libraryItemFechaPubInput.value = item.fechaPublicacion || '';
+                                libraryItemFechaEntInput.value = item.fechaEntrega || '';
+                            } else {
+                                practicaDatesContainer.style.display = 'none';
+                                libraryItemFechaPubInput.value = '';
+                                libraryItemFechaEntInput.value = '';
+                            }
+                        }
+
                         libraryItemLinkInput.value = item.link;
                         libraryItemDescriptionInput.value = item.description;
 
@@ -3708,6 +3742,21 @@
             libraryItemImagePreview = document.getElementById('library-item-image-preview');
 
             libraryItemDescriptionInput = document.getElementById('library-item-description');
+            
+            practicaDatesContainer = document.getElementById('practica-dates-container');
+            libraryItemFechaPubInput = document.getElementById('library-item-fecha-pub');
+            libraryItemFechaEntInput = document.getElementById('library-item-fecha-ent');
+            
+            if (libraryItemTypeSelect) {
+                libraryItemTypeSelect.addEventListener('change', (e) => {
+                    if (e.target.value === 'practica') {
+                        if(practicaDatesContainer) practicaDatesContainer.style.display = 'block';
+                    } else {
+                        if(practicaDatesContainer) practicaDatesContainer.style.display = 'none';
+                    }
+                });
+            }
+
             libraryItemsAdminTbody = document.getElementById('library-items-admin-tbody');
             createMateriaModal = document.getElementById('createMateriaModal');
             createMateriaForm = document.getElementById('create-materia-form');
@@ -4388,6 +4437,13 @@
                 libraryItemImagePreview.src = '';
                 libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
                 libraryItemMateriaSelect.value = 'general'; // Valor por defecto
+                
+                // Asegurar que el contenedor de fechas se muestre u oculte correctamente por defecto
+                if (practicaDatesContainer) {
+                    practicaDatesContainer.style.display = libraryItemTypeSelect.value === 'practica' ? 'block' : 'none';
+                }
+                if (libraryItemFechaPubInput) libraryItemFechaPubInput.value = '';
+                if (libraryItemFechaEntInput) libraryItemFechaEntInput.value = '';
             });
 
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
