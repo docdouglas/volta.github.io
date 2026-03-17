@@ -2871,16 +2871,40 @@
                             const isGeneral = itemVal === 'general' || itemVal === 'ambas';
                             const subjectName = isGeneral ? 'General / Todas' : (allMaterias[itemVal] ? allMaterias[itemVal].name : itemVal.charAt(0).toUpperCase() + itemVal.slice(1));
 
-                            gridHTML += `
-                                <div class="resource-card" data-item-id="${item.id}" title="Clic para ver detalles" style="cursor: pointer;">
-                                    <div class="resource-card-img-wrapper">
-                                        ${imageHTML}
+                            let infoHTML = '';
+                            if (item.type === 'practica') {
+                                // Intenta obtener las fechas de Firebase, si no existen muestra 'No definida'
+                                const fechaPub = item.fechaPublicacion || 'No definida';
+                                const fechaEnt = item.fechaEntrega || 'No definida';
+                                
+                                infoHTML = `
+                                    <div class="resource-card-info">
+                                        <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
+                                        <p class="resource-card-desc" style="color: var(--primary-color); font-weight: 600; margin-bottom: 5px; -webkit-line-clamp: 1;">
+                                            <i class="fas fa-book-open"></i> ${subjectName}
+                                        </p>
+                                        <div style="font-size: 0.85em; color: #555; display: flex; flex-direction: column; gap: 4px; margin-top: 4px;">
+                                            <span><i class="fas fa-calendar-alt" style="width: 16px; text-align: center; color: #64748b;"></i> <strong>Publicación:</strong> ${fechaPub}</span>
+                                            <span><i class="fas fa-clock" style="width: 16px; text-align: center; color: #d97706;"></i> <strong>Entrega:</strong> ${fechaEnt}</span>
+                                        </div>
                                     </div>
+                                `;
+                            } else {
+                                infoHTML = `
                                     <div class="resource-card-info">
                                         <h4 class="resource-card-title" title="${item.title}">${item.title}</h4>
                                         <p class="resource-card-desc" title="${(item.description || 'Sin descripción').replace(/"/g, '&quot;')}">${formatWhatsAppBold(item.description || 'Sin descripción')}</p>
                                         <p class="resource-card-meta">Nro. ${item.displayCode} - ${tipoCapitalizado} | ${subjectName}</p>
                                     </div>
+                                `;
+                            }
+
+                            gridHTML += `
+                                <div class="resource-card" data-item-id="${item.id}" title="Clic para ver detalles" style="cursor: pointer;">
+                                    <div class="resource-card-img-wrapper">
+                                        ${imageHTML}
+                                    </div>
+                                    ${infoHTML}
                                 </div>
                             `;
                         });
@@ -4364,13 +4388,6 @@
                 libraryItemImagePreview.src = '';
                 libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
                 libraryItemMateriaSelect.value = 'general'; // Valor por defecto
-                
-                if (libraryItemFechaPubInput) libraryItemFechaPubInput.value = '';
-                if (libraryItemFechaLimInput) libraryItemFechaLimInput.value = '';
-                const datesGroup = document.getElementById('practica-dates-group');
-                if (datesGroup) {
-                    datesGroup.style.display = libraryItemTypeSelect.value === 'practica' ? 'grid' : 'none';
-                }
             });
 
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
