@@ -1636,6 +1636,41 @@
         #messageBoxModal {
             z-index: 4000 !important;
         }
+
+        /* --- BOTÓN FLOTANTE DE BÚSQUEDA --- */
+        .floating-search-btn {
+            position: fixed;
+            bottom: 95px; /* Por encima de la barra móvil */
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.4);
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 2500;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .floating-search-btn:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.6);
+            background-color: var(--button-hover-bg);
+        }
+        @media (min-width: 768px) {
+            .floating-search-btn {
+                bottom: 40px;
+                right: 40px;
+                width: 65px;
+                height: 65px;
+                font-size: 1.6em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1668,31 +1703,6 @@
                 <div id="news-events-display">
                 </div>
 
-            </section>
-
-            <!-- NUEVA PESTAÑA: BUSCAR -->
-            <section id="buscar" class="tab-content">
-                <h2><i class="fas fa-search" style="margin-right: 10px;"></i>Buscador Global</h2>
-                
-                <div id="search-access-required" class="restricted-access-card">
-                    <div class="restricted-icon"><i class="fas fa-lock"></i></div>
-                    <h3 style="color: var(--dark-nav-color); margin-bottom: 10px; font-size: 1.3em;">Acceso Restringido</h3>
-                    <p style="color: var(--muted-text-color); line-height: 1.6;">
-                        Para utilizar el buscador global, por favor <strong>inicia sesión</strong> desde la pestaña "Portal".
-                    </p>
-                </div>
-
-                <div id="search-content" style="display: none;">
-                    <div class="search-container">
-                        <div class="search-box-wrapper">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="global-search-input" placeholder="Busca noticias, libros, prácticas, software...">
-                        </div>
-                        <div id="search-results-container" class="search-results-list">
-                            <p style="text-align: center; color: #94a3b8; margin-top: 40px;">Escribe algo arriba para empezar a buscar en toda la plataforma.</p>
-                        </div>
-                    </div>
-                </div>
             </section>
 
             <section id="biblioteca" class="tab-content">
@@ -1871,13 +1881,44 @@
                 <div class="icon"><i class="fas fa-user-circle"></i></div>
                 <span>Portal</span>
             </button>
-            <button class="nav-item" data-tab="buscar">
-                <div class="icon"><i class="fas fa-search"></i></div>
-                <span>Buscar</span>
-            </button>
         </nav>
     </div>
     
+    <!-- BOTÓN FLOTANTE DE BÚSQUEDA -->
+    <button id="floating-search-btn" class="floating-search-btn" title="Buscador Global">
+        <i class="fas fa-search"></i>
+    </button>
+
+    <!-- MODAL DE BÚSQUEDA GLOBAL -->
+    <div id="searchModal" class="modal" style="z-index: 3500;">
+        <div class="modal-content" style="max-width: 700px; margin-top: 5vh;">
+            <div class="modal-header">
+                <h3><i class="fas fa-search"></i> Buscador Global</h3>
+                <span class="close-button" id="closeSearchModalBtn">&times;</span>
+            </div>
+            
+            <div id="search-access-required" class="restricted-access-card" style="margin-top: 10px;">
+                <div class="restricted-icon"><i class="fas fa-lock"></i></div>
+                <h3 style="color: var(--dark-nav-color); margin-bottom: 10px; font-size: 1.3em;">Acceso Restringido</h3>
+                <p style="color: var(--muted-text-color); line-height: 1.6;">
+                    Para utilizar el buscador global, por favor <strong>inicia sesión</strong> desde la pestaña "Portal".
+                </p>
+            </div>
+
+            <div id="search-content" style="display: none;">
+                <div class="search-container">
+                    <div class="search-box-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="global-search-input" placeholder="Busca noticias, libros, prácticas, software..." autocomplete="off">
+                    </div>
+                    <div id="search-results-container" class="search-results-list" style="max-height: 55vh; overflow-y: auto; padding-right: 5px;">
+                        <p style="text-align: center; color: #94a3b8; margin-top: 40px;">Escribe algo arriba para empezar a buscar en toda la plataforma.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="manageNewsEventsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -4287,11 +4328,14 @@
                     else if (e.key === '2') tabIndex = 1; // Biblioteca
                     else if (e.key === '3') tabIndex = 2; // Chats
                     else if (e.key === '4') tabIndex = 3; // Portal
-                    else if (e.key === '5') tabIndex = 4; // Buscar
 
                     if (tabIndex !== -1 && navItems[tabIndex]) {
                         e.preventDefault(); 
                         navItems[tabIndex].click(); 
+                    } else if (e.key === '5') {
+                        e.preventDefault();
+                        const searchBtn = document.getElementById('floating-search-btn');
+                        if(searchBtn) searchBtn.click();
                     }
                 }
             });
@@ -4661,6 +4705,24 @@
             // --- LÓGICA DEL BUSCADOR GLOBAL ---
             const globalSearchInput = document.getElementById('global-search-input');
             const searchResultsContainer = document.getElementById('search-results-container');
+            const floatingSearchBtn = document.getElementById('floating-search-btn');
+            const searchModal = document.getElementById('searchModal');
+            const closeSearchModalBtn = document.getElementById('closeSearchModalBtn');
+
+            if (floatingSearchBtn) {
+                floatingSearchBtn.addEventListener('click', () => {
+                    searchModal.style.display = 'block';
+                    if (userIsLoggedIn && globalSearchInput) {
+                        setTimeout(() => globalSearchInput.focus(), 100);
+                    }
+                });
+            }
+
+            if (closeSearchModalBtn) {
+                closeSearchModalBtn.addEventListener('click', () => {
+                    searchModal.style.display = 'none';
+                });
+            }
 
             if (globalSearchInput) {
                 globalSearchInput.addEventListener('input', (e) => {
@@ -4680,6 +4742,7 @@
                                 type: item.type === 'news' ? 'Noticia' : 'Evento',
                                 icon: item.type === 'news' ? 'fa-newspaper' : 'fa-calendar-alt',
                                 action: () => {
+                                    searchModal.style.display = 'none'; // Cierra el buscador automáticamente
                                     document.querySelector('[data-tab="inicio"]').click();
                                     openNewsEventModal(item);
                                 }
@@ -4697,6 +4760,7 @@
                                 type: `Biblioteca - ${item.type}`,
                                 icon: getIconForType(item.type),
                                 action: () => {
+                                    searchModal.style.display = 'none'; // Cierra el buscador automáticamente
                                     document.querySelector('[data-tab="biblioteca"]').click();
                                     openNetflixModal(item);
                                 }
