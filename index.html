@@ -4364,6 +4364,13 @@
                 libraryItemImagePreview.src = '';
                 libraryItemCodeDisplay.value = 'Auto'; // Ahora marca 'Auto' para evitar confusiones de numeración
                 libraryItemMateriaSelect.value = 'general'; // Valor por defecto
+                
+                if (libraryItemFechaPubInput) libraryItemFechaPubInput.value = '';
+                if (libraryItemFechaLimInput) libraryItemFechaLimInput.value = '';
+                const datesGroup = document.getElementById('practica-dates-group');
+                if (datesGroup) {
+                    datesGroup.style.display = libraryItemTypeSelect.value === 'practica' ? 'grid' : 'none';
+                }
             });
 
             newsEventForm.addEventListener('submit', handleNewsEventFormSubmit);
