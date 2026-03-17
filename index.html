@@ -1859,10 +1859,6 @@
                 <div class="icon"><i class="fas fa-home"></i></div>
                 <span>Inicio</span>
             </button>
-            <button class="nav-item" data-tab="buscar">
-                <div class="icon"><i class="fas fa-search"></i></div>
-                <span>Buscar</span>
-            </button>
             <button class="nav-item" data-tab="biblioteca">
                 <div class="icon"><i class="fas fa-book-open"></i></div>
                 <span>Biblioteca</span>
@@ -1874,6 +1870,10 @@
             <button class="nav-item" data-tab="portal">
                 <div class="icon"><i class="fas fa-user-circle"></i></div>
                 <span>Portal</span>
+            </button>
+            <button class="nav-item" data-tab="buscar">
+                <div class="icon"><i class="fas fa-search"></i></div>
+                <span>Buscar</span>
             </button>
         </nav>
     </div>
@@ -4284,10 +4284,10 @@
                 if (e.altKey) {
                     let tabIndex = -1;
                     if (e.key === '1') tabIndex = 0; // Inicio
-                    else if (e.key === '2') tabIndex = 1; // Buscar
-                    else if (e.key === '3') tabIndex = 2; // Biblioteca
-                    else if (e.key === '4') tabIndex = 3; // Chats
-                    else if (e.key === '5') tabIndex = 4; // Portal
+                    else if (e.key === '2') tabIndex = 1; // Biblioteca
+                    else if (e.key === '3') tabIndex = 2; // Chats
+                    else if (e.key === '4') tabIndex = 3; // Portal
+                    else if (e.key === '5') tabIndex = 4; // Buscar
 
                     if (tabIndex !== -1 && navItems[tabIndex]) {
                         e.preventDefault(); 
