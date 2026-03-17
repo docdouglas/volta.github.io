@@ -1670,30 +1670,35 @@
 
             </section>
 
-            <!-- NUEVA PESTAÑA: BUSCAR -->
-            <section id="buscar" class="tab-content">
-                <h2><i class="fas fa-search" style="margin-right: 10px;"></i>Buscador Global</h2>
-                
-                <div id="search-access-required" class="restricted-access-card">
-                    <div class="restricted-icon"><i class="fas fa-lock"></i></div>
-                    <h3 style="color: var(--dark-nav-color); margin-bottom: 10px; font-size: 1.3em;">Acceso Restringido</h3>
-                    <p style="color: var(--muted-text-color); line-height: 1.6;">
-                        Para utilizar el buscador global, por favor <strong>inicia sesión</strong> desde la pestaña "Portal".
-                    </p>
-                </div>
+            <!-- MODAL: BUSCAR (Antes era pestaña) -->
+            <div id="searchModal" class="modal">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3><i class="fas fa-search"></i> Buscador Global</h3>
+                        <span class="close-button">&times;</span>
+                    </div>
+                    
+                    <div id="search-access-required" class="restricted-access-card" style="margin-top: 0; box-shadow: none; border: 1px solid #e2e8f0;">
+                        <div class="restricted-icon" style="font-size: 2em;"><i class="fas fa-lock"></i></div>
+                        <h3 style="color: var(--dark-nav-color); margin-bottom: 10px; font-size: 1.2em;">Acceso Restringido</h3>
+                        <p style="color: var(--muted-text-color); line-height: 1.6;">
+                            Para utilizar el buscador global, por favor <strong>inicia sesión</strong> desde la pestaña "Portal".
+                        </p>
+                    </div>
 
-                <div id="search-content" style="display: none;">
-                    <div class="search-container">
-                        <div class="search-box-wrapper">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="global-search-input" placeholder="Busca noticias, libros, prácticas, software...">
-                        </div>
-                        <div id="search-results-container" class="search-results-list">
-                            <p style="text-align: center; color: #94a3b8; margin-top: 40px;">Escribe algo arriba para empezar a buscar en toda la plataforma.</p>
+                    <div id="search-content" style="display: none;">
+                        <div class="search-container" style="margin-top: 0;">
+                            <div class="search-box-wrapper">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="global-search-input" placeholder="Busca noticias, libros, prácticas, software...">
+                            </div>
+                            <div id="search-results-container" class="search-results-list" style="max-height: 400px; overflow-y: auto; padding-right: 5px;">
+                                <p style="text-align: center; color: #94a3b8; margin-top: 40px;">Escribe algo arriba para empezar a buscar en toda la plataforma.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </section>
+            </div>
 
             <section id="biblioteca" class="tab-content">
                 <h2><i class="fas fa-book-open" style="margin-right: 10px;"></i>Biblioteca Digital</h2>
@@ -1871,7 +1876,7 @@
                 <div class="icon"><i class="fas fa-user-circle"></i></div>
                 <span>Portal</span>
             </button>
-            <button class="nav-item" data-tab="buscar">
+            <button class="nav-item" id="nav-search-btn">
                 <div class="icon"><i class="fas fa-search"></i></div>
                 <span>Buscar</span>
             </button>
@@ -4024,6 +4029,16 @@
                 item.addEventListener('click', (e) => {
                     const tabId = item.getAttribute('data-tab');
 
+                    // SI ES EL BOTÓN DE BUSCAR (que ahora abre un modal y no tiene data-tab)
+                    if (item.id === 'nav-search-btn') {
+                        document.getElementById('searchModal').style.display = 'block';
+                        setTimeout(() => {
+                            const searchInput = document.getElementById('global-search-input');
+                            if (searchInput) searchInput.focus();
+                        }, 100);
+                        return;
+                    }
+
                     // SI ESTAMOS EN COMPUTADORA Y SE HIZO CLIC EN CHATS
                     if (window.innerWidth >= 768 && tabId === 'chats') {
                         e.preventDefault(); // Evitamos comportamiento por defecto
@@ -4287,7 +4302,12 @@
                     else if (e.key === '2') tabIndex = 1; // Biblioteca
                     else if (e.key === '3') tabIndex = 2; // Chats
                     else if (e.key === '4') tabIndex = 3; // Portal
-                    else if (e.key === '5') tabIndex = 4; // Buscar
+                    else if (e.key === '5') {
+                        e.preventDefault();
+                        const searchBtn = document.getElementById('nav-search-btn');
+                        if (searchBtn) searchBtn.click();
+                        return;
+                    }
 
                     if (tabIndex !== -1 && navItems[tabIndex]) {
                         e.preventDefault(); 
@@ -4680,6 +4700,7 @@
                                 type: item.type === 'news' ? 'Noticia' : 'Evento',
                                 icon: item.type === 'news' ? 'fa-newspaper' : 'fa-calendar-alt',
                                 action: () => {
+                                    document.getElementById('searchModal').style.display = 'none';
                                     document.querySelector('[data-tab="inicio"]').click();
                                     openNewsEventModal(item);
                                 }
@@ -4697,6 +4718,7 @@
                                 type: `Biblioteca - ${item.type}`,
                                 icon: getIconForType(item.type),
                                 action: () => {
+                                    document.getElementById('searchModal').style.display = 'none';
                                     document.querySelector('[data-tab="biblioteca"]').click();
                                     openNetflixModal(item);
                                 }
