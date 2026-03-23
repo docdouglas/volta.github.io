@@ -1157,6 +1157,7 @@
 
         // --- ATAJOS DE TECLADO ---
         document.addEventListener('keydown', (e) => {
+            // Atajo Alt + A para añadir
             if (e.altKey && e.key.toLowerCase() === 'a') {
                 e.preventDefault(); 
                 if (isAdmin) {
@@ -1164,6 +1165,19 @@
                 } else {
                     window.toggleAuth();
                     mostrarNotificacion("Acceso Requerido", "Inicia sesión como administrador para usar este atajo.");
+                }
+            }
+
+            // Atajo Escape para cerrar modales
+            if (e.key === 'Escape') {
+                // Ordenados por z-index (del más alto al más bajo) para cerrar siempre el que está al frente
+                const modalsToClose = ['manageCategoriesModal', 'addBookModal', 'loginModal', 'bookModal'];
+                for (const modalId of modalsToClose) {
+                    const modal = document.getElementById(modalId);
+                    if (modal && !modal.classList.contains('hidden')) {
+                        window.closeModal(modalId);
+                        break; // Cierra solo un modal por cada vez que se presiona Escape
+                    }
                 }
             }
         });
