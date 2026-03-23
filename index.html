@@ -1191,7 +1191,7 @@
         }
         .delete-chat-btn:hover { color: #f44336; }
 
-        /* --- NUEVOS ESTILOS ELEGANTES PARA BIBLIOTECA --- */
+        /* --- ESTILOS EDITORIALES/MINIMALISTAS PARA BIBLIOTECA --- */
         .library-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -1213,6 +1213,7 @@
             appearance: none;
             font-family: inherit;
             width: 100%;
+            text-decoration: none; /* Asegura que los enlaces no tengan subrayado */
         }
         .library-card:hover {
             transform: translateY(-8px);
@@ -1727,11 +1728,12 @@
                                 <div class="library-card-title">Prácticas</div>
                                 <div class="library-card-desc">Guías paso a paso y ejercicios de laboratorio.</div>
                             </button>
-                            <button class="library-card" data-inline-type="libro">
+                            <!-- BOTÓN LIBROS: Ahora redirige a biblioteca.html -->
+                            <a href="biblioteca.html" class="library-card">
                                 <div class="library-card-icon"><i class="fas fa-book"></i></div>
                                 <div class="library-card-title">Libros</div>
                                 <div class="library-card-desc">Textos teóricos, manuales y referencias.</div>
-                            </button>
+                            </a>
                             <button class="library-card" data-inline-type="video">
                                 <div class="library-card-icon"><i class="fas fa-video"></i></div>
                                 <div class="library-card-title">Videos</div>
@@ -3967,7 +3969,7 @@
             }
             if(netflixModal) {
                 netflixModal.addEventListener('click', (e) => {
-                    if (e.target === netflixModal) {
+                    if (event.target === netflixModal) {
                         netflixModal.style.display = 'none';
                     }
                 });
@@ -4328,6 +4330,9 @@
             document.querySelectorAll('.library-card').forEach(card => {
                 card.addEventListener('click', () => {
                     const type = card.getAttribute('data-inline-type');
+                    // FIX: Si el elemento no tiene 'data-inline-type', no ejecutamos la lógica inline (ej: Libros)
+                    if (!type) return;
+
                     const title = card.querySelector('.library-card-title').textContent;
                     const iconClass = card.querySelector('.library-card-icon i').className;
 
@@ -4413,28 +4418,11 @@
                         if (form) form.reset();
                         const hiddenId = modal.querySelector('input[type="hidden"]');
                         if(hiddenId) hiddenId.value = '';
-                        if(modal.id === 'editLibraryItemModal') { // Actualizado para el nuevo ID
-                            libraryItemImageBase64Input.value = '';
-                            libraryItemImagePreview.style.display = 'none';
-                            libraryItemImagePreview.src = '';
-                            libraryItemMateriaSelect.value = 'general';
-                        }
+                        // Reiniciar la vista previa del archivo si es el modal de biblioteca
                         if(modal.id === 'manageLibraryModal') {
                             adminLibrarySearchQuery = '';
                             if (adminLibrarySearchInput) adminLibrarySearchInput.value = '';
-                        }
-                    }
-                });
-            });
-            window.addEventListener('click', (event) => {
-                modals.forEach(modal => {
-                    if (event.target == modal && modal.id !== 'messageBoxModal') {
-                        modal.style.display = 'none';
-                        const form = modal.querySelector('form');
-                        if (form) form.reset();
-                        const hiddenId = modal.querySelector('input[type="hidden"]');
-                        if(hiddenId) hiddenId.value = '';
-                        if(modal.id === 'editLibraryItemModal') { // Actualizado para el nuevo ID
+                            
                             libraryItemImageBase64Input.value = '';
                             libraryItemImagePreview.style.display = 'none';
                             libraryItemImagePreview.src = '';
