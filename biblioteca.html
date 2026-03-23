@@ -676,8 +676,10 @@
             if (!chipContainer) return;
             
             const booksInSection = books.filter(b => (b.type || 'book') === currentSection);
-            // Extraer de arrays
-            const allCats = [...new Set(booksInSection.flatMap(b => getCats(b)))].filter(Boolean).sort();
+            // Extraer de arrays y ordenar alfabéticamente respetando el español
+            const allCats = [...new Set(booksInSection.flatMap(b => getCats(b)))]
+                .filter(Boolean)
+                .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
             
             const baseClass = "px-5 py-2 rounded-full text-sm font-medium transition-all cursor-pointer whitespace-nowrap ";
             const activeClass = "bg-[#0f4c81] text-white shadow-md border border-[#0f4c81]";
@@ -718,9 +720,10 @@
                     </div>
                 </div>`;
 
+            // Filtrar y ordenar alfabéticamente respetando el español
             let filteredBooks = (activeFilter === 'All') 
-                ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title))
-                : booksInSection.filter(b => getCats(b).includes(activeFilter)).sort((a, b) => a.title.localeCompare(b.title));
+                ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }))
+                : booksInSection.filter(b => getCats(b).includes(activeFilter)).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
 
             shelf.innerHTML = `
                 <div>
@@ -827,7 +830,8 @@
                 container.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">No hay materias registradas.</p>`;
                 return;
             }
-            container.innerHTML = categories.sort((a,b)=>a.name.localeCompare(b.name)).map(c => `
+            // Ordenamiento alfabético en Español
+            container.innerHTML = categories.sort((a,b)=>a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })).map(c => `
                 <div class="flex items-center justify-between p-3 hover:bg-white/60 rounded-xl group border-b border-white/50 last:border-0 transition-colors">
                     <span class="text-sm text-gray-800 font-medium">${c.name}</span>
                     <div class="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
@@ -886,8 +890,10 @@
             const s = document.getElementById('categorySelect');
             if (!s) return;
             const current = s.value;
+            
+            // Ordenamiento alfabético en Español
             s.innerHTML = '<option value="" disabled selected>Añadir categoría...</option>' + 
-                categories.sort((a,b)=>a.name.localeCompare(b.name)).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+                categories.sort((a,b)=>a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             if (current) s.value = current;
         }
 
@@ -988,7 +994,9 @@
 
             if (!searchStr) { shelf.classList.remove('hidden'); renderApp(); return; }
 
-            const filtered = books.filter(b => b.title.toLowerCase().includes(searchStr) || b.author.toLowerCase().includes(searchStr) || b.id.toLowerCase().includes(searchStr) || getCats(b).some(c => c.toLowerCase().includes(searchStr)));
+            const filtered = books.filter(b => b.title.toLowerCase().includes(searchStr) || b.author.toLowerCase().includes(searchStr) || b.id.toLowerCase().includes(searchStr) || getCats(b).some(c => c.toLowerCase().includes(searchStr)))
+                                  .sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })); // Búsqueda también ordenada alfabéticamente
+            
             shelf.classList.add('hidden');
 
             if (filtered.length === 0) {
