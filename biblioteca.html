@@ -153,6 +153,11 @@
                     <i data-lucide="plus" class="w-4 h-4"></i><span class="hidden sm:inline">Nuevo</span>
                 </button>
                 
+                <!-- Admin Manage Categories Button -->
+                <button id="btnManageCategories" onclick="window.openManageCategories()" class="hidden items-center gap-2 text-xs font-medium text-black hover:bg-black/5 px-3 py-1.5 rounded transition-all">
+                    <i data-lucide="tags" class="w-4 h-4"></i><span class="hidden sm:inline">Materias</span>
+                </button>
+                
                 <!-- Auth Toggle -->
                 <div id="authAvatar" onclick="window.toggleAuth()" class="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-black/5 hover:bg-black/10 border border-black/5 transition-all">
                     <i data-lucide="user" class="w-4 h-4 text-gray-600"></i>
@@ -296,7 +301,7 @@
                                 <select id="addCategory" required class="flex-1 px-3 py-2 win-input text-sm bg-white">
                                     <option value="" disabled selected>Seleccione...</option>
                                 </select>
-                                <button type="button" onclick="window.addNewMateria()" class="win-btn-secondary px-2"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                                <button type="button" onclick="window.openManageCategories()" class="win-btn-secondary px-2" title="Gestionar Materias"><i data-lucide="settings-2" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                         <div class="space-y-1">
@@ -331,6 +336,28 @@
             <div class="px-6 py-4 border-t border-black/5 bg-[#fcfcfc] flex justify-end gap-2 shrink-0 pb-6 md:pb-4">
                 <button type="button" onclick="window.closeModal('addBookModal')" class="win-btn-secondary">Cancelar</button>
                 <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="win-btn-primary">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fluent Modal: Manage Categories -->
+    <div id="manageCategoriesModal" class="fixed inset-0 z-[250] hidden items-center justify-center p-4 acrylic-modal overflow-hidden">
+        <div class="absolute inset-0" onclick="window.closeModal('manageCategoriesModal')"></div>
+        <div class="relative bg-white rounded-lg shadow-2xl border border-black/10 w-full max-w-sm max-h-[90vh] flex flex-col animate-slide overflow-hidden">
+            <div class="px-5 py-4 border-b border-black/5 bg-[#fcfcfc] flex items-center justify-between shrink-0">
+                <h2 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <i data-lucide="tags" class="w-4 h-4 text-[#005fb8]"></i> Gestión de Materias
+                </h2>
+                <button onclick="window.closeModal('manageCategoriesModal')" class="text-gray-500 hover:text-red-500 hover:bg-red-50 p-1 rounded transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            
+            <div class="p-4 border-b border-black/5 bg-white flex gap-2 shrink-0">
+                <input type="text" id="newCategoryInput" class="flex-1 px-3 py-1.5 win-input text-sm" placeholder="Nueva materia...">
+                <button onclick="window.addNewCategoryFromModal()" class="win-btn-primary px-3 flex items-center justify-center" title="Añadir materia"><i data-lucide="plus" class="w-4 h-4"></i></button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-2 bg-white win-scroll" id="categoriesListContainer">
+                <!-- Lista de categorías inyectada por JS -->
             </div>
         </div>
     </div>
@@ -385,6 +412,9 @@
                     categories = snap.docs.map(d => d.data());
                     updateCategoryDropdown();
                     renderFilterChips();
+                    if (!document.getElementById('manageCategoriesModal').classList.contains('hidden')) {
+                        window.renderCategoriesList();
+                    }
                 });
             }
         });
@@ -414,7 +444,7 @@
         };
 
         window.addEventListener('popstate', (e) => {
-            ['loginModal', 'bookModal', 'addBookModal'].forEach(id => {
+            ['loginModal', 'bookModal', 'addBookModal', 'manageCategoriesModal'].forEach(id => {
                 const m = document.getElementById(id);
                 if (m && !m.classList.contains('hidden')) { window.closeModal(id, true); }
             });
@@ -497,15 +527,18 @@
 
         function updateAuthUI() {
             const btn = document.getElementById('btnUploadNav');
+            const btnCat = document.getElementById('btnManageCategories');
             const avatar = document.getElementById('authAvatar');
             const actions = document.getElementById('adminActions');
             if (isAdmin) {
                 btn.classList.remove('hidden'); btn.classList.add('flex');
+                btnCat.classList.remove('hidden'); btnCat.classList.add('flex');
                 avatar.innerHTML = '<i data-lucide="shield-check" class="w-4 h-4 text-white"></i>';
                 avatar.className = "w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-[#005fb8] shadow-sm transition-all";
                 if(actions) { actions.classList.remove('hidden'); actions.classList.add('grid'); }
             } else {
                 btn.classList.add('hidden'); btn.classList.remove('flex');
+                btnCat.classList.add('hidden'); btnCat.classList.remove('flex');
                 avatar.innerHTML = '<i data-lucide="user" class="w-4 h-4 text-gray-600"></i>';
                 avatar.className = "w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-black/5 hover:bg-black/10 border border-black/5 transition-all";
                 if(actions) { actions.classList.add('hidden'); actions.classList.remove('grid'); }
@@ -620,12 +653,74 @@
             lucide.createIcons();
         };
 
-        window.addNewMateria = async () => {
-            const n = prompt("Nombre de la nueva materia:");
+        window.openManageCategories = () => {
+            if (!isAdmin) return;
+            document.getElementById('newCategoryInput').value = '';
+            window.renderCategoriesList();
+            window.openModal('manageCategoriesModal');
+            lucide.createIcons();
+        };
+
+        window.renderCategoriesList = () => {
+            const container = document.getElementById('categoriesListContainer');
+            if (categories.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-500 text-center py-4">No hay materias registradas.</p>`;
+                return;
+            }
+            container.innerHTML = categories.sort((a,b)=>a.name.localeCompare(b.name)).map(c => `
+                <div class="flex items-center justify-between p-2 hover:bg-black/5 rounded group border-b border-black/5 last:border-0 transition-colors">
+                    <span class="text-sm text-gray-800 font-medium">${c.name}</span>
+                    <div class="flex gap-1 opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button onclick="window.editCategory('${c.id}', '${c.name.replace(/'/g, "\\'")}')" class="p-1.5 text-gray-500 hover:text-[#005fb8] hover:bg-white rounded shadow-sm border border-transparent hover:border-black/10 transition-all" title="Editar"><i data-lucide="edit-2" class="w-3.5 h-3.5"></i></button>
+                        <button onclick="window.deleteCategory('${c.id}', '${c.name.replace(/'/g, "\\'")}')" class="p-1.5 text-gray-500 hover:text-red-600 hover:bg-white rounded shadow-sm border border-transparent hover:border-black/10 transition-all" title="Eliminar"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        };
+
+        window.addNewCategoryFromModal = async () => {
+            const input = document.getElementById('newCategoryInput');
+            const n = input.value;
             if (n && n.trim()) {
                 const id = `cat-${Date.now()}`;
-                try { await setDoc(doc(categoriesCollection, id), { id, name: n.trim() }); mostrarNotificacion("Éxito", "Materia añadida."); }
-                catch(e) { console.error(e); }
+                try { 
+                    await setDoc(doc(categoriesCollection, id), { id, name: n.trim() }); 
+                    input.value = '';
+                    mostrarNotificacion("Éxito", "Materia añadida."); 
+                }
+                catch(e) { console.error(e); mostrarNotificacion("Error", "Error al guardar."); }
+            }
+        };
+
+        window.editCategory = async (id, oldName) => {
+            const newName = prompt("Editar nombre de la materia:", oldName);
+            if (newName && newName.trim() && newName.trim() !== oldName) {
+                try {
+                    const newNameStr = newName.trim();
+                    await setDoc(doc(categoriesCollection, id), { id, name: newNameStr }, { merge: true });
+                    
+                    // Actualizar en cascada los libros que usan esta materia
+                    const booksToUpdate = books.filter(b => b.category === oldName);
+                    for (let b of booksToUpdate) {
+                        await setDoc(doc(booksCollection, b.id), { category: newNameStr }, { merge: true });
+                    }
+                    mostrarNotificacion("Éxito", "Materia actualizada.");
+                } catch(e) { console.error(e); mostrarNotificacion("Error", "No se pudo actualizar."); }
+            }
+        };
+
+        window.deleteCategory = async (id, name) => {
+            const inUse = books.some(b => b.category === name);
+            if (inUse) {
+                mostrarNotificacion("Aviso", "No se puede eliminar: hay documentos usando esta materia.");
+                return;
+            }
+            if (confirm(`¿Eliminar permanentemente la materia "${name}"?`)) {
+                try {
+                    await deleteDoc(doc(categoriesCollection, id));
+                    mostrarNotificacion("Éxito", "Materia eliminada.");
+                } catch(e) { console.error(e); mostrarNotificacion("Error", "No se pudo eliminar."); }
             }
         };
 
