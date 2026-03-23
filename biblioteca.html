@@ -1045,6 +1045,20 @@
         document.getElementById('searchInput').addEventListener('input', (e) => window.executeSearch(e.target.value));
         document.getElementById('mobileSearchInput').addEventListener('input', (e) => window.executeSearch(e.target.value));
 
+        // --- ATAJOS DE TECLADO ---
+        document.addEventListener('keydown', (e) => {
+            // Detecta Alt + A (sin importar si es mayúscula o minúscula)
+            if (e.altKey && e.key.toLowerCase() === 'a') {
+                e.preventDefault(); // Evita comportamientos por defecto del navegador
+                if (isAdmin) {
+                    window.openAddBookModal();
+                } else {
+                    window.toggleAuth();
+                    mostrarNotificacion("Acceso Requerido", "Inicia sesión como administrador para usar este atajo.");
+                }
+            }
+        });
+
         updateAuthUI();
     </script>
 </body>
