@@ -739,8 +739,14 @@
             let allCats = [];
 
             if (currentSection === 'practice') {
-                // Grupos fijos para prácticas
-                allCats = ['Ejercicios en Clase', 'Prácticas para Casa'];
+                // Grupos fijos para prácticas + Categorías/Materias dinámicas
+                const practiceGroups = ['Ejercicios en Clase', 'Prácticas para Casa'];
+                const practiceCats = [...new Set(booksInSection.flatMap(b => getCats(b)))]
+                    .filter(Boolean)
+                    .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+                
+                // Combinar ambos eliminando posibles duplicados
+                allCats = [...new Set([...practiceGroups, ...practiceCats])];
             } else {
                 allCats = [...new Set(booksInSection.flatMap(b => getCats(b)))]
                     .filter(Boolean)
@@ -791,7 +797,8 @@
             if (currentSection === 'practice') {
                  filteredBooks = (activeFilter === 'All') 
                     ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }))
-                    : booksInSection.filter(b => b.practiceGroup === activeFilter).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
+                    // Filtra buscando coincidencias ya sea por Grupo de Práctica o por la Materia asignada
+                    : booksInSection.filter(b => b.practiceGroup === activeFilter || getCats(b).includes(activeFilter)).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
             } else {
                  filteredBooks = (activeFilter === 'All') 
                     ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }))
