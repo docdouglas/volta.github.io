@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NetBooks Luxe - University Digital Repository</title>
+    <title>NetDigital Luxe - Repositorio Universitario</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -31,8 +31,8 @@
         /* --- Fondo Institucional --- */
         .luxe-mesh {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.03) 0px, transparent 50%),
-                        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.02) 0px, transparent 50%);
+            background: radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.04) 0px, transparent 50%),
+                        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.03) 0px, transparent 50%);
         }
 
         /* --- University Hero Banner --- */
@@ -53,39 +53,46 @@
 
         .hero-overlay {
             position: absolute; inset: 0;
-            background: linear-gradient(to right, #020617 15%, rgba(2, 6, 23, 0.6) 60%, transparent 100%);
+            background: linear-gradient(to bottom, #020617 10%, rgba(2, 6, 23, 0.8) 50%, #020617 100%);
             z-index: 2;
         }
 
+        @media (min-width: 768px) {
+            .hero-overlay {
+                background: linear-gradient(to right, #020617 20%, rgba(2, 6, 23, 0.6) 60%, transparent 100%);
+            }
+        }
+
         .hero-bottom-fade {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 120px;
             background: linear-gradient(to bottom, transparent, var(--bg-color));
             z-index: 4;
         }
 
-        .hero-aura {
-            position: absolute; top: -20%; right: -10%; width: 60%; height: 140%;
-            background: radial-gradient(circle, rgba(37, 99, 235, 0.15) 0%, transparent 70%);
-            filter: blur(80px); pointer-events: none; z-index: 3;
-        }
-
         /* --- UI Elements --- */
-        .book-card-container { transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1); }
-        .book-card-container:hover { transform: translateY(-8px) scale(1.02); }
-        .book-card-img { border-radius: 1rem; overflow: hidden; background: white; box-shadow: 0 10px 25px -12px rgba(0, 0, 0, 0.12); border: 1px solid rgba(0,0,0,0.04); }
+        .book-card-container { transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+        .book-card-container:hover { transform: translateY(-6px); }
+        .book-card-img { border-radius: 1.25rem; overflow: hidden; background: white; box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0,0,0,0.04); position: relative; }
+        
+        .btn-luxe { background: var(--primary); color: white; padding: 0.7rem 1.8rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.6rem; }
+        .btn-luxe:hover { background: var(--academic-blue); transform: translateY(-1px); box-shadow: 0 10px 20px -5px rgba(30, 64, 175, 0.3); }
 
-        .btn-luxe { background: var(--primary); color: white; padding: 0.6rem 1.8rem; border-radius: 0.6rem; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.05em; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.6rem; }
-        .btn-luxe:hover { background: var(--academic-blue); transform: translateY(-1px); }
+        .btn-portal-white { background: white; color: #020617; padding: 0.85rem 2.2rem; border-radius: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.4); }
+        .btn-portal-white:hover { transform: scale(1.02); box-shadow: 0 15px 35px -5px rgba(0,0,0,0.5); }
 
-        .btn-portal-white { background: white; color: #020617; padding: 0.75rem 2rem; border-radius: 0.6rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 15px 35px -5px rgba(0,0,0,0.4); }
-
-        .glass-nav { background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(16px) saturate(180%); border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px) saturate(180%); border-bottom: 1px solid rgba(0,0,0,0.05); }
 
         .modal-scroll::-webkit-scrollbar { width: 4px; }
         .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
 
-        @keyframes reveal { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-reveal { animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-reveal { animation: reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
 </head>
 <body class="antialiased">
@@ -94,26 +101,27 @@
 
     <!-- Header / Navbar -->
     <nav class="fixed top-0 w-full z-[100] h-16 glass-nav" id="navbar">
-        <div class="max-w-[1600px] mx-auto px-6 lg:px-12 h-full flex items-center justify-between">
-            <div class="flex items-center gap-12">
-                <div class="flex items-center gap-3 cursor-pointer group" onclick="location.reload()">
-                    <div class="w-9 h-9 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-blue-700 transition-all">
-                        <i data-lucide="graduation-cap" class="text-white w-5 h-5"></i>
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 h-full flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2.5 cursor-pointer group" onclick="location.reload()">
+                    <div class="w-8 h-8 sm:w-9 sm:h-9 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-blue-700 transition-all">
+                        <i data-lucide="graduation-cap" class="text-white w-4 h-4 sm:w-5 sm:h-5"></i>
                     </div>
-                    <span style="font-family: 'Outfit', sans-serif;" class="font-black text-xl tracking-tighter text-slate-900 uppercase">Net<span class="text-blue-700">Digital</span></span>
+                    <span style="font-family: 'Outfit', sans-serif;" class="font-black text-lg sm:text-xl tracking-tighter text-slate-900 uppercase">Net<span class="text-blue-700">Digital</span></span>
                 </div>
             </div>
             
-            <div class="flex items-center gap-6">
-                <div class="relative hidden sm:flex items-center group">
+            <div class="flex items-center gap-3 sm:gap-6">
+                <div class="relative hidden md:flex items-center">
                     <i data-lucide="search" class="w-4 h-4 absolute left-4 text-slate-400"></i>
-                    <input type="text" id="searchInput" placeholder="Búsqueda institucional..." class="pl-12 pr-6 py-2 rounded-2xl border border-slate-100 bg-white focus:bg-white focus:ring-4 focus:ring-blue-500/5 outline-none text-xs w-80 transition-all font-medium">
+                    <input type="text" id="searchInput" placeholder="Búsqueda institucional..." class="pl-12 pr-6 py-2 rounded-2xl border border-slate-100 bg-white/50 focus:bg-white focus:ring-4 focus:ring-blue-500/5 outline-none text-xs w-64 lg:w-80 transition-all font-medium">
                 </div>
-                <button id="btnUploadNav" onclick="window.openAddBookModal()" class="hidden items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-white bg-slate-900 px-6 py-3 rounded-xl hover:bg-blue-700 transition-all shadow-xl">
-                    <i data-lucide="plus" class="w-4 h-4"></i><span>Subir</span>
+                <!-- Mobile Search Toggle (Optional/Future) -->
+                <button id="btnUploadNav" onclick="window.openModal('addBookModal')" class="hidden items-center gap-2 text-[9px] font-black uppercase tracking-widest text-white bg-slate-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg">
+                    <i data-lucide="plus" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Subir</span>
                 </button>
-                <div id="authAvatar" onclick="window.toggleAuth()" class="w-10 h-10 rounded-xl text-white flex items-center justify-center cursor-pointer shadow-md bg-white border border-slate-100 hover:border-blue-200 transition-all">
-                    <i data-lucide="user-check" class="w-5 h-5 text-slate-400"></i>
+                <div id="authAvatar" onclick="window.toggleAuth()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center cursor-pointer shadow-sm bg-white border border-slate-100 hover:border-blue-200 transition-all">
+                    <i data-lucide="user-check" class="w-4 h-4 sm:w-5 h-5 text-slate-400"></i>
                 </div>
             </div>
         </div>
@@ -121,164 +129,170 @@
 
     <main class="w-full pt-16">
         <!-- University Luxe Banner -->
-        <section id="heroSection" class="w-full relative min-h-[480px] md:min-h-[550px] flex items-center university-hero animate-reveal overflow-hidden">
+        <section id="heroSection" class="w-full relative min-h-[420px] md:min-h-[520px] flex items-center university-hero animate-reveal overflow-hidden">
             <div class="hero-image-layer"></div>
             <div class="hero-overlay"></div>
-            <div class="hero-pattern"></div>
-            <div class="hero-aura"></div>
             <div class="hero-bottom-fade"></div>
-            <div id="heroContent" class="relative z-10 w-full py-12"></div>
+            <div id="heroContent" class="relative z-10 w-full py-16"></div>
         </section>
         
-        <!-- Luxury Navigation -->
-        <div class="max-w-[1600px] mx-auto px-6 lg:px-12 mt-16 overflow-x-auto hide-scrollbar flex gap-4 py-2" id="filterChips">
-            <button onclick="window.filterByCategory('All')" class="px-8 py-3 rounded-2xl bg-slate-900 text-white text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl transition-all hover:scale-105">Repositorio Principal</button>
+        <!-- Luxury Navigation / Filter Chips -->
+        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 mt-8 sm:mt-12">
+            <div class="flex overflow-x-auto hide-scrollbar gap-3 pb-4" id="filterChips">
+                <button class="flex-none px-6 py-2.5 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest shadow-lg">Cargando...</button>
+            </div>
         </div>
 
         <!-- Master Catalog Grid -->
-        <section id="shelvesContainer" class="max-w-[1600px] mx-auto px-6 lg:px-12 py-20 flex flex-col gap-24"></section>
+        <section id="shelvesContainer" class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-20 flex flex-col gap-16 md:gap-24"></section>
     </main>
 
-    <!-- Modales -->
-    
-    <!-- Login con Icono de Ojo -->
-    <div id="loginModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
-        <div class="absolute inset-0 bg-slate-900/10 backdrop-blur-md" onclick="window.closeModal('loginModal')"></div>
-        <div class="relative bg-white/95 backdrop-blur-xl rounded-[2.5rem] shadow-2xl w-full max-w-sm p-12 text-center animate-reveal border border-white">
-            <h2 class="text-2xl font-bold text-slate-900 mb-10 uppercase tracking-widest text-[18px]">Auth Console</h2>
-            <form id="loginForm" class="space-y-6 text-left">
+    <!-- Modal: Auth Console -->
+    <div id="loginModal" class="fixed inset-0 z-[200] hidden items-center justify-center sm:p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="window.closeModal('loginModal')"></div>
+        <div class="relative bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl w-full max-w-sm p-8 sm:p-12 text-center mt-auto sm:my-auto animate-slide-up sm:animate-reveal border border-white">
+            <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden"></div>
+            <h2 class="text-xl font-bold text-slate-900 mb-8 uppercase tracking-widest">Auth Console</h2>
+            <form id="loginForm" class="space-y-5 text-left">
                 <div class="space-y-1">
-                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Douglas Identity</label>
-                    <input type="text" id="loginUser" required class="w-full px-6 py-4 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/5 bg-white shadow-sm font-medium" placeholder="Usuario">
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity</label>
+                    <input type="text" id="loginUser" required class="w-full px-5 py-3.5 border border-slate-100 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 bg-slate-50 font-medium" placeholder="Usuario">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Security Key</label>
+                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Security Key</label>
                     <div class="relative">
-                        <input type="password" id="loginPass" required class="w-full px-6 py-4 border border-slate-100 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/5 bg-white shadow-sm font-medium pr-12" placeholder="••••••••">
-                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors outline-none">
+                        <input type="password" id="loginPass" required class="w-full px-5 py-3.5 border border-slate-100 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 bg-slate-50 font-medium pr-12" placeholder="••••••••">
+                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors">
                             <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="w-full btn-luxe mt-6 uppercase text-xs tracking-[0.3em] justify-center py-4">Verificar</button>
+                <button type="submit" class="w-full btn-luxe mt-4 uppercase text-[10px] tracking-widest justify-center py-4">Verificar Acceso</button>
             </form>
         </div>
     </div>
 
-    <!-- Asset Detail Luxe View -->
-    <div id="bookModal" class="fixed inset-0 z-[150] hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-xl" onclick="window.closeModal('bookModal')"></div>
-        <div class="relative bg-white rounded-[3rem] shadow-2xl w-full max-w-2xl my-8 overflow-hidden flex flex-col md:flex-row animate-reveal border border-white/20">
-            <button onclick="window.closeModal('bookModal')" class="absolute top-8 right-8 p-3 rounded-full bg-slate-50 hover:bg-slate-100 text-slate-400 z-50 transition-all hover:rotate-90">
-                <i data-lucide="x" class="w-6 h-6"></i>
+    <!-- Modal: Asset Detail -->
+    <div id="bookModal" class="fixed inset-0 z-[150] hidden items-end md:items-center justify-center sm:p-6 overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xl" onclick="window.closeModal('bookModal')"></div>
+        
+        <div class="relative bg-white rounded-t-[2rem] md:rounded-[3rem] shadow-2xl w-full max-w-4xl max-h-[90vh] md:max-h-[85vh] h-full md:h-auto overflow-hidden flex flex-col md:flex-row animate-slide-up md:animate-reveal border border-white/20">
+            <!-- Close Button / Mobile Drag Handle -->
+            <button onclick="window.closeModal('bookModal')" class="absolute top-4 right-4 md:top-6 md:right-6 p-2 rounded-full bg-slate-100/80 text-slate-500 z-50 hover:bg-slate-200 transition-all backdrop-blur-sm">
+                <i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i>
             </button>
+            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-slate-300/50 rounded-full md:hidden z-50"></div>
             
-            <div class="w-full md:w-[45%] p-10 flex flex-col items-center bg-slate-50/50 border-r border-slate-100 justify-center">
-                <img id="modalCover" src="" class="w-full max-w-[220px] rounded-[1.5rem] shadow-[0_40px_80px_rgba(0,0,0,0.2)] border-[8px] border-white aspect-[2/3] object-cover transition-all duration-700">
-                <div class="flex flex-col w-full gap-4 max-w-[220px] mt-10">
-                    <button onclick="window.actionRead()" class="btn-luxe flex items-center justify-center text-xs tracking-widest py-4"><i data-lucide="book-open" class="w-5 h-5"></i> ACCESO DIGITAL</button>
-                    <button onclick="window.actionDownload()" class="bg-white border border-slate-200 rounded-2xl py-4 text-[10px] uppercase tracking-widest font-black text-slate-600 hover:text-blue-700 transition-all shadow-sm">Descargar PDF</button>
-                    <div id="adminActions" class="hidden grid grid-cols-2 gap-3 mt-4 pt-6 border-t border-slate-200">
-                        <button onclick="window.editCurrentBook()" class="bg-slate-100 text-slate-500 py-3 rounded-xl text-[9px] font-bold uppercase hover:bg-slate-200">Modificar</button>
-                        <button onclick="window.deleteCurrentBook()" class="bg-red-50 text-red-600 py-3 rounded-xl text-[9px] font-bold uppercase hover:bg-red-100">Remover</button>
+            <!-- Left Side: Cover & Actions -->
+            <div class="w-full md:w-[40%] p-6 pt-10 md:p-10 flex flex-row md:flex-col items-center bg-slate-50 border-b md:border-b-0 md:border-r border-slate-100 justify-start md:justify-center gap-5 md:gap-0 relative z-10 shrink-0">
+                <div class="w-28 sm:w-36 md:w-full md:max-w-[240px] shrink-0">
+                    <img id="modalCover" src="" class="w-full rounded-xl md:rounded-2xl shadow-xl border-2 md:border-4 border-white aspect-[2/3] object-cover">
+                </div>
+                <div class="flex flex-col w-full gap-2 md:gap-3 md:mt-8 md:max-w-[240px]">
+                    <button onclick="window.actionRead()" class="btn-luxe w-full justify-center py-2.5 md:py-3.5 text-[9px] md:text-[10px] tracking-widest shadow-md">
+                        <i data-lucide="book-open" class="w-4 h-4"></i><span class="hidden sm:inline">ACCESO DIGITAL</span><span class="sm:hidden">LEER</span>
+                    </button>
+                    <button onclick="window.actionDownload()" class="w-full bg-white border border-slate-200 rounded-xl py-2.5 md:py-3 text-[9px] font-black uppercase tracking-widest text-slate-600 hover:text-blue-700 transition-all">Descargar</button>
+                    <div id="adminActions" class="hidden grid-cols-2 gap-2 mt-1 md:mt-2 pt-3 md:pt-4 border-t border-slate-200">
+                        <button onclick="window.editCurrentBook()" class="bg-slate-200/50 text-slate-500 py-2 md:py-2.5 rounded-lg text-[8px] font-black uppercase">Editar</button>
+                        <button onclick="window.deleteCurrentBook()" class="bg-red-50 text-red-500 py-2 md:py-2.5 rounded-lg text-[8px] font-black uppercase">Borrar</button>
                     </div>
                 </div>
             </div>
 
-            <div class="w-full md:w-[55%] p-10 bg-white flex flex-col justify-center">
-                <div class="flex items-center gap-4 mb-6">
-                    <span id="modalCategory" class="text-blue-600 font-black text-[9px] uppercase tracking-[0.4em]">CATEGORÍA</span>
-                    <span class="w-1.5 h-1.5 bg-slate-200 rounded-full"></span>
-                    <span id="modalIdDisplay" class="text-slate-300 font-mono text-[10px] tracking-widest uppercase">ID: XXXX</span>
+            <!-- Right Side: Details -->
+            <div class="w-full md:w-[60%] p-6 md:p-12 bg-white flex flex-col overflow-y-auto modal-scroll grow">
+                <div class="flex items-center gap-2 mb-3 md:mb-4">
+                    <span id="modalCategory" class="text-blue-600 font-black text-[8px] md:text-[9px] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded-md">CATEGORÍA</span>
+                    <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
+                    <span id="modalIdDisplay" class="text-slate-300 font-mono text-[9px] tracking-tighter">ID: XXXX</span>
                 </div>
-                <h2 id="modalTitle" class="text-3xl font-extrabold mb-4 text-slate-900 leading-[1.1] tracking-tighter uppercase">TÍTULO</h2>
-                <p id="modalAuthor" class="text-xl text-slate-400 font-light mb-8 italic">Responsable Académico: <br><span id="modalAuthorName" class="text-slate-900 font-bold not-italic">Autor</span></p>
-                <div class="mb-10">
-                    <h4 class="text-[9px] font-black text-slate-300 uppercase tracking-[0.5em] mb-4 text-xs font-black">Sinopsis Académica</h4>
-                    <p id="modalDescription" class="text-slate-500 leading-relaxed text-sm italic line-clamp-6"></p>
+                <h2 id="modalTitle" class="text-xl sm:text-2xl md:text-3xl font-black mb-1 md:mb-3 text-slate-900 leading-tight uppercase tracking-tight">TÍTULO</h2>
+                <p id="modalAuthor" class="text-sm sm:text-base md:text-lg text-slate-500 mb-5 md:mb-6 italic">Responsable: <span id="modalAuthorName" class="text-slate-900 font-bold not-italic">Autor</span></p>
+                <div class="mb-6 md:mb-8 flex-1">
+                    <h4 class="text-[9px] md:text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 md:mb-3">Sinopsis Académica</h4>
+                    <p id="modalDescription" class="text-slate-600 leading-relaxed text-xs sm:text-sm italic"></p>
                 </div>
-                <div class="bg-slate-50 p-8 rounded-[2.5rem] border border-slate-100 flex justify-between items-center mt-auto">
-                    <div>
-                        <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1 italic">Knowledge Access Key</p>
-                        <p id="modalId" class="font-mono font-bold text-slate-900 text-2xl tracking-tighter"></p>
+                <div class="bg-slate-50 p-4 md:p-6 rounded-xl md:rounded-2xl border border-slate-100 flex justify-between items-center mt-auto shrink-0">
+                    <div class="overflow-hidden mr-4">
+                        <p class="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Knowledge Key</p>
+                        <p id="modalId" class="font-mono font-bold text-slate-900 text-base md:text-lg lg:text-xl truncate"></p>
                     </div>
-                    <button onclick="window.copyCode()" class="w-14 h-14 flex items-center justify-center bg-white border border-slate-100 text-slate-300 hover:text-blue-600 hover:border-blue-200 transition-all rounded-2xl shadow-sm"><i data-lucide="copy"></i></button>
+                    <button onclick="window.copyCode()" class="flex-none w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-400 hover:text-blue-600 rounded-xl shadow-sm transition-all"><i data-lucide="copy" class="w-4 h-4 md:w-5 md:h-5"></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Management Center Modal -->
-    <div id="addBookModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 overflow-y-auto">
-        <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-xl" onclick="window.closeModal('addBookModal')"></div>
-        <div class="relative bg-white rounded-[3rem] shadow-2xl w-full max-w-2xl my-8 flex flex-col animate-reveal border border-slate-100 overflow-hidden">
-            <div class="p-8 border-b border-slate-50 bg-white flex items-center justify-between flex-none">
-                <h2 id="modalFormTitle" class="text-2xl font-bold text-slate-900 tracking-tight uppercase flex items-center gap-4">
-                    <span class="w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center text-white"><i data-lucide="server" class="w-5 h-5"></i></span>
+    <!-- Modal: Management Center -->
+    <div id="addBookModal" class="fixed inset-0 z-[200] hidden items-end md:items-center justify-center sm:p-4 overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-xl" onclick="window.closeModal('addBookModal')"></div>
+        <div class="relative bg-white rounded-t-[2rem] md:rounded-[3rem] shadow-2xl w-full max-w-2xl max-h-[90vh] h-full md:h-auto flex flex-col animate-slide-up md:animate-reveal border border-slate-100 overflow-hidden mt-auto md:my-4">
+            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-slate-200 rounded-full md:hidden z-50"></div>
+            
+            <div class="p-5 pt-8 md:p-8 border-b border-slate-50 bg-white flex items-center justify-between shrink-0">
+                <h2 id="modalFormTitle" class="text-lg md:text-xl font-bold text-slate-900 tracking-tight uppercase flex items-center gap-3">
+                    <span class="w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white"><i data-lucide="server" class="w-4 h-4 md:w-5 md:h-5"></i></span>
                     Asset Management
                 </h2>
-                <button onclick="window.closeModal('addBookModal')" class="text-slate-300 hover:text-slate-900 transition-colors"><i data-lucide="x"></i></button>
+                <button onclick="window.closeModal('addBookModal')" class="text-slate-300 hover:text-slate-900 transition-colors p-2"><i data-lucide="x"></i></button>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-10 bg-slate-50/10">
-                <form id="addBookForm" class="space-y-6">
-                    <div class="grid grid-cols-2 gap-6">
+            <div class="flex-1 overflow-y-auto p-5 md:p-10 bg-slate-50/10 modal-scroll">
+                <form id="addBookForm" class="space-y-5 md:space-y-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
                         <div class="space-y-1">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Título Oficial</label>
-                            <input type="text" id="addTitle" required class="w-full px-5 py-3 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 bg-white font-medium text-sm" placeholder="Nombre...">
+                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Título Oficial</label>
+                            <input type="text" id="addTitle" required class="w-full px-4 md:px-5 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm" placeholder="Nombre...">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Responsable</label>
-                            <input type="text" id="addAuthor" required class="w-full px-5 py-3 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 bg-white font-medium text-sm" placeholder="Autor...">
+                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Responsable</label>
+                            <input type="text" id="addAuthor" required class="w-full px-4 md:px-5 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm" placeholder="Autor...">
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
                         <div class="space-y-1">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Materia</label>
+                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Materia</label>
                             <div class="flex gap-2">
-                                <select id="addCategory" required class="flex-1 px-4 py-3 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 bg-white font-medium appearance-none cursor-pointer text-sm">
-                                    <option value="" disabled selected>Materia...</option>
+                                <select id="addCategory" required class="flex-1 px-3 md:px-4 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm">
+                                    <option value="" disabled selected>Seleccionar...</option>
                                 </select>
-                                <button type="button" onclick="window.addNewMateria()" class="bg-white p-3 rounded-xl border border-slate-100 hover:bg-slate-50 text-blue-600 shadow-sm transition-all"><i data-lucide="plus" class="w-4 h-4"></i></button>
-                            </div>
-                            <div class="flex gap-4 mt-1 px-1 justify-end">
-                                <button type="button" onclick="window.editSelectedMateria()" class="text-[8px] font-black text-amber-600 uppercase hover:underline">Editar</button>
-                                <button type="button" onclick="window.deleteSelectedMateria()" class="text-[8px] font-black text-red-600 uppercase hover:underline">Borrar</button>
+                                <button type="button" onclick="window.addNewMateria()" class="bg-white px-3 rounded-xl border border-slate-100 text-blue-600 shadow-sm hover:bg-slate-50 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Resource Drive Link</label>
-                            <input type="url" id="addResourceLink" required class="w-full px-5 py-3 border border-slate-200 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 bg-white font-medium text-sm" placeholder="https://drive.google.com/...">
+                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Drive Link</label>
+                            <input type="url" id="addResourceLink" required class="w-full px-4 md:px-5 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm" placeholder="https://...">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-[180px_1fr] gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-5 md:gap-6">
                         <div class="space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Asset Imagery</label>
-                            <div onclick="document.getElementById('addCover').click()" class="relative border-2 border-dashed border-slate-200 p-4 h-[160px] rounded-2xl text-center hover:border-blue-400 hover:bg-white transition-all group cursor-pointer bg-white/50 flex flex-col items-center justify-center overflow-hidden">
+                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Asset Cover</label>
+                            <div onclick="document.getElementById('addCover').click()" class="relative border-2 border-dashed border-slate-200 h-[140px] md:h-[180px] rounded-2xl text-center hover:border-blue-400 hover:bg-white transition-all group cursor-pointer bg-slate-50 flex flex-col items-center justify-center overflow-hidden">
                                 <input type="file" id="addCover" accept="image/*" class="hidden">
-                                <div id="imagePreviewContainer" class="hidden h-full">
-                                    <img id="imagePreview" src="" alt="Preview" class="h-full w-auto rounded-lg shadow-md border border-white">
+                                <div id="imagePreviewContainer" class="hidden h-full w-full">
+                                    <img id="imagePreview" src="" alt="Preview" class="h-full w-full object-cover">
                                 </div>
                                 <div id="imagePlaceholder" class="flex flex-col items-center">
-                                    <i data-lucide="camera" class="w-6 h-6 text-slate-200 mb-2 group-hover:text-blue-500 transition-all"></i>
-                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Subir Imagen</span>
+                                    <i data-lucide="camera" class="w-5 h-5 md:w-6 md:h-6 text-slate-300 mb-2 group-hover:text-blue-500"></i>
+                                    <span class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase">Subir Imagen</span>
                                 </div>
                             </div>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[9px] font-black text-slate-400 uppercase tracking-widest ml-1 text-xs">Abstract de Contenido</label>
-                            <textarea id="addDescription" required class="w-full h-[160px] px-5 py-4 border border-slate-200 rounded-2xl outline-none focus:ring-4 focus:ring-blue-500/5 focus:border-blue-400 bg-white font-medium resize-none text-sm italic" placeholder="Resumen institucional..."></textarea>
+                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Resumen</label>
+                            <textarea id="addDescription" required class="w-full h-[140px] md:h-[180px] px-4 md:px-5 py-3 md:py-4 border border-slate-200 rounded-2xl outline-none focus:border-blue-400 bg-white text-xs md:text-sm italic resize-none" placeholder="Descripción académica..."></textarea>
                         </div>
                     </div>
                     <button type="submit" id="hiddenSubmit" class="hidden"></button>
                 </form>
             </div>
 
-            <div class="p-10 border-t border-slate-50 bg-white flex gap-6 flex-none">
-                <button type="button" onclick="window.closeModal('addBookModal')" class="flex-1 py-4 font-bold text-slate-300 uppercase tracking-widest text-[10px] hover:text-slate-900 transition-all bg-slate-50 rounded-2xl">Cancelar</button>
-                <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="flex-[2] btn-luxe justify-center text-[11px] tracking-[0.2em] shadow-blue-900/20 py-4 uppercase font-black">ACTUALIZAR REPOSITORIO</button>
+            <div class="p-5 md:p-8 border-t border-slate-50 bg-white flex flex-col sm:flex-row gap-2 md:gap-3 shrink-0 pb-8 md:pb-8">
+                <button type="button" onclick="window.closeModal('addBookModal')" class="flex-1 py-3 font-bold text-slate-400 uppercase text-[9px] md:text-[10px] tracking-widest hover:text-slate-900 bg-slate-50 rounded-xl border border-slate-100">Cancelar</button>
+                <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="flex-[2] btn-luxe justify-center text-[9px] md:text-[10px] tracking-widest uppercase">Actualizar Repositorio</button>
             </div>
         </div>
     </div>
@@ -287,7 +301,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
@@ -316,7 +330,7 @@
 
         const initAuth = async () => {
           try {
-              if (typeof initialAuthToken !== 'undefined' && initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
+              if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
               else await signInAnonymously(auth);
           } catch(e) { console.error("Identity failure:", e); }
         };
@@ -333,10 +347,57 @@
                     categories = snap.docs.map(d => d.data());
                     updateCategoryDropdown();
                     renderFilterChips();
-                    if (!document.getElementById('searchInput').value.trim()) renderApp();
                 });
             }
         });
+
+        // --- SISTEMA DE NAVEGACIÓN (HISTORY API) PARA MODALES ---
+        window.openModal = (id) => {
+            const m = document.getElementById(id);
+            if (m) {
+                m.classList.remove('hidden'); m.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+                // Agregamos un estado al historial al abrir el modal
+                history.pushState({ modalOpen: true, modalId: id }, '', '#' + id);
+            }
+        };
+
+        window.closeModal = (id, fromPopState = false) => {
+            const m = document.getElementById(id);
+            if (m && !m.classList.contains('hidden')) {
+                m.classList.add('hidden'); m.classList.remove('flex');
+                
+                // Solo restaurar el scroll si no hay otros modales abiertos
+                const anyOpen = document.querySelectorAll('.fixed.inset-0.flex').length > 0;
+                if (!anyOpen) document.body.style.overflow = '';
+                
+                // Si cerramos manualmente (X o fondo), retrocedemos en el historial para limpiarlo
+                if (!fromPopState && history.state && history.state.modalOpen) {
+                    history.back();
+                }
+            }
+        };
+
+        // Escuchar el evento de navegación (Botón Atrás del celular/navegador)
+        window.addEventListener('popstate', (e) => {
+            // Cerramos todos los modales (indicando que viene del PopState para no causar loop)
+            ['loginModal', 'bookModal', 'addBookModal'].forEach(id => {
+                const m = document.getElementById(id);
+                if (m && !m.classList.contains('hidden')) {
+                    window.closeModal(id, true);
+                }
+            });
+
+            // Si navegamos "Hacia Adelante" a un estado donde había un modal, lo reabrimos
+            if (e.state && e.state.modalOpen) {
+                const m = document.getElementById(e.state.modalId);
+                if (m) {
+                    m.classList.remove('hidden'); m.classList.add('flex');
+                    document.body.style.overflow = 'hidden';
+                }
+            }
+        });
+        // --------------------------------------------------------
 
         function generateSimpleCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -345,7 +406,6 @@
             return result;
         }
 
-        // --- PASSWORD VISIBILITY TOGGLE ---
         window.togglePasswordVisibility = () => {
             const passInput = document.getElementById('loginPass');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -390,8 +450,7 @@
                 isAdmin = false; localStorage.setItem('winLibraryAdmin', 'false');
                 updateAuthUI(); mostrarNotificacion("Security", "Sesión cerrada.");
             } else {
-                document.getElementById('loginModal').classList.remove('hidden');
-                document.getElementById('loginModal').classList.add('flex');
+                window.openModal('loginModal');
             }
         };
 
@@ -403,6 +462,7 @@
                 isAdmin = true; localStorage.setItem('winLibraryAdmin', 'true');
                 window.closeModal('loginModal'); updateAuthUI();
                 mostrarNotificacion("Security", "Douglas, acceso autorizado.");
+                document.getElementById('loginForm').reset();
             } else { mostrarNotificacion("Error", "Fallo de credenciales."); }
         });
 
@@ -413,21 +473,16 @@
             if (isAdmin) {
                 btn.classList.remove('hidden'); btn.classList.add('flex');
                 avatar.innerHTML = 'D';
-                avatar.className = "w-10 h-10 rounded-xl text-white flex items-center justify-center font-black text-xs cursor-pointer shadow-lg bg-blue-600 transition-all hover:rotate-6";
+                avatar.className = "w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center font-black text-xs cursor-pointer shadow-lg bg-blue-600 transition-all hover:rotate-6";
                 if(actions) { actions.classList.remove('hidden'); actions.classList.add('grid'); }
             } else {
                 btn.classList.add('hidden'); btn.classList.remove('flex');
                 avatar.innerHTML = '<i data-lucide="user-check" class="w-4 h-4 text-slate-400"></i>';
-                avatar.className = "w-10 h-10 rounded-xl text-white flex items-center justify-center font-bold text-sm cursor-pointer bg-white border border-slate-100 transition-all";
+                avatar.className = "w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center font-bold text-sm cursor-pointer bg-white border border-slate-100 transition-all";
                 if(actions) { actions.classList.add('hidden'); actions.classList.remove('grid'); }
                 lucide.createIcons();
             }
         }
-
-        window.closeModal = (id) => {
-            const m = document.getElementById(id);
-            if (m) { m.classList.add('hidden'); m.classList.remove('flex'); document.body.style.overflow = ''; }
-        };
 
         window.filterByCategory = (cat) => {
             activeFilter = cat;
@@ -444,8 +499,11 @@
             const chipContainer = document.getElementById('filterChips');
             if (!chipContainer) return;
             const allCats = [...new Set([...categories.map(c => c.name), ...books.map(b => b.category)])].filter(Boolean).sort();
-            chipContainer.innerHTML = `<button onclick="window.filterByCategory('All')" class="px-8 py-3 rounded-2xl bg-slate-900 text-white text-[11px] font-black uppercase tracking-widest shadow-2xl transition-all hover:scale-105">Catálogo Maestro</button>` + 
-                allCats.map(c => `<button onclick="window.filterByCategory('${c}')" class="px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${activeFilter === c ? 'bg-slate-900 text-white shadow-2xl' : 'bg-white text-slate-400 border border-slate-100 shadow-sm'}">${c}</button>`).join('');
+            
+            const btnClassBase = "flex-none px-5 md:px-6 py-2 md:py-2.5 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ";
+            
+            chipContainer.innerHTML = `<button onclick="window.filterByCategory('All')" class="${btnClassBase} ${activeFilter === 'All' ? 'bg-slate-900 text-white shadow-xl' : 'bg-white text-slate-400 border border-slate-100'}">CATÁLOGO MAESTRO</button>` + 
+                allCats.map(c => `<button onclick="window.filterByCategory('${c}')" class="${btnClassBase} ${activeFilter === c ? 'bg-slate-900 text-white shadow-xl' : 'bg-white text-slate-400 border border-slate-100'}">${c}</button>`).join('');
         }
 
         function renderApp() {
@@ -453,52 +511,54 @@
             const shelf = document.getElementById('shelvesContainer');
             
             if (books.length === 0) {
-                heroContent.innerHTML = `<div class="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-col items-center justify-center text-center animate-reveal"><div class="w-16 h-16 bg-white/10 rounded flex items-center justify-center mb-6"><i data-lucide="library" class="text-white w-8 h-8"></i></div><h1 class="text-4xl font-extrabold text-white mb-4 uppercase tracking-tighter">Portal Académico</h1><p class="text-slate-400 text-lg font-light max-w-xl italic">Iniciando repositorio...</p></div>`;
+                heroContent.innerHTML = `<div class="max-w-[1500px] mx-auto px-6 w-full text-center animate-reveal"><h1 class="text-3xl font-extrabold text-white uppercase tracking-tighter">Portal Académico</h1><p class="text-slate-400 text-sm mt-4">Iniciando repositorio...</p></div>`;
                 shelf.innerHTML = "";
                 lucide.createIcons();
                 return;
             }
 
+            const latestBook = books[books.length - 1];
+
             heroContent.innerHTML = `
-                <div class="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-col md:flex-row items-center gap-12 lg:gap-24 animate-reveal">
+                <div class="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-col md:flex-row items-center gap-10 lg:gap-24 animate-reveal">
                     <div class="max-w-2xl text-center md:text-left">
-                        <div class="inline-flex items-center gap-2 px-5 py-2 bg-blue-600/10 text-blue-400 rounded text-[9px] font-black uppercase tracking-[0.4em] mb-10 border border-blue-500/20">Knowledge Resource Center</div>
-                        <h1 style="font-family: 'Outfit', sans-serif;" class="text-5xl md:text-6xl lg:text-7xl font-black text-white leading-[0.95] uppercase tracking-tighter mb-10 drop-shadow-2xl">Gestión de <br><span class="text-blue-500">Recursos</span></h1>
-                        <div class="flex flex-wrap items-center justify-center md:justify-start gap-14 mb-16">
-                            <div><p class="text-white text-4xl font-bold tracking-tighter">${books.length}</p><p class="text-slate-500 text-[9px] font-black uppercase tracking-widest mt-2">Documentos</p></div>
-                            <div class="w-px h-14 bg-white/10"></div>
-                            <div><p class="text-white text-4xl font-bold tracking-tighter">${categories.length}</p><p class="text-slate-500 text-[9px] font-black uppercase tracking-widest mt-2">Clasificaciones</p></div>
+                        <div class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-600/10 text-blue-400 rounded-lg text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] mb-6 md:mb-8 border border-blue-500/20">Digital Knowledge Center</div>
+                        <h1 style="font-family: 'Outfit', sans-serif;" class="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-tight uppercase tracking-tighter mb-6 md:mb-8 drop-shadow-2xl">Repositorio <br><span class="text-blue-500">NetDigital</span></h1>
+                        <div class="flex items-center justify-center md:justify-start gap-8 md:gap-10 mb-8 md:mb-10">
+                            <div><p class="text-white text-2xl md:text-3xl font-bold">${books.length}</p><p class="text-slate-500 text-[7px] md:text-[8px] font-black uppercase tracking-widest">Activos</p></div>
+                            <div class="w-px h-8 md:h-10 bg-white/10"></div>
+                            <div><p class="text-white text-2xl md:text-3xl font-bold">${categories.length}</p><p class="text-slate-500 text-[7px] md:text-[8px] font-black uppercase tracking-widest">Materias</p></div>
                         </div>
-                        <button onclick="window.scrollTo({top: document.getElementById('shelvesContainer').offsetTop - 100, behavior: 'smooth'})" class="btn-portal-white">Acceder al Repositorio</button>
+                        <button onclick="window.scrollTo({top: document.getElementById('shelvesContainer').offsetTop - 100, behavior: 'smooth'})" class="btn-portal-white w-full sm:w-auto text-[10px] md:text-xs">Explorar Biblioteca</button>
                     </div>
-                    <div class="hidden md:flex w-[280px] lg:w-[350px] flex-none items-center justify-center relative transform rotate-2">
-                        <div class="absolute -inset-10 bg-blue-600/10 blur-[100px] rounded-full"></div>
-                        <div class="aspect-[2/3] w-full rounded-[2.5rem] overflow-hidden shadow-[0_50px_100px_-20px_rgba(0,0,0,0.4)] border-[12px] border-white/5 bg-slate-800 relative z-10">
-                            <img src="${books[books.length-1].coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover">
+                    <div class="hidden md:flex w-[240px] lg:w-[320px] flex-none items-center justify-center relative transform rotate-2">
+                        <div class="absolute -inset-10 bg-blue-600/10 blur-[80px] rounded-full"></div>
+                        <div class="aspect-[2/3] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border-[10px] border-white/5 bg-slate-800 relative z-10">
+                            <img src="${latestBook.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover">
                         </div>
                     </div>
                 </div>`;
 
-            let finalBooks = (activeFilter === 'All') 
+            let filteredBooks = (activeFilter === 'All') 
                 ? [...books].sort((a, b) => a.title.localeCompare(b.title))
                 : books.filter(b => b.category === activeFilter).sort((a, b) => a.title.localeCompare(b.title));
 
             shelf.innerHTML = `
                 <div class="animate-reveal">
-                    <div class="flex items-center gap-8 mb-16">
-                        <h3 class="text-3xl font-extrabold tracking-tighter text-slate-900 uppercase">${activeFilter === 'All' ? 'Catálogo Maestro' : activeFilter}</h3>
-                        <div class="h-px flex-1 bg-slate-200"></div>
-                        <span class="text-[9px] font-black text-slate-400 tracking-[0.5em]">${finalBooks.length} ENTRADAS</span>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 mb-8 sm:mb-16">
+                        <h3 class="text-2xl sm:text-3xl font-black tracking-tighter text-slate-900 uppercase">${activeFilter === 'All' ? 'Catálogo Maestro' : activeFilter}</h3>
+                        <div class="hidden sm:block h-px flex-1 bg-slate-200"></div>
+                        <span class="text-[9px] font-black text-slate-400 tracking-widest uppercase">${filteredBooks.length} ENTRADAS LOCALIZADAS</span>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-x-10 gap-y-20">
-                        ${finalBooks.map(b => `
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-10 sm:gap-x-6 md:gap-x-10 sm:gap-y-16">
+                        ${filteredBooks.map(b => `
                             <div class="book-card-container cursor-pointer group/card" onclick="window.openBookDetails('${b.id}')">
-                                <div class="book-card-img aspect-[2/3] bg-white border border-slate-100">
-                                    <img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-1000 group-hover:scale-110">
+                                <div class="book-card-img aspect-[2/3]">
+                                    <img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-700 group-hover/card:scale-110">
                                 </div>
-                                <div class="mt-8 px-1">
-                                    <h4 class="font-bold text-sm text-slate-900 uppercase tracking-tighter line-clamp-1 group-hover/card:text-blue-600 transition-all">${b.title}</h4>
-                                    <p class="text-[10px] font-black text-slate-400 mt-2 uppercase tracking-widest">${b.author}</p>
+                                <div class="mt-4 sm:mt-5">
+                                    <h4 class="font-bold text-[10px] sm:text-[11px] md:text-[12px] text-slate-900 uppercase tracking-tighter line-clamp-2 sm:line-clamp-1 group-hover/card:text-blue-600 transition-all">${b.title}</h4>
+                                    <p class="text-[8px] sm:text-[9px] font-black text-slate-400 mt-1 sm:mt-1.5 uppercase tracking-widest truncate">${b.author}</p>
                                 </div>
                             </div>
                         `).join('')}
@@ -519,8 +579,8 @@
             document.getElementById('modalIdDisplay').textContent = `MASTER ID: ${b.id}`;
             document.getElementById('modalDescription').textContent = b.description;
             updateAuthUI();
-            document.getElementById('bookModal').classList.remove('hidden'); document.getElementById('bookModal').classList.add('flex');
-            document.body.style.overflow = 'hidden'; lucide.createIcons();
+            window.openModal('bookModal');
+            lucide.createIcons();
         };
 
         window.openAddBookModal = () => {
@@ -529,9 +589,9 @@
             document.getElementById('addBookForm').reset();
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('imagePlaceholder').classList.remove('hidden');
-            document.getElementById('modalFormTitle').innerHTML = '<span class="w-11 h-11 bg-slate-900 rounded-xl flex items-center justify-center text-white"><i data-lucide="edit-3" class="w-4 h-4"></i></span> Asset Creation';
-            document.getElementById('addBookModal').classList.remove('hidden'); document.getElementById('addBookModal').classList.add('flex');
-            document.body.style.overflow = 'hidden'; lucide.createIcons();
+            document.getElementById('modalFormTitle').innerHTML = '<span class="w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white"><i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5"></i></span> Asset Creation';
+            window.openModal('addBookModal');
+            lucide.createIcons();
         };
 
         window.addNewMateria = async () => {
@@ -543,39 +603,11 @@
             }
         };
 
-        window.editSelectedMateria = async () => {
-            const select = document.getElementById('addCategory');
-            const oldName = select.value;
-            if (!oldName) return;
-            const categoryObj = categories.find(c => c.name === oldName);
-            const newName = prompt("Renombrar materia:", oldName);
-            if (newName && newName.trim() && newName.trim().toUpperCase() !== oldName) {
-                try {
-                    const finalNewName = newName.trim().toUpperCase();
-                    await updateDoc(doc(categoriesCollection, categoryObj.id), { name: finalNewName });
-                    books.filter(b => b.category === oldName).forEach(async book => {
-                        await updateDoc(doc(booksCollection, book.id), { category: finalNewName });
-                    });
-                    mostrarNotificacion("Master Sync", "Base de datos sincronizada.");
-                } catch(e) { console.error(e); }
-            }
-        };
-
-        window.deleteSelectedMateria = async () => {
-            const v = document.getElementById('addCategory').value;
-            if (!v) return;
-            const c = categories.find(x => x.name === v);
-            if (c && confirm(`¿Remover permanentemente "${v}"?`)) {
-                try { await deleteDoc(doc(categoriesCollection, c.id)); mostrarNotificacion("System", "Materia eliminada."); }
-                catch(e) { console.error(e); }
-            }
-        };
-
         function updateCategoryDropdown() {
             const s = document.getElementById('addCategory');
             if (!s) return;
             const current = s.value;
-            s.innerHTML = '<option value="" disabled selected>Clasificación...</option>' + 
+            s.innerHTML = '<option value="" disabled selected>Seleccionar...</option>' + 
                 categories.sort((a,b)=>a.name.localeCompare(b.name)).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             if (current) s.value = current;
         }
@@ -592,12 +624,12 @@
                     id: id, title: document.getElementById('addTitle').value.toUpperCase(),
                     author: document.getElementById('addAuthor').value, category: document.getElementById('addCategory').value,
                     resourceLink: document.getElementById('addResourceLink').value, description: document.getElementById('addDescription').value,
-                    coverUrl: finalUrl, dateAdded: editingBookId ? (books.find(x=>x.id===editingBookId)?.dateAdded || '2026') : new Date().getFullYear().toString()
+                    coverUrl: finalUrl
                 };
                 await setDoc(doc(booksCollection, id), data, { merge: true });
-                window.closeModal('addBookModal'); mostrarNotificacion("Identity", "Activo actualizado.");
+                window.closeModal('addBookModal'); mostrarNotificacion("Identity", "Activo sincronizado.");
             } catch (err) { mostrarNotificacion("Error", "Fallo al procesar."); }
-            finally { btn.disabled = false; btn.textContent = "ACTUALIZAR REPOSITORIO"; currentImageData = null; }
+            finally { btn.disabled = false; btn.textContent = "Actualizar Repositorio"; currentImageData = null; }
         });
 
         window.editCurrentBook = () => {
@@ -608,8 +640,13 @@
             document.getElementById('addCategory').value = b.category; document.getElementById('addResourceLink').value = b.resourceLink;
             document.getElementById('addDescription').value = b.description; document.getElementById('imagePreview').src = b.coverUrl;
             document.getElementById('imagePreviewContainer').classList.remove('hidden'); document.getElementById('imagePlaceholder').classList.add('hidden');
-            window.closeModal('bookModal'); document.getElementById('addBookModal').classList.remove('hidden');
-            document.getElementById('addBookModal').classList.add('flex'); lucide.createIcons();
+            
+            // Cerramos primero y luego abrimos para manejar correctamente el History API
+            window.closeModal('bookModal');
+            setTimeout(() => {
+                window.openModal('addBookModal');
+                lucide.createIcons();
+            }, 50);
         };
 
         window.deleteCurrentBook = async () => {
@@ -621,43 +658,37 @@
 
         window.actionRead = () => { const b = books.find(x => x.id === currentViewBookId); if (b?.resourceLink) window.open(b.resourceLink, '_blank'); };
         window.actionDownload = () => window.actionRead();
-        window.copyCode = () => { const c = document.getElementById('modalId').textContent; navigator.clipboard.writeText(c).then(() => mostrarNotificacion("Clipboard", "Identidad copiada.")); };
+        window.copyCode = () => { const c = document.getElementById('modalId').textContent; navigator.clipboard.writeText(c).then(() => mostrarNotificacion("Clipboard", "ID Copiado.")); };
 
         function mostrarNotificacion(t, m) {
             const toast = document.createElement('div');
-            toast.className = "fixed bottom-8 right-8 bg-slate-900 border border-white/10 shadow-2xl p-5 rounded-2xl z-[300] animate-reveal flex items-center gap-4 min-w-[280px]";
-            toast.innerHTML = `<div class="bg-blue-600 p-2 rounded-lg text-white shadow-lg"><i data-lucide="check" class="w-5 h-5"></i></div><div><p class="font-bold text-[9px] uppercase text-slate-400 tracking-[0.2em] mb-0.5">${t}</p><p class="text-xs font-medium text-white">${m}</p></div>`;
+            toast.className = "fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-slate-900 border border-white/10 shadow-2xl p-4 sm:p-5 rounded-2xl z-[300] animate-reveal flex items-center gap-4 max-w-[90%] md:max-w-sm";
+            toast.innerHTML = `<div class="bg-blue-600 p-2 rounded-lg text-white shrink-0"><i data-lucide="check" class="w-4 h-4"></i></div><div><p class="font-bold text-[8px] uppercase text-slate-400 tracking-widest">${t}</p><p class="text-[10px] md:text-[11px] font-medium text-white">${m}</p></div>`;
             document.body.appendChild(toast); lucide.createIcons();
-            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(15px)'; setTimeout(() => toast.remove(), 400); }, 3500);
+            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
         }
 
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const term = e.target.value.toLowerCase().trim();
-            const heroContent = document.getElementById('heroContent');
             const shelf = document.getElementById('shelvesContainer');
+            const heroContent = document.getElementById('heroContent');
 
             if (!term) { shelf.classList.remove('hidden'); renderApp(); return; }
 
-            const filtered = books.filter(b => {
-                const title = (b.title || "").toLowerCase();
-                const author = (b.author || "").toLowerCase();
-                const id = (b.id || "").toLowerCase();
-                return title.includes(term) || author.includes(term) || id.includes(term);
-            });
-
+            const filtered = books.filter(b => b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term) || b.id.toLowerCase().includes(term));
             shelf.classList.add('hidden');
 
             if (filtered.length === 0) {
-                heroContent.innerHTML = `<div class="max-w-[1500px] mx-auto px-6 lg:px-12 w-full animate-reveal py-10"><div class="bg-white/5 backdrop-blur-md rounded-3xl p-12 border border-white/10 text-center"><div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-6"><i data-lucide="search-x" class="text-slate-400 w-8 h-8"></i></div><h2 class="text-2xl font-bold text-white uppercase tracking-widest mb-2">Sin coincidencias</h2><p class="text-slate-400 text-sm italic">No se localizaron registros para "${term}"</p><button onclick="document.getElementById('searchInput').value=''; renderApp(); document.getElementById('shelvesContainer').classList.remove('hidden');" class="mt-8 text-[10px] font-black text-blue-400 uppercase tracking-[0.3em] hover:text-white transition-all underline underline-offset-8">Limpiar Búsqueda</button></div></div>`;
+                heroContent.innerHTML = `<div class="max-w-xl mx-auto text-center py-20 animate-reveal"><h2 class="text-xl font-bold text-white uppercase mb-4 tracking-widest">Sin resultados</h2><p class="text-slate-400 text-sm">No hay coincidencias para "${term}"</p></div>`;
             } else {
                 heroContent.innerHTML = `
-                    <div class="max-w-[1500px] mx-auto px-6 lg:px-12 w-full animate-reveal">
-                        <div class="flex items-center justify-between mb-10 border-b border-white/10 pb-6 px-2">
-                            <div><h3 class="text-2xl font-black text-white uppercase tracking-tighter">Resultados de Búsqueda</h3><p class="text-blue-400 text-[9px] font-bold uppercase tracking-[0.3em] mt-1">${filtered.length} LOCALIZADOS</p></div>
-                            <button onclick="document.getElementById('searchInput').value=''; renderApp(); document.getElementById('shelvesContainer').classList.remove('hidden');" class="bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all"><i data-lucide="x" class="w-5 h-5"></i></button>
+                    <div class="max-w-[1500px] mx-auto px-4 md:px-6 animate-reveal">
+                        <div class="flex items-center justify-between mb-6 md:mb-8 pb-4 border-b border-white/10">
+                            <h3 class="text-lg md:text-xl font-black text-white uppercase">Resultados: ${filtered.length}</h3>
+                            <button onclick="document.getElementById('searchInput').value=''; renderApp(); document.getElementById('shelvesContainer').classList.remove('hidden');" class="text-white/40 hover:text-white"><i data-lucide="x"></i></button>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-6 md:gap-8 overflow-y-auto max-h-[300px] pr-2 modal-scroll">
-                            ${filtered.map(b => `<div class="book-card-container cursor-pointer group/card" onclick="window.openBookDetails('${b.id}')"><div class="aspect-[2/3] rounded-2xl overflow-hidden shadow-2xl border-2 border-white/10 group-hover:border-blue-500 transition-all"><img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover"></div><div class="mt-4"><h4 class="font-bold text-[11px] text-white uppercase truncate drop-shadow-md group-hover:text-blue-400">${b.title}</h4><p class="text-[9px] font-medium text-slate-400 uppercase tracking-widest mt-1">${b.author}</p></div></div>`).join('')}
+                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 max-h-[400px] overflow-y-auto modal-scroll pr-2 md:pr-4">
+                            ${filtered.map(b => `<div class="cursor-pointer group" onclick="window.openBookDetails('${b.id}')"><div class="aspect-[2/3] rounded-xl overflow-hidden border border-white/10 group-hover:border-blue-500 transition-all"><img src="${b.coverUrl}" class="w-full h-full object-cover"></div><p class="text-[9px] md:text-[10px] font-bold text-white mt-2 md:mt-3 uppercase truncate">${b.title}</p></div>`).join('')}
                         </div>
                     </div>`;
             }
