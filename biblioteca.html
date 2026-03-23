@@ -3,308 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Novell Digital Luxe - Repositorio Universitario</title>
+    <title>Novell Digital - Biblioteca Universitaria</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&family=Outfit:wght@100;400;700;900&display=swap');
+    <!-- Fuente Inter para simular Segoe UI Variable de Windows 11 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <style>
         :root {
-            --bg-color: #f8fafc;
-            --surface: #ffffff;
-            --primary: #020617;
-            --academic-blue: #1e40af;
-            --accent-soft: #eff6ff;
-            --border: #e2e8f0;
+            --win-bg: #f3f3f3; /* Windows 11 Background */
+            --win-surface: #ffffff; /* Windows 11 Surface */
+            --win-accent: #005fb8; /* Windows 11 Accent Blue */
+            --win-accent-hover: #0053a0;
+            --win-border: rgba(0, 0, 0, 0.06);
+            --win-text: #1a1a1a;
+            --win-text-sec: #5c5c5c;
         }
 
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: var(--bg-color);
-            color: #0f172a;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--win-bg);
+            color: var(--win-text);
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
-            letter-spacing: -0.015em;
         }
 
-        /* --- Fondo Institucional --- */
-        .luxe-mesh {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
-            background: radial-gradient(at 0% 0%, rgba(30, 64, 175, 0.04) 0px, transparent 50%),
-                        radial-gradient(at 100% 100%, rgba(15, 23, 42, 0.03) 0px, transparent 50%);
+        /* --- Fluent Design Materials --- */
+        .acrylic-nav {
+            background-color: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px) saturate(150%);
+            border-bottom: 1px solid var(--win-border);
         }
 
-        /* --- University Hero Banner --- */
-        .university-hero {
-            background: #020617;
-            position: relative;
-            box-shadow: 0 15px 35px rgba(2, 6, 23, 0.1);
-            overflow: hidden;
-            transition: all 0.5s ease;
+        .acrylic-modal {
+            background-color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(16px);
         }
 
-        .hero-image-layer {
-            position: absolute; inset: 0;
-            background-image: url('https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2000&auto=format&fit=crop');
-            background-size: cover; background-position: center;
-            opacity: 0.25; filter: brightness(0.5) contrast(1.1); z-index: 1;
+        .surface-card {
+            background-color: var(--win-surface);
+            border: 1px solid var(--win-border);
+            border-radius: 8px; /* Standard Win11 radius */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02), 0 0 2px rgba(0,0,0,0.04);
+            transition: all 0.2s ease;
         }
 
-        .hero-overlay {
-            position: absolute; inset: 0;
-            background: linear-gradient(to bottom, #020617 10%, rgba(2, 6, 23, 0.8) 50%, #020617 100%);
-            z-index: 2;
+        .surface-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.04), 0 0 2px rgba(0,0,0,0.06);
+            transform: translateY(-2px);
         }
 
-        @media (min-width: 768px) {
-            .hero-overlay {
-                background: linear-gradient(to right, #020617 20%, rgba(2, 6, 23, 0.6) 60%, transparent 100%);
-            }
+        /* --- Fluent Controls --- */
+        .win-btn-primary {
+            background-color: var(--win-accent);
+            color: white;
+            border-radius: 4px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid transparent;
+            transition: all 0.1s ease;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        .win-btn-primary:hover { background-color: var(--win-accent-hover); }
+        .win-btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+
+        .win-btn-secondary {
+            background-color: #fdfdfd;
+            color: var(--win-text);
+            border-radius: 4px;
+            padding: 6px 16px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid rgba(0,0,0,0.1);
+            transition: all 0.1s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+        .win-btn-secondary:hover { background-color: #f5f5f5; }
+        .win-btn-secondary:active { transform: scale(0.98); background-color: #ededed; }
+
+        .win-input {
+            background-color: #ffffff;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.2);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            color: var(--win-text);
+        }
+        .win-input:focus {
+            outline: none;
+            border-bottom: 2px solid var(--win-accent);
+            padding-bottom: calc(0.5rem - 1px); /* Prevent layout shift */
+            background-color: #ffffff;
         }
 
-        .hero-bottom-fade {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 120px;
-            background: linear-gradient(to bottom, transparent, var(--bg-color));
-            z-index: 4;
-        }
-
-        /* --- UI Elements --- */
-        .book-card-container { transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
-        .book-card-container:hover { transform: translateY(-6px); }
-        .book-card-img { border-radius: 1.25rem; overflow: hidden; background: white; box-shadow: 0 4px 20px -10px rgba(0, 0, 0, 0.15); border: 1px solid rgba(0,0,0,0.04); position: relative; }
+        /* --- Scrollbars & Animations --- */
+        .win-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .win-scroll::-webkit-scrollbar-track { background: transparent; }
+        .win-scroll::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+        .win-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
         
-        .btn-luxe { background: var(--primary); color: white; padding: 0.7rem 1.8rem; border-radius: 0.75rem; font-weight: 700; font-size: 0.85rem; letter-spacing: 0.03em; transition: all 0.3s ease; display: inline-flex; align-items: center; gap: 0.6rem; }
-        .btn-luxe:hover { background: var(--academic-blue); transform: translateY(-1px); box-shadow: 0 10px 20px -5px rgba(30, 64, 175, 0.3); }
-
-        .btn-portal-white { background: white; color: #020617; padding: 0.85rem 2.2rem; border-radius: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.8rem; transition: all 0.3s ease; box-shadow: 0 10px 30px -5px rgba(0,0,0,0.4); }
-        .btn-portal-white:hover { transform: scale(1.02); box-shadow: 0 15px 35px -5px rgba(0,0,0,0.5); }
-
-        .glass-nav { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px) saturate(180%); border-bottom: 1px solid rgba(0,0,0,0.05); }
-
-        .modal-scroll::-webkit-scrollbar { width: 4px; }
-        .modal-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        @keyframes reveal { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-reveal { animation: reveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-
-        @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUpWin { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        .animate-fade { animation: fadeIn 0.3s ease forwards; }
+        .animate-slide { animation: slideUpWin 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+
+        /* Mica-like ambient background blur */
+        .ambient-bg {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle at 50% 30%, rgba(0, 95, 184, 0.03) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.02) 0%, transparent 40%);
+            z-index: -1; pointer-events: none;
+        }
     </style>
 </head>
 <body class="antialiased">
 
-    <div class="luxe-mesh"></div>
+    <div class="ambient-bg"></div>
 
-    <!-- Header / Navbar -->
-    <nav class="fixed top-0 w-full z-[100] glass-nav flex flex-col transition-all duration-300" id="navbar">
-        <div class="max-w-[1600px] w-full mx-auto px-4 sm:px-8 lg:px-12 h-16 flex items-center justify-between shrink-0">
-            <div class="flex items-center gap-8">
-                <div class="flex items-center gap-2.5 cursor-pointer group" onclick="location.reload()">
-                    <div class="w-8 h-8 sm:w-9 sm:h-9 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-blue-700 transition-all">
-                        <i data-lucide="graduation-cap" class="text-white w-4 h-4 sm:w-5 sm:h-5"></i>
-                    </div>
-                    <span style="font-family: 'Outfit', sans-serif;" class="font-black text-lg sm:text-xl tracking-tighter text-slate-900 uppercase">Novell<span class="text-blue-700">Digital</span></span>
+    <!-- Fluent Navigation Bar -->
+    <nav class="fixed top-0 w-full z-[100] acrylic-nav flex flex-col transition-all duration-300" id="navbar">
+        <div class="max-w-[1400px] w-full mx-auto px-4 sm:px-6 h-14 flex items-center justify-between shrink-0">
+            <!-- Brand -->
+            <div class="flex items-center gap-6">
+                <div class="flex items-center gap-3 cursor-pointer select-none" onclick="location.reload()">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/e/e6/Windows_11_logo.svg" alt="Win11 Logo" class="w-5 h-5 opacity-80 hidden sm:block">
+                    <span class="font-semibold text-base tracking-tight text-[#1a1a1a]">Novell Digital</span>
                 </div>
             </div>
             
-            <div class="flex items-center gap-3 sm:gap-6">
+            <!-- Actions -->
+            <div class="flex items-center gap-2 sm:gap-4">
+                <!-- Desktop Search -->
                 <div class="relative hidden md:flex items-center">
-                    <i data-lucide="search" class="w-4 h-4 absolute left-4 text-slate-400"></i>
-                    <input type="text" id="searchInput" placeholder="Búsqueda institucional..." class="pl-12 pr-6 py-2 rounded-2xl border border-slate-100 bg-white/50 focus:bg-white focus:ring-4 focus:ring-blue-500/5 outline-none text-xs w-64 lg:w-80 transition-all font-medium">
+                    <i data-lucide="search" class="w-4 h-4 absolute left-3 text-gray-500"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar documentos..." class="pl-9 pr-4 py-1.5 win-input text-sm w-64 lg:w-80">
                 </div>
-                <!-- Botón Buscador Móvil -->
-                <button onclick="window.toggleMobileSearch()" class="md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-100/50 flex items-center justify-center transition-all">
-                    <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                <!-- Mobile Search Toggle -->
+                <button onclick="window.toggleMobileSearch()" class="md:hidden w-8 h-8 rounded text-gray-600 hover:bg-black/5 flex items-center justify-center transition-all">
+                    <i data-lucide="search" class="w-4 h-4"></i>
                 </button>
-                <!-- Mobile Search Toggle (Optional/Future) -->
-                <button id="btnUploadNav" onclick="window.openModal('addBookModal')" class="hidden items-center gap-2 text-[9px] font-black uppercase tracking-widest text-white bg-slate-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg">
-                    <i data-lucide="plus" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Subir</span>
+                
+                <!-- Admin Upload Button -->
+                <button id="btnUploadNav" onclick="window.openModal('addBookModal')" class="hidden items-center gap-2 text-xs font-medium text-black hover:bg-black/5 px-3 py-1.5 rounded transition-all">
+                    <i data-lucide="plus" class="w-4 h-4"></i><span class="hidden sm:inline">Nuevo</span>
                 </button>
-                <div id="authAvatar" onclick="window.toggleAuth()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center cursor-pointer shadow-sm bg-white border border-slate-100 hover:border-blue-200 transition-all">
-                    <i data-lucide="user-check" class="w-4 h-4 sm:w-5 h-5 text-slate-400"></i>
+                
+                <!-- Auth Toggle -->
+                <div id="authAvatar" onclick="window.toggleAuth()" class="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-black/5 hover:bg-black/10 border border-black/5 transition-all">
+                    <i data-lucide="user" class="w-4 h-4 text-gray-600"></i>
                 </div>
             </div>
         </div>
         
-        <!-- Contenedor Buscador Móvil -->
-        <div id="mobileSearchBox" class="hidden md:hidden w-full px-4 pb-4 animate-reveal">
-            <div class="relative flex items-center">
-                <i data-lucide="search" class="w-4 h-4 absolute left-4 text-slate-400"></i>
-                <input type="text" id="mobileSearchInput" placeholder="Buscar por título o autor..." class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-white focus:ring-4 focus:ring-blue-500/10 outline-none text-sm transition-all font-medium shadow-sm">
+        <!-- Mobile Search Container -->
+        <div id="mobileSearchBox" class="hidden md:hidden w-full px-4 pb-3 bg-white/50 border-t border-black/5 animate-fade">
+            <div class="relative flex items-center mt-2">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3 text-gray-500"></i>
+                <input type="text" id="mobileSearchInput" placeholder="Buscar..." class="w-full pl-9 pr-4 py-2 win-input text-sm">
             </div>
         </div>
     </nav>
 
-    <main class="w-full pt-16">
-        <!-- University Luxe Banner -->
-        <section id="heroSection" class="w-full relative min-h-[420px] md:min-h-[520px] flex items-center university-hero animate-reveal overflow-hidden">
-            <div class="hero-image-layer"></div>
-            <div class="hero-overlay"></div>
-            <div class="hero-bottom-fade"></div>
-            <div id="heroContent" class="relative z-10 w-full py-16"></div>
+    <main class="w-full pt-14">
+        <!-- Fluent Hero / Library Header -->
+        <section id="heroSection" class="w-full relative px-4 sm:px-6 pt-12 pb-6 animate-slide">
+            <div id="heroContent" class="max-w-[1400px] mx-auto"></div>
         </section>
         
-        <!-- Luxury Navigation / Filter Chips -->
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 mt-8 sm:mt-12">
-            <div class="flex overflow-x-auto hide-scrollbar gap-3 pb-4" id="filterChips">
-                <button class="flex-none px-6 py-2.5 rounded-xl bg-slate-900 text-white text-[10px] font-black uppercase tracking-widest shadow-lg">Cargando...</button>
+        <!-- Pivot / Filter Tabs -->
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 mb-6">
+            <div class="flex overflow-x-auto hide-scrollbar gap-1 border-b border-black/5 pb-1" id="filterChips">
+                <button class="px-4 py-1.5 text-sm font-semibold text-black border-b-2 border-[#005fb8]">Cargando...</button>
             </div>
         </div>
 
         <!-- Master Catalog Grid -->
-        <section id="shelvesContainer" class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 py-12 sm:py-20 flex flex-col gap-16 md:gap-24"></section>
+        <section id="shelvesContainer" class="max-w-[1400px] mx-auto px-4 sm:px-6 pb-20 flex flex-col gap-8"></section>
     </main>
 
-    <!-- Modal: Auth Console -->
-    <div id="loginModal" class="fixed inset-0 z-[200] hidden items-center justify-center sm:p-4">
-        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="window.closeModal('loginModal')"></div>
-        <div class="relative bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl w-full max-w-sm p-8 sm:p-12 text-center mt-auto sm:my-auto animate-slide-up sm:animate-reveal border border-white">
-            <div class="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 sm:hidden"></div>
-            <h2 class="text-xl font-bold text-slate-900 mb-8 uppercase tracking-widest">Auth Console</h2>
-            <form id="loginForm" class="space-y-5 text-left">
+    <!-- Fluent Modal: Auth Console -->
+    <div id="loginModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4 acrylic-modal">
+        <div class="absolute inset-0" onclick="window.closeModal('loginModal')"></div>
+        <div class="relative bg-white rounded-lg shadow-2xl border border-black/10 w-full max-w-sm p-6 sm:p-8 text-left animate-slide">
+            <button onclick="window.closeModal('loginModal')" class="absolute top-4 right-4 text-gray-500 hover:text-black hover:bg-black/5 p-1 rounded transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
+            
+            <h2 class="text-xl font-semibold text-gray-900 mb-6">Seguridad del Sistema</h2>
+            <form id="loginForm" class="space-y-4">
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Identity</label>
-                    <input type="text" id="loginUser" required class="w-full px-5 py-3.5 border border-slate-100 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 bg-slate-50 font-medium" placeholder="Usuario">
+                    <label class="text-xs font-medium text-gray-600">Usuario</label>
+                    <input type="text" id="loginUser" required class="w-full px-3 py-2 win-input text-sm" placeholder="Ingrese su usuario">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Security Key</label>
+                    <label class="text-xs font-medium text-gray-600">Contraseña</label>
                     <div class="relative">
-                        <input type="password" id="loginPass" required class="w-full px-5 py-3.5 border border-slate-100 rounded-xl outline-none focus:ring-4 focus:ring-blue-500/5 bg-slate-50 font-medium pr-12" placeholder="••••••••">
-                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-blue-600 transition-colors">
-                            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
+                        <input type="password" id="loginPass" required class="w-full px-3 py-2 win-input text-sm pr-10" placeholder="••••••••">
+                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-black p-1 rounded hover:bg-black/5 transition-colors">
+                            <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="w-full btn-luxe mt-4 uppercase text-[10px] tracking-widest justify-center py-4">Verificar Acceso</button>
+                <div class="pt-4 flex justify-end gap-2">
+                    <button type="button" onclick="window.closeModal('loginModal')" class="win-btn-secondary">Cancelar</button>
+                    <button type="submit" class="win-btn-primary">Aceptar</button>
+                </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal: Asset Detail -->
-    <div id="bookModal" class="fixed inset-0 z-[150] hidden items-end md:items-center justify-center sm:p-6 overflow-hidden">
-        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-xl" onclick="window.closeModal('bookModal')"></div>
+    <!-- Fluent Modal: Asset Detail -->
+    <div id="bookModal" class="fixed inset-0 z-[150] hidden items-end md:items-center justify-center sm:p-6 acrylic-modal overflow-hidden">
+        <div class="absolute inset-0" onclick="window.closeModal('bookModal')"></div>
         
-        <div class="relative bg-white rounded-t-[2rem] md:rounded-[3rem] shadow-2xl w-full max-w-4xl max-h-[90vh] md:max-h-[85vh] h-full md:h-auto overflow-hidden flex flex-col md:flex-row animate-slide-up md:animate-reveal border border-white/20">
-            <!-- Close Button / Mobile Drag Handle -->
-            <button onclick="window.closeModal('bookModal')" class="absolute top-4 right-4 md:top-6 md:right-6 p-2 rounded-full bg-slate-100/80 text-slate-500 z-50 hover:bg-slate-200 transition-all backdrop-blur-sm">
-                <i data-lucide="x" class="w-4 h-4 md:w-5 md:h-5"></i>
+        <div class="relative bg-white rounded-t-xl md:rounded-lg shadow-2xl border border-black/10 w-full max-w-3xl max-h-[90vh] md:max-h-[85vh] h-full md:h-auto overflow-hidden flex flex-col md:flex-row animate-slide">
+            <!-- Win11 Dialog Close -->
+            <button onclick="window.closeModal('bookModal')" class="absolute top-3 right-3 text-gray-500 hover:text-red-500 hover:bg-red-50 p-1.5 rounded transition-colors z-50">
+                <i data-lucide="x" class="w-4 h-4"></i>
             </button>
-            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-slate-300/50 rounded-full md:hidden z-50"></div>
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-gray-300 rounded-full md:hidden z-50"></div>
             
-            <!-- Left Side: Cover & Actions -->
-            <div class="w-full md:w-[40%] p-6 pt-10 md:p-10 flex flex-row md:flex-col items-center bg-slate-50 border-b md:border-b-0 md:border-r border-slate-100 justify-start md:justify-center gap-5 md:gap-0 relative z-10 shrink-0">
-                <div class="w-28 sm:w-36 md:w-full md:max-w-[240px] shrink-0">
-                    <img id="modalCover" src="" class="w-full rounded-xl md:rounded-2xl shadow-xl border-2 md:border-4 border-white aspect-[2/3] object-cover">
-                </div>
-                <div class="flex flex-col w-full gap-2 md:gap-3 md:mt-8 md:max-w-[240px]">
-                    <button onclick="window.actionRead()" class="btn-luxe w-full justify-center py-2.5 md:py-3.5 text-[9px] md:text-[10px] tracking-widest shadow-md">
-                        <i data-lucide="book-open" class="w-4 h-4"></i><span class="hidden sm:inline">ACCESO DIGITAL</span><span class="sm:hidden">LEER</span>
+            <!-- Left Side: Cover -->
+            <div class="w-full md:w-[35%] p-6 pt-8 md:p-8 bg-[#f9f9f9] border-b md:border-b-0 md:border-r border-black/5 flex flex-col items-center shrink-0">
+                <img id="modalCover" src="" class="w-32 md:w-full max-w-[200px] rounded shadow-md border border-black/5 aspect-[2/3] object-cover mb-6">
+                
+                <div class="w-full flex flex-col gap-2">
+                    <button onclick="window.actionRead()" class="win-btn-primary w-full flex justify-center items-center gap-2">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> Abrir Recurso
                     </button>
-                    <button onclick="window.actionDownload()" class="w-full bg-white border border-slate-200 rounded-xl py-2.5 md:py-3 text-[9px] font-black uppercase tracking-widest text-slate-600 hover:text-blue-700 transition-all">Descargar</button>
-                    <div id="adminActions" class="hidden grid-cols-2 gap-2 mt-1 md:mt-2 pt-3 md:pt-4 border-t border-slate-200">
-                        <button onclick="window.editCurrentBook()" class="bg-slate-200/50 text-slate-500 py-2 md:py-2.5 rounded-lg text-[8px] font-black uppercase">Editar</button>
-                        <button onclick="window.deleteCurrentBook()" class="bg-red-50 text-red-500 py-2 md:py-2.5 rounded-lg text-[8px] font-black uppercase">Borrar</button>
-                    </div>
+                    <button onclick="window.copyCode()" class="win-btn-secondary w-full flex justify-center items-center gap-2 text-xs">
+                        <i data-lucide="copy" class="w-3.5 h-3.5"></i> Copiar ID: <span id="modalIdDisplay" class="font-mono"></span>
+                    </button>
+                </div>
+
+                <div id="adminActions" class="hidden w-full grid-cols-2 gap-2 mt-4 pt-4 border-t border-black/5">
+                    <button onclick="window.editCurrentBook()" class="win-btn-secondary text-xs flex justify-center"><i data-lucide="edit-2" class="w-3 h-3 mr-1"></i> Editar</button>
+                    <button onclick="window.deleteCurrentBook()" class="win-btn-secondary text-xs flex justify-center text-red-600 hover:bg-red-50"><i data-lucide="trash-2" class="w-3 h-3 mr-1"></i> Borrar</button>
                 </div>
             </div>
 
             <!-- Right Side: Details -->
-            <div class="w-full md:w-[60%] p-6 md:p-12 bg-white flex flex-col overflow-y-auto modal-scroll grow">
-                <div class="flex items-center gap-2 mb-3 md:mb-4">
-                    <span id="modalCategory" class="text-blue-600 font-black text-[8px] md:text-[9px] uppercase tracking-widest bg-blue-50 px-2 py-1 rounded-md">CATEGORÍA</span>
-                    <span class="w-1 h-1 bg-slate-200 rounded-full"></span>
-                    <span id="modalIdDisplay" class="text-slate-300 font-mono text-[9px] tracking-tighter">ID: XXXX</span>
+            <div class="w-full md:w-[65%] p-6 md:p-8 bg-white flex flex-col overflow-y-auto win-scroll grow">
+                <span id="modalCategory" class="text-xs font-semibold text-[#005fb8] mb-2 uppercase tracking-wide">Categoría</span>
+                <h2 id="modalTitle" class="text-2xl font-semibold text-gray-900 mb-1 leading-tight">Título del Documento</h2>
+                <p id="modalAuthorName" class="text-sm text-gray-600 mb-6">Autor</p>
+                
+                <div class="mb-4">
+                    <h4 class="text-sm font-semibold text-gray-900 mb-2">Descripción</h4>
+                    <p id="modalDescription" class="text-sm text-gray-600 leading-relaxed"></p>
                 </div>
-                <h2 id="modalTitle" class="text-xl sm:text-2xl md:text-3xl font-black mb-1 md:mb-3 text-slate-900 leading-tight uppercase tracking-tight">TÍTULO</h2>
-                <p id="modalAuthor" class="text-sm sm:text-base md:text-lg text-slate-500 mb-5 md:mb-6 italic">Responsable: <span id="modalAuthorName" class="text-slate-900 font-bold not-italic">Autor</span></p>
-                <div class="mb-6 md:mb-8 flex-1">
-                    <h4 class="text-[9px] md:text-[10px] font-black text-slate-300 uppercase tracking-widest mb-2 md:mb-3">Sinopsis Académica</h4>
-                    <p id="modalDescription" class="text-slate-600 leading-relaxed text-xs sm:text-sm italic"></p>
-                </div>
-                <div class="bg-slate-50 p-4 md:p-6 rounded-xl md:rounded-2xl border border-slate-100 flex justify-between items-center mt-auto shrink-0">
-                    <div class="overflow-hidden mr-4">
-                        <p class="text-[7px] md:text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Knowledge Key</p>
-                        <p id="modalId" class="font-mono font-bold text-slate-900 text-base md:text-lg lg:text-xl truncate"></p>
-                    </div>
-                    <button onclick="window.copyCode()" class="flex-none w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-white border border-slate-100 text-slate-400 hover:text-blue-600 rounded-xl shadow-sm transition-all"><i data-lucide="copy" class="w-4 h-4 md:w-5 md:h-5"></i></button>
+                
+                <div class="mt-auto pt-6">
+                    <p class="text-[10px] text-gray-400 font-mono">ID Sistema: <span id="modalId"></span></p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal: Management Center -->
-    <div id="addBookModal" class="fixed inset-0 z-[200] hidden items-end md:items-center justify-center sm:p-4 overflow-hidden">
-        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-xl" onclick="window.closeModal('addBookModal')"></div>
-        <div class="relative bg-white rounded-t-[2rem] md:rounded-[3rem] shadow-2xl w-full max-w-2xl max-h-[90vh] h-full md:h-auto flex flex-col animate-slide-up md:animate-reveal border border-slate-100 overflow-hidden mt-auto md:my-4">
-            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-slate-200 rounded-full md:hidden z-50"></div>
+    <!-- Fluent Modal: Management Center -->
+    <div id="addBookModal" class="fixed inset-0 z-[200] hidden items-end md:items-center justify-center sm:p-4 acrylic-modal overflow-hidden">
+        <div class="absolute inset-0" onclick="window.closeModal('addBookModal')"></div>
+        <div class="relative bg-white rounded-t-xl md:rounded-lg shadow-2xl border border-black/10 w-full max-w-2xl max-h-[90vh] h-full md:h-auto flex flex-col animate-slide overflow-hidden mt-auto md:my-4">
+            <div class="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-gray-300 rounded-full md:hidden z-50"></div>
             
-            <div class="p-5 pt-8 md:p-8 border-b border-slate-50 bg-white flex items-center justify-between shrink-0">
-                <h2 id="modalFormTitle" class="text-lg md:text-xl font-bold text-slate-900 tracking-tight uppercase flex items-center gap-3">
-                    <span class="w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white"><i data-lucide="server" class="w-4 h-4 md:w-5 md:h-5"></i></span>
-                    Asset Management
+            <div class="px-6 py-4 border-b border-black/5 bg-[#fcfcfc] flex items-center justify-between shrink-0">
+                <h2 id="modalFormTitle" class="text-base font-semibold text-gray-900 flex items-center gap-2">
+                    <i data-lucide="file-plus" class="w-4 h-4 text-[#005fb8]"></i> Gestión de Archivos
                 </h2>
-                <button onclick="window.closeModal('addBookModal')" class="text-slate-300 hover:text-slate-900 transition-colors p-2"><i data-lucide="x"></i></button>
+                <button onclick="window.closeModal('addBookModal')" class="text-gray-500 hover:text-red-500 hover:bg-red-50 p-1 rounded transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
 
-            <div class="flex-1 overflow-y-auto p-5 md:p-10 bg-slate-50/10 modal-scroll">
-                <form id="addBookForm" class="space-y-5 md:space-y-6">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+            <div class="flex-1 overflow-y-auto p-6 bg-white win-scroll">
+                <form id="addBookForm" class="space-y-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-1">
-                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Título Oficial</label>
-                            <input type="text" id="addTitle" required class="w-full px-4 md:px-5 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm" placeholder="Nombre...">
+                            <label class="text-xs font-medium text-gray-700">Título</label>
+                            <input type="text" id="addTitle" required class="w-full px-3 py-2 win-input text-sm" placeholder="Ej. Arquitectura Moderna">
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Responsable</label>
-                            <input type="text" id="addAuthor" required class="w-full px-4 md:px-5 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm" placeholder="Autor...">
+                            <label class="text-xs font-medium text-gray-700">Autor / Responsable</label>
+                            <input type="text" id="addAuthor" required class="w-full px-3 py-2 win-input text-sm" placeholder="Nombre...">
                         </div>
                     </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="space-y-1">
-                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Materia</label>
+                            <label class="text-xs font-medium text-gray-700">Materia</label>
                             <div class="flex gap-2">
-                                <select id="addCategory" required class="flex-1 px-3 md:px-4 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm">
-                                    <option value="" disabled selected>Seleccionar...</option>
+                                <select id="addCategory" required class="flex-1 px-3 py-2 win-input text-sm bg-white">
+                                    <option value="" disabled selected>Seleccione...</option>
                                 </select>
-                                <button type="button" onclick="window.addNewMateria()" class="bg-white px-3 rounded-xl border border-slate-100 text-blue-600 shadow-sm hover:bg-slate-50 transition-colors"><i data-lucide="plus" class="w-4 h-4"></i></button>
+                                <button type="button" onclick="window.addNewMateria()" class="win-btn-secondary px-2"><i data-lucide="plus" class="w-4 h-4"></i></button>
                             </div>
                         </div>
                         <div class="space-y-1">
-                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Drive Link</label>
-                            <input type="url" id="addResourceLink" required class="w-full px-4 md:px-5 py-2.5 md:py-3 border border-slate-200 rounded-xl outline-none focus:border-blue-400 bg-white text-sm" placeholder="https://...">
+                            <label class="text-xs font-medium text-gray-700">Enlace (URL)</label>
+                            <input type="url" id="addResourceLink" required class="w-full px-3 py-2 win-input text-sm" placeholder="https://...">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 lg:grid-cols-[160px_1fr] gap-5 md:gap-6">
-                        <div class="space-y-2">
-                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Asset Cover</label>
-                            <div onclick="document.getElementById('addCover').click()" class="relative border-2 border-dashed border-slate-200 h-[140px] md:h-[180px] rounded-2xl text-center hover:border-blue-400 hover:bg-white transition-all group cursor-pointer bg-slate-50 flex flex-col items-center justify-center overflow-hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-[140px_1fr] gap-4 pt-2">
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-700">Portada</label>
+                            <div onclick="document.getElementById('addCover').click()" class="relative border border-dashed border-gray-300 bg-[#fafafa] h-[160px] rounded flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 hover:border-[#005fb8] transition-colors overflow-hidden group">
                                 <input type="file" id="addCover" accept="image/*" class="hidden">
                                 <div id="imagePreviewContainer" class="hidden h-full w-full">
                                     <img id="imagePreview" src="" alt="Preview" class="h-full w-full object-cover">
                                 </div>
-                                <div id="imagePlaceholder" class="flex flex-col items-center">
-                                    <i data-lucide="camera" class="w-5 h-5 md:w-6 md:h-6 text-slate-300 mb-2 group-hover:text-blue-500"></i>
-                                    <span class="text-[8px] md:text-[9px] font-black text-slate-400 uppercase">Subir Imagen</span>
+                                <div id="imagePlaceholder" class="flex flex-col items-center text-gray-400 group-hover:text-[#005fb8]">
+                                    <i data-lucide="image-plus" class="w-6 h-6 mb-1"></i>
+                                    <span class="text-[10px] font-medium">Examinar</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="space-y-2">
-                            <label class="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Resumen</label>
-                            <textarea id="addDescription" required class="w-full h-[140px] md:h-[180px] px-4 md:px-5 py-3 md:py-4 border border-slate-200 rounded-2xl outline-none focus:border-blue-400 bg-white text-xs md:text-sm italic resize-none" placeholder="Descripción académica..."></textarea>
+                        <div class="space-y-1">
+                            <label class="text-xs font-medium text-gray-700">Descripción</label>
+                            <textarea id="addDescription" required class="w-full h-[160px] px-3 py-2 win-input text-sm resize-none" placeholder="Escriba un resumen..."></textarea>
                         </div>
                     </div>
                     <button type="submit" id="hiddenSubmit" class="hidden"></button>
                 </form>
             </div>
 
-            <div class="p-5 md:p-8 border-t border-slate-50 bg-white flex flex-col sm:flex-row gap-2 md:gap-3 shrink-0 pb-8 md:pb-8">
-                <button type="button" onclick="window.closeModal('addBookModal')" class="flex-1 py-3 font-bold text-slate-400 uppercase text-[9px] md:text-[10px] tracking-widest hover:text-slate-900 bg-slate-50 rounded-xl border border-slate-100">Cancelar</button>
-                <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="flex-[2] btn-luxe justify-center text-[9px] md:text-[10px] tracking-widest uppercase">Actualizar Repositorio</button>
+            <div class="px-6 py-4 border-t border-black/5 bg-[#fcfcfc] flex justify-end gap-2 shrink-0 pb-6 md:pb-4">
+                <button type="button" onclick="window.closeModal('addBookModal')" class="win-btn-secondary">Cancelar</button>
+                <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="win-btn-primary">Guardar Cambios</button>
             </div>
         </div>
     </div>
@@ -369,7 +395,6 @@
             if (m) {
                 m.classList.remove('hidden'); m.classList.add('flex');
                 document.body.style.overflow = 'hidden';
-                // Agregamos un estado al historial al abrir el modal
                 history.pushState({ modalOpen: true, modalId: id }, '', '#' + id);
             }
         };
@@ -379,28 +404,21 @@
             if (m && !m.classList.contains('hidden')) {
                 m.classList.add('hidden'); m.classList.remove('flex');
                 
-                // Solo restaurar el scroll si no hay otros modales abiertos
                 const anyOpen = document.querySelectorAll('.fixed.inset-0.flex').length > 0;
                 if (!anyOpen) document.body.style.overflow = '';
                 
-                // Si cerramos manualmente (X o fondo), retrocedemos en el historial para limpiarlo
                 if (!fromPopState && history.state && history.state.modalOpen) {
                     history.back();
                 }
             }
         };
 
-        // Escuchar el evento de navegación (Botón Atrás del celular/navegador)
         window.addEventListener('popstate', (e) => {
-            // Cerramos todos los modales (indicando que viene del PopState para no causar loop)
             ['loginModal', 'bookModal', 'addBookModal'].forEach(id => {
                 const m = document.getElementById(id);
-                if (m && !m.classList.contains('hidden')) {
-                    window.closeModal(id, true);
-                }
+                if (m && !m.classList.contains('hidden')) { window.closeModal(id, true); }
             });
 
-            // Si navegamos "Hacia Adelante" a un estado donde había un modal, lo reabrimos
             if (e.state && e.state.modalOpen) {
                 const m = document.getElementById(e.state.modalId);
                 if (m) {
@@ -409,7 +427,6 @@
                 }
             }
         });
-        // --------------------------------------------------------
 
         function generateSimpleCode() {
             const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
@@ -460,7 +477,7 @@
         window.toggleAuth = () => {
             if (isAdmin) {
                 isAdmin = false; localStorage.setItem('winLibraryAdmin', 'false');
-                updateAuthUI(); mostrarNotificacion("Security", "Sesión cerrada.");
+                updateAuthUI(); mostrarNotificacion("Información", "Sesión cerrada correctamente.");
             } else {
                 window.openModal('loginModal');
             }
@@ -473,9 +490,9 @@
             if (u === 'douglas' && p === 'd5720') {
                 isAdmin = true; localStorage.setItem('winLibraryAdmin', 'true');
                 window.closeModal('loginModal'); updateAuthUI();
-                mostrarNotificacion("Security", "Douglas, acceso autorizado.");
+                mostrarNotificacion("Seguridad", "Administrador conectado.");
                 document.getElementById('loginForm').reset();
-            } else { mostrarNotificacion("Error", "Fallo de credenciales."); }
+            } else { mostrarNotificacion("Error", "Credenciales incorrectas."); }
         });
 
         function updateAuthUI() {
@@ -484,13 +501,13 @@
             const actions = document.getElementById('adminActions');
             if (isAdmin) {
                 btn.classList.remove('hidden'); btn.classList.add('flex');
-                avatar.innerHTML = 'D';
-                avatar.className = "w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center font-black text-xs cursor-pointer shadow-lg bg-blue-600 transition-all hover:rotate-6";
+                avatar.innerHTML = '<i data-lucide="shield-check" class="w-4 h-4 text-white"></i>';
+                avatar.className = "w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-[#005fb8] shadow-sm transition-all";
                 if(actions) { actions.classList.remove('hidden'); actions.classList.add('grid'); }
             } else {
                 btn.classList.add('hidden'); btn.classList.remove('flex');
-                avatar.innerHTML = '<i data-lucide="user-check" class="w-4 h-4 text-slate-400"></i>';
-                avatar.className = "w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center font-bold text-sm cursor-pointer bg-white border border-slate-100 transition-all";
+                avatar.innerHTML = '<i data-lucide="user" class="w-4 h-4 text-gray-600"></i>';
+                avatar.className = "w-8 h-8 rounded-full flex items-center justify-center cursor-pointer bg-black/5 hover:bg-black/10 border border-black/5 transition-all";
                 if(actions) { actions.classList.add('hidden'); actions.classList.remove('grid'); }
                 lucide.createIcons();
             }
@@ -503,7 +520,7 @@
             renderApp();
             if (cat !== 'All') {
                 const shelf = document.getElementById('shelvesContainer');
-                window.scrollTo({ top: shelf.offsetTop - 100, behavior: 'smooth' });
+                window.scrollTo({ top: shelf.offsetTop - 80, behavior: 'smooth' });
             }
         };
 
@@ -512,10 +529,13 @@
             if (!chipContainer) return;
             const allCats = [...new Set([...categories.map(c => c.name), ...books.map(b => b.category)])].filter(Boolean).sort();
             
-            const btnClassBase = "flex-none px-5 md:px-6 py-2 md:py-2.5 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all whitespace-nowrap ";
+            // Fluent Design Tabs (Pivot)
+            const baseClass = "px-4 py-1.5 text-sm font-medium transition-colors whitespace-nowrap cursor-pointer hover:text-gray-900 ";
+            const activeClass = "text-gray-900 border-b-2 border-[#005fb8]";
+            const inactiveClass = "text-gray-500 border-b-2 border-transparent";
             
-            chipContainer.innerHTML = `<button onclick="window.filterByCategory('All')" class="${btnClassBase} ${activeFilter === 'All' ? 'bg-slate-900 text-white shadow-xl' : 'bg-white text-slate-400 border border-slate-100'}">CATÁLOGO MAESTRO</button>` + 
-                allCats.map(c => `<button onclick="window.filterByCategory('${c}')" class="${btnClassBase} ${activeFilter === c ? 'bg-slate-900 text-white shadow-xl' : 'bg-white text-slate-400 border border-slate-100'}">${c}</button>`).join('');
+            chipContainer.innerHTML = `<button onclick="window.filterByCategory('All')" class="${baseClass} ${activeFilter === 'All' ? activeClass : inactiveClass}">Todos</button>` + 
+                allCats.map(c => `<button onclick="window.filterByCategory('${c}')" class="${baseClass} ${activeFilter === c ? activeClass : inactiveClass}">${c}</button>`).join('');
         }
 
         function renderApp() {
@@ -523,30 +543,24 @@
             const shelf = document.getElementById('shelvesContainer');
             
             if (books.length === 0) {
-                heroContent.innerHTML = `<div class="max-w-[1500px] mx-auto px-6 w-full text-center animate-reveal"><h1 class="text-3xl font-extrabold text-white uppercase tracking-tighter">Portal Académico</h1><p class="text-slate-400 text-sm mt-4">Iniciando repositorio...</p></div>`;
+                heroContent.innerHTML = `<div class="w-full text-center py-10 animate-fade"><h1 class="text-2xl font-semibold text-gray-900">Biblioteca en blanco</h1><p class="text-gray-500 text-sm mt-2">Añade documentos para comenzar.</p></div>`;
                 shelf.innerHTML = "";
                 lucide.createIcons();
                 return;
             }
 
-            const latestBook = books[books.length - 1];
-
+            // Fluent Minimal Hero
             heroContent.innerHTML = `
-                <div class="max-w-[1500px] mx-auto px-6 lg:px-12 w-full flex flex-col md:flex-row items-center gap-10 lg:gap-24 animate-reveal">
-                    <div class="max-w-2xl text-center md:text-left">
-                        <div class="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 bg-blue-600/10 text-blue-400 rounded-lg text-[7px] md:text-[8px] font-black uppercase tracking-[0.3em] mb-6 md:mb-8 border border-blue-500/20">Digital Knowledge Center</div>
-                        <h1 style="font-family: 'Outfit', sans-serif;" class="text-4xl sm:text-5xl lg:text-7xl font-black text-white leading-tight uppercase tracking-tighter mb-6 md:mb-8 drop-shadow-2xl">Repositorio <br><span class="text-blue-500">Novell Digital</span></h1>
-                        <div class="flex items-center justify-center md:justify-start gap-8 md:gap-10 mb-8 md:mb-10">
-                            <div><p class="text-white text-2xl md:text-3xl font-bold">${books.length}</p><p class="text-slate-500 text-[7px] md:text-[8px] font-black uppercase tracking-widest">Activos</p></div>
-                            <div class="w-px h-8 md:h-10 bg-white/10"></div>
-                            <div><p class="text-white text-2xl md:text-3xl font-bold">${categories.length}</p><p class="text-slate-500 text-[7px] md:text-[8px] font-black uppercase tracking-widest">Materias</p></div>
-                        </div>
-                        <button onclick="window.scrollTo({top: document.getElementById('shelvesContainer').offsetTop - 100, behavior: 'smooth'})" class="btn-portal-white w-full sm:w-auto text-[10px] md:text-xs">Explorar Biblioteca</button>
+                <div class="w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-6 animate-fade">
+                    <div>
+                        <h1 class="text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight mb-2">Biblioteca Digital</h1>
+                        <p class="text-gray-600 text-sm md:text-base max-w-lg">Explora nuestra colección de documentos y recursos. Actualmente contamos con <b>${books.length}</b> activos organizados en <b>${categories.length}</b> áreas de estudio.</p>
                     </div>
-                    <div class="hidden md:flex w-[240px] lg:w-[320px] flex-none items-center justify-center relative transform rotate-2">
-                        <div class="absolute -inset-10 bg-blue-600/10 blur-[80px] rounded-full"></div>
-                        <div class="aspect-[2/3] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border-[10px] border-white/5 bg-slate-800 relative z-10">
-                            <img src="${latestBook.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover">
+                    <div class="hidden md:flex items-center gap-4 bg-white/60 p-3 rounded-lg border border-black/5 shadow-sm backdrop-blur-sm">
+                        <i data-lucide="library" class="w-8 h-8 text-[#005fb8]/70"></i>
+                        <div>
+                            <p class="text-xs text-gray-500 font-medium uppercase tracking-wider">Estado</p>
+                            <p class="text-sm font-semibold text-gray-900">Sincronizado</p>
                         </div>
                     </div>
                 </div>`;
@@ -555,22 +569,22 @@
                 ? [...books].sort((a, b) => a.title.localeCompare(b.title))
                 : books.filter(b => b.category === activeFilter).sort((a, b) => a.title.localeCompare(b.title));
 
+            // Windows 11 style Grid Cards
             shelf.innerHTML = `
-                <div class="animate-reveal">
-                    <div class="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-8 mb-8 sm:mb-16">
-                        <h3 class="text-2xl sm:text-3xl font-black tracking-tighter text-slate-900 uppercase">${activeFilter === 'All' ? 'Catálogo Maestro' : activeFilter}</h3>
-                        <div class="hidden sm:block h-px flex-1 bg-slate-200"></div>
-                        <span class="text-[9px] font-black text-slate-400 tracking-widest uppercase">${filteredBooks.length} ENTRADAS LOCALIZADAS</span>
+                <div class="animate-fade">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-lg font-semibold text-gray-900">${activeFilter === 'All' ? 'Catálogo General' : activeFilter}</h3>
+                        <span class="text-xs font-medium text-gray-500 bg-black/5 px-2 py-1 rounded">${filteredBooks.length} items</span>
                     </div>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-10 sm:gap-x-6 md:gap-x-10 sm:gap-y-16">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
                         ${filteredBooks.map(b => `
-                            <div class="book-card-container cursor-pointer group/card" onclick="window.openBookDetails('${b.id}')">
-                                <div class="book-card-img aspect-[2/3]">
-                                    <img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-all duration-700 group-hover/card:scale-110">
+                            <div class="surface-card cursor-pointer group flex flex-col overflow-hidden" onclick="window.openBookDetails('${b.id}')">
+                                <div class="w-full aspect-[2/3] bg-gray-100 border-b border-black/5 overflow-hidden">
+                                    <img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover">
                                 </div>
-                                <div class="mt-4 sm:mt-5">
-                                    <h4 class="font-bold text-[10px] sm:text-[11px] md:text-[12px] text-slate-900 uppercase tracking-tighter line-clamp-2 sm:line-clamp-1 group-hover/card:text-blue-600 transition-all">${b.title}</h4>
-                                    <p class="text-[8px] sm:text-[9px] font-black text-slate-400 mt-1 sm:mt-1.5 uppercase tracking-widest truncate">${b.author}</p>
+                                <div class="p-3 bg-white">
+                                    <h4 class="font-semibold text-xs text-gray-900 line-clamp-2 leading-tight mb-1 group-hover:text-[#005fb8] transition-colors">${b.title}</h4>
+                                    <p class="text-[10px] text-gray-500 truncate">${b.author}</p>
                                 </div>
                             </div>
                         `).join('')}
@@ -588,7 +602,7 @@
             document.getElementById('modalTitle').textContent = b.title;
             document.getElementById('modalAuthorName').textContent = b.author;
             document.getElementById('modalId').textContent = b.id;
-            document.getElementById('modalIdDisplay').textContent = `MASTER ID: ${b.id}`;
+            document.getElementById('modalIdDisplay').textContent = b.id;
             document.getElementById('modalDescription').textContent = b.description;
             updateAuthUI();
             window.openModal('bookModal');
@@ -601,7 +615,7 @@
             document.getElementById('addBookForm').reset();
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('imagePlaceholder').classList.remove('hidden');
-            document.getElementById('modalFormTitle').innerHTML = '<span class="w-8 h-8 md:w-10 md:h-10 bg-slate-900 rounded-xl flex items-center justify-center text-white"><i data-lucide="edit-3" class="w-4 h-4 md:w-5 md:h-5"></i></span> Asset Creation';
+            document.getElementById('modalFormTitle').innerHTML = '<i data-lucide="file-plus" class="w-4 h-4 text-[#005fb8]"></i> Añadir Documento';
             window.openModal('addBookModal');
             lucide.createIcons();
         };
@@ -610,7 +624,7 @@
             const n = prompt("Nombre de la nueva materia:");
             if (n && n.trim()) {
                 const id = `cat-${Date.now()}`;
-                try { await setDoc(doc(categoriesCollection, id), { id, name: n.trim().toUpperCase() }); mostrarNotificacion("System", "Materia añadida."); }
+                try { await setDoc(doc(categoriesCollection, id), { id, name: n.trim() }); mostrarNotificacion("Éxito", "Materia añadida."); }
                 catch(e) { console.error(e); }
             }
         };
@@ -619,7 +633,7 @@
             const s = document.getElementById('addCategory');
             if (!s) return;
             const current = s.value;
-            s.innerHTML = '<option value="" disabled selected>Seleccionar...</option>' + 
+            s.innerHTML = '<option value="" disabled selected>Seleccione...</option>' + 
                 categories.sort((a,b)=>a.name.localeCompare(b.name)).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             if (current) s.value = current;
         }
@@ -627,21 +641,21 @@
         document.getElementById('addBookForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('modalFormSubmitBtn');
-            if (!editingBookId && !currentImageData) { mostrarNotificacion("System", "Imagen requerida."); return; }
-            btn.disabled = true; btn.textContent = "CONECTANDO...";
+            if (!editingBookId && !currentImageData) { mostrarNotificacion("Aviso", "Añada una imagen de portada."); return; }
+            btn.disabled = true; btn.textContent = "Guardando...";
             try {
                 const id = editingBookId || generateSimpleCode();
                 let finalUrl = currentImageData || (editingBookId ? books.find(x => x.id === editingBookId).coverUrl : fallbackImg);
                 const data = {
-                    id: id, title: document.getElementById('addTitle').value.toUpperCase(),
+                    id: id, title: document.getElementById('addTitle').value,
                     author: document.getElementById('addAuthor').value, category: document.getElementById('addCategory').value,
                     resourceLink: document.getElementById('addResourceLink').value, description: document.getElementById('addDescription').value,
                     coverUrl: finalUrl
                 };
                 await setDoc(doc(booksCollection, id), data, { merge: true });
-                window.closeModal('addBookModal'); mostrarNotificacion("Identity", "Activo sincronizado.");
-            } catch (err) { mostrarNotificacion("Error", "Fallo al procesar."); }
-            finally { btn.disabled = false; btn.textContent = "Actualizar Repositorio"; currentImageData = null; }
+                window.closeModal('addBookModal'); mostrarNotificacion("Éxito", "Documento guardado.");
+            } catch (err) { mostrarNotificacion("Error", "No se pudo guardar."); }
+            finally { btn.disabled = false; btn.textContent = "Guardar Cambios"; currentImageData = null; }
         });
 
         window.editCurrentBook = () => {
@@ -653,31 +667,31 @@
             document.getElementById('addDescription').value = b.description; document.getElementById('imagePreview').src = b.coverUrl;
             document.getElementById('imagePreviewContainer').classList.remove('hidden'); document.getElementById('imagePlaceholder').classList.add('hidden');
             
-            // Cerramos primero y luego abrimos para manejar correctamente el History API
             window.closeModal('bookModal');
             setTimeout(() => {
                 window.openModal('addBookModal');
+                document.getElementById('modalFormTitle').innerHTML = '<i data-lucide="edit-2" class="w-4 h-4 text-[#005fb8]"></i> Editar Documento';
                 lucide.createIcons();
             }, 50);
         };
 
         window.deleteCurrentBook = async () => {
-            if (confirm("¿Confirmas la remoción del material?") && currentViewBookId) {
-                try { await deleteDoc(doc(booksCollection, currentViewBookId)); window.closeModal('bookModal'); mostrarNotificacion("System", "Removido con éxito."); }
+            if (confirm("¿Está seguro que desea eliminar este documento permanentemente?") && currentViewBookId) {
+                try { await deleteDoc(doc(booksCollection, currentViewBookId)); window.closeModal('bookModal'); mostrarNotificacion("Aviso", "Documento eliminado."); }
                 catch(e) { console.error(e); }
             }
         };
 
         window.actionRead = () => { const b = books.find(x => x.id === currentViewBookId); if (b?.resourceLink) window.open(b.resourceLink, '_blank'); };
-        window.actionDownload = () => window.actionRead();
-        window.copyCode = () => { const c = document.getElementById('modalId').textContent; navigator.clipboard.writeText(c).then(() => mostrarNotificacion("Clipboard", "ID Copiado.")); };
+        window.copyCode = () => { const c = document.getElementById('modalId').textContent; navigator.clipboard.writeText(c).then(() => mostrarNotificacion("Copiado", "ID en el portapapeles.")); };
 
+        // Fluent Toast Notification
         function mostrarNotificacion(t, m) {
             const toast = document.createElement('div');
-            toast.className = "fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-slate-900 border border-white/10 shadow-2xl p-4 sm:p-5 rounded-2xl z-[300] animate-reveal flex items-center gap-4 max-w-[90%] md:max-w-sm";
-            toast.innerHTML = `<div class="bg-blue-600 p-2 rounded-lg text-white shrink-0"><i data-lucide="check" class="w-4 h-4"></i></div><div><p class="font-bold text-[8px] uppercase text-slate-400 tracking-widest">${t}</p><p class="text-[10px] md:text-[11px] font-medium text-white">${m}</p></div>`;
+            toast.className = "fixed bottom-6 right-6 md:bottom-8 md:right-8 bg-white border border-black/10 shadow-lg p-3 rounded-md z-[300] animate-slide flex items-start gap-3 w-[300px]";
+            toast.innerHTML = `<div class="mt-0.5 text-[#005fb8]"><i data-lucide="info" class="w-4 h-4"></i></div><div><p class="font-semibold text-xs text-gray-900">${t}</p><p class="text-[11px] text-gray-600">${m}</p></div>`;
             document.body.appendChild(toast); lucide.createIcons();
-            setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(10px)'; toast.style.transition = 'all 0.3s ease'; setTimeout(() => toast.remove(), 300); }, 3000);
         }
 
         window.toggleMobileSearch = () => {
@@ -704,16 +718,25 @@
             shelf.classList.add('hidden');
 
             if (filtered.length === 0) {
-                heroContent.innerHTML = `<div class="max-w-xl mx-auto text-center py-20 animate-reveal"><h2 class="text-xl font-bold text-white uppercase mb-4 tracking-widest">Sin resultados</h2><p class="text-slate-400 text-sm">No hay coincidencias para "${searchStr}"</p></div>`;
+                heroContent.innerHTML = `<div class="w-full text-center py-10 animate-fade"><h2 class="text-lg font-semibold text-gray-900 mb-2">Sin resultados</h2><p class="text-gray-500 text-sm">No encontramos "${searchStr}"</p></div>`;
             } else {
                 heroContent.innerHTML = `
-                    <div class="max-w-[1500px] mx-auto px-4 md:px-6 animate-reveal">
-                        <div class="flex items-center justify-between mb-6 md:mb-8 pb-4 border-b border-white/10">
-                            <h3 class="text-lg md:text-xl font-black text-white uppercase">Resultados: ${filtered.length}</h3>
-                            <button onclick="window.executeSearch(''); document.getElementById('shelvesContainer').classList.remove('hidden');" class="text-white/40 hover:text-white"><i data-lucide="x"></i></button>
+                    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 animate-fade mb-10">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-semibold text-gray-900">Búsqueda: ${filtered.length} coincidencia(s)</h3>
+                            <button onclick="window.executeSearch(''); document.getElementById('shelvesContainer').classList.remove('hidden');" class="text-gray-500 hover:bg-black/5 p-1 rounded"><i data-lucide="x" class="w-4 h-4"></i></button>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 max-h-[400px] overflow-y-auto modal-scroll pr-2 md:pr-4">
-                            ${filtered.map(b => `<div class="cursor-pointer group" onclick="window.openBookDetails('${b.id}')"><div class="aspect-[2/3] rounded-xl overflow-hidden border border-white/10 group-hover:border-blue-500 transition-all"><img src="${b.coverUrl}" class="w-full h-full object-cover"></div><p class="text-[9px] md:text-[10px] font-bold text-white mt-2 md:mt-3 uppercase truncate">${b.title}</p></div>`).join('')}
+                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4">
+                            ${filtered.map(b => `
+                                <div class="surface-card cursor-pointer group flex flex-col overflow-hidden" onclick="window.openBookDetails('${b.id}')">
+                                    <div class="w-full aspect-[2/3] bg-gray-100 border-b border-black/5 overflow-hidden">
+                                        <img src="${b.coverUrl}" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="p-3 bg-white">
+                                        <h4 class="font-semibold text-xs text-gray-900 line-clamp-1 group-hover:text-[#005fb8] transition-colors">${b.title}</h4>
+                                    </div>
+                                </div>
+                            `).join('')}
                         </div>
                     </div>`;
             }
