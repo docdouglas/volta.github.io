@@ -100,8 +100,8 @@
     <div class="luxe-mesh"></div>
 
     <!-- Header / Navbar -->
-    <nav class="fixed top-0 w-full z-[100] h-16 glass-nav" id="navbar">
-        <div class="max-w-[1600px] mx-auto px-4 sm:px-8 lg:px-12 h-full flex items-center justify-between">
+    <nav class="fixed top-0 w-full z-[100] glass-nav flex flex-col transition-all duration-300" id="navbar">
+        <div class="max-w-[1600px] w-full mx-auto px-4 sm:px-8 lg:px-12 h-16 flex items-center justify-between shrink-0">
             <div class="flex items-center gap-8">
                 <div class="flex items-center gap-2.5 cursor-pointer group" onclick="location.reload()">
                     <div class="w-8 h-8 sm:w-9 sm:h-9 bg-slate-900 rounded-xl flex items-center justify-center shadow-lg group-hover:bg-blue-700 transition-all">
@@ -116,6 +116,10 @@
                     <i data-lucide="search" class="w-4 h-4 absolute left-4 text-slate-400"></i>
                     <input type="text" id="searchInput" placeholder="Búsqueda institucional..." class="pl-12 pr-6 py-2 rounded-2xl border border-slate-100 bg-white/50 focus:bg-white focus:ring-4 focus:ring-blue-500/5 outline-none text-xs w-64 lg:w-80 transition-all font-medium">
                 </div>
+                <!-- Botón Buscador Móvil -->
+                <button onclick="window.toggleMobileSearch()" class="md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-slate-100/50 flex items-center justify-center transition-all">
+                    <i data-lucide="search" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+                </button>
                 <!-- Mobile Search Toggle (Optional/Future) -->
                 <button id="btnUploadNav" onclick="window.openModal('addBookModal')" class="hidden items-center gap-2 text-[9px] font-black uppercase tracking-widest text-white bg-slate-900 px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg">
                     <i data-lucide="plus" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Subir</span>
@@ -123,6 +127,14 @@
                 <div id="authAvatar" onclick="window.toggleAuth()" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl text-white flex items-center justify-center cursor-pointer shadow-sm bg-white border border-slate-100 hover:border-blue-200 transition-all">
                     <i data-lucide="user-check" class="w-4 h-4 sm:w-5 h-5 text-slate-400"></i>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Contenedor Buscador Móvil -->
+        <div id="mobileSearchBox" class="hidden md:hidden w-full px-4 pb-4 animate-reveal">
+            <div class="relative flex items-center">
+                <i data-lucide="search" class="w-4 h-4 absolute left-4 text-slate-400"></i>
+                <input type="text" id="mobileSearchInput" placeholder="Buscar por título o autor..." class="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-200 bg-white focus:ring-4 focus:ring-blue-500/10 outline-none text-sm transition-all font-medium shadow-sm">
             </div>
         </div>
     </nav>
@@ -668,24 +680,37 @@
             setTimeout(() => { toast.style.opacity = '0'; setTimeout(() => toast.remove(), 400); }, 3500);
         }
 
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase().trim();
+        window.toggleMobileSearch = () => {
+            const box = document.getElementById('mobileSearchBox');
+            if (box.classList.contains('hidden')) {
+                box.classList.remove('hidden');
+                document.getElementById('mobileSearchInput').focus();
+            } else {
+                box.classList.add('hidden');
+            }
+        };
+
+        window.executeSearch = (term) => {
+            document.getElementById('searchInput').value = term;
+            document.getElementById('mobileSearchInput').value = term;
+            
+            const searchStr = term.toLowerCase().trim();
             const shelf = document.getElementById('shelvesContainer');
             const heroContent = document.getElementById('heroContent');
 
-            if (!term) { shelf.classList.remove('hidden'); renderApp(); return; }
+            if (!searchStr) { shelf.classList.remove('hidden'); renderApp(); return; }
 
-            const filtered = books.filter(b => b.title.toLowerCase().includes(term) || b.author.toLowerCase().includes(term) || b.id.toLowerCase().includes(term));
+            const filtered = books.filter(b => b.title.toLowerCase().includes(searchStr) || b.author.toLowerCase().includes(searchStr) || b.id.toLowerCase().includes(searchStr));
             shelf.classList.add('hidden');
 
             if (filtered.length === 0) {
-                heroContent.innerHTML = `<div class="max-w-xl mx-auto text-center py-20 animate-reveal"><h2 class="text-xl font-bold text-white uppercase mb-4 tracking-widest">Sin resultados</h2><p class="text-slate-400 text-sm">No hay coincidencias para "${term}"</p></div>`;
+                heroContent.innerHTML = `<div class="max-w-xl mx-auto text-center py-20 animate-reveal"><h2 class="text-xl font-bold text-white uppercase mb-4 tracking-widest">Sin resultados</h2><p class="text-slate-400 text-sm">No hay coincidencias para "${searchStr}"</p></div>`;
             } else {
                 heroContent.innerHTML = `
                     <div class="max-w-[1500px] mx-auto px-4 md:px-6 animate-reveal">
                         <div class="flex items-center justify-between mb-6 md:mb-8 pb-4 border-b border-white/10">
                             <h3 class="text-lg md:text-xl font-black text-white uppercase">Resultados: ${filtered.length}</h3>
-                            <button onclick="document.getElementById('searchInput').value=''; renderApp(); document.getElementById('shelvesContainer').classList.remove('hidden');" class="text-white/40 hover:text-white"><i data-lucide="x"></i></button>
+                            <button onclick="window.executeSearch(''); document.getElementById('shelvesContainer').classList.remove('hidden');" class="text-white/40 hover:text-white"><i data-lucide="x"></i></button>
                         </div>
                         <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6 max-h-[400px] overflow-y-auto modal-scroll pr-2 md:pr-4">
                             ${filtered.map(b => `<div class="cursor-pointer group" onclick="window.openBookDetails('${b.id}')"><div class="aspect-[2/3] rounded-xl overflow-hidden border border-white/10 group-hover:border-blue-500 transition-all"><img src="${b.coverUrl}" class="w-full h-full object-cover"></div><p class="text-[9px] md:text-[10px] font-bold text-white mt-2 md:mt-3 uppercase truncate">${b.title}</p></div>`).join('')}
@@ -693,7 +718,10 @@
                     </div>`;
             }
             lucide.createIcons();
-        });
+        };
+
+        document.getElementById('searchInput').addEventListener('input', (e) => window.executeSearch(e.target.value));
+        document.getElementById('mobileSearchInput').addEventListener('input', (e) => window.executeSearch(e.target.value));
 
         updateAuthUI();
     </script>
