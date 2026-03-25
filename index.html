@@ -670,6 +670,38 @@
         let globalUsername = ''; // Guarda el nombre actual
         let noticiasLocales = []; // Cache de noticias
 
+        // --- NUEVO: Función para formatear texto (Negrillas y XSS Seguro) ---
+        window.formatTextSafe = (text) => {
+            if (!text) return '';
+            // Protege contra código malicioso
+            let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+            // Convierte *texto* en texto en negrilla
+            safeText = safeText.replace(/\*(.*?)\*/g, '<strong class="font-extrabold">$1</strong>');
+            return safeText;
+        };
+
+        // --- NUEVO: Manejo del botón físico "Atrás" del navegador/celular ---
+        window.addEventListener('popstate', (e) => {
+            const view = e.state ? e.state.view : 'dashboard';
+            
+            // Ocultar todas las vistas
+            document.getElementById('dashboardContainer').classList.add('hidden');
+            document.getElementById('noticiasContainer').classList.add('hidden');
+            document.getElementById('sugerenciasContainer').classList.add('hidden');
+            document.getElementById('practicasContainer').classList.add('hidden');
+            document.getElementById('calificacionesContainer').classList.add('hidden');
+            document.getElementById('modalDetalleNoticia').classList.add('hidden');
+            
+            // Mostrar la vista solicitada según el historial
+            if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
+            else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
+            else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
+            else if (view === 'practicas') document.getElementById('practicasContainer').classList.remove('hidden');
+            else if (view === 'calificaciones') document.getElementById('calificacionesContainer').classList.remove('hidden');
+            
+            lucide.createIcons();
+        });
+
         // --- Función centralizada para mostrar el Dashboard ---
         function mostrarDashboard(username, role, conRetraso = false) {
             globalRole = role;
@@ -693,6 +725,10 @@
                 document.getElementById('loginContainer').classList.add('hidden');
                 document.getElementById('adminNameDisplay').innerText = username;
                 document.getElementById('dashboardContainer').classList.remove('hidden');
+                
+                // Registra el menú principal como el punto de inicio en el historial
+                history.replaceState({ view: 'dashboard' }, '', window.location.pathname);
+                
                 lucide.createIcons();
             };
 
@@ -878,11 +914,12 @@
         });
 
         // ==========================================
-        //  SISTEMA DE CHATS Y SUGERENCIAS (NUEVO)
+        //  SISTEMA DE CHATS Y SUGERENCIAS 
         // ==========================================
         let sugerenciasLocales = [];
 
         window.abrirSugerencias = () => {
+            history.pushState({ view: 'sugerencias' }, '', '#chat');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.remove('hidden');
             lucide.createIcons();
@@ -890,6 +927,7 @@
         };
 
         window.cerrarSugerencias = () => {
+            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -987,7 +1025,7 @@
                             isMine ? 'bg-[#0f4c81] text-white rounded-tr-sm' 
                                    : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'
                         }">
-                            ${sug.texto}
+                            ${window.formatTextSafe(sug.texto)}
                         </div>
                     </div>
                 `;
@@ -1065,6 +1103,7 @@
         // ==========================================
 
         window.abrirNoticias = async () => {
+            history.pushState({ view: 'noticias' }, '', '#noticias');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.remove('hidden');
             
@@ -1082,6 +1121,7 @@
         };
 
         window.cerrarNoticias = () => {
+            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1200,8 +1240,8 @@
                         <p class="text-[11px] font-bold uppercase tracking-widest text-[#0f4c81] mb-2 flex items-center gap-1.5">
                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i> ${fechaStr}
                         </p>
-                        <h4 class="font-bold text-xl text-gray-900 leading-snug mb-3 font-serif-title group-hover:text-[#0f4c81] transition-colors line-clamp-2">${noticia.titulo}</h4>
-                        <p class="text-[13px] text-gray-600 line-clamp-3 mb-5 flex-1 leading-relaxed">${noticia.contenido}</p>
+                        <h4 class="font-bold text-xl text-gray-900 leading-snug mb-3 font-serif-title group-hover:text-[#0f4c81] transition-colors line-clamp-2">${window.formatTextSafe(noticia.titulo)}</h4>
+                        <p class="text-[13px] text-gray-600 line-clamp-3 mb-5 flex-1 leading-relaxed">${window.formatTextSafe(noticia.contenido)}</p>
                         <div class="pt-4 border-t border-gray-100 flex items-center gap-2 mt-auto">
                             <div class="w-7 h-7 rounded-full bg-[#0f4c81]/10 flex items-center justify-center"><i data-lucide="user" class="w-3.5 h-3.5 text-[#0f4c81]"></i></div>
                             <div>
@@ -1224,8 +1264,8 @@
             const defaultImage = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop';
             
             document.getElementById('detalleNoticiaImagen').src = noticia.imagen || defaultImage;
-            document.getElementById('detalleNoticiaTitulo').innerText = noticia.titulo;
-            document.getElementById('detalleNoticiaContenido').innerText = noticia.contenido;
+            document.getElementById('detalleNoticiaTitulo').innerHTML = window.formatTextSafe(noticia.titulo);
+            document.getElementById('detalleNoticiaContenido').innerHTML = window.formatTextSafe(noticia.contenido);
             document.getElementById('detalleNoticiaAutor').innerText = noticia.autor || 'Administración';
             
             let fechaStr = 'Fecha reciente';
@@ -1439,6 +1479,7 @@
         let tabPracticasActivo = 'clase'; // 'clase' o 'virtual'
 
         window.abrirPracticas = async () => {
+            history.pushState({ view: 'practicas' }, '', '#practicas');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.remove('hidden');
             
@@ -1455,6 +1496,7 @@
         };
 
         window.cerrarPracticas = () => {
+            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1598,7 +1640,7 @@
                     
                     <!-- Detalles (Derecha apilada) -->
                     <div class="flex-1 min-w-0 pr-10 flex flex-col justify-center">
-                        <h4 class="font-bold text-[15px] sm:text-base text-gray-900 truncate mb-1" title="${practica.materia}">${practica.materia}</h4>
+                        <h4 class="font-bold text-[15px] sm:text-base text-gray-900 truncate mb-1" title="${practica.materia}">${window.formatTextSafe(practica.materia)}</h4>
                         <p class="text-[12px] sm:text-[13px] text-gray-500 truncate mb-0.5">Publicado: ${fechaPubStr}</p>
                         <p class="text-[12px] sm:text-[13px] font-semibold truncate mb-1.5 ${alertColor}">Entrega: ${fechaEntStr}</p>
                         <p class="text-[11px] sm:text-[12px] text-[#0f4c81]/80 font-medium truncate flex items-center gap-1.5 mt-0.5">
@@ -1760,6 +1802,7 @@
         // ==========================================
 
         window.abrirCalificaciones = async () => {
+            history.pushState({ view: 'calificaciones' }, '', '#calificaciones');
             // Ocultar dashboard, mostrar contenedor de calificaciones
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.remove('hidden');
@@ -1957,6 +2000,7 @@
 
         // --- Lógica para volver al Dashboard ---
         window.cerrarCalificaciones = () => {
+            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
             document.getElementById('calificacionesContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
