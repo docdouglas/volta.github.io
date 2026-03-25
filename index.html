@@ -471,9 +471,20 @@
             <form id="formPractica" class="space-y-5">
                 <input type="hidden" id="practicaId">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-1.5 md:col-span-2">
-                        <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Nombre de la Materia / Título</label>
-                        <input type="text" id="practicaMateria" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm font-medium text-gray-900" placeholder="Ej: Análisis de Circuitos - Práctica 1">
+                    <!-- NUEVO: Select de Materias Dinámico -->
+                    <div class="space-y-1.5 md:col-span-1">
+                        <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Materia</label>
+                        <div class="relative">
+                            <select id="practicaMateria" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm font-medium text-gray-900 appearance-none cursor-pointer">
+                                <option value="" disabled selected>Cargando materias...</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 pointer-events-none"></i>
+                        </div>
+                    </div>
+                    <!-- NUEVO: Input para el título de la práctica -->
+                    <div class="space-y-1.5 md:col-span-1">
+                        <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Título de la Práctica</label>
+                        <input type="text" id="practicaTitulo" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm font-medium text-gray-900" placeholder="Ej: Práctica N. 2">
                     </div>
                     <div class="space-y-1.5">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Tipo de Práctica</label>
@@ -1545,6 +1556,32 @@
             lucide.createIcons();
         };
 
+        // --- NUEVO: Cargar materias guardadas en Firebase al Select ---
+        window.cargarMateriasSelect = async () => {
+            const select = document.getElementById('practicaMateria');
+            select.innerHTML = '<option value="" disabled selected>Cargando materias...</option>';
+            try {
+                const currentAppId = localStorage.getItem('workingAppId') || 'default';
+                let materiasRef = (currentAppId === 'root') ? collection(db, 'materias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'materias');
+                const snap = await getDocs(materiasRef);
+                
+                let options = '<option value="" disabled selected>Seleccione una materia</option>';
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    const nombre = data.nombre || 'Materia sin nombre';
+                    options += `<option value="${nombre}">${nombre}</option>`;
+                });
+                
+                if(snap.empty) {
+                    options = '<option value="" disabled selected>No hay materias registradas</option>';
+                }
+                select.innerHTML = options;
+            } catch (error) {
+                console.error("Error cargando materias:", error);
+                select.innerHTML = '<option value="" disabled selected>Error al cargar materias</option>';
+            }
+        };
+
         // --- Visor/Modal Completo para Lectura de Prácticas ---
         window.abrirDetallePractica = (id) => {
             const practica = practicasLocales.find(p => p.id === id);
@@ -1600,7 +1637,7 @@
             document.getElementById('modalDetallePractica').classList.add('hidden');
         };
 
-        window.abrirModalPractica = () => {
+        window.abrirModalPractica = async () => {
             document.getElementById('formPractica').reset();
             document.getElementById('practicaId').value = '';
             document.getElementById('practicaTipo').value = tabPracticasActivo;
@@ -1610,17 +1647,34 @@
             document.getElementById('practicaFileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
             document.getElementById('modalPracticaTitle').innerText = 'Nueva Práctica';
             document.getElementById('modalPractica').classList.remove('hidden');
+            
+            // Cargar materias dinámicamente al abrir
+            await window.cargarMateriasSelect();
         };
 
         window.cerrarModalPractica = () => {
             document.getElementById('modalPractica').classList.add('hidden');
         };
 
-        window.editarPractica = (id) => {
+        window.editarPractica = async (id) => {
             const practica = practicasLocales.find(p => p.id === id);
             if (practica) {
                 document.getElementById('practicaId').value = practica.id;
-                document.getElementById('practicaMateria').value = practica.materia;
+                document.getElementById('modalPracticaTitle').innerText = 'Editar Práctica';
+                document.getElementById('modalPractica').classList.remove('hidden');
+                
+                // Cargar opciones antes de asignar el valor
+                await window.cargarMateriasSelect();
+                
+                // Asignar los valores separados si existen (Compatibilidad)
+                if (practica.materiaNombre && practica.titulo) {
+                    document.getElementById('practicaMateria').value = practica.materiaNombre;
+                    document.getElementById('practicaTitulo').value = practica.titulo;
+                } else {
+                    // Si es una práctica antigua donde todo estaba junto
+                    document.getElementById('practicaTitulo').value = practica.materia || '';
+                }
+
                 document.getElementById('practicaTipo').value = practica.tipo;
                 document.getElementById('practicaDocUrl').value = practica.documentoUrl;
                 document.getElementById('practicaFechaEntrega').value = practica.fechaEntrega || '';
@@ -1638,9 +1692,6 @@
                     document.getElementById('practicaImagePreview').src = '';
                     document.getElementById('practicaFileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
                 }
-                
-                document.getElementById('modalPracticaTitle').innerText = 'Editar Práctica';
-                document.getElementById('modalPractica').classList.remove('hidden');
             }
         };
 
@@ -1680,8 +1731,14 @@
                     imageUrl = await comprimirImagenBase64(file);
                 }
 
+                // Unimos Materia + Título para guardarlo amigablemente
+                const materiaSel = document.getElementById('practicaMateria').value;
+                const tituloInp = document.getElementById('practicaTitulo').value.trim();
+
                 const data = {
-                    materia: document.getElementById('practicaMateria').value.trim(),
+                    materia: `${materiaSel} - ${tituloInp}`, // Se guarda concatenado para lectura fácil
+                    materiaNombre: materiaSel,
+                    titulo: tituloInp,
                     tipo: document.getElementById('practicaTipo').value,
                     documentoUrl: document.getElementById('practicaDocUrl').value.trim(),
                     imagen: imageUrl,
