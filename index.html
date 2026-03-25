@@ -451,17 +451,17 @@
 
             <!-- Controles de Vista: Pestañas y Filtro Dinámico -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                <!-- Pestañas de Prácticas -->
+                <!-- Pestañas de Prácticas (SE RESTAURÓ EL PADDING PX-4 SM:PX-6) -->
                 <div class="flex gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 w-full sm:w-max shadow-inner">
-                    <button id="tabClase" onclick="cambiarTabPracticas('clase')" class="flex-1 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]">
+                    <button id="tabClase" onclick="cambiarTabPracticas('clase')" class="flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]">
                         <i data-lucide="users" class="w-4 h-4"></i> En Clase
                     </button>
-                    <button id="tabVirtual" onclick="cambiarTabPracticas('virtual')" class="flex-1 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]">
+                    <button id="tabVirtual" onclick="cambiarTabPracticas('virtual')" class="flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]">
                         <i data-lucide="laptop" class="w-4 h-4"></i> Virtuales
                     </button>
                 </div>
                 
-                <!-- Buscador Dinámico (Se arregló la llamada a window) -->
+                <!-- Buscador Dinámico -->
                 <div class="relative w-full sm:w-72 shrink-0">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
                     <input type="text" id="buscadorPracticas" oninput="window.renderizarPracticas()" placeholder="Buscar materia o título..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200/80 rounded-full focus:outline-none focus:border-[#0f4c81] focus:ring-2 focus:ring-[#0f4c81]/20 transition-all text-sm shadow-sm text-gray-700">
@@ -1458,10 +1458,11 @@
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
 
+        // SE CORRIGIERON LAS CLASES PARA QUE NO PIERDA EL ESPACIADO (px-4 sm:px-6) AL CAMBIAR DE TAB
         window.cambiarTabPracticas = (tab) => {
             tabPracticasActivo = tab;
-            const activeClass = "flex-1 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
-            const inactiveClass = "flex-1 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]";
+            const activeClass = "flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
+            const inactiveClass = "flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]";
             
             if (tab === 'clase') {
                 document.getElementById('tabClase').className = activeClass;
