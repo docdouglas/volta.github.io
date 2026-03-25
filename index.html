@@ -471,7 +471,6 @@
             <form id="formPractica" class="space-y-5">
                 <input type="hidden" id="practicaId">
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- NUEVO: Input con Autocompletado de Materias Dinámico -->
                     <div class="space-y-1.5 md:col-span-1">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Materia</label>
                         <input type="text" id="practicaMateria" list="materiasDatalist" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm font-medium text-gray-900" placeholder="Escribe o selecciona la materia..." autocomplete="off">
@@ -479,7 +478,6 @@
                             <!-- Opciones cargadas dinámicamente -->
                         </datalist>
                     </div>
-                    <!-- NUEVO: Input para el título de la práctica -->
                     <div class="space-y-1.5 md:col-span-1">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Título de la Práctica</label>
                         <input type="text" id="practicaTitulo" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm font-medium text-gray-900" placeholder="Ej: Práctica N. 2">
@@ -500,7 +498,6 @@
                         <input type="url" id="practicaDocUrl" required placeholder="https://drive.google.com/..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm text-gray-900">
                         <p class="text-[10px] text-gray-400 pl-1">Enlace a Google Drive, PDF, Mediafire, etc.</p>
                     </div>
-                    <!-- NUEVO CAMPO: DESCRIPCIÓN -->
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Descripción / Instrucciones (Opcional)</label>
                         <textarea id="practicaDescripcion" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm resize-none text-gray-900" placeholder="Detalles de la práctica, instrucciones, índice, etc..."></textarea>
@@ -738,6 +735,15 @@
             return safeText;
         };
 
+        // --- NUEVO: Helper seguro para historial (Evita bloqueos en modo local file://) ---
+        window.cambiarHistorial = (vista, ruta) => {
+            try {
+                history.pushState({ view: vista }, '', ruta);
+            } catch (e) {
+                // Silencioso: Evita que el navegador bloquee la navegación si se usa sin servidor local
+            }
+        };
+
         // Manejo del botón Atrás
         window.addEventListener('popstate', (e) => {
             const view = e.state ? e.state.view : 'dashboard';
@@ -782,7 +788,7 @@
                 document.getElementById('adminNameDisplay').innerText = username;
                 document.getElementById('dashboardContainer').classList.remove('hidden');
                 
-                history.replaceState({ view: 'dashboard' }, '', window.location.pathname);
+                try { history.replaceState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
                 lucide.createIcons();
             };
 
@@ -955,7 +961,7 @@
         let sugerenciasLocales = [];
 
         window.abrirSugerencias = () => {
-            history.pushState({ view: 'sugerencias' }, '', '#chat');
+            window.cambiarHistorial('sugerencias', '#chat');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.remove('hidden');
             lucide.createIcons();
@@ -963,7 +969,7 @@
         };
 
         window.cerrarSugerencias = () => {
-            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
+            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1097,7 +1103,7 @@
         // ==========================================
 
         window.abrirNoticias = async () => {
-            history.pushState({ view: 'noticias' }, '', '#noticias');
+            window.cambiarHistorial('noticias', '#noticias');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.remove('hidden');
             
@@ -1114,7 +1120,7 @@
         };
 
         window.cerrarNoticias = () => {
-            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
+            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1192,7 +1198,6 @@
                 card.onclick = () => abrirDetalleNoticia(noticia.id);
                 card.className = "bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 overflow-hidden group flex flex-col h-full relative cursor-pointer hover:-translate-y-1";
                 
-                // Los botones de Editar y Eliminar han sido movidos dentro del modal para mantener las tarjetas limpias
                 card.innerHTML = `
                     <div class="h-44 bg-gray-200 relative overflow-hidden shrink-0">
                         <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1219,7 +1224,337 @@
             lucide.createIcons();
         };
 
-        // --- NUEVO: Cargar materias guardadas en Firebase al Input de Autocompletado ---
+        window.abrirDetalleNoticia = (id) => {
+            const noticia = noticiasLocales.find(n => n.id === id);
+            if(!noticia) return;
+
+            const defaultImage = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop';
+            
+            document.getElementById('detalleNoticiaImagen').src = noticia.imagen || defaultImage;
+            document.getElementById('detalleNoticiaTitulo').innerHTML = window.formatTextSafe(noticia.titulo);
+            document.getElementById('detalleNoticiaContenido').innerHTML = window.formatTextSafe(noticia.contenido);
+            document.getElementById('detalleNoticiaAutor').innerText = noticia.autor || 'Administración';
+            
+            let fechaStr = 'Fecha reciente';
+            if (noticia.fecha) {
+                const dateObj = new Date(noticia.fecha);
+                fechaStr = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase();
+            }
+            document.getElementById('detalleNoticiaFechaBadge').innerText = fechaStr;
+
+            let colorPill = 'text-blue-700 bg-blue-50';
+            if (noticia.tipo === 'Evento') colorPill = 'text-purple-700 bg-purple-50';
+            if (noticia.tipo === 'Aviso') colorPill = 'text-orange-700 bg-orange-50';
+            
+            const tipoBadge = document.getElementById('detalleNoticiaTipo');
+            tipoBadge.className = `px-2 py-1 rounded-md ${colorPill}`;
+            tipoBadge.innerText = noticia.tipo || 'Noticia';
+
+            const adminControls = document.getElementById('detalleNoticiaAdminControls');
+            if (globalRole === 'admin') {
+                adminControls.classList.remove('hidden');
+                adminControls.innerHTML = `
+                    <button onclick="cerrarDetalleNoticia(); editarNoticia('${noticia.id}')" class="flex-1 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                        <i data-lucide="edit-2" class="w-4 h-4"></i> Editar
+                    </button>
+                    <button onclick="cerrarDetalleNoticia(); eliminarNoticia('${noticia.id}')" class="flex-1 py-2.5 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar
+                    </button>
+                `;
+            } else {
+                adminControls.classList.add('hidden');
+                adminControls.innerHTML = '';
+            }
+
+            document.getElementById('modalDetalleNoticia').classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.cerrarDetalleNoticia = () => {
+            document.getElementById('modalDetalleNoticia').classList.add('hidden');
+        };
+
+        window.abrirModalNoticia = () => {
+            document.getElementById('formNoticia').reset();
+            document.getElementById('noticiaId').value = '';
+            document.getElementById('noticiaImagenUrlActual').value = '';
+            document.getElementById('imagePreviewContainer').classList.add('hidden');
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('fileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
+            document.getElementById('modalNoticiaTitle').innerText = 'Nueva Publicación';
+            document.getElementById('modalNoticia').classList.remove('hidden');
+        };
+
+        window.cerrarModalNoticia = () => {
+            document.getElementById('modalNoticia').classList.add('hidden');
+        };
+
+        window.editarNoticia = (id) => {
+            const noticia = noticiasLocales.find(n => n.id === id);
+            if (noticia) {
+                document.getElementById('noticiaId').value = noticia.id;
+                document.getElementById('noticiaTitulo').value = noticia.titulo;
+                document.getElementById('noticiaTipo').value = noticia.tipo;
+                document.getElementById('noticiaContenido').value = noticia.contenido;
+                
+                document.getElementById('noticiaImagenUrlActual').value = noticia.imagen || '';
+                if (noticia.imagen) {
+                    document.getElementById('imagePreviewContainer').classList.remove('hidden');
+                    document.getElementById('imagePreview').src = noticia.imagen;
+                    document.getElementById('fileNameDisplay').innerText = 'Imagen actual guardada';
+                } else {
+                    document.getElementById('imagePreviewContainer').classList.add('hidden');
+                    document.getElementById('imagePreview').src = '';
+                    document.getElementById('fileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
+                }
+                
+                document.getElementById('modalNoticiaTitle').innerText = 'Editar Publicación';
+                document.getElementById('modalNoticia').classList.remove('hidden');
+            }
+        };
+
+        window.eliminarNoticia = async (id) => {
+            if (!confirm("¿Estás seguro de que deseas eliminar esta publicación permanentemente?")) return;
+            try {
+                const noticia = noticiasLocales.find(n => n.id === id);
+                if (!noticia) return;
+                let docRef = (noticia._path === 'root') ? doc(db, 'noticias', id) : doc(db, 'artifacts', noticia._path, 'public', 'data', 'noticias', id);
+                await deleteDoc(docRef);
+                window.mostrarNotificacion("Eliminada", "La publicación fue eliminada con éxito.");
+                cargarNoticias(); 
+            } catch (error) {
+                window.mostrarNotificacion("Error", "No se pudo eliminar la publicación.", "error");
+            }
+        };
+
+        const comprimirImagenBase64 = (file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 800; 
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > MAX_WIDTH) {
+                            height = Math.round((height * MAX_WIDTH) / width);
+                            width = MAX_WIDTH;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    };
+                };
+            });
+        };
+
+        document.getElementById('formNoticia').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardarNoticia');
+            if (btn.disabled) return;
+            
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando...';
+            lucide.createIcons();
+
+            try {
+                const id = document.getElementById('noticiaId').value;
+                let imageUrl = document.getElementById('noticiaImagenUrlActual').value || "";
+                const fileInput = document.getElementById('noticiaImagenFile');
+                
+                if (fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
+                    lucide.createIcons();
+                    imageUrl = await comprimirImagenBase64(file);
+                }
+
+                const data = {
+                    titulo: document.getElementById('noticiaTitulo').value.trim() || "Sin Título",
+                    tipo: document.getElementById('noticiaTipo').value || "Noticia",
+                    imagen: imageUrl,
+                    contenido: document.getElementById('noticiaContenido').value.trim() || "",
+                    autor: globalUsername || "Administrador",
+                    fecha: new Date().toISOString() 
+                };
+
+                const currentAppId = localStorage.getItem('workingAppId') || 'default';
+
+                if (id) {
+                    const noticiaOriginal = noticiasLocales.find(n => n.id === id);
+                    const pathGuardado = noticiaOriginal ? noticiaOriginal._path : currentAppId;
+                    let colRef = (pathGuardado === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', pathGuardado, 'public', 'data', 'noticias');
+                    await updateDoc(doc(colRef, id), data);
+                    window.mostrarNotificacion("Actualizada", "La publicación ha sido editada.");
+                } else {
+                    let colRef = (currentAppId === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'noticias');
+                    await addDoc(colRef, data);
+                    window.mostrarNotificacion("Publicada", "La nueva publicación ya está visible.");
+                }
+
+                cerrarModalNoticia();
+                cargarNoticias(); 
+            } catch (error) {
+                if (error.code && error.code.includes('resource-exhausted')) {
+                    window.mostrarNotificacion("Imagen muy grande", "La imagen supera el límite de memoria.", "error");
+                } else {
+                    window.mostrarNotificacion("Error al guardar", "Revisa tu conexión o permisos.", "error");
+                }
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i data-lucide="save" class="w-4 h-4"></i> Guardar Publicación';
+                lucide.createIcons();
+            }
+        });
+
+        // ==========================================
+        //  SISTEMA DE PRÁCTICAS
+        // ==========================================
+
+        let practicasLocales = [];
+        let tabPracticasActivo = 'clase';
+
+        window.abrirPracticas = async () => {
+            window.cambiarHistorial('practicas', '#practicas');
+            document.getElementById('dashboardContainer').classList.add('hidden');
+            document.getElementById('practicasContainer').classList.remove('hidden');
+            
+            if (globalRole === 'admin') {
+                document.getElementById('btnNuevaPractica').classList.remove('hidden');
+                document.getElementById('btnNuevaPractica').classList.add('flex');
+            } else {
+                document.getElementById('btnNuevaPractica').classList.add('hidden');
+                document.getElementById('btnNuevaPractica').classList.remove('flex');
+            }
+            
+            lucide.createIcons();
+            cargarPracticas();
+        };
+
+        window.cerrarPracticas = () => {
+            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+            document.getElementById('practicasContainer').classList.add('hidden');
+            document.getElementById('dashboardContainer').classList.remove('hidden');
+        };
+
+        window.cambiarTabPracticas = (tab) => {
+            tabPracticasActivo = tab;
+            const activeClass = "flex-1 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
+            const inactiveClass = "flex-1 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]";
+            
+            if (tab === 'clase') {
+                document.getElementById('tabClase').className = activeClass;
+                document.getElementById('tabVirtual').className = inactiveClass;
+            } else {
+                document.getElementById('tabVirtual').className = activeClass;
+                document.getElementById('tabClase').className = inactiveClass;
+            }
+            renderizarPracticas();
+        };
+
+        const cargarPracticas = async () => {
+            const container = document.getElementById('practicasList');
+            container.innerHTML = `
+                <div class="col-span-full flex flex-col items-center justify-center py-16 text-[#0f4c81]">
+                    <i data-lucide="loader-2" class="w-10 h-10 animate-spin mb-4 text-[#0f4c81]/70"></i>
+                    <p class="font-bold text-gray-600">Actualizando repositorio...</p>
+                </div>`;
+            lucide.createIcons();
+
+            try {
+                const rutasABuscar = ['default', 'default-app-id', 'root'];
+                let todasLasPracticas = [];
+
+                for (const ruta of rutasABuscar) {
+                    try {
+                        let colRef = (ruta === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', ruta, 'public', 'data', 'practicas');
+                        const snapshot = await getDocs(colRef);
+                        snapshot.forEach(doc => {
+                            if (!todasLasPracticas.find(p => p.id === doc.id)) todasLasPracticas.push({ id: doc.id, _path: ruta, ...doc.data() });
+                        });
+                    } catch (e) {}
+                }
+
+                practicasLocales = todasLasPracticas;
+                practicasLocales.sort((a, b) => new Date(b.fechaPublicacion) - new Date(a.fechaPublicacion));
+                renderizarPracticas();
+
+            } catch (error) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 flex flex-col items-center">
+                        <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-4 text-red-500">
+                            <i data-lucide="wifi-off" class="w-7 h-7"></i>
+                        </div>
+                        <p class="font-bold text-gray-900">Repositorio no disponible</p>
+                    </div>`;
+                lucide.createIcons();
+            }
+        };
+
+        const renderizarPracticas = () => {
+            const container = document.getElementById('practicasList');
+            container.innerHTML = '';
+
+            const practicasFiltradas = practicasLocales.filter(p => p.tipo === tabPracticasActivo);
+
+            if (practicasFiltradas.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16 flex flex-col items-center bg-white/40 rounded-2xl border border-dashed border-gray-300">
+                        <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-gray-400">
+                            <i data-lucide="folder-open" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-gray-800">No hay prácticas asignadas</h3>
+                        <p class="text-gray-500 mt-1 text-sm">Todo está al día por aquí.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            practicasFiltradas.forEach(practica => {
+                const defaultImage = 'https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?q=80&w=800&auto=format&fit=crop';
+                const imgUrl = practica.imagen || defaultImage;
+                
+                const fechaPubObj = new Date(practica.fechaPublicacion);
+                const fechaPubStr = fechaPubObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                
+                let fechaEntStr = 'Sin fecha límite';
+                let alertColor = 'text-gray-500';
+                if (practica.fechaEntrega) {
+                    const fechaEntObj = new Date(practica.fechaEntrega + 'T12:00:00');
+                    fechaEntStr = fechaEntObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                    if (fechaEntObj < new Date()) alertColor = 'text-red-600';
+                    else alertColor = 'text-emerald-600';
+                }
+
+                const card = document.createElement('div');
+                card.onclick = () => abrirDetallePractica(practica.id);
+                card.className = "bg-white/90 border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md hover:bg-white hover:border-[#0f4c81]/30 transition-all duration-300 p-4 flex items-center gap-5 relative group cursor-pointer h-max";
+                
+                card.innerHTML = `
+                    <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm flex items-center justify-center p-1.5">
+                        <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-contain rounded-lg">
+                    </div>
+                    <div class="flex-1 min-w-0 pr-2 flex flex-col justify-center">
+                        <h4 class="font-bold text-[15px] sm:text-base text-gray-900 line-clamp-2 mb-1 leading-tight" title="${practica.materia}">${window.formatTextSafe(practica.materia)}</h4>
+                        <p class="text-[12px] sm:text-[13px] text-gray-500 truncate mb-0.5">Publicado: ${fechaPubStr}</p>
+                        <p class="text-[12px] sm:text-[13px] font-semibold truncate mb-1.5 ${alertColor}">Entrega: ${fechaEntStr}</p>
+                        <p class="text-[11px] sm:text-[12px] text-[#0f4c81]/80 font-medium truncate flex items-center gap-1.5 mt-0.5">
+                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Leer Detalles
+                        </p>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            lucide.createIcons();
+        };
+
         window.cargarMateriasSelect = async () => {
             const datalist = document.getElementById('materiasDatalist');
             if(!datalist) return;
@@ -1237,12 +1572,9 @@
                 });
                 
                 datalist.innerHTML = options;
-            } catch (error) {
-                console.error("Error cargando materias:", error);
-            }
+            } catch (error) {}
         };
 
-        // --- Visor/Modal Completo para Lectura de Prácticas ---
         window.abrirDetallePractica = (id) => {
             const practica = practicasLocales.find(p => p.id === id);
             if(!practica) return;
@@ -1265,14 +1597,11 @@
             
             document.getElementById('detallePracticaBadge').innerText = practica.tipo === 'clase' ? 'EN CLASE' : 'VIRTUAL';
             
-            // Descripción general u Opcional
             const desc = practica.descripcion ? practica.descripcion : 'No se han proporcionado instrucciones adicionales para esta práctica. Abre el documento adjunto para más información.';
             document.getElementById('detallePracticaDescripcion').innerHTML = window.formatTextSafe(desc);
 
-            // Botón de acceso
             document.getElementById('btnAccederRecurso').href = practica.documentoUrl || '#';
 
-            // Inyectar los botones de Administrador directamente en el Modal
             const adminControls = document.getElementById('detallePracticaAdminControls');
             if (globalRole === 'admin') {
                 adminControls.classList.remove('hidden');
@@ -1308,7 +1637,6 @@
             document.getElementById('modalPracticaTitle').innerText = 'Nueva Práctica';
             document.getElementById('modalPractica').classList.remove('hidden');
             
-            // Cargar materias dinámicamente al abrir
             await window.cargarMateriasSelect();
         };
 
@@ -1323,15 +1651,12 @@
                 document.getElementById('modalPracticaTitle').innerText = 'Editar Práctica';
                 document.getElementById('modalPractica').classList.remove('hidden');
                 
-                // Cargar opciones antes de asignar el valor
                 await window.cargarMateriasSelect();
                 
-                // Asignar los valores separados si existen (Compatibilidad)
                 if (practica.materiaNombre && practica.titulo) {
                     document.getElementById('practicaMateria').value = practica.materiaNombre;
                     document.getElementById('practicaTitulo').value = practica.titulo;
                 } else {
-                    // Si es una práctica antigua donde todo estaba junto
                     document.getElementById('practicaTitulo').value = practica.materia || '';
                 }
 
@@ -1339,7 +1664,6 @@
                 document.getElementById('practicaDocUrl').value = practica.documentoUrl;
                 document.getElementById('practicaFechaEntrega').value = practica.fechaEntrega || '';
                 
-                // NUEVO CAMPO: Recuperar descripción al editar
                 document.getElementById('practicaDescripcion').value = practica.descripcion || '';
                 
                 document.getElementById('practicaImagenUrlActual').value = practica.imagen || '';
@@ -1391,19 +1715,18 @@
                     imageUrl = await comprimirImagenBase64(file);
                 }
 
-                // Unimos Materia + Título para guardarlo amigablemente
                 const materiaSel = document.getElementById('practicaMateria').value;
                 const tituloInp = document.getElementById('practicaTitulo').value.trim();
 
                 const data = {
-                    materia: `${materiaSel} - ${tituloInp}`, // Se guarda concatenado para lectura fácil
+                    materia: `${materiaSel} - ${tituloInp}`, 
                     materiaNombre: materiaSel,
                     titulo: tituloInp,
                     tipo: document.getElementById('practicaTipo').value,
                     documentoUrl: document.getElementById('practicaDocUrl').value.trim(),
                     imagen: imageUrl,
                     fechaEntrega: document.getElementById('practicaFechaEntrega').value,
-                    descripcion: document.getElementById('practicaDescripcion').value.trim(), // GUARDAMOS NUEVO CAMPO
+                    descripcion: document.getElementById('practicaDescripcion').value.trim(),
                     autor: globalUsername || "Administrador",
                     fechaPublicacion: new Date().toISOString() 
                 };
@@ -1444,7 +1767,7 @@
         // ==========================================
 
         window.abrirCalificaciones = async () => {
-            history.pushState({ view: 'calificaciones' }, '', '#calificaciones');
+            window.cambiarHistorial('calificaciones', '#calificaciones');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.remove('hidden');
             lucide.createIcons();
@@ -1614,7 +1937,7 @@
         };
 
         window.cerrarCalificaciones = () => {
-            history.pushState({ view: 'dashboard' }, '', window.location.pathname);
+            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
             document.getElementById('calificacionesContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
