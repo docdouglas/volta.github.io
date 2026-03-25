@@ -449,14 +449,23 @@
                 </div>
             </div>
 
-            <!-- Pestañas de Prácticas -->
-            <div class="flex gap-1 mb-8 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 max-w-sm mx-auto sm:mx-0 shadow-inner">
-                <button id="tabClase" onclick="cambiarTabPracticas('clase')" class="flex-1 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]">
-                    <i data-lucide="users" class="w-4 h-4"></i> En Clase
-                </button>
-                <button id="tabVirtual" onclick="cambiarTabPracticas('virtual')" class="flex-1 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]">
-                    <i data-lucide="laptop" class="w-4 h-4"></i> Virtuales
-                </button>
+            <!-- Controles de Vista: Pestañas y Filtro Dinámico -->
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <!-- Pestañas de Prácticas -->
+                <div class="flex gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 w-full sm:w-max shadow-inner">
+                    <button id="tabClase" onclick="cambiarTabPracticas('clase')" class="flex-1 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]">
+                        <i data-lucide="users" class="w-4 h-4"></i> En Clase
+                    </button>
+                    <button id="tabVirtual" onclick="cambiarTabPracticas('virtual')" class="flex-1 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]">
+                        <i data-lucide="laptop" class="w-4 h-4"></i> Virtuales
+                    </button>
+                </div>
+                
+                <!-- Buscador Dinámico -->
+                <div class="relative w-full sm:w-72 shrink-0">
+                    <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
+                    <input type="text" id="buscadorPracticas" oninput="renderizarPracticas()" placeholder="Buscar materia o título..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200/80 rounded-full focus:outline-none focus:border-[#0f4c81] focus:ring-2 focus:ring-[#0f4c81]/20 transition-all text-sm shadow-sm text-gray-700">
+                </div>
             </div>
             
             <div id="practicasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[250px]"></div>
@@ -1433,6 +1442,11 @@
                 document.getElementById('btnNuevaPractica').classList.add('hidden');
                 document.getElementById('btnNuevaPractica').classList.remove('flex');
             }
+
+            // Limpiar buscador
+            if(document.getElementById('buscadorPracticas')) {
+                document.getElementById('buscadorPracticas').value = '';
+            }
             
             lucide.createIcons();
             cargarPracticas();
@@ -1502,16 +1516,30 @@
             const container = document.getElementById('practicasList');
             container.innerHTML = '';
 
-            const practicasFiltradas = practicasLocales.filter(p => p.tipo === tabPracticasActivo);
+            const busquedaInput = document.getElementById('buscadorPracticas');
+            const terminoBusqueda = busquedaInput ? busquedaInput.value.toLowerCase().trim() : '';
+
+            // Lógica combinada: Filtra por Tab (Clase/Virtual) y luego por el texto de Búsqueda
+            const practicasFiltradas = practicasLocales.filter(p => {
+                const coincideTab = p.tipo === tabPracticasActivo;
+                const coincideBusqueda = terminoBusqueda === '' || 
+                    (p.materia && p.materia.toLowerCase().includes(terminoBusqueda)) ||
+                    (p.descripcion && p.descripcion.toLowerCase().includes(terminoBusqueda));
+                return coincideTab && coincideBusqueda;
+            });
 
             if (practicasFiltradas.length === 0) {
+                const tituloVacio = terminoBusqueda ? `Sin resultados para "${terminoBusqueda}"` : "No hay prácticas asignadas";
+                const subtituloVacio = terminoBusqueda ? "Intenta buscar con otras palabras." : "Todo está al día por aquí.";
+                const iconoVacio = terminoBusqueda ? "search" : "folder-open";
+
                 container.innerHTML = `
                     <div class="col-span-full text-center py-16 flex flex-col items-center bg-white/40 rounded-2xl border border-dashed border-gray-300">
                         <div class="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-gray-400">
-                            <i data-lucide="folder-open" class="w-8 h-8"></i>
+                            <i data-lucide="${iconoVacio}" class="w-8 h-8"></i>
                         </div>
-                        <h3 class="text-lg font-bold text-gray-800">No hay prácticas asignadas</h3>
-                        <p class="text-gray-500 mt-1 text-sm">Todo está al día por aquí.</p>
+                        <h3 class="text-lg font-bold text-gray-800">${tituloVacio}</h3>
+                        <p class="text-gray-500 mt-1 text-sm">${subtituloVacio}</p>
                     </div>`;
                 lucide.createIcons();
                 return;
