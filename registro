@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Académico Premium</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --brand-color: #0f4c81; /* Classic Blue */
+            --brand-hover: #0a365c;
+            --text-main: #1e293b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            background-color: #f8fafc;
+        }
+
+        h1, h2, h3, .font-serif-title {
+            font-family: 'Playfair Display', serif;
+        }
+
+        /* --- Fondo Premium Elegante --- */
+        .premium-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            z-index: -2;
+            opacity: 0.15; /* Muy sutil para evitar oscurecer */
+        }
+        
+        .premium-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.95) 100%);
+            backdrop-filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* --- Glassmorphism UI --- */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 10px 40px rgba(15, 76, 129, 0.05);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 32px rgba(15, 76, 129, 0.04);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 12px 40px rgba(15, 76, 129, 0.08);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        /* --- Controles --- */
+        .btn-elegant {
+            background: var(--brand-color);
+            color: white;
+            padding: 0.6rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(15, 76, 129, 0.2);
+            border: 1px solid transparent;
+        }
+        .btn-elegant:hover { background: var(--brand-hover); box-shadow: 0 6px 20px rgba(15, 76, 129, 0.3); transform: translateY(-1px); }
+        .btn-elegant:disabled { background: #94a3b8; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--brand-color);
+            padding: 0.6rem 1.5rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(15, 76, 129, 0.2);
+            transition: all 0.2s ease;
+        }
+        .btn-glass:hover { background: #f8fafc; border-color: var(--brand-color); box-shadow: 0 4px 15px rgba(15, 76, 129, 0.1); }
+
+        .input-glass {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(15, 76, 129, 0.15);
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+        }
+        .input-glass:focus {
+            outline: none;
+            background: #ffffff;
+            border-color: var(--brand-color);
+            box-shadow: 0 0 0 3px rgba(15, 76, 129, 0.1);
+        }
+
+        .section-tab {
+            padding: 0.75rem 1.5rem;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #64748b;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 1px solid transparent;
+        }
+        .section-tab.active {
+            background: white;
+            color: var(--brand-color);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border: 1px solid rgba(15, 76, 129, 0.1);
+        }
+
+        .smooth-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+        .smooth-scroll::-webkit-scrollbar-track { background: transparent; }
+        .smooth-scroll::-webkit-scrollbar-thumb { background: rgba(15, 76, 129, 0.2); border-radius: 10px; }
+        
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+        
+        /* Ocultar input number arrows */
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="premium-bg"></div>
+    <div class="premium-overlay"></div>
+
+    <!-- Navegación -->
+    <nav class="fixed top-0 w-full z-[100] glass-nav h-16 flex items-center">
+        <div class="max-w-[1400px] w-full mx-auto px-6 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-[#0f4c81] flex items-center justify-center shadow-lg">
+                    <i data-lucide="graduation-cap" class="w-5 h-5 text-white"></i>
+                </div>
+                <span class="font-serif-title font-bold text-xl text-[#0f4c81]">Panel Docente</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm font-medium text-gray-500 mr-2">Administrador</span>
+                <div class="w-9 h-9 rounded-full bg-blue-50 border border-[#0f4c81]/20 flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-4 h-4 text-[#0f4c81]"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="w-full pt-24 pb-20 max-w-[1400px] mx-auto px-4 sm:px-6">
+        
+        <!-- Tabs de Secciones -->
+        <div class="flex justify-center mb-8 max-w-full overflow-x-auto hide-scrollbar py-1">
+            <div class="glass-panel p-1.5 rounded-full flex gap-1 items-center shadow-sm min-w-max">
+                <button onclick="switchTab('materias')" id="tab-materias" class="section-tab active flex items-center gap-2">
+                    <i data-lucide="book" class="w-4 h-4"></i> Materias
+                </button>
+                <button onclick="switchTab('alumnos')" id="tab-alumnos" class="section-tab flex items-center gap-2">
+                    <i data-lucide="users" class="w-4 h-4"></i> Alumnos
+                </button>
+                <button onclick="switchTab('calificaciones')" id="tab-calificaciones" class="section-tab flex items-center gap-2">
+                    <i data-lucide="clipboard-check" class="w-4 h-4"></i> Calificaciones
+                </button>
+            </div>
+        </div>
+
+        <!-- VISTAS DINÁMICAS -->
+        <div id="view-materias" class="view-section animate-fade">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-3xl font-serif-title font-bold text-gray-900">Gestión de Materias</h2>
+                    <p class="text-gray-500 text-sm mt-1">Configura las asignaturas y sus ponderaciones.</p>
+                </div>
+                <button onclick="openModal('modalMateria')" class="btn-elegant flex items-center justify-center gap-2 w-full sm:w-auto">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Nueva Materia
+                </button>
+            </div>
+            <div id="listaMaterias" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                <!-- Se llena con JS -->
+            </div>
+        </div>
+
+        <div id="view-alumnos" class="view-section hidden animate-fade">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+                <div>
+                    <h2 class="text-3xl font-serif-title font-bold text-gray-900">Registro de Alumnos</h2>
+                    <p class="text-gray-500 text-sm mt-1">Administra estudiantes y sus inscripciones.</p>
+                </div>
+                <button onclick="openModal('modalAlumno')" class="btn-elegant flex items-center justify-center gap-2 w-full sm:w-auto">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i> Nuevo Alumno
+                </button>
+            </div>
+            <div class="glass-panel rounded-2xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-50 border-b border-gray-200">
+                                <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Nombre Completo</th>
+                                <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Celular / Contraseña</th>
+                                <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Usuario (Login)</th>
+                                <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Materias Inscritas</th>
+                                <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider text-right">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="listaAlumnos" class="divide-y divide-gray-100 bg-white/50">
+                            <!-- Se llena con JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-calificaciones" class="view-section hidden animate-fade">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif-title font-bold text-gray-900">Calificaciones</h2>
+                    <p class="text-gray-500 text-sm mt-1">Registra notas seleccionando una materia.</p>
+                </div>
+                <div class="w-full md:w-72">
+                    <select id="selectMateriaGrades" onchange="renderGradesTable()" class="w-full px-4 py-3 input-glass text-sm font-semibold text-[#0f4c81]">
+                        <option value="">-- Seleccionar Materia --</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="gradesContainer" class="glass-panel rounded-2xl overflow-hidden hidden">
+                <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
+                    <div id="gradesInfo" class="text-sm font-medium text-gray-600"></div>
+                    <button onclick="saveAllGrades()" class="btn-elegant py-2 text-sm hidden w-full sm:w-auto" id="btnSaveGrades">Guardar Notas</button>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead id="gradesTableHead" class="bg-white">
+                            <!-- JS Dinámico -->
+                        </thead>
+                        <tbody id="gradesTableBody" class="divide-y divide-gray-100 bg-white/60">
+                            <!-- JS Dinámico -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div id="emptyGradesState" class="text-center py-20 text-gray-400">
+                <i data-lucide="clipboard-list" class="w-16 h-16 mx-auto mb-4 opacity-50"></i>
+                <p class="text-lg">Selecciona una materia para ver y calificar a los alumnos inscritos.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODALES -->
+    
+    <!-- Modal: Nueva Materia -->
+    <div id="modalMateria" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal('modalMateria')"></div>
+        <div class="relative bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-fade border border-gray-100">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 id="modalMateriaTitle" class="font-bold text-lg text-[#0f4c81] flex items-center gap-2"><i data-lucide="book" class="w-5 h-5"></i> Registrar Materia</h3>
+                <button type="button" onclick="closeModal('modalMateria')" class="text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="formMateria" class="p-6 space-y-5">
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Nombre de la Materia</label>
+                    <input type="text" id="matNombre" required class="w-full mt-1 px-4 py-3 input-glass" placeholder="Ej. Matemáticas Discretas">
+                </div>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Prácticas</label>
+                        <input type="number" id="matNumPrac" required min="0" max="20" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Parciales</label>
+                        <input type="number" id="matNumParc" required min="0" max="10" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
+                    </div>
+                </div>
+
+                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                    <h4 class="text-xs font-bold text-[#0f4c81] uppercase tracking-wider mb-3 text-center">Ponderación (Debe sumar 100%)</h4>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div class="text-center">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Prácticas %</label>
+                            <input type="number" id="matPesoPrac" required min="0" max="100" class="w-full mt-1 px-2 py-2 input-glass text-center text-sm" value="30">
+                        </div>
+                        <div class="text-center">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Parciales %</label>
+                            <input type="number" id="matPesoParc" required min="0" max="100" class="w-full mt-1 px-2 py-2 input-glass text-center text-sm" value="50">
+                        </div>
+                        <div class="text-center">
+                            <label class="text-[10px] font-bold text-gray-500 uppercase">Asistencia %</label>
+                            <input type="number" id="matPesoAsis" required min="0" max="100" class="w-full mt-1 px-2 py-2 input-glass text-center text-sm" value="20">
+                        </div>
+                    </div>
+                    <p id="errorPesos" class="text-red-500 text-xs text-center mt-2 hidden font-medium">La suma debe ser exactamente 100%.</p>
+                </div>
+
+                <button type="submit" id="btnGuardarMateria" class="w-full btn-elegant py-3 mt-2">Guardar Materia</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Nuevo Alumno -->
+    <div id="modalAlumno" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModal('modalAlumno')"></div>
+        <div class="relative bg-white rounded-3xl w-full max-w-lg shadow-2xl overflow-hidden animate-fade border border-gray-100">
+            <div class="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
+                <h3 id="modalAlumnoTitle" class="font-bold text-lg text-[#0f4c81] flex items-center gap-2"><i data-lucide="user-plus" class="w-5 h-5"></i> Registrar Alumno</h3>
+                <button type="button" onclick="closeModal('modalAlumno')" class="text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="formAlumno" class="p-6 space-y-4 max-h-[80vh] overflow-y-auto smooth-scroll">
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Ap. Paterno</label>
+                        <input type="text" id="aluPat" required class="w-full mt-1 px-4 py-2.5 input-glass" oninput="updatePreviewAccount()">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Ap. Materno</label>
+                        <input type="text" id="aluMat" class="w-full mt-1 px-4 py-2.5 input-glass">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Nombre(s)</label>
+                        <input type="text" id="aluNom" required class="w-full mt-1 px-4 py-2.5 input-glass" oninput="updatePreviewAccount()">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Celular</label>
+                        <input type="text" id="aluCel" required class="w-full mt-1 px-4 py-2.5 input-glass" oninput="updatePreviewAccount()">
+                    </div>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-2">
+                    <p class="text-xs font-bold text-gray-500 uppercase mb-2">Credenciales Generadas (Para Portal Notas)</p>
+                    <div class="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                        <div class="flex-1">
+                            <span class="text-[10px] text-gray-400">Usuario</span>
+                            <p id="previewUser" class="font-mono text-sm text-[#0f4c81] font-bold bg-white px-2 py-1 rounded border border-gray-100">-</p>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] text-gray-400">Contraseña</span>
+                            <p id="previewPass" class="font-mono text-sm text-[#0f4c81] font-bold bg-white px-2 py-1 rounded border border-gray-100">-</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <label class="text-xs font-bold text-[#0f4c81] uppercase tracking-wider pl-1 mb-2 block border-b pb-1">Inscribir en Materias</label>
+                    <div id="materiasCheckboxes" class="space-y-2 max-h-32 overflow-y-auto smooth-scroll p-1">
+                        <!-- JS Dinámico -->
+                    </div>
+                </div>
+
+                <button type="submit" id="btnGuardarAlumno" class="w-full btn-elegant py-3 mt-4">Guardar Alumno</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase y Lógica -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Configuración requerida por el entorno o tu Firebase real
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') {
+            firebaseConfig = JSON.parse(__firebase_config);
+        } else {
+            // Fallback a tu configuración real de Firebase
+            firebaseConfig = {
+                apiKey: "AIzaSyAG51FqizcLdlhMmHDhVRstqHpMZKAHJ0A",
+                authDomain: "novell-instituto-superior.firebaseapp.com",
+                projectId: "novell-instituto-superior",
+                storageBucket: "novell-instituto-superior.firebasestorage.app",
+                messagingSenderId: "995723750721",
+                appId: "1:995723750721:web:c428676b529679370d05c0"
+            };
+        }
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // Estado local
+        let materias = [];
+        let alumnos = [];
+        let calificaciones = [];
+        let currentUser = null;
+        let editingMateriaId = null;
+        let editingAlumnoId = null;
+
+        // Función auxiliar para evitar congelamiento infinito en Firebase
+        const withTimeout = (promise, ms = 10000) => {
+            return Promise.race([
+                promise,
+                new Promise((_, reject) => setTimeout(() => reject(new Error("Tiempo de espera agotado de red.")), ms))
+            ]);
+        };
+
+        // --- Inicialización y Auth (Debe ser estricto) ---
+        const initAuth = async () => {
+            try {
+                let userCred;
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    userCred = await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    userCred = await signInAnonymously(auth);
+                }
+                // Asignar instantáneamente para evitar demoras
+                currentUser = userCred.user;
+            } catch(e) { 
+                console.error("Auth error:", e); 
+                mostrarNotificacion("Falta Configurar Firebase", "Debes ir a Firebase Console > Authentication > Sign-in method y habilitar 'Anónimo'.", true);
+            }
+        };
+
+        // Arrancar autenticación primero
+        (async () => {
+            await initAuth();
+            
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                if (user) {
+                    // Escuchar Datos con callbacks de error requeridos
+                    const refMaterias = collection(db, 'artifacts', appId, 'public', 'data', 'materias');
+                    const refAlumnos = collection(db, 'artifacts', appId, 'public', 'data', 'alumnos');
+                    const refCalificaciones = collection(db, 'artifacts', appId, 'public', 'data', 'calificaciones');
+
+                    onSnapshot(refMaterias, (snap) => { materias = snap.docs.map(d => d.data()); renderUI(); }, (err) => console.error("Snapshot Materias Error:", err));
+                    onSnapshot(refAlumnos, (snap) => { alumnos = snap.docs.map(d => d.data()); renderUI(); }, (err) => console.error("Snapshot Alumnos Error:", err));
+                    onSnapshot(refCalificaciones, (snap) => { calificaciones = snap.docs.map(d => d.data()); renderGradesTable(); }, (err) => console.error("Snapshot Calificaciones Error:", err));
+                }
+            });
+        })();
+
+        // --- UI & Tabs ---
+        window.switchTab = (tabId) => {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${tabId}`).classList.remove('hidden');
+            
+            document.querySelectorAll('.section-tab').forEach(el => el.classList.remove('active'));
+            document.getElementById(`tab-${tabId}`).classList.add('active');
+            
+            if(tabId === 'calificaciones') {
+                updateGradesSelect();
+                renderGradesTable();
+            }
+        };
+
+        window.openModal = (id) => {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+            
+            if(id === 'modalMateria') {
+                editingMateriaId = null;
+                document.getElementById('formMateria').reset();
+                document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="book" class="w-5 h-5"></i> Registrar Materia';
+                document.getElementById('errorPesos').classList.add('hidden');
+            }
+            if(id === 'modalAlumno') {
+                editingAlumnoId = null;
+                document.getElementById('formAlumno').reset();
+                document.getElementById('modalAlumnoTitle').innerHTML = '<i data-lucide="user-plus" class="w-5 h-5"></i> Registrar Alumno';
+                updatePreviewAccount();
+                renderMateriasCheckboxes();
+            }
+            lucide.createIcons();
+        };
+
+        window.closeModal = (id) => {
+            document.getElementById(id).classList.add('hidden');
+            document.getElementById(id).classList.remove('flex');
+        };
+
+        function mostrarNotificacion(t, m, esError = false) {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-6 right-6 z-[300] bg-white border border-gray-100 shadow-[0_10px_40px_rgba(0,0,0,0.1)] p-4 rounded-xl flex items-start gap-3 w-80 animate-fade`;
+            const iconColor = esError ? 'text-red-500 bg-red-50' : 'text-[#0f4c81] bg-[#0f4c81]/10';
+            const iconName = esError ? 'alert-circle' : 'check-circle';
+            
+            toast.innerHTML = `<div class="mt-0.5 ${iconColor} p-2 rounded-full"><i data-lucide="${iconName}" class="w-4 h-4"></i></div><div><p class="font-bold text-sm text-gray-900">${t}</p><p class="text-xs text-gray-500 mt-1">${m}</p></div>`;
+            document.body.appendChild(toast); 
+            lucide.createIcons();
+            setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(15px)'; toast.style.transition = 'all 0.4s ease'; setTimeout(() => toast.remove(), 400); }, 3500);
+        }
+
+        function renderUI() {
+            renderMaterias();
+            renderAlumnos();
+            lucide.createIcons();
+        }
+
+        // --- Lógica Materias ---
+        document.getElementById('formMateria').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnGuardarMateria');
+            const prac = parseInt(document.getElementById('matPesoPrac').value);
+            const parc = parseInt(document.getElementById('matPesoParc').value);
+            const asis = parseInt(document.getElementById('matPesoAsis').value);
+            
+            if ((prac + parc + asis) !== 100) {
+                document.getElementById('errorPesos').classList.remove('hidden');
+                return;
+            }
+            document.getElementById('errorPesos').classList.add('hidden');
+
+            // Feedback visual para evitar que el usuario piense que se congeló
+            const originalText = btn.innerText;
+            btn.innerText = "Guardando...";
+            btn.disabled = true;
+
+            const id = editingMateriaId ? editingMateriaId : ('mat_' + Date.now());
+            const data = {
+                id: id,
+                nombre: document.getElementById('matNombre').value.trim(),
+                numPracticas: parseInt(document.getElementById('matNumPrac').value),
+                numParciales: parseInt(document.getElementById('matNumParc').value),
+                pesoPracticas: prac,
+                pesoParciales: parc,
+                pesoAsistencia: asis
+            };
+
+            if (!currentUser) {
+                mostrarNotificacion("Error", "No autenticado. Si estás en local, habilita el inicio de sesión 'Anónimo' en Firebase.", true);
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'materias', id);
+                await withTimeout(setDoc(docRef, data));
+                closeModal('modalMateria');
+                document.getElementById('formMateria').reset();
+                mostrarNotificacion("Éxito", "Materia creada correctamente.");
+            } catch (err) { 
+                console.error("Firebase Error:", err);
+                mostrarNotificacion("Error", "Fallo al guardar en Firebase. Revisa tu consola.", true);
+            } finally {
+                // Restaurar botón siempre
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        function renderMaterias() {
+            const container = document.getElementById('listaMaterias');
+            if(materias.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400"><p>No hay materias registradas.</p></div>`;
+                return;
+            }
+            container.innerHTML = materias.map(m => `
+                <div class="glass-card p-6 rounded-2xl relative">
+                    <button onclick="editarMateria('${m.id}')" class="absolute top-4 right-12 text-blue-400 hover:text-blue-600 transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                    <button onclick="borrarMateria('${m.id}')" class="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-4 border border-blue-100 text-[#0f4c81]">
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-gray-900 mb-4">${m.nombre}</h3>
+                    
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
+                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Prácticas</p>
+                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numPracticas}</p>
+                        </div>
+                        <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
+                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Parciales</p>
+                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numParciales}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
+                        <span>P: ${m.pesoPracticas}%</span>
+                        <span>Ex: ${m.pesoParciales}%</span>
+                        <span>Asist: ${m.pesoAsistencia}%</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        window.editarMateria = (id) => {
+            const m = materias.find(x => x.id === id);
+            if (!m) return;
+            editingMateriaId = id;
+            document.getElementById('matNombre').value = m.nombre;
+            document.getElementById('matNumPrac').value = m.numPracticas;
+            document.getElementById('matNumParc').value = m.numParciales;
+            document.getElementById('matPesoPrac').value = m.pesoPracticas;
+            document.getElementById('matPesoParc').value = m.pesoParciales;
+            document.getElementById('matPesoAsis').value = m.pesoAsistencia;
+            
+            document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="edit" class="w-5 h-5"></i> Editar Materia';
+            document.getElementById('modalMateria').classList.remove('hidden');
+            document.getElementById('modalMateria').classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.borrarMateria = async (id) => {
+            if (!currentUser) return mostrarNotificacion("Error", "No autenticado. Habilita Auth Anónima en Firebase.", true);
+            if(confirm("¿Seguro que deseas eliminar esta materia?")) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'materias', id);
+                    await withTimeout(deleteDoc(docRef));
+                } catch(err) {
+                    mostrarNotificacion("Error", "No se pudo eliminar.", true);
+                }
+            }
+        };
+
+        // --- Lógica Alumnos ---
+        window.updatePreviewAccount = () => {
+            const nom = document.getElementById('aluNom').value.trim().toLowerCase().split(' ')[0] || 'nombre';
+            const cel = document.getElementById('aluCel').value.trim() || 'celular';
+            
+            document.getElementById('previewUser').innerText = nom;
+            document.getElementById('previewPass').innerText = cel;
+        };
+
+        function renderMateriasCheckboxes(selectedIds = []) {
+            const container = document.getElementById('materiasCheckboxes');
+            if (materias.length === 0) {
+                container.innerHTML = `<p class="text-xs text-gray-400 italic">Primero crea materias.</p>`;
+                return;
+            }
+            container.innerHTML = materias.map(m => `
+                <label class="flex items-center gap-2 p-2 hover:bg-gray-50 rounded border border-transparent hover:border-gray-100 cursor-pointer transition-colors">
+                    <input type="checkbox" name="matCheck" value="${m.id}" class="w-4 h-4 text-[#0f4c81] rounded focus:ring-[#0f4c81]" ${selectedIds.includes(m.id) ? 'checked' : ''}>
+                    <span class="text-sm text-gray-700 font-medium">${m.nombre}</span>
+                </label>
+            `).join('');
+        }
+
+        document.getElementById('formAlumno').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const btn = document.getElementById('btnGuardarAlumno');
+            const originalText = btn.innerText;
+            btn.innerText = "Guardando...";
+            btn.disabled = true;
+
+            const matChecks = Array.from(document.querySelectorAll('input[name="matCheck"]:checked')).map(cb => cb.value);
+            const nom = document.getElementById('aluNom').value.trim();
+            const pat = document.getElementById('aluPat').value.trim();
+            const cel = document.getElementById('aluCel').value.trim();
+            const usuario = nom.toLowerCase().split(' ')[0];
+
+            const id = editingAlumnoId ? editingAlumnoId : ('alu_' + Date.now());
+            const data = {
+                id: id,
+                paterno: pat,
+                materno: document.getElementById('aluMat').value.trim(),
+                nombre: nom,
+                celular: cel,
+                usuario: usuario,
+                password: cel,
+                materiasInscritas: matChecks
+            };
+
+            if (!currentUser) {
+                mostrarNotificacion("Error", "No autenticado. Si estás en local, habilita el inicio de sesión 'Anónimo' en Firebase.", true);
+                btn.innerText = originalText;
+                btn.disabled = false;
+                return;
+            }
+
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'alumnos', id);
+                await withTimeout(setDoc(docRef, data));
+                closeModal('modalAlumno');
+                mostrarNotificacion("Éxito", "Alumno registrado.");
+            } catch (err) { 
+                console.error("Firebase Error:", err);
+                mostrarNotificacion("Error", "Fallo al guardar alumno en Firebase.", true);
+            } finally {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        function renderAlumnos() {
+            const tbody = document.getElementById('listaAlumnos');
+            if(alumnos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-400">No hay alumnos registrados.</td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = alumnos.map(a => {
+                const matNames = a.materiasInscritas.map(mid => {
+                    const m = materias.find(x => x.id === mid);
+                    return m ? m.nombre : 'Desc.';
+                });
+                
+                return `
+                <tr class="hover:bg-blue-50/30 transition-colors">
+                    <td class="py-3 px-6 text-sm font-semibold text-gray-900">${a.paterno} ${a.materno} ${a.nombre}</td>
+                    <td class="py-3 px-6 text-sm text-gray-600 font-mono">${a.celular}</td>
+                    <td class="py-3 px-6 text-sm text-[#0f4c81] font-mono font-medium">${a.usuario}</td>
+                    <td class="py-3 px-6 text-xs text-gray-500">
+                        ${matNames.length > 0 ? matNames.map(n => `<span class="inline-block bg-gray-100 px-2 py-1 rounded border border-gray-200 mr-1 mb-1">${n}</span>`).join('') : '<span class="italic">Ninguna</span>'}
+                    </td>
+                    <td class="py-3 px-6 text-right">
+                        <button onclick="editarAlumno('${a.id}')" class="text-blue-400 hover:text-blue-600 p-1 mr-2"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button onclick="borrarAlumno('${a.id}')" class="text-red-400 hover:text-red-600 p-1"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                    </td>
+                </tr>
+            `}).join('');
+        }
+
+        window.editarAlumno = (id) => {
+            const a = alumnos.find(x => x.id === id);
+            if (!a) return;
+            editingAlumnoId = id;
+            document.getElementById('aluPat').value = a.paterno;
+            document.getElementById('aluMat').value = a.materno;
+            document.getElementById('aluNom').value = a.nombre;
+            document.getElementById('aluCel').value = a.celular;
+            
+            updatePreviewAccount();
+            renderMateriasCheckboxes(a.materiasInscritas);
+            
+            document.getElementById('modalAlumnoTitle').innerHTML = '<i data-lucide="edit" class="w-5 h-5"></i> Editar Alumno';
+            document.getElementById('modalAlumno').classList.remove('hidden');
+            document.getElementById('modalAlumno').classList.add('flex');
+            lucide.createIcons();
+        };
+
+        window.borrarAlumno = async (id) => {
+            if (!currentUser) return mostrarNotificacion("Error", "No autenticado. Habilita Auth Anónima en Firebase.", true);
+            if(confirm("¿Seguro que deseas eliminar este alumno?")) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'alumnos', id);
+                    await withTimeout(deleteDoc(docRef));
+                } catch(err) {
+                    mostrarNotificacion("Error", "No se pudo eliminar el alumno.", true);
+                }
+            }
+        };
+
+        // --- Lógica Calificaciones ---
+        function updateGradesSelect() {
+            const select = document.getElementById('selectMateriaGrades');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">-- Seleccionar Materia --</option>' + 
+                materias.map(m => `<option value="${m.id}">${m.nombre}</option>`).join('');
+            if(materias.find(m => m.id === currentVal)) select.value = currentVal;
+        }
+
+        window.renderGradesTable = () => {
+            const select = document.getElementById('selectMateriaGrades');
+            const matId = select.value;
+            const emptyState = document.getElementById('emptyGradesState');
+            const container = document.getElementById('gradesContainer');
+            const thead = document.getElementById('gradesTableHead');
+            const tbody = document.getElementById('gradesTableBody');
+            
+            if(!matId) {
+                emptyState.classList.remove('hidden'); container.classList.add('hidden');
+                document.getElementById('btnSaveGrades').classList.add('hidden');
+                return;
+            }
+
+            const materia = materias.find(m => m.id === matId);
+            if(!materia) return;
+
+            const alumnosInscritos = alumnos.filter(a => a.materiasInscritas.includes(matId));
+            
+            emptyState.classList.add('hidden'); 
+            container.classList.remove('hidden');
+            document.getElementById('btnSaveGrades').classList.remove('hidden');
+            document.getElementById('gradesInfo').innerText = `${alumnosInscritos.length} alumnos inscritos`;
+
+            // Generar Cabeceras
+            let headHTML = `<tr><th class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase sticky left-0 bg-white z-10 border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">Alumno</th>`;
+            for(let i=1; i<=materia.numPracticas; i++) headHTML += `<th class="py-3 px-2 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/30">Prác ${i}</th>`;
+            for(let i=1; i<=materia.numParciales; i++) headHTML += `<th class="py-3 px-2 text-[10px] font-bold text-gray-500 uppercase text-center bg-indigo-50/30">Parc ${i}</th>`;
+            headHTML += `<th class="py-3 px-2 text-[10px] font-bold text-gray-500 uppercase text-center bg-green-50/30">Asist. (100)</th>`;
+            headHTML += `<th class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase text-center bg-gray-50 border-l border-gray-200">Nota Final</th></tr>`;
+            thead.innerHTML = headHTML;
+
+            // Generar Filas
+            if(alumnosInscritos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="100%" class="py-8 text-center text-gray-400">No hay alumnos en esta materia.</td></tr>`;
+                return;
+            }
+
+            let bodyHTML = '';
+            alumnosInscritos.forEach(al => {
+                const califId = `${al.id}_${matId}`;
+                const notaObj = calificaciones.find(c => c.id === califId) || { practicas: [], parciales: [], asistencia: 0 };
+                
+                bodyHTML += `<tr>`;
+                bodyHTML += `<td class="py-2 px-4 text-sm font-semibold text-gray-800 sticky left-0 bg-white/90 backdrop-blur border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.02)] whitespace-nowrap">${al.paterno} ${al.materno} ${al.nombre}</td>`;
+                
+                // Inputs Prácticas
+                for(let i=0; i<materia.numPracticas; i++) {
+                    const val = notaObj.practicas[i] || '';
+                    bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10"><input type="number" min="0" max="100" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')"></td>`;
+                }
+                
+                // Inputs Parciales
+                for(let i=0; i<materia.numParciales; i++) {
+                    const val = notaObj.parciales[i] || '';
+                    bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/10"><input type="number" min="0" max="100" data-type="parc" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')"></td>`;
+                }
+
+                // Input Asistencia
+                const asisVal = notaObj.asistencia || '';
+                bodyHTML += `<td class="py-2 px-2 text-center bg-green-50/10"><input type="number" min="0" max="100" data-type="asis" data-al="${al.id}" value="${asisVal}" class="w-16 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-green-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')"></td>`;
+
+                // Celda Nota Final
+                bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l border-gray-100 font-bold text-lg" id="final_${al.id}">-</td>`;
+                bodyHTML += `</tr>`;
+            });
+            tbody.innerHTML = bodyHTML;
+            
+            // Trigger calculation for all rows initially
+            setTimeout(() => {
+                alumnosInscritos.forEach(al => {
+                    const dummyInput = document.querySelector(`input[data-al="${al.id}"]`);
+                    if(dummyInput) window.calcFinalRow(dummyInput, materia.id);
+                });
+            }, 50);
+        };
+
+        window.calcFinalRow = (el, matId) => {
+            const alId = el.getAttribute('data-al');
+            const materia = materias.find(m => m.id === matId);
+            if(!materia) return;
+
+            // Recopilar valores de esta fila
+            const rowInputs = document.querySelectorAll(`input[data-al="${alId}"]`);
+            let sumPrac = 0, countPrac = 0;
+            let sumParc = 0, countParc = 0;
+            let asis = 0;
+
+            rowInputs.forEach(inp => {
+                const val = parseFloat(inp.value) || 0;
+                const type = inp.getAttribute('data-type');
+                if(type === 'prac') { sumPrac += val; countPrac++; }
+                else if(type === 'parc') { sumParc += val; countParc++; }
+                else if(type === 'asis') { asis = val; }
+            });
+
+            // Promedios sobre 100
+            const avgPrac = countPrac > 0 ? (sumPrac / countPrac) : 0;
+            const avgParc = countParc > 0 ? (sumParc / countParc) : 0;
+
+            // Calculo final ponderado (Asumiendo que las notas se ingresan sobre 100)
+            const ptsPrac = avgPrac * (materia.pesoPracticas / 100);
+            const ptsParc = avgParc * (materia.pesoParciales / 100);
+            const ptsAsis = asis * (materia.pesoAsistencia / 100);
+
+            const notaFinal = Math.round(ptsPrac + ptsParc + ptsAsis);
+            
+            const finalCell = document.getElementById(`final_${alId}`);
+            if(finalCell) {
+                finalCell.innerText = notaFinal;
+                finalCell.className = `py-2 px-4 text-center bg-gray-50 border-l border-gray-100 font-bold text-lg ${notaFinal >= 51 ? 'text-green-600' : 'text-red-500'}`;
+            }
+        };
+
+        window.saveAllGrades = async () => {
+            const select = document.getElementById('selectMateriaGrades');
+            const matId = select.value;
+            if(!matId) return;
+            const materia = materias.find(m => m.id === matId);
+
+            const btn = document.getElementById('btnSaveGrades');
+            btn.innerText = "Guardando..."; btn.disabled = true;
+
+            const alumnosInscritos = alumnos.filter(a => a.materiasInscritas.includes(matId));
+            
+            try {
+                for(const al of alumnosInscritos) {
+                    const rowInputs = document.querySelectorAll(`input[data-al="${al.id}"]`);
+                    let pracArr = new Array(materia.numPracticas).fill(0);
+                    let parcArr = new Array(materia.numParciales).fill(0);
+                    let asisVal = 0;
+
+                    rowInputs.forEach(inp => {
+                        const val = parseFloat(inp.value) || 0;
+                        const type = inp.getAttribute('data-type');
+                        const idx = parseInt(inp.getAttribute('data-idx'));
+                        
+                        if(type === 'prac') pracArr[idx] = val;
+                        else if(type === 'parc') parcArr[idx] = val;
+                        else if(type === 'asis') asisVal = val;
+                    });
+
+                    if (!currentUser) throw new Error("No autenticado");
+                    
+                    const califId = `${al.id}_${matId}`;
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'calificaciones', califId);
+                    
+                    await withTimeout(setDoc(docRef, {
+                        id: califId,
+                        alumnoId: al.id,
+                        materiaId: matId,
+                        practicas: pracArr,
+                        parciales: parcArr,
+                        asistencia: asisVal
+                    }));
+                }
+                mostrarNotificacion("Guardado", "Notas actualizadas correctamente.");
+            } catch(e) { 
+                console.error("Firebase Error:", e); 
+                mostrarNotificacion("Error", "Error al guardar. Revisa tu red.", true); 
+            } finally {
+                btn.innerText = "Guardar Notas"; btn.disabled = false;
+            }
+        };
+
+    </script>
+</body>
+</html>
