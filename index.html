@@ -102,7 +102,7 @@
         }
         .toast-enter { animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
         
-        /* Ocultar barra de scroll para el chat pero permitir scroll */
+        /* Ocultar barra de scroll pero permitir scroll */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
         }
@@ -118,17 +118,12 @@
     <div class="premium-bg"></div>
     <div class="premium-overlay"></div>
 
-    <!-- Contenedor Principal del Formulario (INICIA OCULTO con la clase 'hidden') -->
+    <!-- Contenedor Principal del Formulario -->
     <div id="loginContainer" class="hidden relative glass-panel rounded-3xl w-full max-w-[420px] p-8 sm:p-10 text-center animate-fade-scale">
-        
-        <!-- Nombre de Portal -->
         <div class="mx-auto mb-8">
             <span class="text-[#0f4c81] text-2xl font-bold tracking-[0.2em] uppercase font-serif-title">Portal</span>
         </div>
-
-        <!-- Formulario -->
         <form id="loginForm" class="space-y-5 text-left">
-            <!-- Campo Usuario -->
             <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-black uppercase tracking-widest pl-2">Identidad de Usuario</label>
                 <div class="relative">
@@ -136,8 +131,6 @@
                     <input type="text" id="loginUser" required autocomplete="username" class="w-full pl-11 pr-4 py-3.5 input-glass text-sm text-black placeholder:text-black/60" placeholder="nombre">
                 </div>
             </div>
-            
-            <!-- Campo Contraseña -->
             <div class="space-y-1.5">
                 <label class="text-[11px] font-bold text-black uppercase tracking-widest pl-2">Clave de Seguridad</label>
                 <div class="relative">
@@ -148,29 +141,22 @@
                     </button>
                 </div>
             </div>
-            
-            <!-- Botón de Envío -->
             <button type="submit" id="submitBtn" class="w-full btn-elegant py-4 mt-4 text-[15px] flex items-center justify-center gap-2">
                 <span>Verificar Credenciales</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
         </form>
-
-        <!-- Pie de página pequeño -->
-        <div class="mt-8 text-xs text-black font-medium">
-            &copy; 2024 Novell Digital. Acceso Seguro.
-        </div>
+        <div class="mt-8 text-xs text-black font-medium">&copy; 2024 Novell Digital. Acceso Seguro.</div>
     </div>
 
-    <!-- SCRIPT SÍNCRONO: Decide inmediatamente si mostrar el formulario para evitar parpadeos -->
+    <!-- Script inicial -->
     <script>
-        // Si no hay ninguna llave de sesión guardada, mostramos el login instantáneamente
         if (!localStorage.getItem('portalSessionId')) {
             document.getElementById('loginContainer').classList.remove('hidden');
         }
     </script>
 
-    <!-- Menú Principal (Dashboard) - Inicialmente Oculto -->
+    <!-- Menú Principal (Dashboard) -->
     <div id="dashboardContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12">
             <!-- Header del Dashboard -->
@@ -194,16 +180,9 @@
 
             <!-- Banner Publicitario / Carrusel -->
             <div class="relative w-full h-40 sm:h-48 md:h-56 mb-8 rounded-2xl overflow-hidden bg-white border border-white/80 shadow-sm">
-                <!-- Imagen 1: Contabilidad -->
-                <img id="bannerSlide1" src="novell contabilidad.png" onerror="this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-100" alt="Novell Contabilidad">
-                
-                <!-- Imagen 2: Electrónica -->
-                <img id="bannerSlide2" src="novell electronica.png" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-0" alt="Novell Electrónica">
-                
-                <!-- Gradiente para que los puntitos resalten -->
+                <img id="bannerSlide1" src="novell contabilidad.png" onerror="this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-100">
+                <img id="bannerSlide2" src="novell electronica.png" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-0">
                 <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
-
-                <!-- Indicadores (Puntos) -->
                 <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                     <div id="dot1" class="w-4 h-2 rounded-full bg-white transition-all duration-500 shadow-sm"></div>
                     <div id="dot2" class="w-2 h-2 rounded-full bg-white/50 transition-all duration-500 shadow-sm"></div>
@@ -212,7 +191,7 @@
 
             <!-- Grid de Opciones -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Opción 1: Noticias y Eventos -->
+                <!-- Noticias y Eventos -->
                 <button onclick="abrirNoticias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-blue-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="newspaper" class="w-7 h-7"></i>
@@ -223,7 +202,7 @@
                     </div>
                 </button>
 
-                <!-- Opción 2: Biblioteca -->
+                <!-- Biblioteca -->
                 <button onclick="window.location.href='biblioteca.html'" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="library" class="w-7 h-7"></i>
@@ -234,7 +213,7 @@
                     </div>
                 </button>
 
-                <!-- Opción 3: Clases Virtuales -->
+                <!-- Clases Virtuales -->
                 <button onclick="window.open('https://meet.google.com/tzo-efrb-qjk', '_blank')" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="video" class="w-7 h-7"></i>
@@ -245,7 +224,7 @@
                     </div>
                 </button>
 
-                <!-- Opción 4: Prácticas -->
+                <!-- Prácticas -->
                 <button onclick="abrirPracticas()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-orange-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="pen-tool" class="w-7 h-7"></i>
@@ -256,7 +235,7 @@
                     </div>
                 </button>
 
-                <!-- Opción 5: Chats y Sugerencias (NUEVO COLOR: TEAL) -->
+                <!-- Chats y Sugerencias -->
                 <button onclick="abrirSugerencias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-teal-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="message-square" class="w-7 h-7"></i>
@@ -267,7 +246,7 @@
                     </div>
                 </button>
 
-                <!-- Opción 6: Calificaciones (Solo Alumnos) -->
+                <!-- Calificaciones (Solo Alumnos) -->
                 <button id="btnCalificaciones" onclick="abrirCalificaciones()" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-yellow-400 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-yellow-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="graduation-cap" class="w-7 h-7"></i>
@@ -278,7 +257,7 @@
                     </div>
                 </button>
 
-                <!-- Opción 7: Registro Académico (Solo Admin) -->
+                <!-- Registro Académico (Solo Admin) -->
                 <button id="btnGestion" onclick="window.location.href='registro.html'" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-[#0f4c81]/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-[#0f4c81]/10 text-[#0f4c81] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-[#0f4c81] group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="users" class="w-7 h-7"></i>
@@ -290,7 +269,6 @@
                 </button>
             </div>
             
-            <!-- Botón Cerrar Sesión -->
             <div class="mt-10 flex justify-center sm:justify-end border-t border-gray-300/50 pt-6">
                 <button onclick="cerrarSesion()" class="inline-flex items-center gap-2 text-sm font-bold text-red-600 hover:text-white bg-red-50 hover:bg-red-500 px-6 py-3 rounded-full transition-colors border border-red-100 hover:border-red-500 shadow-sm">
                     <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión Segura
@@ -299,10 +277,9 @@
         </div>
     </div>
 
-    <!-- Contenedor de Chats y Sugerencias (NUEVO) -->
+    <!-- Contenedor de Chats y Sugerencias -->
     <div id="sugerenciasContainer" class="hidden relative w-full max-w-4xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-6 sm:p-10 flex flex-col h-[85vh] max-h-[800px]">
-            <!-- Header -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-5 mb-5 gap-4 shrink-0">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Chats y Sugerencias</h2>
@@ -313,15 +290,9 @@
                     <span class="hidden sm:inline">Volver</span>
                 </button>
             </div>
-
-            <!-- Área de mensajes (Scrollable) -->
-            <div id="sugerenciasList" class="flex-1 overflow-y-auto pr-2 space-y-5 mb-5 scrollbar-hide">
-                <!-- Aquí se inyectarán los mensajes dinámicamente -->
-            </div>
-
-            <!-- Formulario de Entrada -->
+            <div id="sugerenciasList" class="flex-1 overflow-y-auto pr-2 space-y-5 mb-5 scrollbar-hide"></div>
             <form id="formSugerencia" class="shrink-0 flex gap-3 relative border-t border-gray-200/60 pt-5">
-                <input type="text" id="sugerenciaTexto" required placeholder="Escribe tu mensaje aquí..." autocomplete="off" class="w-full pl-5 pr-14 py-4 bg-white/80 border border-gray-200 rounded-2xl focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all text-sm text-gray-900 shadow-sm">
+                <input type="text" id="sugerenciaTexto" required placeholder="Escribe tu mensaje aquí... (Usa *texto* para negrilla)" autocomplete="off" class="w-full pl-5 pr-14 py-4 bg-white/80 border border-gray-200 rounded-2xl focus:outline-none focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20 transition-all text-sm text-gray-900 shadow-sm">
                 <button type="submit" id="btnEnviarSugerencia" class="absolute right-2 top-[30px] w-10 h-10 bg-teal-600 hover:bg-teal-700 text-white rounded-xl flex items-center justify-center transition-all shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
                     <i data-lucide="send" class="w-4 h-4 ml-0.5 mt-0.5"></i>
                 </button>
@@ -348,14 +319,11 @@
                     </button>
                 </div>
             </div>
-            
-            <div id="noticiasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[250px]">
-                <!-- Aquí se inyectarán las noticias dinámicamente -->
-            </div>
+            <div id="noticiasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[250px]"></div>
         </div>
     </div>
 
-    <!-- Modal de Creación/Edición de Noticias (Solo Admin) -->
+    <!-- Modal de Creación/Edición de Noticias -->
     <div id="modalNoticia" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="cerrarModalNoticia()"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 animate-fade-scale border border-gray-100">
@@ -379,11 +347,9 @@
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Imagen de Portada</label>
                         <input type="hidden" id="noticiaImagenUrlActual">
                         <div class="flex items-center gap-4">
-                            <!-- Previsualización de la imagen -->
                             <div id="imagePreviewContainer" class="hidden w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0 shadow-sm">
                                 <img id="imagePreview" src="" class="w-full h-full object-cover">
                             </div>
-                            <!-- Botón de subida -->
                             <label class="flex-1 flex flex-col items-center justify-center px-4 py-3.5 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl hover:bg-white hover:border-[#0f4c81] transition-all cursor-pointer group">
                                 <div class="flex items-center gap-2 text-gray-500 group-hover:text-[#0f4c81] transition-colors">
                                     <i data-lucide="upload-cloud" class="w-5 h-5"></i>
@@ -396,7 +362,7 @@
                     </div>
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Contenido / Descripción</label>
-                        <textarea id="noticiaContenido" required rows="5" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0f4c81] focus:ring-2 focus:ring-[#0f4c81]/20 transition-all text-sm resize-none text-gray-900" placeholder="Detalles del anuncio..."></textarea>
+                        <textarea id="noticiaContenido" required rows="5" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-[#0f4c81] focus:ring-2 focus:ring-[#0f4c81]/20 transition-all text-sm resize-none text-gray-900" placeholder="Detalles del anuncio... (Usa *texto* para negrillas)"></textarea>
                     </div>
                 </div>
                 <div class="flex gap-3 pt-4 border-t border-gray-100 mt-6">
@@ -413,12 +379,9 @@
     <div id="modalDetalleNoticia" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetalleNoticia()"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-scale flex flex-col max-h-[90vh] sm:max-h-[85vh]">
-            <!-- Botón Cerrar Flotante -->
             <button onclick="cerrarDetalleNoticia()" class="absolute top-4 right-4 z-10 w-10 h-10 bg-black/20 hover:bg-black/40 backdrop-blur text-white rounded-full flex items-center justify-center transition-all shadow-sm">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            
-            <!-- Imagen de Cabecera -->
             <div class="w-full h-48 sm:h-64 relative shrink-0 bg-gray-100">
                 <img id="detalleNoticiaImagen" src="" class="w-full h-full object-cover">
                 <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
@@ -426,20 +389,13 @@
                     Noticia
                 </div>
             </div>
-            
-            <!-- Contenido Scrollable -->
             <div class="p-6 sm:p-10 overflow-y-auto scrollbar-hide flex-1">
                 <div class="flex items-center gap-2 mb-3 text-sm font-bold uppercase tracking-widest text-[#0f4c81]">
                     <i data-lucide="calendar" class="w-4 h-4"></i>
                     <span id="detalleNoticiaFecha">Fecha</span>
                 </div>
-                <h3 id="detalleNoticiaTitulo" class="text-2xl sm:text-3xl font-serif-title font-bold text-gray-900 mb-6 leading-tight">
-                    Título de la Noticia
-                </h3>
-                <div id="detalleNoticiaContenido" class="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm sm:text-base">
-                    Contenido completo aquí...
-                </div>
-                
+                <h3 id="detalleNoticiaTitulo" class="text-2xl sm:text-3xl font-serif-title font-bold text-gray-900 mb-6 leading-tight"></h3>
+                <div id="detalleNoticiaContenido" class="text-gray-700 leading-relaxed whitespace-pre-wrap text-sm sm:text-base"></div>
                 <div class="mt-8 pt-6 border-t border-gray-100 flex items-center gap-3">
                     <div class="w-10 h-10 rounded-full bg-[#0f4c81]/10 flex items-center justify-center">
                         <i data-lucide="user" class="w-5 h-5 text-[#0f4c81]"></i>
@@ -483,13 +439,11 @@
                 </button>
             </div>
             
-            <div id="practicasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[250px]">
-                <!-- Aquí se inyectarán las prácticas dinámicamente -->
-            </div>
+            <div id="practicasList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 min-h-[250px]"></div>
         </div>
     </div>
 
-    <!-- Modal de Creación/Edición de Prácticas (Solo Admin) -->
+    <!-- Modal de Creación/Edición de Prácticas -->
     <div id="modalPractica" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="cerrarModalPractica()"></div>
         <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 animate-fade-scale border border-gray-100">
@@ -517,15 +471,18 @@
                         <input type="url" id="practicaDocUrl" required placeholder="https://drive.google.com/..." class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm text-gray-900">
                         <p class="text-[10px] text-gray-400 pl-1">Enlace a Google Drive, PDF, Mediafire, etc.</p>
                     </div>
+                    <!-- NUEVO CAMPO: DESCRIPCIÓN -->
+                    <div class="space-y-1.5 md:col-span-2">
+                        <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Descripción / Instrucciones (Opcional)</label>
+                        <textarea id="practicaDescripcion" rows="4" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm resize-none text-gray-900" placeholder="Detalles de la práctica, instrucciones, índice, etc..."></textarea>
+                    </div>
                     <div class="space-y-1.5 md:col-span-2">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Imagen de Referencia</label>
                         <input type="hidden" id="practicaImagenUrlActual">
                         <div class="flex items-center gap-4">
-                            <!-- Previsualización -->
                             <div id="practicaImagePreviewContainer" class="hidden w-16 h-16 rounded-xl bg-gray-100 border border-gray-200 overflow-hidden shrink-0 shadow-sm">
                                 <img id="practicaImagePreview" src="" class="w-full h-full object-cover">
                             </div>
-                            <!-- Botón de subida -->
                             <label class="flex-1 flex flex-col items-center justify-center px-4 py-3.5 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl hover:bg-white hover:border-orange-500 transition-all cursor-pointer group">
                                 <div class="flex items-center gap-2 text-gray-500 group-hover:text-orange-500 transition-colors">
                                     <i data-lucide="upload-cloud" class="w-5 h-5"></i>
@@ -546,6 +503,71 @@
         </div>
     </div>
 
+    <!-- Modal de Detalle de Práctica (Lectura y Estilo Completo) -->
+    <div id="modalDetallePractica" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 sm:p-6">
+        <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetallePractica()"></div>
+        <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-scale flex flex-col md:flex-row max-h-[90vh]">
+            
+            <!-- Botón Cerrar Flotante (Móvil) -->
+            <button onclick="cerrarDetallePractica()" class="md:hidden absolute top-4 right-4 z-20 w-10 h-10 bg-black/20 backdrop-blur text-white rounded-full flex items-center justify-center shadow-sm">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            
+            <!-- Panel Izquierdo (Imagen y Botones) -->
+            <div class="w-full md:w-[40%] bg-slate-50 border-r border-gray-100 p-6 md:p-8 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
+                <!-- Imagen -->
+                <div class="w-full aspect-[3/4] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60 mb-2 p-2">
+                    <img id="detallePracticaImagen" src="" class="w-full h-full object-contain rounded-xl">
+                </div>
+                
+                <!-- Acciones Principales -->
+                <a id="btnAccederRecurso" href="#" target="_blank" class="w-full py-3.5 bg-[#0f4c81] hover:bg-[#0a365c] text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-[15px]">
+                    <i data-lucide="external-link" class="w-4 h-4"></i> Acceder al Recurso
+                </a>
+                
+                <button onclick="copiarEnlacePractica()" class="w-full py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
+                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar Enlace
+                </button>
+
+                <!-- Controles Admin Inyectados Dinámicamente -->
+                <div id="detallePracticaAdminControls" class="hidden flex gap-2 mt-2 pt-4 border-t border-gray-200/60">
+                    <!-- Los botones de Editar y Borrar se inyectarán aquí -->
+                </div>
+            </div>
+
+            <!-- Panel Derecho (Contenido) -->
+            <div class="w-full md:w-[60%] p-6 md:p-10 overflow-y-auto scrollbar-hide relative bg-white">
+                <!-- Botón Cerrar Desktop -->
+                <button onclick="cerrarDetallePractica()" class="hidden md:flex absolute top-6 right-6 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full items-center justify-center transition-colors">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+
+                <div class="flex items-center gap-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                    <span id="detallePracticaBadge" class="text-[#0f4c81] bg-[#0f4c81]/10 px-2 py-1 rounded-md">Categoría</span>
+                    <span class="text-gray-300">•</span>
+                    <span>Documento</span>
+                </div>
+
+                <h3 id="detallePracticaTitulo" class="text-2xl sm:text-3xl lg:text-4xl font-serif-title font-bold text-gray-900 mb-3 leading-tight pr-8 md:pr-12">
+                    Título de la Práctica
+                </h3>
+                
+                <div class="text-sm text-gray-600 mb-8 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-gray-100 pb-5">
+                    <span>Autor: <span id="detallePracticaAutor" class="font-bold text-gray-800">Admin</span></span>
+                    <span class="hidden sm:inline text-gray-200">|</span>
+                    <span id="detallePracticaFechas" class="font-medium text-emerald-600">Entrega: 25 Mar</span>
+                </div>
+
+                <div>
+                    <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Descripción General</h4>
+                    <div id="detallePracticaDescripcion" class="text-gray-700 text-sm sm:text-[15px] leading-relaxed whitespace-pre-wrap">
+                        <!-- El texto formateado irá aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Contenedor de Calificaciones -->
     <div id="calificacionesContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12">
@@ -559,19 +581,14 @@
                     <span class="hidden sm:inline">Volver al Menú</span>
                 </button>
             </div>
-            
-            <div id="calificacionesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[250px]">
-                <!-- Aquí se inyectarán las calificaciones dinámicamente -->
-            </div>
+            <div id="calificacionesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[250px]"></div>
         </div>
     </div>
 
     <!-- Scripts de UI (Iconos, Notificaciones y Visibilidad) -->
     <script>
-        // Inicializar iconos
         lucide.createIcons();
 
-        // Mostrar/Ocultar contraseña
         window.togglePasswordVisibility = () => {
             const passInput = document.getElementById('loginPass');
             const eyeIcon = document.getElementById('eyeIcon');
@@ -585,7 +602,6 @@
             lucide.createIcons();
         };
 
-        // Sistema de notificaciones estilo Toast
         window.mostrarNotificacion = (titulo, mensaje, tipo = 'info') => {
             const toast = document.createElement('div');
             const iconColor = tipo === 'error' ? 'text-red-500' : 'text-[#0f4c81]';
@@ -605,7 +621,6 @@
             document.body.appendChild(toast); 
             lucide.createIcons();
             
-            // Auto eliminar
             setTimeout(() => { 
                 toast.style.opacity = '0'; 
                 toast.style.transform = 'translateY(20px)'; 
@@ -614,7 +629,6 @@
             }, 4000);
         };
 
-        // Previsualizar la imagen seleccionada del dispositivo
         window.previewImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -628,7 +642,6 @@
             }
         };
 
-        // Previsualizar imagen para Prácticas
         window.previewPracticaImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -641,16 +654,34 @@
                 lucide.createIcons();
             }
         };
+
+        // --- Copiar Enlace Universal ---
+        window.copiarEnlacePractica = () => {
+            const url = document.getElementById('btnAccederRecurso').href;
+            if(url && url !== '#' && url !== window.location.href) {
+                navigator.clipboard.writeText(url).then(() => {
+                    window.mostrarNotificacion("Enlace Copiado", "El enlace se ha copiado al portapapeles.");
+                }).catch(err => {
+                    const el = document.createElement('textarea');
+                    el.value = url;
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(el);
+                    window.mostrarNotificacion("Enlace Copiado", "El enlace se ha copiado al portapapeles.");
+                });
+            } else {
+                window.mostrarNotificacion("Sin Enlace", "No hay un enlace válido para copiar.", "error");
+            }
+        };
     </script>
 
-    <!-- Firebase y Lógica de Autenticación -->
+    <!-- Firebase y Lógica Principal -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        // Ya no importamos Firebase Storage
 
-        // Objeto de configuración con tus credenciales
         const firebaseConfig = {
             apiKey: "AIzaSyAG51FqizcLdlhMmHDhVRstqHpMZKAHJ0A",
             authDomain: "novell-instituto-superior.firebaseapp.com",
@@ -666,33 +697,30 @@
         const db = getFirestore(app);
         
         let appId = localStorage.getItem('workingAppId') || 'default';
-        let globalRole = ''; // Guarda el rol actual
-        let globalUsername = ''; // Guarda el nombre actual
-        let noticiasLocales = []; // Cache de noticias
+        let globalRole = ''; 
+        let globalUsername = ''; 
+        let noticiasLocales = []; 
 
-        // --- NUEVO: Función para formatear texto (Negrillas y XSS Seguro) ---
+        // Formateador de texto a negrilla
         window.formatTextSafe = (text) => {
             if (!text) return '';
-            // Protege contra código malicioso
             let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-            // Convierte *texto* en texto en negrilla
             safeText = safeText.replace(/\*(.*?)\*/g, '<strong class="font-extrabold">$1</strong>');
             return safeText;
         };
 
-        // --- NUEVO: Manejo del botón físico "Atrás" del navegador/celular ---
+        // Manejo del botón Atrás
         window.addEventListener('popstate', (e) => {
             const view = e.state ? e.state.view : 'dashboard';
             
-            // Ocultar todas las vistas
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.add('hidden');
             document.getElementById('modalDetalleNoticia').classList.add('hidden');
+            document.getElementById('modalDetallePractica').classList.add('hidden');
             
-            // Mostrar la vista solicitada según el historial
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
             else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
@@ -702,7 +730,6 @@
             lucide.createIcons();
         });
 
-        // --- Función centralizada para mostrar el Dashboard ---
         function mostrarDashboard(username, role, conRetraso = false) {
             globalRole = role;
             globalUsername = username;
@@ -726,9 +753,7 @@
                 document.getElementById('adminNameDisplay').innerText = username;
                 document.getElementById('dashboardContainer').classList.remove('hidden');
                 
-                // Registra el menú principal como el punto de inicio en el historial
                 history.replaceState({ view: 'dashboard' }, '', window.location.pathname);
-                
                 lucide.createIcons();
             };
 
@@ -736,7 +761,6 @@
             else ejecutarTransicion();
         }
 
-        // --- Inicializar Autenticación Automática (Sesiones previas) ---
         const initAuth = async () => {
             try {
                 if (!auth.currentUser) await signInAnonymously(auth);
@@ -757,26 +781,22 @@
                             const userData = docSnap.data();
                             mostrarDashboard(userData.usuario, userData.rol, false);
                         } else {
-                            // Sesión vencida o no existe
                             localStorage.removeItem('portalSessionId');
                             document.getElementById('loginContainer').classList.remove('hidden');
                         }
                     } catch (e) {
-                        console.error("No se pudo recuperar la sesión", e);
                         document.getElementById('loginContainer').classList.remove('hidden');
                     }
                 } else {
                     document.getElementById('loginContainer').classList.remove('hidden');
                 }
             } catch (error) {
-                console.error("Error inicial en auth:", error);
                 document.getElementById('loginContainer').classList.remove('hidden');
             }
         };
 
         initAuth();
 
-        // 2. Manejar el envío del formulario: MAESTRO + ESCÁNER MULTI-RUTA
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             
@@ -795,21 +815,16 @@
                 let userRole = null;
                 let correctAppId = 'default';
 
-                // --- 1. ACCESO DIRECTO DE ADMINISTRADOR MAESTRO (DOUGLAS) ---
                 if (inputUser === 'douglas' && inputPass === 'd5720') {
                     userData = { id: 'admin_master_douglas', usuario: 'Douglas' };
                     userRole = 'admin';
-                    correctAppId = 'default'; // Para guardar su sesión de manera limpia
+                    correctAppId = 'default';
                     localStorage.setItem('adminId', userData.id);
                 } 
-                // --- 2. BÚSQUEDA EN BASE DE DATOS PARA OTROS (ALUMNOS/ADMINS) ---
                 else {
                     const rutasABuscar = ['default', 'default-app-id'];
-                    console.log("Iniciando escáner de bases de datos para usuarios comunes...");
-
                     for (const currentId of rutasABuscar) {
                         try {
-                            // Buscar en Alumnos
                             const refAlumnos = collection(db, 'artifacts', currentId, 'public', 'data', 'alumnos');
                             const snapAlumnos = await getDocs(refAlumnos);
                             const alumnoEncontrado = snapAlumnos.docs.map(doc => ({ id: doc.id, ...doc.data() })).find(a => 
@@ -824,7 +839,6 @@
                                 break; 
                             }
 
-                            // Buscar en Admins
                             const refAdmins = collection(db, 'artifacts', currentId, 'public', 'data', 'admins');
                             const snapAdmins = await getDocs(refAdmins);
                             const adminEncontrado = snapAdmins.docs.map(doc => ({ id: doc.id, ...doc.data() })).find(a => 
@@ -837,12 +851,9 @@
                                 localStorage.setItem('adminId', adminEncontrado.id);
                                 break; 
                             }
-                        } catch (e) {
-                            // Ignoramos errores de rutas inexistentes
-                        }
+                        } catch (e) {}
                     }
 
-                    // Último recurso: Buscar en la raíz 
                     if (!userData) {
                         try {
                             const rootAlumnos = await getDocs(collection(db, 'alumnos'));
@@ -867,9 +878,8 @@
                             }
                         } catch (e) {}
                     }
-                } // Fin de búsqueda de BD
+                } 
                 
-                // --- 3. PROCESAR ACCESO EXITOSO O DENEGADO ---
                 if (userData) {
                     appId = correctAppId;
                     localStorage.setItem('workingAppId', correctAppId);
@@ -889,9 +899,7 @@
                         } else {
                             await setDoc(doc(db, 'artifacts', correctAppId, 'public', 'data', 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, creado: new Date().toISOString() });
                         }
-                    } catch (sessionError) {
-                        console.warn("Navegador bloquea persistencia, usando sesión local en memoria.");
-                    }
+                    } catch (sessionError) {}
                     
                     localStorage.setItem('portalSessionId', newSessionId);
                     mostrarDashboard(nombreUsuario, userRole, true);
@@ -901,7 +909,6 @@
                     restaurarBoton();
                 }
             } catch (error) {
-                console.error("Error conectando a Firebase:", error);
                 window.mostrarNotificacion("Error de Conexión", "No se pudo comunicar con el servidor.", "error");
                 restaurarBoton();
             }
@@ -914,7 +921,7 @@
         });
 
         // ==========================================
-        //  SISTEMA DE CHATS Y SUGERENCIAS 
+        //  SISTEMA DE CHATS Y SUGERENCIAS
         // ==========================================
         let sugerenciasLocales = [];
 
@@ -942,33 +949,23 @@
             lucide.createIcons();
 
             try {
-                // Escáner universal de rutas
                 const rutasABuscar = ['default', 'default-app-id', 'root'];
                 let todasLasSugerencias = [];
 
                 for (const ruta of rutasABuscar) {
                     try {
-                        let colRef = (ruta === 'root') 
-                            ? collection(db, 'sugerencias') 
-                            : collection(db, 'artifacts', ruta, 'public', 'data', 'sugerencias');
-                        
+                        let colRef = (ruta === 'root') ? collection(db, 'sugerencias') : collection(db, 'artifacts', ruta, 'public', 'data', 'sugerencias');
                         const snapshot = await getDocs(colRef);
                         snapshot.forEach(doc => {
-                            if (!todasLasSugerencias.find(s => s.id === doc.id)) {
-                                todasLasSugerencias.push({ id: doc.id, _path: ruta, ...doc.data() });
-                            }
+                            if (!todasLasSugerencias.find(s => s.id === doc.id)) todasLasSugerencias.push({ id: doc.id, _path: ruta, ...doc.data() });
                         });
                     } catch (e) {}
                 }
 
                 sugerenciasLocales = todasLasSugerencias;
-                // Ordenar por fecha (más antiguos primero, para mostrar estilo chat hacia abajo)
                 sugerenciasLocales.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-                
                 renderizarSugerencias();
-
             } catch (error) {
-                console.error("Error obteniendo sugerencias:", error);
                 container.innerHTML = `<p class="text-center text-red-500 font-bold py-4">Error al cargar el chat.</p>`;
             }
         };
@@ -992,39 +989,29 @@
 
             sugerenciasLocales.forEach(sug => {
                 const isAdmin = globalRole === 'admin';
-                // Detectamos si el mensaje es del usuario actual para alinearlo a la derecha (estilo WhatsApp)
                 const isMine = sug.autor === globalUsername;
-                
                 const fechaObj = new Date(sug.fecha);
                 const fechaStr = fechaObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' }) + ' ' + fechaObj.toLocaleTimeString('es-ES', {hour: '2-digit', minute:'2-digit'});
 
                 const card = document.createElement('div');
                 card.className = `flex w-full ${isMine ? 'justify-end' : 'justify-start'}`;
 
-                // Formato del botón de eliminar (Solo visible si es Admin)
                 let btnEliminarHtml = isAdmin ? `
                     <button onclick="eliminarSugerencia('${sug.id}')" class="text-red-400 hover:text-red-600 transition-colors bg-white/50 p-1 rounded-md shadow-sm" title="Eliminar Mensaje">
                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                     </button>
                 ` : '';
 
-                // Textos pequeños sobre la burbuja
                 let headerText = isMine ? `${fechaStr} • Tú` : `${sug.autor} • ${fechaStr}`;
 
                 card.innerHTML = `
                     <div class="max-w-[85%] sm:max-w-[70%] flex flex-col ${isMine ? 'items-end' : 'items-start'}">
-                        <!-- Cabecera del mensaje -->
                         <div class="flex items-center gap-2 mb-1.5 px-1">
                             ${isMine ? btnEliminarHtml : ''}
                             <span class="text-[10px] text-gray-400 font-bold uppercase tracking-wider">${headerText}</span>
                             ${!isMine ? btnEliminarHtml : ''}
                         </div>
-                        
-                        <!-- Burbuja de Chat -->
-                        <div class="p-3.5 rounded-2xl text-sm shadow-sm relative ${
-                            isMine ? 'bg-[#0f4c81] text-white rounded-tr-sm' 
-                                   : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'
-                        }">
+                        <div class="p-3.5 rounded-2xl text-sm shadow-sm relative ${isMine ? 'bg-[#0f4c81] text-white rounded-tr-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm'}">
                             ${window.formatTextSafe(sug.texto)}
                         </div>
                     </div>
@@ -1032,29 +1019,19 @@
                 container.appendChild(card);
             });
             
-            // Auto Scroll al fondo cuando hay un mensaje nuevo
             container.scrollTop = container.scrollHeight;
             lucide.createIcons();
         };
 
         window.eliminarSugerencia = async (id) => {
             if (!confirm("¿Eliminar este mensaje permanentemente?")) return;
-
             try {
                 const sug = sugerenciasLocales.find(s => s.id === id);
                 if (!sug) return;
-
-                let docRef;
-                if (sug._path === 'root') {
-                    docRef = doc(db, 'sugerencias', id);
-                } else {
-                    docRef = doc(db, 'artifacts', sug._path, 'public', 'data', 'sugerencias', id);
-                }
-                
+                let docRef = (sug._path === 'root') ? doc(db, 'sugerencias', id) : doc(db, 'artifacts', sug._path, 'public', 'data', 'sugerencias', id);
                 await deleteDoc(docRef);
                 cargarSugerencias();
             } catch (error) {
-                console.error("Error eliminando:", error);
                 window.mostrarNotificacion("Error", "No se pudo eliminar el mensaje.", "error");
             }
         };
@@ -1071,25 +1048,13 @@
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i>';
 
             try {
-                const data = {
-                    texto: texto,
-                    autor: globalUsername || "Usuario Anónimo",
-                    rol: globalRole,
-                    fecha: new Date().toISOString()
-                };
-
+                const data = { texto: texto, autor: globalUsername || "Usuario Anónimo", rol: globalRole, fecha: new Date().toISOString() };
                 const currentAppId = localStorage.getItem('workingAppId') || 'default';
-                let colRef = (currentAppId === 'root') 
-                    ? collection(db, 'sugerencias') 
-                    : collection(db, 'artifacts', currentAppId, 'public', 'data', 'sugerencias');
-                    
+                let colRef = (currentAppId === 'root') ? collection(db, 'sugerencias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'sugerencias');
                 await addDoc(colRef, data);
-                
                 input.value = '';
                 cargarSugerencias();
-
             } catch (error) {
-                console.error("Error enviando sugerencia:", error);
                 window.mostrarNotificacion("Error", "No se pudo enviar el mensaje.", "error");
             } finally {
                 btn.disabled = false;
@@ -1107,7 +1072,6 @@
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.remove('hidden');
             
-            // Mostrar botón "Nueva" solo si es admin
             if (globalRole === 'admin') {
                 document.getElementById('btnNuevaNoticia').classList.remove('hidden');
                 document.getElementById('btnNuevaNoticia').classList.add('flex');
@@ -1136,37 +1100,23 @@
             lucide.createIcons();
 
             try {
-                // NUEVO: Escáner universal de rutas para unificar la cartelera a todos
                 const rutasABuscar = ['default', 'default-app-id', 'root'];
                 let todasLasNoticias = [];
 
                 for (const ruta of rutasABuscar) {
                     try {
-                        let colRef = (ruta === 'root') 
-                            ? collection(db, 'noticias') 
-                            : collection(db, 'artifacts', ruta, 'public', 'data', 'noticias');
-                        
+                        let colRef = (ruta === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', ruta, 'public', 'data', 'noticias');
                         const snapshot = await getDocs(colRef);
                         snapshot.forEach(doc => {
-                            // Evitamos duplicados
-                            if (!todasLasNoticias.find(n => n.id === doc.id)) {
-                                todasLasNoticias.push({ id: doc.id, _path: ruta, ...doc.data() });
-                            }
+                            if (!todasLasNoticias.find(n => n.id === doc.id)) todasLasNoticias.push({ id: doc.id, _path: ruta, ...doc.data() });
                         });
-                    } catch (e) {
-                        // Ignorar silenciosamente si no hay noticias en esa ruta
-                    }
+                    } catch (e) {}
                 }
 
                 noticiasLocales = todasLasNoticias;
-                
-                // Ordenar por fecha (más recientes primero)
                 noticiasLocales.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
-
                 renderizarNoticias(noticiasLocales);
-
             } catch (error) {
-                console.error("Error obteniendo noticias:", error);
                 container.innerHTML = `
                     <div class="col-span-full text-center py-12 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-4 text-red-500">
@@ -1200,27 +1150,22 @@
                 const defaultImage = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop';
                 const imgUrl = noticia.imagen || defaultImage;
                 
-                // Formatear Fecha
                 let fechaStr = 'Fecha reciente';
                 if (noticia.fecha) {
                     const dateObj = new Date(noticia.fecha);
                     fechaStr = dateObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
                 }
 
-                // Colores por tipo
                 let colorPill = 'text-blue-700 bg-white/90';
                 if (noticia.tipo === 'Evento') colorPill = 'text-purple-700 bg-white/90';
                 if (noticia.tipo === 'Aviso') colorPill = 'text-orange-700 bg-white/90';
 
-                // SE ACTUALIZÓ PARA SER CLICABLE
                 const card = document.createElement('div');
                 card.onclick = () => abrirDetalleNoticia(noticia.id);
                 card.className = "bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 overflow-hidden group flex flex-col h-full relative cursor-pointer hover:-translate-y-1";
                 
-                // Controles de Administrador
                 let adminControls = '';
                 if (isAdmin) {
-                    // event.stopPropagation() evita que se abra el modal de lectura al hacer clic en editar/eliminar
                     adminControls = `
                         <div class="absolute top-3 right-3 z-10 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                             <button onclick="event.stopPropagation(); editarNoticia('${noticia.id}')" class="w-9 h-9 bg-white/95 backdrop-blur rounded-xl flex items-center justify-center text-blue-600 hover:bg-blue-50 border border-gray-100 shadow-sm transition-colors" title="Editar"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
@@ -1256,7 +1201,6 @@
             lucide.createIcons();
         };
 
-        // --- Visor de Lectura Completo de Noticia ---
         window.abrirDetalleNoticia = (id) => {
             const noticia = noticiasLocales.find(n => n.id === id);
             if(!noticia) return;
@@ -1291,17 +1235,13 @@
             document.getElementById('modalDetalleNoticia').classList.add('hidden');
         };
 
-        // --- CRUD Noticias (Admin) ---
         window.abrirModalNoticia = () => {
             document.getElementById('formNoticia').reset();
             document.getElementById('noticiaId').value = '';
-            
-            // Limpiar previsualización de imagen
             document.getElementById('noticiaImagenUrlActual').value = '';
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('imagePreview').src = '';
             document.getElementById('fileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
-            
             document.getElementById('modalNoticiaTitle').innerText = 'Nueva Publicación';
             document.getElementById('modalNoticia').classList.remove('hidden');
         };
@@ -1318,7 +1258,6 @@
                 document.getElementById('noticiaTipo').value = noticia.tipo;
                 document.getElementById('noticiaContenido').value = noticia.contenido;
                 
-                // Mostrar imagen actual si existe
                 document.getElementById('noticiaImagenUrlActual').value = noticia.imagen || '';
                 if (noticia.imagen) {
                     document.getElementById('imagePreviewContainer').classList.remove('hidden');
@@ -1337,29 +1276,18 @@
 
         window.eliminarNoticia = async (id) => {
             if (!confirm("¿Estás seguro de que deseas eliminar esta publicación permanentemente?")) return;
-
             try {
-                // NUEVO: Identificar exactamente en qué ruta universal estaba guardada
                 const noticia = noticiasLocales.find(n => n.id === id);
                 if (!noticia) return;
-
-                let docRef;
-                if (noticia._path === 'root') {
-                    docRef = doc(db, 'noticias', id);
-                } else {
-                    docRef = doc(db, 'artifacts', noticia._path, 'public', 'data', 'noticias', id);
-                }
-                
+                let docRef = (noticia._path === 'root') ? doc(db, 'noticias', id) : doc(db, 'artifacts', noticia._path, 'public', 'data', 'noticias', id);
                 await deleteDoc(docRef);
                 window.mostrarNotificacion("Eliminada", "La publicación fue eliminada con éxito.");
-                cargarNoticias(); // Recargar
+                cargarNoticias(); 
             } catch (error) {
-                console.error("Error eliminando:", error);
                 window.mostrarNotificacion("Error", "No se pudo eliminar la publicación.", "error");
             }
         };
 
-        // --- NUEVO: Función para comprimir imagen a Base64 sin usar Storage ---
         const comprimirImagenBase64 = (file) => {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -1369,11 +1297,10 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800; // Ancho máximo para no saturar la base de datos
+                        const MAX_WIDTH = 800; 
                         let width = img.width;
                         let height = img.height;
 
-                        // Si la imagen es muy grande, la redimensionamos matemáticamente
                         if (width > MAX_WIDTH) {
                             height = Math.round((height * MAX_WIDTH) / width);
                             width = MAX_WIDTH;
@@ -1383,8 +1310,6 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // Retorna la imagen convertida en texto plano (JPEG comprimido al 70%)
                         resolve(canvas.toDataURL('image/jpeg', 0.7));
                     };
                 };
@@ -1394,8 +1319,6 @@
         document.getElementById('formNoticia').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardarNoticia');
-            
-            // 1. Evitar clics múltiples accidentales
             if (btn.disabled) return;
             
             btn.disabled = true;
@@ -1407,21 +1330,17 @@
                 let imageUrl = document.getElementById('noticiaImagenUrlActual').value || "";
                 const fileInput = document.getElementById('noticiaImagenFile');
                 
-                // Procesar imagen LOCALMENTE a texto Base64
                 if (fileInput.files && fileInput.files[0]) {
                     const file = fileInput.files[0];
                     btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
                     lucide.createIcons();
-                    
-                    // Comprime y convierte a texto en lugar de subir a un servidor
                     imageUrl = await comprimirImagenBase64(file);
                 }
 
-                // Preparar datos limpios
                 const data = {
                     titulo: document.getElementById('noticiaTitulo').value.trim() || "Sin Título",
                     tipo: document.getElementById('noticiaTipo').value || "Noticia",
-                    imagen: imageUrl, // Ahora esto guarda el texto larguísimo en lugar de una URL
+                    imagen: imageUrl,
                     contenido: document.getElementById('noticiaContenido').value.trim() || "",
                     autor: globalUsername || "Administrador",
                     fecha: new Date().toISOString() 
@@ -1429,40 +1348,25 @@
 
                 const currentAppId = localStorage.getItem('workingAppId') || 'default';
 
-                // Guardar en BD (Firestore normal)
                 if (id) {
-                    // Actualizar: Respetar la ruta original donde se guardó la noticia
                     const noticiaOriginal = noticiasLocales.find(n => n.id === id);
                     const pathGuardado = noticiaOriginal ? noticiaOriginal._path : currentAppId;
-                    
-                    let colRef = (pathGuardado === 'root') 
-                        ? collection(db, 'noticias') 
-                        : collection(db, 'artifacts', pathGuardado, 'public', 'data', 'noticias');
-                        
-                    const docRef = doc(colRef, id);
-                    await updateDoc(docRef, data);
+                    let colRef = (pathGuardado === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', pathGuardado, 'public', 'data', 'noticias');
+                    await updateDoc(doc(colRef, id), data);
                     window.mostrarNotificacion("Actualizada", "La publicación ha sido editada.");
                 } else {
-                    // Crear nueva: Guardar en el entorno actual del admin
-                    let colRef = (currentAppId === 'root') 
-                        ? collection(db, 'noticias') 
-                        : collection(db, 'artifacts', currentAppId, 'public', 'data', 'noticias');
-                        
+                    let colRef = (currentAppId === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'noticias');
                     await addDoc(colRef, data);
                     window.mostrarNotificacion("Publicada", "La nueva publicación ya está visible.");
                 }
 
                 cerrarModalNoticia();
-                cargarNoticias(); // Refrescar lista
-
+                cargarNoticias(); 
             } catch (error) {
-                console.error("Error guardando publicación:", error);
-                
-                // Si la imagen sigue siendo muy grande para Firestore a pesar de la compresión
                 if (error.code && error.code.includes('resource-exhausted')) {
-                    window.mostrarNotificacion("Imagen muy grande", "La imagen supera el límite de memoria de la base de datos. Usa una más pequeña.", "error");
+                    window.mostrarNotificacion("Imagen muy grande", "La imagen supera el límite de memoria.", "error");
                 } else {
-                    window.mostrarNotificacion("Error al guardar", "Revisa tu conexión o permisos de base de datos.", "error");
+                    window.mostrarNotificacion("Error al guardar", "Revisa tu conexión o permisos.", "error");
                 }
             } finally {
                 btn.disabled = false;
@@ -1476,7 +1380,7 @@
         // ==========================================
 
         let practicasLocales = [];
-        let tabPracticasActivo = 'clase'; // 'clase' o 'virtual'
+        let tabPracticasActivo = 'clase';
 
         window.abrirPracticas = async () => {
             history.pushState({ view: 'practicas' }, '', '#practicas');
@@ -1503,12 +1407,9 @@
 
         window.cambiarTabPracticas = (tab) => {
             tabPracticasActivo = tab;
-            
-            // Clases de diseño exactas basadas en la imagen de referencia
             const activeClass = "flex-1 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
             const inactiveClass = "flex-1 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]";
             
-            // Aplicar estilos
             if (tab === 'clase') {
                 document.getElementById('tabClase').className = activeClass;
                 document.getElementById('tabVirtual').className = inactiveClass;
@@ -1529,33 +1430,24 @@
             lucide.createIcons();
 
             try {
-                // Escáner universal de rutas
                 const rutasABuscar = ['default', 'default-app-id', 'root'];
                 let todasLasPracticas = [];
 
                 for (const ruta of rutasABuscar) {
                     try {
-                        let colRef = (ruta === 'root') 
-                            ? collection(db, 'practicas') 
-                            : collection(db, 'artifacts', ruta, 'public', 'data', 'practicas');
-                        
+                        let colRef = (ruta === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', ruta, 'public', 'data', 'practicas');
                         const snapshot = await getDocs(colRef);
                         snapshot.forEach(doc => {
-                            if (!todasLasPracticas.find(p => p.id === doc.id)) {
-                                todasLasPracticas.push({ id: doc.id, _path: ruta, ...doc.data() });
-                            }
+                            if (!todasLasPracticas.find(p => p.id === doc.id)) todasLasPracticas.push({ id: doc.id, _path: ruta, ...doc.data() });
                         });
                     } catch (e) {}
                 }
 
                 practicasLocales = todasLasPracticas;
-                // Ordenar por fecha de publicación
                 practicasLocales.sort((a, b) => new Date(b.fechaPublicacion) - new Date(a.fechaPublicacion));
-                
                 renderizarPracticas();
 
             } catch (error) {
-                console.error("Error obteniendo prácticas:", error);
                 container.innerHTML = `
                     <div class="col-span-full text-center py-12 flex flex-col items-center">
                         <div class="w-14 h-14 rounded-full bg-red-100 flex items-center justify-center mb-4 text-red-500">
@@ -1571,7 +1463,6 @@
             const container = document.getElementById('practicasList');
             container.innerHTML = '';
 
-            // Filtrar según la pestaña activa
             const practicasFiltradas = practicasLocales.filter(p => p.tipo === tabPracticasActivo);
 
             if (practicasFiltradas.length === 0) {
@@ -1588,63 +1479,38 @@
             }
 
             practicasFiltradas.forEach(practica => {
-                const isAdmin = globalRole === 'admin';
                 const defaultImage = 'https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?q=80&w=800&auto=format&fit=crop';
                 const imgUrl = practica.imagen || defaultImage;
                 
-                // Formatear Fechas
                 const fechaPubObj = new Date(practica.fechaPublicacion);
                 const fechaPubStr = fechaPubObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
                 
-                // Fecha de entrega (Parseo seguro)
                 let fechaEntStr = 'Sin fecha límite';
                 let alertColor = 'text-gray-500';
                 if (practica.fechaEntrega) {
-                    // Prevenir desajustes de zona horaria añadiendo hora neutral
                     const fechaEntObj = new Date(practica.fechaEntrega + 'T12:00:00');
                     fechaEntStr = fechaEntObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
-                    
-                    if (fechaEntObj < new Date()) {
-                        alertColor = 'text-red-600'; // Vencido
-                    } else {
-                        alertColor = 'text-emerald-600'; // A tiempo
-                    }
+                    if (fechaEntObj < new Date()) alertColor = 'text-red-600';
+                    else alertColor = 'text-emerald-600';
                 }
 
-                // NUEVO DISEÑO MEJORADO: Tarjeta compacta (h-max) e imagen más grande
-                const card = document.createElement('a');
-                card.href = practica.documentoUrl || '#';
-                card.target = "_blank";
-                card.rel = "noopener noreferrer";
+                // Ahora las tarjetas son divs (sin links) para facilitar la lectura del texto de frente y abrir el modal al click.
+                const card = document.createElement('div');
+                card.onclick = () => abrirDetallePractica(practica.id);
                 card.className = "bg-white/90 border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md hover:bg-white hover:border-[#0f4c81]/30 transition-all duration-300 p-4 flex items-center gap-5 relative group cursor-pointer h-max";
                 
-                // Controles de Administrador
-                let adminControls = '';
-                if (isAdmin) {
-                    // Se usa event.preventDefault() y stopPropagation() para que al borrar/editar NO se abra el enlace
-                    adminControls = `
-                        <div class="absolute top-3 right-3 z-10 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <button onclick="event.preventDefault(); event.stopPropagation(); editarPractica('${practica.id}')" class="w-8 h-8 bg-white/90 backdrop-blur border border-gray-200 rounded-lg flex items-center justify-center text-blue-600 hover:bg-blue-50 shadow-sm transition-colors" title="Editar"><i data-lucide="edit-2" class="w-4 h-4"></i></button>
-                            <button onclick="event.preventDefault(); event.stopPropagation(); eliminarPractica('${practica.id}')" class="w-8 h-8 bg-white/90 backdrop-blur border border-gray-200 rounded-lg flex items-center justify-center text-red-600 hover:bg-red-50 shadow-sm transition-colors" title="Eliminar"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                        </div>
-                    `;
-                }
+                // Los botones de "Editar/Eliminar" se movieron de la tarjeta principal hacia el modal interno para un diseño más limpio
 
                 card.innerHTML = `
-                    ${adminControls}
-                    
-                    <!-- Imagen (Izquierda) - Aumentada -->
                     <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm flex items-center justify-center p-1.5">
                         <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-contain rounded-lg">
                     </div>
-                    
-                    <!-- Detalles (Derecha apilada) -->
-                    <div class="flex-1 min-w-0 pr-10 flex flex-col justify-center">
-                        <h4 class="font-bold text-[15px] sm:text-base text-gray-900 truncate mb-1" title="${practica.materia}">${window.formatTextSafe(practica.materia)}</h4>
+                    <div class="flex-1 min-w-0 pr-2 flex flex-col justify-center">
+                        <h4 class="font-bold text-[15px] sm:text-base text-gray-900 line-clamp-2 mb-1 leading-tight" title="${practica.materia}">${window.formatTextSafe(practica.materia)}</h4>
                         <p class="text-[12px] sm:text-[13px] text-gray-500 truncate mb-0.5">Publicado: ${fechaPubStr}</p>
                         <p class="text-[12px] sm:text-[13px] font-semibold truncate mb-1.5 ${alertColor}">Entrega: ${fechaEntStr}</p>
                         <p class="text-[11px] sm:text-[12px] text-[#0f4c81]/80 font-medium truncate flex items-center gap-1.5 mt-0.5">
-                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Clic para abrir
+                            <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Leer Detalles
                         </p>
                     </div>
                 `;
@@ -1653,20 +1519,69 @@
             lucide.createIcons();
         };
 
-        // --- CRUD Prácticas (Admin) ---
+        // --- Visor/Modal Completo para Lectura de Prácticas ---
+        window.abrirDetallePractica = (id) => {
+            const practica = practicasLocales.find(p => p.id === id);
+            if(!practica) return;
+
+            const defaultImage = 'https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?q=80&w=800&auto=format&fit=crop';
+            
+            document.getElementById('detallePracticaImagen').src = practica.imagen || defaultImage;
+            document.getElementById('detallePracticaTitulo').innerHTML = window.formatTextSafe(practica.materia);
+            document.getElementById('detallePracticaAutor').innerText = practica.autor || 'Administración';
+            
+            let fechaEntStr = 'Sin límite';
+            let alertColor = 'text-gray-500';
+            if (practica.fechaEntrega) {
+                const fechaEntObj = new Date(practica.fechaEntrega + 'T12:00:00');
+                fechaEntStr = fechaEntObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+                if (fechaEntObj < new Date()) alertColor = 'text-red-600';
+                else alertColor = 'text-emerald-600';
+            }
+            document.getElementById('detallePracticaFechas').innerHTML = `Entrega: <span class="${alertColor}">${fechaEntStr}</span>`;
+            
+            document.getElementById('detallePracticaBadge').innerText = practica.tipo === 'clase' ? 'EN CLASE' : 'VIRTUAL';
+            
+            // Descripción general u Opcional
+            const desc = practica.descripcion ? practica.descripcion : 'No se han proporcionado instrucciones adicionales para esta práctica. Abre el documento adjunto para más información.';
+            document.getElementById('detallePracticaDescripcion').innerHTML = window.formatTextSafe(desc);
+
+            // Botón de acceso
+            document.getElementById('btnAccederRecurso').href = practica.documentoUrl || '#';
+
+            // Inyectar los botones de Administrador directamente en el Modal
+            const adminControls = document.getElementById('detallePracticaAdminControls');
+            if (globalRole === 'admin') {
+                adminControls.classList.remove('hidden');
+                adminControls.innerHTML = `
+                    <button onclick="cerrarDetallePractica(); editarPractica('${practica.id}')" class="flex-1 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                        <i data-lucide="edit-2" class="w-4 h-4"></i> Editar
+                    </button>
+                    <button onclick="cerrarDetallePractica(); eliminarPractica('${practica.id}')" class="flex-1 py-2.5 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                        <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar
+                    </button>
+                `;
+            } else {
+                adminControls.classList.add('hidden');
+                adminControls.innerHTML = '';
+            }
+
+            document.getElementById('modalDetallePractica').classList.remove('hidden');
+            lucide.createIcons();
+        };
+
+        window.cerrarDetallePractica = () => {
+            document.getElementById('modalDetallePractica').classList.add('hidden');
+        };
+
         window.abrirModalPractica = () => {
             document.getElementById('formPractica').reset();
             document.getElementById('practicaId').value = '';
-            
-            // Forzar el select a la pestaña actual
             document.getElementById('practicaTipo').value = tabPracticasActivo;
-            
-            // Limpiar previsualización
             document.getElementById('practicaImagenUrlActual').value = '';
             document.getElementById('practicaImagePreviewContainer').classList.add('hidden');
             document.getElementById('practicaImagePreview').src = '';
             document.getElementById('practicaFileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
-            
             document.getElementById('modalPracticaTitle').innerText = 'Nueva Práctica';
             document.getElementById('modalPractica').classList.remove('hidden');
         };
@@ -1684,7 +1599,9 @@
                 document.getElementById('practicaDocUrl').value = practica.documentoUrl;
                 document.getElementById('practicaFechaEntrega').value = practica.fechaEntrega || '';
                 
-                // Mostrar imagen actual
+                // NUEVO CAMPO: Recuperar descripción al editar
+                document.getElementById('practicaDescripcion').value = practica.descripcion || '';
+                
                 document.getElementById('practicaImagenUrlActual').value = practica.imagen || '';
                 if (practica.imagen) {
                     document.getElementById('practicaImagePreviewContainer').classList.remove('hidden');
@@ -1703,23 +1620,15 @@
 
         window.eliminarPractica = async (id) => {
             if (!confirm("¿Estás seguro de que deseas eliminar esta práctica?")) return;
-
             try {
                 const practica = practicasLocales.find(p => p.id === id);
                 if (!practica) return;
-
-                let docRef;
-                if (practica._path === 'root') {
-                    docRef = doc(db, 'practicas', id);
-                } else {
-                    docRef = doc(db, 'artifacts', practica._path, 'public', 'data', 'practicas', id);
-                }
+                let docRef = (practica._path === 'root') ? doc(db, 'practicas', id) : doc(db, 'artifacts', practica._path, 'public', 'data', 'practicas', id);
                 
                 await deleteDoc(docRef);
                 window.mostrarNotificacion("Eliminada", "La práctica ha sido borrada.");
                 cargarPracticas();
             } catch (error) {
-                console.error("Error eliminando:", error);
                 window.mostrarNotificacion("Error", "No se pudo eliminar.", "error");
             }
         };
@@ -1727,7 +1636,6 @@
         document.getElementById('formPractica').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btnGuardarPractica');
-            
             if (btn.disabled) return;
             
             btn.disabled = true;
@@ -1743,7 +1651,6 @@
                     const file = fileInput.files[0];
                     btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
                     lucide.createIcons();
-                    // Reutiliza la función del sistema de noticias
                     imageUrl = await comprimirImagenBase64(file);
                 }
 
@@ -1753,8 +1660,9 @@
                     documentoUrl: document.getElementById('practicaDocUrl').value.trim(),
                     imagen: imageUrl,
                     fechaEntrega: document.getElementById('practicaFechaEntrega').value,
+                    descripcion: document.getElementById('practicaDescripcion').value.trim(), // GUARDAMOS NUEVO CAMPO
                     autor: globalUsername || "Administrador",
-                    fechaPublicacion: new Date().toISOString() // Generación automática de fecha
+                    fechaPublicacion: new Date().toISOString() 
                 };
 
                 const currentAppId = localStorage.getItem('workingAppId') || 'default';
@@ -1762,29 +1670,20 @@
                 if (id) {
                     const original = practicasLocales.find(p => p.id === id);
                     const pathGuardado = original ? original._path : currentAppId;
-                    
-                    let colRef = (pathGuardado === 'root') 
-                        ? collection(db, 'practicas') 
-                        : collection(db, 'artifacts', pathGuardado, 'public', 'data', 'practicas');
-                        
+                    let colRef = (pathGuardado === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', pathGuardado, 'public', 'data', 'practicas');
                     await updateDoc(doc(colRef, id), data);
                     window.mostrarNotificacion("Actualizada", "Práctica editada correctamente.");
                 } else {
-                    let colRef = (currentAppId === 'root') 
-                        ? collection(db, 'practicas') 
-                        : collection(db, 'artifacts', currentAppId, 'public', 'data', 'practicas');
-                        
+                    let colRef = (currentAppId === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'practicas');
                     await addDoc(colRef, data);
                     window.mostrarNotificacion("Publicada", "Nueva práctica asignada.");
                 }
 
                 cerrarModalPractica();
-                // Forzar la vista a la pestaña del tipo de práctica guardada
                 cambiarTabPracticas(data.tipo);
                 cargarPracticas();
 
             } catch (error) {
-                console.error("Error guardando práctica:", error);
                 if (error.code && error.code.includes('resource-exhausted')) {
                     window.mostrarNotificacion("Imagen muy grande", "La imagen excede el límite permitido.", "error");
                 } else {
@@ -1803,7 +1702,6 @@
 
         window.abrirCalificaciones = async () => {
             history.pushState({ view: 'calificaciones' }, '', '#calificaciones');
-            // Ocultar dashboard, mostrar contenedor de calificaciones
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.remove('hidden');
             lucide.createIcons();
@@ -1842,7 +1740,6 @@
                 materiasRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'materias');
             }
 
-            // 1. Obtener Materias para cruzar nombres y pesos de calificación
             const materiasSnap = await getDocs(materiasRef);
             const materiasMap = {};
             materiasSnap.forEach(doc => {
@@ -1850,15 +1747,11 @@
                 if(doc.data().id) materiasMap[doc.data().id] = doc.data();
             });
 
-            // 2. Obtener todas las calificaciones y filtrar en memoria por el alumnoId
             const calificacionesSnap = await getDocs(calificacionesRef);
             const misCalificaciones = [];
             calificacionesSnap.forEach(doc => {
                 const data = doc.data();
-                // Verificamos que la nota corresponda a este alumno
-                if (data.alumnoId === alumnoId) {
-                    misCalificaciones.push(data);
-                }
+                if (data.alumnoId === alumnoId) misCalificaciones.push(data);
             });
             
             if (misCalificaciones.length === 0) {
@@ -1874,15 +1767,13 @@
                 return;
             }
 
-            container.innerHTML = ''; // Limpiar loader
+            container.innerHTML = ''; 
             
             misCalificaciones.forEach(data => {
-                // Mapear con la colección "materias" usando materiaId
                 const materiaObj = materiasMap[data.materiaId] || {};
                 const materia = materiaObj.nombre || data.materia || 'Materia sin título';
                 const profesor = data.profesor || 'Docente Asignado';
 
-                // 1. Función auxiliar para procesar listas de notas y convertirlas en puntos
                 const calcularPuntos = (valores, pesoMaximo) => {
                     if (valores === undefined || valores === null || valores === '') return { puntos: 0, str: '-' };
                     let arr = [];
@@ -1893,26 +1784,17 @@
                     } else if (typeof valores === 'number') {
                         arr = [valores];
                     }
-                    
                     if (arr.length === 0) return { puntos: 0, str: '-' };
-                    
-                    // Promedia las notas (ej. 90, 90 = 90) y saca los puntos en base al peso (ej. 50%)
                     const promedio = arr.reduce((a, b) => a + b, 0) / arr.length;
                     const peso = parseFloat(pesoMaximo) || 0;
                     const puntos = (promedio / 100) * peso; 
-                    
-                    return { 
-                        puntos: Math.round(puntos * 10) / 10, 
-                        str: arr.join(', ') 
-                    };
+                    return { puntos: Math.round(puntos * 10) / 10, str: arr.join(', ') };
                 };
 
-                // 2. Extraer los pesos configurados en la materia
                 const pesoAsist = materiaObj.pesoAsistencia || 0;
                 const pesoParc = materiaObj.pesoParciales || 0;
                 const pesoPrac = materiaObj.pesoPracticas || 0;
 
-                // 3. Calcular los puntos obtenidos en cada rubro
                 const valAsistencia = data.asistencia ?? data.notaAsistencia;
                 const valParciales = data.parciales ?? data.notaParciales ?? data.promedioParciales;
                 const valPracticas = data.practicas ?? data.notaPracticas ?? data.promedioPracticas;
@@ -1921,24 +1803,19 @@
                 const parcData = calcularPuntos(valParciales, pesoParc);
                 const pracData = calcularPuntos(valPracticas, pesoPrac);
 
-                // 4. Determinar la nota final (Si la bd no tiene nota final, la calcula sumando los puntos)
                 let nota = parseFloat(data.notaFinal || data.nota || data.promedio || data.calificacionFinal);
                 if (isNaN(nota) || nota === 0) {
                     if (asistData.puntos > 0 || parcData.puntos > 0 || pracData.puntos > 0) {
                         nota = asistData.puntos + parcData.puntos + pracData.puntos;
-                    } else {
-                        nota = 0;
-                    }
+                    } else { nota = 0; }
                 }
                 nota = Math.round(nota);
                 
-                // Lógica de estado (aprobado >= 60)
                 const aprobado = nota >= 60;
                 const estado = aprobado ? 'Aprobado' : 'Reprobado';
                 const colorPill = aprobado ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-red-700 bg-red-100 border-red-200';
                 const colorText = aprobado ? 'text-emerald-600' : 'text-red-500';
 
-                // 5. Generar detalle visual de la evaluación
                 let detalleHTML = data.detalle || '';
                 if (valAsistencia !== undefined || valParciales !== undefined || valPracticas !== undefined) {
                     detalleHTML = `
@@ -1955,9 +1832,7 @@
                 const card = document.createElement('div');
                 card.className = "bg-white border border-gray-100 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group";
                 card.innerHTML = `
-                        <!-- Decoración lateral de color -->
                         <div class="absolute left-0 top-0 bottom-0 w-1.5 ${aprobado ? 'bg-emerald-400' : 'bg-red-400'}"></div>
-                        
                         <div class="flex justify-between items-start mb-4">
                             <div>
                             <h4 class="font-bold text-xl text-gray-900 leading-tight mb-1 group-hover:text-[#0f4c81] transition-colors">${materia}</h4>
@@ -1967,12 +1842,10 @@
                         </div>
                         <span class="px-3 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider ${colorPill}">${estado}</span>
                     </div>
-                    
                     <div class="flex items-end gap-2 mb-4 border-b border-gray-100 pb-4">
                         <span class="text-5xl font-black ${colorText} font-serif-title tracking-tighter">${nota}</span>
                         <span class="text-sm text-gray-400 mb-1.5 font-bold uppercase tracking-widest">/ 100</span>
                     </div>
-                    
                     <div>
                         <p class="text-[13px] text-gray-600 leading-relaxed bg-gray-50/80 p-3 rounded-xl border border-gray-100">
                             <span class="block font-bold text-gray-800 text-xs uppercase tracking-wider mb-1">Detalle de Evaluación</span>
@@ -1985,7 +1858,6 @@
             lucide.createIcons();
 
         } catch (error) {
-            console.error("Error al obtener calificaciones:", error);
             container.innerHTML = `
                     <div class="col-span-full text-center py-12 flex flex-col items-center">
                         <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4 text-red-600">
@@ -1998,23 +1870,18 @@
             }
         };
 
-        // --- Lógica para volver al Dashboard ---
         window.cerrarCalificaciones = () => {
             history.pushState({ view: 'dashboard' }, '', window.location.pathname);
             document.getElementById('calificacionesContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
 
-        // 3. Función para cerrar sesión
         window.cerrarSesion = async () => {
             const currentSessionId = localStorage.getItem('portalSessionId');
             if (currentSessionId) {
                 try {
-                    if (appId === 'root') {
-                        await deleteDoc(doc(db, 'sesiones', currentSessionId));
-                    } else {
-                        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sesiones', currentSessionId));
-                    }
+                    if (appId === 'root') await deleteDoc(doc(db, 'sesiones', currentSessionId));
+                    else await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sesiones', currentSessionId));
                 } catch (e) {}
             }
             
@@ -2037,7 +1904,6 @@
             lucide.createIcons();
         };
 
-        // 4. Lógica del Carrusel (Banner)
         let currentSlide = 1;
         setInterval(() => {
             const slide1 = document.getElementById('bannerSlide1');
