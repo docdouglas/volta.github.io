@@ -641,31 +641,37 @@
             lucide.createIcons();
         };
 
+        // --- ACTUALIZADO: Notificaciones con estilo oscuro, glassmorphism, responsivas y de menor duración ---
         window.mostrarNotificacion = (titulo, mensaje, tipo = 'info') => {
             const toast = document.createElement('div');
-            const iconColor = tipo === 'error' ? 'text-red-500' : 'text-[#0f4c81]';
-            const bgColor = tipo === 'error' ? 'bg-red-50' : 'bg-[#0f4c81]/10';
+            
+            // Colores adaptados para fondo oscuro
+            const iconColor = tipo === 'error' ? 'text-red-400' : 'text-blue-400';
+            const bgColor = tipo === 'error' ? 'bg-red-500/20' : 'bg-blue-500/20';
             const iconName = tipo === 'error' ? 'alert-circle' : 'check-circle';
 
-            toast.className = "fixed top-6 right-6 md:top-auto md:bottom-6 z-[300] bg-white border border-gray-100 shadow-[0_15px_40px_rgba(0,0,0,0.12)] p-4 rounded-2xl flex items-start gap-3 w-[calc(100%-3rem)] md:w-80 toast-enter";
+            // Ajustes responsivos y fondo negro translúcido
+            toast.className = "fixed top-4 right-4 md:top-auto md:bottom-6 z-[300] bg-gray-900/85 backdrop-blur-md border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.3)] p-3 md:p-4 rounded-2xl flex items-start gap-2.5 md:gap-3 w-[calc(100%-2rem)] md:w-80 toast-enter";
+            
             toast.innerHTML = `
-                <div class="mt-0.5 ${bgColor} p-2.5 rounded-full ${iconColor}">
-                    <i data-lucide="${iconName}" class="w-5 h-5"></i>
+                <div class="mt-0.5 ${bgColor} p-2 md:p-2.5 rounded-full ${iconColor}">
+                    <i data-lucide="${iconName}" class="w-4 h-4 md:w-5 md:h-5"></i>
                 </div>
                 <div class="flex-1">
-                    <p class="font-bold text-[15px] text-gray-900 leading-tight">${titulo}</p>
-                    <p class="text-sm text-gray-500 mt-1 leading-snug">${mensaje}</p>
+                    <p class="font-bold text-sm md:text-[15px] text-white leading-tight">${titulo}</p>
+                    <p class="text-xs md:text-sm text-gray-300 mt-0.5 md:mt-1 leading-snug">${mensaje}</p>
                 </div>
             `;
             document.body.appendChild(toast); 
             lucide.createIcons();
             
+            // Reducido el tiempo de visualización de 4000 a 2500 ms
             setTimeout(() => { 
                 toast.style.opacity = '0'; 
                 toast.style.transform = 'translateY(20px)'; 
                 toast.style.transition = 'all 0.4s ease'; 
                 setTimeout(() => toast.remove(), 400); 
-            }, 4000);
+            }, 2500);
         };
 
         window.previewImage = (input) => {
