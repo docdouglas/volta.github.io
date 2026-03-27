@@ -211,6 +211,10 @@
                 <button onclick="window.switchSection('software')" id="tab-software" class="section-tab flex items-center gap-2">
                     <i data-lucide="monitor" class="w-4 h-4"></i> Software
                 </button>
+                <!-- Nueva Pestaña de Videos -->
+                <button onclick="window.switchSection('video')" id="tab-video" class="section-tab flex items-center gap-2">
+                    <i data-lucide="play-circle" class="w-4 h-4"></i> Videos
+                </button>
             </div>
         </div>
 
@@ -357,6 +361,11 @@
                             <label class="flex items-center gap-2 cursor-pointer group">
                                 <input type="radio" name="assetType" value="software" class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
                                 <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="monitor" class="w-4 h-4 inline text-gray-400 mr-1"></i>Software / App</span>
+                            </label>
+                            <!-- Nuevo Radio para Video -->
+                            <label class="flex items-center gap-2 cursor-pointer group">
+                                <input type="radio" name="assetType" value="video" class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
+                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="play-circle" class="w-4 h-4 inline text-gray-400 mr-1"></i>Video / Clase</span>
                             </label>
                         </div>
                     </div>
@@ -548,8 +557,14 @@
             activePracticeSubject = 'All';
             document.getElementById('searchInput').value = '';
             
-            document.getElementById('tab-book').className = `section-tab flex items-center gap-2 ${section === 'book' ? 'active' : ''}`;
-            document.getElementById('tab-software').className = `section-tab flex items-center gap-2 ${section === 'software' ? 'active' : ''}`;
+            // Actualización de pestañas visuales
+            const tabBook = document.getElementById('tab-book');
+            const tabSoftware = document.getElementById('tab-software');
+            const tabVideo = document.getElementById('tab-video');
+            
+            if (tabBook) tabBook.className = `section-tab flex items-center gap-2 ${section === 'book' ? 'active' : ''}`;
+            if (tabSoftware) tabSoftware.className = `section-tab flex items-center gap-2 ${section === 'software' ? 'active' : ''}`;
+            if (tabVideo) tabVideo.className = `section-tab flex items-center gap-2 ${section === 'video' ? 'active' : ''}`;
             
             renderFilterChips();
             renderApp();
@@ -609,6 +624,7 @@
                 
                 if(val === 'software') lbl.innerText = 'Desarrollador / Empresa';
                 else if(val === 'practice') lbl.innerText = 'Docente / Auxiliar';
+                else if(val === 'video') lbl.innerText = 'Creador / Canal';
                 else lbl.innerText = 'Autor / Responsable';
 
                 const pFields = document.getElementById('practiceFields');
@@ -805,6 +821,7 @@
             let heroTitle, heroIcon, heroDesc;
             if(currentSection === 'book') { heroTitle = 'Biblioteca Digital'; heroIcon = 'book-open'; heroDesc = 'documentos, libros y publicaciones'; }
             else if(currentSection === 'software') { heroTitle = 'Software Center'; heroIcon = 'monitor'; heroDesc = 'aplicaciones, herramientas y sistemas'; }
+            else if(currentSection === 'video') { heroTitle = 'Videoteca'; heroIcon = 'play-circle'; heroDesc = 'tutoriales, clases y contenido audiovisual'; }
             else { heroTitle = 'Centro de Prácticas'; heroIcon = 'pen-tool'; heroDesc = 'ejercicios resueltos y prácticas para evaluación'; }
 
             heroContent.innerHTML = `
@@ -907,6 +924,7 @@
             
             const isSoftware = (b.type === 'software');
             const isPractice = (b.type === 'practice');
+            const isVideo = (b.type === 'video');
 
             document.getElementById('modalCover').src = b.coverUrl;
             
@@ -916,11 +934,11 @@
                 ? bCats.map(c => `<span class="text-[#0f4c81] font-semibold text-xs uppercase tracking-wider bg-[#0f4c81]/10 px-3 py-1 rounded-full border border-[#0f4c81]/20">${c}</span>`).join('')
                 : `<span class="text-[#0f4c81] font-semibold text-xs uppercase tracking-wider bg-[#0f4c81]/10 px-3 py-1 rounded-full border border-[#0f4c81]/20">General</span>`;
             
-            document.getElementById('modalTypeBadge').textContent = isPractice ? 'Práctica' : (isSoftware ? 'Software' : 'Documento');
+            document.getElementById('modalTypeBadge').textContent = isPractice ? 'Práctica' : (isVideo ? 'Video' : (isSoftware ? 'Software' : 'Documento'));
             document.getElementById('modalTitle').textContent = b.title;
             
-            document.getElementById('lblResponsable').textContent = isPractice ? 'Docente:' : (isSoftware ? 'Desarrollador:' : 'Autor:');
-            document.getElementById('lblAcceder').textContent = isPractice ? 'Ver Práctica' : (isSoftware ? 'Descargar Software' : 'Acceder al Recurso');
+            document.getElementById('lblResponsable').textContent = isPractice ? 'Docente:' : (isVideo ? 'Canal / Creador:' : (isSoftware ? 'Desarrollador:' : 'Autor:'));
+            document.getElementById('lblAcceder').textContent = isPractice ? 'Ver Práctica' : (isVideo ? 'Ver Video' : (isSoftware ? 'Descargar Software' : 'Acceder al Recurso'));
             
             document.getElementById('modalAuthorName').textContent = b.author;
             document.getElementById('modalId').textContent = b.id;
@@ -1104,7 +1122,7 @@
             const typeRadio = document.querySelector(`input[name="assetType"][value="${type}"]`);
             if (typeRadio) typeRadio.checked = true;
 
-            document.getElementById('lblInputAuthor').innerText = type === 'software' ? 'Desarrollador / Empresa' : (type === 'practice' ? 'Docente / Auxiliar' : 'Autor / Responsable');
+            document.getElementById('lblInputAuthor').innerText = type === 'software' ? 'Desarrollador / Empresa' : (type === 'video' ? 'Creador / Canal' : (type === 'practice' ? 'Docente / Auxiliar' : 'Autor / Responsable'));
 
             if (type === 'practice') {
                 document.getElementById('practiceFields').classList.remove('hidden');
@@ -1187,7 +1205,7 @@
                             ${filtered.map(b => `
                                 <div class="glass-card rounded-2xl cursor-pointer group flex flex-col overflow-hidden relative" onclick="window.openBookDetails('${b.id}')">
                                     <div class="absolute top-2 right-2 z-10 bg-white/90 backdrop-blur-md rounded-full p-1.5 shadow-sm text-[#0f4c81]">
-                                        <i data-lucide="${(b.type || 'book') === 'software' ? 'monitor' : (b.type === 'practice' ? 'pen-tool' : 'book-open')}" class="w-3 h-3"></i>
+                                        <i data-lucide="${(b.type || 'book') === 'software' ? 'monitor' : (b.type === 'video' ? 'play-circle' : (b.type === 'practice' ? 'pen-tool' : 'book-open'))}" class="w-3 h-3"></i>
                                     </div>
                                     ${(b.type === 'practice' && b.practiceGroup === 'Ejercicios en Clase') ? `
                                         <div class="absolute top-2 left-2 z-20 bg-green-500/90 backdrop-blur-md rounded-full px-2 py-1 shadow-md text-white flex items-center gap-1">
