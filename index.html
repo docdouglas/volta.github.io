@@ -768,7 +768,9 @@
         // --- NUEVO: Helper seguro para historial (Evita bloqueos en modo local file://) ---
         window.cambiarHistorial = (vista, ruta) => {
             try {
-                history.pushState({ view: vista }, '', ruta);
+                if (window.location.hash !== ruta && window.location.pathname !== ruta) {
+                    history.pushState({ view: vista }, '', ruta);
+                }
             } catch (e) {
                 // Silencioso: Evita que el navegador bloquee la navegación si se usa sin servidor local
             }
@@ -776,16 +778,29 @@
 
         // Manejo del botón Atrás
         window.addEventListener('popstate', (e) => {
-            const view = e.state ? e.state.view : 'dashboard';
+            // 1. Cerrar cualquier modal que esté abierto forzosamente al retroceder
+            const modales = ['modalNoticia', 'modalDetalleNoticia', 'modalPractica', 'modalDetallePractica'];
+            modales.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.classList.add('hidden');
+            });
+
+            // 2. Determinar la vista a mostrar según el hash actual en la URL
+            const hash = window.location.hash;
+            let view = 'dashboard';
+            if (hash.startsWith('#noticias')) view = 'noticias';
+            else if (hash.startsWith('#practicas')) view = 'practicas';
+            else if (hash.startsWith('#sugerencias')) view = 'sugerencias';
+            else if (hash.startsWith('#calificaciones')) view = 'calificaciones';
             
+            // 3. Ocultar todos los contenedores principales
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.add('hidden');
-            document.getElementById('modalDetalleNoticia').classList.add('hidden');
-            document.getElementById('modalDetallePractica').classList.add('hidden');
             
+            // 4. Mostrar el contenedor correspondiente
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
             else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
@@ -816,9 +831,18 @@
             const ejecutarTransicion = () => {
                 document.getElementById('loginContainer').classList.add('hidden');
                 document.getElementById('adminNameDisplay').innerText = username;
-                document.getElementById('dashboardContainer').classList.remove('hidden');
                 
-                try { history.replaceState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+                // Restaurar la vista según la URL actual (Ideal para cuando el usuario presiona F5 / Refrescar)
+                const hash = window.location.hash;
+                if (hash.startsWith('#noticias')) window.abrirNoticias(true);
+                else if (hash.startsWith('#practicas')) window.abrirPracticas(true);
+                else if (hash.startsWith('#sugerencias')) window.abrirSugerencias(true);
+                else if (hash.startsWith('#calificaciones') && role !== 'admin') window.abrirCalificaciones(true);
+                else {
+                    document.getElementById('dashboardContainer').classList.remove('hidden');
+                    try { history.replaceState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+                }
+                
                 lucide.createIcons();
             };
 
@@ -990,8 +1014,8 @@
         // ==========================================
         let sugerenciasLocales = [];
 
-        window.abrirSugerencias = () => {
-            window.cambiarHistorial('sugerencias', '#chat');
+        window.abrirSugerencias = (omitirHistorial) => {
+            if (omitirHistorial !== true) window.cambiarHistorial('sugerencias', '#sugerencias');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.remove('hidden');
             lucide.createIcons();
@@ -999,7 +1023,7 @@
         };
 
         window.cerrarSugerencias = () => {
-            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+            window.cambiarHistorial('dashboard', window.location.pathname);
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1132,8 +1156,8 @@
         //  SISTEMA DE NOTICIAS Y EVENTOS 
         // ==========================================
 
-        window.abrirNoticias = async () => {
-            window.cambiarHistorial('noticias', '#noticias');
+        window.abrirNoticias = async (omitirHistorial) => {
+            if (omitirHistorial !== true) window.cambiarHistorial('noticias', '#noticias');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.remove('hidden');
             
@@ -1150,7 +1174,7 @@
         };
 
         window.cerrarNoticias = () => {
-            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+            window.cambiarHistorial('dashboard', window.location.pathname);
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1284,10 +1308,10 @@
             if (globalRole === 'admin') {
                 adminControls.classList.remove('hidden');
                 adminControls.innerHTML = `
-                    <button onclick="cerrarDetalleNoticia(); editarNoticia('${noticia.id}')" class="flex-1 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                    <button onclick="cerrarDetalleNoticia(true); editarNoticia('${noticia.id}')" class="flex-1 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
                         <i data-lucide="edit-2" class="w-4 h-4"></i> Editar
                     </button>
-                    <button onclick="cerrarDetalleNoticia(); eliminarNoticia('${noticia.id}')" class="flex-1 py-2.5 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                    <button onclick="cerrarDetalleNoticia(true); eliminarNoticia('${noticia.id}')" class="flex-1 py-2.5 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
                         <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar
                     </button>
                 `;
@@ -1297,11 +1321,13 @@
             }
 
             document.getElementById('modalDetalleNoticia').classList.remove('hidden');
+            window.cambiarHistorial('modal_detalle_noticia', '#noticias-detalle');
             lucide.createIcons();
         };
 
-        window.cerrarDetalleNoticia = () => {
+        window.cerrarDetalleNoticia = (isFromAction = false) => {
             document.getElementById('modalDetalleNoticia').classList.add('hidden');
+            if (isFromAction !== true && window.location.hash.includes('-detalle')) history.back();
         };
 
         window.abrirModalNoticia = () => {
@@ -1313,10 +1339,12 @@
             document.getElementById('fileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
             document.getElementById('modalNoticiaTitle').innerText = 'Nueva Publicación';
             document.getElementById('modalNoticia').classList.remove('hidden');
+            window.cambiarHistorial('modal_noticia', '#noticias-editar');
         };
 
-        window.cerrarModalNoticia = () => {
+        window.cerrarModalNoticia = (isFromAction = false) => {
             document.getElementById('modalNoticia').classList.add('hidden');
+            if (isFromAction !== true && window.location.hash.includes('-editar')) history.back();
         };
 
         window.editarNoticia = (id) => {
@@ -1340,6 +1368,7 @@
                 
                 document.getElementById('modalNoticiaTitle').innerText = 'Editar Publicación';
                 document.getElementById('modalNoticia').classList.remove('hidden');
+                window.cambiarHistorial('modal_noticia', '#noticias-editar');
             }
         };
 
@@ -1429,7 +1458,8 @@
                     window.mostrarNotificacion("Publicada", "La nueva publicación ya está visible.");
                 }
 
-                cerrarModalNoticia();
+                cerrarModalNoticia(true);
+                if (window.location.hash.includes('-editar')) history.back();
                 cargarNoticias(); 
             } catch (error) {
                 if (error.code && error.code.includes('resource-exhausted')) {
@@ -1451,8 +1481,8 @@
         let practicasLocales = [];
         let tabPracticasActivo = 'clase';
 
-        window.abrirPracticas = async () => {
-            window.cambiarHistorial('practicas', '#practicas');
+        window.abrirPracticas = async (omitirHistorial) => {
+            if (omitirHistorial !== true) window.cambiarHistorial('practicas', '#practicas');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.remove('hidden');
             
@@ -1474,7 +1504,7 @@
         };
 
         window.cerrarPracticas = () => {
-            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+            window.cambiarHistorial('dashboard', window.location.pathname);
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
@@ -1721,10 +1751,10 @@
             if (globalRole === 'admin') {
                 adminControls.classList.remove('hidden');
                 adminControls.innerHTML = `
-                    <button onclick="cerrarDetallePractica(); editarPractica('${practica.id}')" class="flex-1 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                    <button onclick="cerrarDetallePractica(true); editarPractica('${practica.id}')" class="flex-1 py-2.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
                         <i data-lucide="edit-2" class="w-4 h-4"></i> Editar
                     </button>
-                    <button onclick="cerrarDetallePractica(); eliminarPractica('${practica.id}')" class="flex-1 py-2.5 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
+                    <button onclick="cerrarDetallePractica(true); eliminarPractica('${practica.id}')" class="flex-1 py-2.5 bg-red-50 hover:bg-red-100 border border-red-100 text-red-600 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] shadow-sm">
                         <i data-lucide="trash-2" class="w-4 h-4"></i> Borrar
                     </button>
                 `;
@@ -1734,11 +1764,13 @@
             }
 
             document.getElementById('modalDetallePractica').classList.remove('hidden');
+            window.cambiarHistorial('modal_detalle_practica', '#practicas-detalle');
             lucide.createIcons();
         };
 
-        window.cerrarDetallePractica = () => {
+        window.cerrarDetallePractica = (isFromAction = false) => {
             document.getElementById('modalDetallePractica').classList.add('hidden');
+            if (isFromAction !== true && window.location.hash.includes('-detalle')) history.back();
         };
 
         window.abrirModalPractica = async () => {
@@ -1751,12 +1783,14 @@
             document.getElementById('practicaFileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
             document.getElementById('modalPracticaTitle').innerText = 'Nueva Práctica';
             document.getElementById('modalPractica').classList.remove('hidden');
+            window.cambiarHistorial('modal_practica', '#practicas-editar');
             
             await window.cargarMateriasSelect();
         };
 
-        window.cerrarModalPractica = () => {
+        window.cerrarModalPractica = (isFromAction = false) => {
             document.getElementById('modalPractica').classList.add('hidden');
+            if (isFromAction !== true && window.location.hash.includes('-editar')) history.back();
         };
 
         window.editarPractica = async (id) => {
@@ -1765,6 +1799,7 @@
                 document.getElementById('practicaId').value = practica.id;
                 document.getElementById('modalPracticaTitle').innerText = 'Editar Práctica';
                 document.getElementById('modalPractica').classList.remove('hidden');
+                window.cambiarHistorial('modal_practica', '#practicas-editar');
                 
                 await window.cargarMateriasSelect();
                 
@@ -1860,7 +1895,9 @@
                     window.mostrarNotificacion("Publicada", "Nueva práctica asignada.");
                 }
 
-                cerrarModalPractica();
+                cerrarModalPractica(true);
+                if(window.location.hash.includes('-editar')) history.back();
+                
                 cambiarTabPracticas(data.tipo);
                 cargarPracticas();
 
@@ -1881,8 +1918,8 @@
         //  SISTEMA DE CALIFICACIONES 
         // ==========================================
 
-        window.abrirCalificaciones = async () => {
-            window.cambiarHistorial('calificaciones', '#calificaciones');
+        window.abrirCalificaciones = async (omitirHistorial) => {
+            if (omitirHistorial !== true) window.cambiarHistorial('calificaciones', '#calificaciones');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.remove('hidden');
             lucide.createIcons();
@@ -2052,7 +2089,7 @@
         };
 
         window.cerrarCalificaciones = () => {
-            try { history.pushState({ view: 'dashboard' }, '', window.location.pathname); } catch(e){}
+            window.cambiarHistorial('dashboard', window.location.pathname);
             document.getElementById('calificacionesContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
