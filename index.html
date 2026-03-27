@@ -543,67 +543,75 @@
     </div>
 
     <!-- Modal de Detalle de Práctica (Lectura y Estilo Completo) -->
-    <div id="modalDetallePractica" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 sm:p-6">
+    <div id="modalDetallePractica" class="hidden fixed inset-0 z-[250] flex items-end sm:items-center justify-center p-0 sm:p-6 pb-0 sm:pb-6">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetallePractica()"></div>
-        <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-scale flex flex-col md:flex-row max-h-[90vh]">
+        <div class="relative w-full max-w-3xl bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl overflow-hidden animate-fade-scale flex flex-col max-h-[95vh] sm:max-h-[90vh]">
             
-            <!-- Botón Cerrar Flotante (Móvil) -->
-            <button onclick="cerrarDetallePractica()" class="md:hidden absolute top-4 right-4 z-20 w-10 h-10 bg-black/20 backdrop-blur text-white rounded-full flex items-center justify-center shadow-sm">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            
-            <!-- Panel Izquierdo (Imagen y Botones) -->
-            <div class="w-full md:w-[40%] bg-slate-50 border-r border-gray-100 p-6 md:p-8 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
-                <!-- Imagen -->
-                <div class="w-full aspect-[3/4] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60 mb-2 p-2">
-                    <img id="detallePracticaImagen" src="" class="w-full h-full object-contain rounded-xl">
-                </div>
-                
-                <!-- Acciones Principales -->
-                <a id="btnAccederRecurso" href="#" target="_blank" class="w-full py-3.5 bg-[#0f4c81] hover:bg-[#0a365c] text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-[15px]">
-                    <i data-lucide="external-link" class="w-4 h-4"></i> Acceder al Recurso
-                </a>
-                
-                <button onclick="copiarEnlacePractica()" class="w-full py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-sm shadow-sm">
-                    <i data-lucide="copy" class="w-4 h-4"></i> Copiar Enlace
-                </button>
-
-                <!-- Controles Admin Inyectados Dinámicamente -->
-                <div id="detallePracticaAdminControls" class="hidden flex gap-2 mt-2 pt-4 border-t border-gray-200/60">
-                    <!-- Los botones de Editar y Borrar se inyectarán aquí -->
-                </div>
+            <!-- Handle decorativo para móvil -->
+            <div class="w-full flex justify-center pt-3 pb-2 sm:hidden absolute top-0 z-20">
+                <div class="w-10 h-1.5 bg-gray-200 rounded-full"></div>
             </div>
 
-            <!-- Panel Derecho (Contenido) -->
-            <div class="w-full md:w-[60%] p-6 md:p-10 overflow-y-auto scrollbar-hide relative bg-white">
-                <!-- Botón Cerrar Desktop -->
-                <button onclick="cerrarDetallePractica()" class="hidden md:flex absolute top-6 right-6 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full items-center justify-center transition-colors">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-
-                <div class="flex items-center gap-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
-                    <span id="detallePracticaBadge" class="text-[#0f4c81] bg-[#0f4c81]/10 px-2 py-1 rounded-md">Categoría</span>
-                    <span class="text-gray-300">•</span>
-                    <span>Documento</span>
-                </div>
-
-                <h3 id="detallePracticaTitulo" class="text-2xl sm:text-3xl lg:text-4xl font-serif-title font-bold text-gray-900 mb-1.5 leading-tight pr-8 md:pr-12">
-                    Título de la Práctica
-                </h3>
-                <h4 id="detallePracticaMateria" class="text-sm sm:text-base text-[#0f4c81] font-bold uppercase tracking-wider mb-4 pr-8 md:pr-12 hidden">
-                    Nombre de la Materia
-                </h4>
+            <!-- Botón Cerrar Flotante -->
+            <button onclick="cerrarDetallePractica()" class="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full flex items-center justify-center transition-colors shadow-sm">
+                <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            </button>
+            
+            <!-- Contenedor Scrollable -->
+            <div class="overflow-y-auto scrollbar-hide flex-1 pt-12 sm:pt-0">
                 
-                <div class="text-sm text-gray-600 mb-6 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-gray-100 pb-5">
-                    <span>Autor: <span id="detallePracticaAutor" class="font-bold text-gray-800">Admin</span></span>
-                    <span class="hidden sm:inline text-gray-200">|</span>
-                    <span id="detallePracticaFechas" class="font-medium text-emerald-600">Entrega: 25 Mar</span>
+                <!-- Sección Superior (Split: Imagen Izq, Botones Der) -->
+                <div class="p-5 sm:p-8 flex flex-row gap-5 sm:gap-8 items-center sm:items-stretch border-b border-gray-100">
+                    <!-- Imagen -->
+                    <div class="w-32 sm:w-48 shrink-0 relative">
+                        <div class="w-full aspect-[3/4] bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
+                            <img id="detallePracticaImagen" src="" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                    
+                    <!-- Botones -->
+                    <div class="flex-1 flex flex-col justify-center gap-2.5 sm:gap-3 py-1">
+                        <a id="btnAccederRecurso" href="#" target="_blank" class="w-full py-2.5 sm:py-3.5 bg-[#0f4c81] hover:bg-[#0a365c] text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-[13px] sm:text-[15px]">
+                            <i data-lucide="external-link" class="w-4 h-4 sm:w-5 sm:h-5"></i> <span class="hidden sm:inline">Acceder al Recurso</span><span class="sm:hidden">Acceder al Recurso</span>
+                        </a>
+                        
+                        <button onclick="copiarEnlacePractica()" class="w-full py-2.5 sm:py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] sm:text-[14px] shadow-sm">
+                            <i data-lucide="copy" class="w-4 h-4 sm:w-5 sm:h-5"></i> Copiar Enlace
+                        </button>
+
+                        <!-- Controles Admin Inyectados Dinámicamente -->
+                        <div id="detallePracticaAdminControls" class="hidden flex gap-2 mt-1 sm:mt-2 w-full">
+                            <!-- Los botones de Editar y Borrar se inyectarán aquí -->
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Descripción General</h4>
-                    <div id="detallePracticaDescripcion" class="text-gray-700 text-sm sm:text-[15px] leading-relaxed whitespace-pre-wrap">
-                        <!-- El texto formateado irá aquí -->
+                <!-- Sección Inferior (Contenido) -->
+                <div class="p-6 sm:p-8 relative bg-white">
+                    <div class="flex items-center gap-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+                        <span id="detallePracticaBadge" class="text-[#0f4c81] bg-[#0f4c81]/10 px-2 py-1 rounded-md">Categoría</span>
+                        <span class="text-gray-300">•</span>
+                        <span>Documento</span>
+                    </div>
+
+                    <h3 id="detallePracticaTitulo" class="text-2xl sm:text-3xl lg:text-4xl font-serif-title font-bold text-gray-900 mb-1.5 leading-tight">
+                        Título de la Práctica
+                    </h3>
+                    <h4 id="detallePracticaMateria" class="text-[13px] sm:text-[15px] text-[#0f4c81] font-bold uppercase tracking-wider mb-4 hidden">
+                        Nombre de la Materia
+                    </h4>
+                    
+                    <div class="text-[13px] sm:text-[14px] text-gray-600 mb-6 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 border-b border-gray-100 pb-5">
+                        <span>Autor: <span id="detallePracticaAutor" class="font-bold text-gray-800">Admin</span></span>
+                        <span class="hidden sm:inline text-gray-200">|</span>
+                        <span id="detallePracticaFechas" class="font-medium text-emerald-600">Entrega: 25 Mar</span>
+                    </div>
+
+                    <div>
+                        <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Descripción General</h4>
+                        <div id="detallePracticaDescripcion" class="text-gray-700 text-[14px] sm:text-[15px] leading-relaxed whitespace-pre-wrap">
+                            <!-- El texto formateado irá aquí -->
+                        </div>
                     </div>
                 </div>
             </div>
