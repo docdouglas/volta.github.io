@@ -174,7 +174,7 @@
                 </div>
             </div>
 
-            <div class="relative w-full h-40 sm:h-48 md:h-56 mb-8 rounded-2xl overflow-hidden bg-white border border-white/80 shadow-sm">
+            <div class="hidden sm:block relative w-full h-40 sm:h-48 md:h-56 mb-8 rounded-2xl overflow-hidden bg-white border border-white/80 shadow-sm">
                 <img id="bannerSlide1" src="novell contabilidad.png" onerror="this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-100">
                 <img id="bannerSlide2" src="novell electronica.png" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-0">
                 <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
@@ -604,16 +604,13 @@
             lucide.createIcons();
         };
 
-        // --- ACTUALIZADO: Notificaciones con estilo oscuro, glassmorphism, responsivas y de menor duración ---
         window.mostrarNotificacion = (titulo, mensaje, tipo = 'info') => {
             const toast = document.createElement('div');
             
-            // Colores adaptados para fondo oscuro
             const iconColor = tipo === 'error' ? 'text-red-400' : 'text-blue-400';
             const bgColor = tipo === 'error' ? 'bg-red-500/20' : 'bg-blue-500/20';
             const iconName = tipo === 'error' ? 'alert-circle' : 'check-circle';
 
-            // Ajustes responsivos y fondo negro translúcido
             toast.className = "fixed top-4 right-4 md:top-auto md:bottom-6 z-[300] bg-gray-900/85 backdrop-blur-md border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.3)] p-3 md:p-4 rounded-2xl flex items-start gap-2.5 md:gap-3 w-[calc(100%-2rem)] md:w-80 toast-enter";
             
             toast.innerHTML = `
@@ -628,7 +625,6 @@
             document.body.appendChild(toast); 
             lucide.createIcons();
             
-            // Reducido el tiempo de visualización de 4000 a 2500 ms
             setTimeout(() => { 
                 toast.style.opacity = '0'; 
                 toast.style.transform = 'translateY(20px)'; 
@@ -663,7 +659,6 @@
             }
         };
 
-        // --- Copiar Enlace Universal ---
         window.copiarEnlacePractica = () => {
             const url = document.getElementById('btnAccederRecurso').href;
             if(url && url !== '#' && url !== window.location.href) {
@@ -708,7 +703,6 @@
         let globalUsername = ''; 
         let noticiasLocales = []; 
 
-        // Formateador de texto a negrilla
         window.formatTextSafe = (text) => {
             if (!text) return '';
             let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -716,27 +710,21 @@
             return safeText;
         };
 
-        // --- NUEVO: Helper seguro para historial (Evita bloqueos en modo local file://) ---
         window.cambiarHistorial = (vista, ruta) => {
             try {
                 if (window.location.hash !== ruta && window.location.pathname !== ruta) {
                     history.pushState({ view: vista }, '', ruta);
                 }
-            } catch (e) {
-                // Silencioso: Evita que el navegador bloquee la navegación si se usa sin servidor local
-            }
+            } catch (e) {}
         };
 
-        // Manejo del botón Atrás
         window.addEventListener('popstate', (e) => {
-            // 1. Cerrar cualquier modal que esté abierto forzosamente al retroceder
             const modales = ['modalNoticia', 'modalDetalleNoticia', 'modalPractica', 'modalDetallePractica'];
             modales.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.classList.add('hidden');
             });
 
-            // 2. Determinar la vista a mostrar según el hash actual en la URL
             const hash = window.location.hash;
             let view = 'dashboard';
             if (hash.startsWith('#noticias')) view = 'noticias';
@@ -744,14 +732,12 @@
             else if (hash.startsWith('#sugerencias')) view = 'sugerencias';
             else if (hash.startsWith('#calificaciones')) view = 'calificaciones';
             
-            // 3. Ocultar todos los contenedores principales
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.add('hidden');
             
-            // 4. Mostrar el contenedor correspondiente
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
             else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
@@ -783,7 +769,6 @@
                 document.getElementById('loginContainer').classList.add('hidden');
                 document.getElementById('adminNameDisplay').innerText = username;
                 
-                // Restaurar la vista según la URL actual (Ideal para cuando el usuario presiona F5 / Refrescar)
                 const hash = window.location.hash;
                 if (hash.startsWith('#noticias')) window.abrirNoticias(true);
                 else if (hash.startsWith('#practicas')) window.abrirPracticas(true);
@@ -960,9 +945,6 @@
             }
         });
 
-        // ==========================================
-        //  SISTEMA DE CHATS Y SUGERENCIAS
-        // ==========================================
         let sugerenciasLocales = [];
 
         window.abrirSugerencias = (omitirHistorial) => {
@@ -1102,10 +1084,6 @@
                 lucide.createIcons();
             }
         });
-
-        // ==========================================
-        //  SISTEMA DE NOTICIAS Y EVENTOS 
-        // ==========================================
 
         window.abrirNoticias = async (omitirHistorial) => {
             if (omitirHistorial !== true) window.cambiarHistorial('noticias', '#noticias');
@@ -1425,10 +1403,6 @@
             }
         });
 
-        // ==========================================
-        //  SISTEMA DE PRÁCTICAS
-        // ==========================================
-
         let practicasLocales = [];
         let tabPracticasActivo = 'clase';
 
@@ -1445,7 +1419,6 @@
                 document.getElementById('btnNuevaPractica').classList.remove('flex');
             }
 
-            // Limpiar buscador
             if(document.getElementById('buscadorPracticas')) {
                 document.getElementById('buscadorPracticas').value = '';
             }
@@ -1460,7 +1433,6 @@
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
 
-        // SE CORRIGIERON LAS CLASES PARA QUE NO PIERDA EL ESPACIADO (px-4 sm:px-6) AL CAMBIAR DE TAB
         window.cambiarTabPracticas = (tab) => {
             tabPracticasActivo = tab;
             const activeClass = "flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
@@ -1515,7 +1487,6 @@
             }
         };
 
-        // NUEVO: Se expone la función de forma global usando window
         window.renderizarPracticas = () => {
             const container = document.getElementById('practicasList');
             container.innerHTML = '';
@@ -1523,7 +1494,6 @@
             const busquedaInput = document.getElementById('buscadorPracticas');
             const terminoRaw = busquedaInput ? busquedaInput.value.trim() : '';
             
-            // Función auxiliar para quitar acentos y pasar a minúsculas
             const normalizar = (str) => {
                 if (!str) return '';
                 return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -1531,7 +1501,6 @@
             
             const terminoBusqueda = normalizar(terminoRaw);
 
-            // Lógica combinada: Filtra por Tab (Clase/Virtual) y luego por el texto de Búsqueda sin acentos
             const practicasFiltradas = practicasLocales.filter(p => {
                 const coincideTab = p.tipo === tabPracticasActivo;
                 const coincideBusqueda = terminoBusqueda === '' || 
@@ -1557,13 +1526,11 @@
                 return;
             }
 
-            // NUEVO: Agrupamos las prácticas filtradas por Materia
             const grupos = {};
             practicasFiltradas.forEach(practica => {
-                // Obtenemos el nombre de la materia o usamos un valor por defecto
                 let nombreMateria = practica.materiaNombre;
                 if (!nombreMateria && practica.materia) {
-                    nombreMateria = practica.materia.split(' - ')[0]; // Para compatibilidad con datos viejos
+                    nombreMateria = practica.materia.split(' - ')[0]; 
                 }
                 nombreMateria = nombreMateria || 'Otras Prácticas';
                 
@@ -1571,15 +1538,12 @@
                 grupos[nombreMateria].push(practica);
             });
 
-            // Ordenar las materias alfabéticamente
             const materiasOrdenadas = Object.keys(grupos).sort((a, b) => a.localeCompare(b));
 
             materiasOrdenadas.forEach(nombreMateria => {
-                // Crear el contenedor de cada grupo
                 const seccion = document.createElement('div');
                 seccion.className = "w-full animate-fade-scale";
                 
-                // Añadir el Título de la Materia
                 seccion.innerHTML = `
                     <div class="flex items-center gap-3 mb-5 border-b border-gray-200/60 pb-2">
                         <div class="w-2 h-6 bg-[#0f4c81] rounded-full"></div>
@@ -1588,7 +1552,6 @@
                     </div>
                 `;
 
-                // Contenedor Grid para las tarjetas de ese grupo
                 const grid = document.createElement('div');
                 grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
@@ -1864,10 +1827,6 @@
                 lucide.createIcons();
             }
         });
-
-        // ==========================================
-        //  SISTEMA DE CALIFICACIONES 
-        // ==========================================
 
         window.abrirCalificaciones = async (omitirHistorial) => {
             if (omitirHistorial !== true) window.cambiarHistorial('calificaciones', '#calificaciones');
