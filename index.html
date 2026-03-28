@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Acceso Restringido - Novell Digital</title>
     
-    <!-- Tailwind CSS & Lucide Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <!-- Fuentes Premium: Playfair para títulos, Inter para interfaz -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 
     <style>
@@ -114,11 +112,9 @@
 </head>
 <body class="flex items-center justify-center min-h-screen px-4 py-8">
 
-    <!-- Capas de Fondo -->
     <div class="premium-bg"></div>
     <div class="premium-overlay"></div>
 
-    <!-- Contenedor Principal del Formulario -->
     <div id="loginContainer" class="hidden relative glass-panel rounded-3xl w-full max-w-[420px] p-8 sm:p-10 text-center animate-fade-scale">
         <div class="mx-auto mb-8">
             <span class="text-[#0f4c81] text-2xl font-bold tracking-[0.2em] uppercase font-serif-title">Portal</span>
@@ -152,17 +148,14 @@
         </div>
     </div>
 
-    <!-- Script inicial -->
     <script>
         if (!localStorage.getItem('portalSessionId')) {
             document.getElementById('loginContainer').classList.remove('hidden');
         }
     </script>
 
-    <!-- Menú Principal (Dashboard) -->
     <div id="dashboardContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12">
-            <!-- Header del Dashboard -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 border-b border-gray-300/50 pb-6 gap-4">
                 <div>
                     <h2 id="dashboardTitle" class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Portal Principal</h2>
@@ -181,7 +174,6 @@
                 </div>
             </div>
 
-            <!-- Banner Publicitario / Carrusel -->
             <div class="relative w-full h-40 sm:h-48 md:h-56 mb-8 rounded-2xl overflow-hidden bg-white border border-white/80 shadow-sm">
                 <img id="bannerSlide1" src="novell contabilidad.png" onerror="this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-100">
                 <img id="bannerSlide2" src="novell electronica.png" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-0">
@@ -192,9 +184,7 @@
                 </div>
             </div>
 
-            <!-- Grid de Opciones -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Noticias y Eventos -->
                 <button onclick="abrirNoticias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-blue-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="newspaper" class="w-7 h-7"></i>
@@ -205,7 +195,6 @@
                     </div>
                 </button>
 
-                <!-- Biblioteca -->
                 <button onclick="window.location.href='biblioteca.html'" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="library" class="w-7 h-7"></i>
@@ -216,7 +205,6 @@
                     </div>
                 </button>
 
-                <!-- Clases Virtuales -->
                 <button onclick="window.open('https://meet.google.com/tzo-efrb-qjk', '_blank')" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="video" class="w-7 h-7"></i>
@@ -227,7 +215,6 @@
                     </div>
                 </button>
 
-                <!-- Prácticas -->
                 <button onclick="abrirPracticas()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-orange-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="pen-tool" class="w-7 h-7"></i>
@@ -238,7 +225,6 @@
                     </div>
                 </button>
 
-                <!-- Chats y Sugerencias -->
                 <button onclick="abrirSugerencias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-teal-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="message-square" class="w-7 h-7"></i>
@@ -249,7 +235,6 @@
                     </div>
                 </button>
 
-                <!-- Calificaciones (Solo Alumnos) -->
                 <button id="btnCalificaciones" onclick="abrirCalificaciones()" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-yellow-400 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-yellow-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="graduation-cap" class="w-7 h-7"></i>
@@ -260,7 +245,6 @@
                     </div>
                 </button>
 
-                <!-- Registro Académico (Solo Admin) -->
                 <button id="btnGestion" onclick="window.location.href='registro.html'" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-[#0f4c81]/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-[#0f4c81]/10 text-[#0f4c81] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-[#0f4c81] group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="users" class="w-7 h-7"></i>
@@ -280,7 +264,6 @@
         </div>
     </div>
 
-    <!-- Contenedor de Chats y Sugerencias -->
     <div id="sugerenciasContainer" class="hidden relative w-full max-w-4xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-6 sm:p-10 flex flex-col h-[85vh] max-h-[800px]">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-5 mb-5 gap-4 shrink-0">
@@ -303,7 +286,6 @@
         </div>
     </div>
 
-    <!-- Contenedor de Noticias -->
     <div id="noticiasContainer" class="hidden relative w-full max-w-6xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4">
@@ -326,10 +308,9 @@
         </div>
     </div>
 
-    <!-- Modal de Creación/Edición de Noticias -->
     <div id="modalNoticia" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="cerrarModalNoticia()"></div>
-        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 animate-fade-scale border border-gray-100">
+        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 animate-fade-scale border border-gray-100 max-h-[90vh] overflow-y-auto scrollbar-hide">
             <h3 id="modalNoticiaTitle" class="text-2xl font-serif-title font-bold text-gray-900 mb-6">Nueva Publicación</h3>
             <form id="formNoticia" class="space-y-5">
                 <input type="hidden" id="noticiaId">
@@ -378,32 +359,24 @@
         </div>
     </div>
 
-    <!-- Modal de Detalle de Noticia (Lectura con panel dividido) -->
     <div id="modalDetalleNoticia" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetalleNoticia()"></div>
         <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-scale flex flex-col md:flex-row max-h-[90vh]">
             
-            <!-- Botón Cerrar Flotante (Móvil) -->
             <button onclick="cerrarDetalleNoticia()" class="md:hidden absolute top-4 right-4 z-20 w-10 h-10 bg-black/20 backdrop-blur text-white rounded-full flex items-center justify-center shadow-sm">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             
-            <!-- Panel Izquierdo (Imagen y Botones) -->
             <div class="w-full md:w-[40%] bg-slate-50 border-r border-gray-100 p-6 md:p-8 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
-                <!-- Imagen -->
                 <div class="w-full aspect-square md:aspect-[4/5] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60 mb-2 p-2">
                     <img id="detalleNoticiaImagen" src="" class="w-full h-full object-cover rounded-xl">
                 </div>
                 
-                <!-- Controles Admin Inyectados Dinámicamente -->
                 <div id="detalleNoticiaAdminControls" class="hidden flex gap-2 mt-auto pt-4 border-t border-gray-200/60">
-                    <!-- Los botones de Editar y Borrar se inyectarán aquí -->
-                </div>
+                    </div>
             </div>
 
-            <!-- Panel Derecho (Contenido) -->
             <div class="w-full md:w-[60%] p-6 md:p-10 overflow-y-auto scrollbar-hide relative bg-white">
-                <!-- Botón Cerrar Desktop -->
                 <button onclick="cerrarDetalleNoticia()" class="hidden md:flex absolute top-6 right-6 w-10 h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full items-center justify-center transition-colors">
                     <i data-lucide="x" class="w-5 h-5"></i>
                 </button>
@@ -425,14 +398,12 @@
                 <div>
                     <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Contenido de la publicación</h4>
                     <div id="detalleNoticiaContenido" class="text-gray-700 text-sm sm:text-[15px] leading-relaxed whitespace-pre-wrap">
-                        <!-- El texto formateado irá aquí -->
-                    </div>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Contenedor de Prácticas -->
     <div id="practicasContainer" class="hidden relative w-full max-w-6xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4">
@@ -452,9 +423,7 @@
                 </div>
             </div>
 
-            <!-- Controles de Vista: Pestañas y Filtro Dinámico -->
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                <!-- Pestañas de Prácticas (SE RESTAURÓ EL PADDING PX-4 SM:PX-6) -->
                 <div class="flex gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 w-full sm:w-max shadow-inner">
                     <button id="tabClase" onclick="cambiarTabPracticas('clase')" class="flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]">
                         <i data-lucide="users" class="w-4 h-4"></i> En Clase
@@ -464,22 +433,19 @@
                     </button>
                 </div>
                 
-                <!-- Buscador Dinámico -->
                 <div class="relative w-full sm:w-72 shrink-0">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
                     <input type="text" id="buscadorPracticas" oninput="window.renderizarPracticas()" placeholder="Buscar materia o título..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200/80 rounded-full focus:outline-none focus:border-[#0f4c81] focus:ring-2 focus:ring-[#0f4c81]/20 transition-all text-sm shadow-sm text-gray-700">
                 </div>
             </div>
             
-            <!-- SE CAMBIÓ LA CLASE PARA ADMITIR GRUPOS -->
             <div id="practicasList" class="flex flex-col gap-10 min-h-[250px] w-full"></div>
         </div>
     </div>
 
-    <!-- Modal de Creación/Edición de Prácticas -->
     <div id="modalPractica" class="hidden fixed inset-0 z-[200] flex items-center justify-center p-4">
         <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm" onclick="cerrarModalPractica()"></div>
-        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-8 animate-fade-scale border border-gray-100">
+        <div class="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 animate-fade-scale border border-gray-100 max-h-[90vh] overflow-y-auto scrollbar-hide">
             <h3 id="modalPracticaTitle" class="text-2xl font-serif-title font-bold text-gray-900 mb-6">Nueva Práctica</h3>
             <form id="formPractica" class="space-y-5">
                 <input type="hidden" id="practicaId">
@@ -488,8 +454,7 @@
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Materia</label>
                         <input type="text" id="practicaMateria" list="materiasDatalist" required class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all text-sm font-medium text-gray-900" placeholder="Escribe o selecciona la materia..." autocomplete="off">
                         <datalist id="materiasDatalist">
-                            <!-- Opciones cargadas dinámicamente -->
-                        </datalist>
+                            </datalist>
                     </div>
                     <div class="space-y-1.5 md:col-span-1">
                         <label class="text-[11px] font-bold text-gray-700 uppercase tracking-widest pl-1">Título de la Práctica</label>
@@ -542,34 +507,27 @@
         </div>
     </div>
 
-    <!-- Modal de Detalle de Práctica (Lectura y Estilo Completo) -->
     <div id="modalDetallePractica" class="hidden fixed inset-0 z-[250] flex items-end sm:items-center justify-center p-0 sm:p-6 pb-0 sm:pb-6">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetallePractica()"></div>
         <div class="relative w-full max-w-3xl bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl overflow-hidden animate-fade-scale flex flex-col max-h-[95vh] sm:max-h-[90vh]">
             
-            <!-- Handle decorativo para móvil -->
             <div class="w-full flex justify-center pt-3 pb-2 sm:hidden absolute top-0 z-20">
                 <div class="w-10 h-1.5 bg-gray-200 rounded-full"></div>
             </div>
 
-            <!-- Botón Cerrar Flotante -->
             <button onclick="cerrarDetallePractica()" class="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full flex items-center justify-center transition-colors shadow-sm">
                 <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
             
-            <!-- Contenedor Scrollable -->
             <div class="overflow-y-auto scrollbar-hide flex-1 pt-12 sm:pt-0">
                 
-                <!-- Sección Superior (Split: Imagen Izq, Botones Der) -->
                 <div class="p-5 sm:p-8 flex flex-row gap-5 sm:gap-8 items-center sm:items-stretch border-b border-gray-100">
-                    <!-- Imagen -->
                     <div class="w-32 sm:w-48 shrink-0 relative">
                         <div class="w-full aspect-[3/4] bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
                             <img id="detallePracticaImagen" src="" class="w-full h-full object-cover">
                         </div>
                     </div>
                     
-                    <!-- Botones -->
                     <div class="flex-1 flex flex-col justify-center gap-2.5 sm:gap-3 py-1">
                         <a id="btnAccederRecurso" href="#" target="_blank" class="w-full py-2.5 sm:py-3.5 bg-[#0f4c81] hover:bg-[#0a365c] text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-[13px] sm:text-[15px]">
                             <i data-lucide="external-link" class="w-4 h-4 sm:w-5 sm:h-5"></i> <span class="hidden sm:inline">Acceder al Recurso</span><span class="sm:hidden">Acceder al Recurso</span>
@@ -579,14 +537,11 @@
                             <i data-lucide="copy" class="w-4 h-4 sm:w-5 sm:h-5"></i> Copiar Enlace
                         </button>
 
-                        <!-- Controles Admin Inyectados Dinámicamente -->
                         <div id="detallePracticaAdminControls" class="hidden flex gap-2 mt-1 sm:mt-2 w-full">
-                            <!-- Los botones de Editar y Borrar se inyectarán aquí -->
-                        </div>
+                            </div>
                     </div>
                 </div>
 
-                <!-- Sección Inferior (Contenido) -->
                 <div class="p-6 sm:p-8 relative bg-white">
                     <div class="flex items-center gap-2 mb-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                         <span id="detallePracticaBadge" class="text-[#0f4c81] bg-[#0f4c81]/10 px-2 py-1 rounded-md">Categoría</span>
@@ -610,15 +565,13 @@
                     <div>
                         <h4 class="text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Descripción General</h4>
                         <div id="detallePracticaDescripcion" class="text-gray-700 text-[14px] sm:text-[15px] leading-relaxed whitespace-pre-wrap">
-                            <!-- El texto formateado irá aquí -->
-                        </div>
+                            </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Contenedor de Calificaciones -->
     <div id="calificacionesContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12">
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4">
@@ -635,7 +588,6 @@
         </div>
     </div>
 
-    <!-- Scripts de UI (Iconos, Notificaciones y Visibilidad) -->
     <script>
         lucide.createIcons();
 
@@ -732,7 +684,6 @@
         };
     </script>
 
-    <!-- Firebase y Lógica Principal -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
