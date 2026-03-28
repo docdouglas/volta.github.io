@@ -1460,6 +1460,7 @@
             document.getElementById('dashboardContainer').classList.remove('hidden');
         };
 
+        // SE CORRIGIERON LAS CLASES PARA QUE NO PIERDA EL ESPACIADO (px-4 sm:px-6) AL CAMBIAR DE TAB
         window.cambiarTabPracticas = (tab) => {
             tabPracticasActivo = tab;
             const activeClass = "flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
@@ -1514,6 +1515,7 @@
             }
         };
 
+        // NUEVO: Se expone la función de forma global usando window
         window.renderizarPracticas = () => {
             const container = document.getElementById('practicasList');
             container.innerHTML = '';
@@ -1521,6 +1523,7 @@
             const busquedaInput = document.getElementById('buscadorPracticas');
             const terminoRaw = busquedaInput ? busquedaInput.value.trim() : '';
             
+            // Función auxiliar para quitar acentos y pasar a minúsculas
             const normalizar = (str) => {
                 if (!str) return '';
                 return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
@@ -1528,6 +1531,7 @@
             
             const terminoBusqueda = normalizar(terminoRaw);
 
+            // Lógica combinada: Filtra por Tab (Clase/Virtual) y luego por el texto de Búsqueda sin acentos
             const practicasFiltradas = practicasLocales.filter(p => {
                 const coincideTab = p.tipo === tabPracticasActivo;
                 const coincideBusqueda = terminoBusqueda === '' || 
@@ -1553,11 +1557,13 @@
                 return;
             }
 
+            // NUEVO: Agrupamos las prácticas filtradas por Materia
             const grupos = {};
             practicasFiltradas.forEach(practica => {
+                // Obtenemos el nombre de la materia o usamos un valor por defecto
                 let nombreMateria = practica.materiaNombre;
                 if (!nombreMateria && practica.materia) {
-                    nombreMateria = practica.materia.split(' - ')[0]; 
+                    nombreMateria = practica.materia.split(' - ')[0]; // Para compatibilidad con datos viejos
                 }
                 nombreMateria = nombreMateria || 'Otras Prácticas';
                 
@@ -1565,12 +1571,15 @@
                 grupos[nombreMateria].push(practica);
             });
 
+            // Ordenar las materias alfabéticamente
             const materiasOrdenadas = Object.keys(grupos).sort((a, b) => a.localeCompare(b));
 
             materiasOrdenadas.forEach(nombreMateria => {
+                // Crear el contenedor de cada grupo
                 const seccion = document.createElement('div');
                 seccion.className = "w-full animate-fade-scale";
                 
+                // Añadir el Título de la Materia
                 seccion.innerHTML = `
                     <div class="flex items-center gap-3 mb-5 border-b border-gray-200/60 pb-2">
                         <div class="w-2 h-6 bg-[#0f4c81] rounded-full"></div>
@@ -1579,6 +1588,7 @@
                     </div>
                 `;
 
+                // Contenedor Grid para las tarjetas de ese grupo
                 const grid = document.createElement('div');
                 grid.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6";
 
@@ -1600,24 +1610,22 @@
 
                     const card = document.createElement('div');
                     card.onclick = () => abrirDetallePractica(practica.id);
-                    
-                    // --- NUEVO ESTILO DE TARJETAS MÁS GRANDES Y ATRACTIVAS ---
-                    card.className = "bg-white border border-gray-100/80 rounded-[1.25rem] shadow-[0_4px_20px_rgb(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:border-[#0f4c81]/30 transition-all duration-300 p-5 sm:p-6 flex items-center gap-5 sm:gap-6 relative group cursor-pointer h-max";
+                    card.className = "bg-white/90 border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md hover:bg-white hover:border-[#0f4c81]/30 transition-all duration-300 p-4 flex items-center gap-5 relative group cursor-pointer h-max";
                     
                     const displayTitulo = practica.titulo || practica.materia;
                     const displayMateria = practica.materiaNombre || '';
 
                     card.innerHTML = `
-                        <div class="w-28 h-28 sm:w-36 sm:h-36 shrink-0 bg-gray-50 rounded-[1rem] overflow-hidden border border-gray-200 shadow-sm flex items-center justify-center p-1">
-                            <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-cover rounded-xl">
+                        <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm flex items-center justify-center p-1.5">
+                            <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-contain rounded-lg">
                         </div>
-                        <div class="flex-1 min-w-0 pr-1 flex flex-col justify-center">
-                            <h4 class="font-bold text-[18px] sm:text-[20px] text-gray-900 line-clamp-1 mb-1 leading-tight font-serif-title group-hover:text-[#0f4c81] transition-colors" title="${displayTitulo}">${window.formatTextSafe(displayTitulo)}</h4>
-                            ${displayMateria ? `<p class="text-[12px] sm:text-[13px] font-bold text-[#0f4c81] uppercase tracking-wider truncate mb-2" title="${displayMateria}">${window.formatTextSafe(displayMateria)}</p>` : ''}
-                            <p class="text-[13px] sm:text-[14px] text-gray-500 truncate mb-1 font-medium">Publicado: ${fechaPubStr}</p>
-                            <p class="text-[13px] sm:text-[14px] font-bold truncate mb-3 ${alertColor}">Entrega: ${fechaEntStr}</p>
-                            <p class="text-[13px] sm:text-[14px] text-[#0f4c81] font-semibold truncate flex items-center gap-1.5 transition-transform group-hover:translate-x-1">
-                                <i data-lucide="book-open" class="w-4 h-4"></i> Leer Detalles
+                        <div class="flex-1 min-w-0 pr-2 flex flex-col justify-center">
+                            <h4 class="font-bold text-[16px] sm:text-[17px] text-gray-900 line-clamp-1 mb-0.5 leading-tight font-serif-title" title="${displayTitulo}">${window.formatTextSafe(displayTitulo)}</h4>
+                            ${displayMateria ? `<p class="text-[11px] sm:text-[12px] font-bold text-[#0f4c81] uppercase tracking-wide truncate mb-1" title="${displayMateria}">${window.formatTextSafe(displayMateria)}</p>` : ''}
+                            <p class="text-[12px] sm:text-[13px] text-gray-500 truncate mb-0.5">Publicado: ${fechaPubStr}</p>
+                            <p class="text-[12px] sm:text-[13px] font-semibold truncate mb-1.5 ${alertColor}">Entrega: ${fechaEntStr}</p>
+                            <p class="text-[11px] sm:text-[12px] text-[#0f4c81]/80 font-medium truncate flex items-center gap-1.5 mt-0.5">
+                                <i data-lucide="book-open" class="w-3.5 h-3.5"></i> Leer Detalles
                             </p>
                         </div>
                     `;
