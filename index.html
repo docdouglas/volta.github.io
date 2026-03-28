@@ -28,12 +28,19 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* --- Fondo Pantalla Completa --- */
+        /* --- Fondo Pantalla Completa y Responsivo --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-image: url('ingreso.png'); /* Imagen aplicada a toda la ventana */
             background-size: cover; background-position: center;
             z-index: -2;
+            background-image: url('ingreso.png'); /* Imagen por defecto para escritorio */
+        }
+        
+        /* Imagen optimizada para dispositivos móviles (pantallas pequeñas) */
+        @media (max-width: 640px) {
+            .premium-bg {
+                background-image: url('ingreso-portrait.png'); /* Imagen vertical para móviles */
+            }
         }
         
         /* Capa sutil para asegurar que el texto sea legible sobre cualquier imagen */
@@ -43,9 +50,9 @@
             z-index: -1;
         }
 
-        /* --- Glassmorphism UI (Efecto cristal para los contenedores) --- */
+        /* --- Glassmorphism UI (Efecto cristal para los contenedores) con Mayor Transparencia --- */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
+            background: rgba(255, 255, 255, 0.6); /* Transparencia incrementada: de 0.85 a 0.6 */
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.9);
