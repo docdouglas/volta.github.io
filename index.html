@@ -115,39 +115,44 @@
     <div class="premium-bg"></div>
     <div class="premium-overlay"></div>
 
-    <div id="loginContainer" class="hidden relative glass-panel rounded-3xl w-full max-w-[420px] p-8 sm:p-10 text-center animate-fade-scale">
-        <div class="mx-auto mb-8">
-            <span class="text-[#0f4c81] text-2xl font-bold tracking-[0.2em] uppercase font-serif-title">Portal</span>
-        </div>
-        <form id="loginForm" class="space-y-5 text-left">
-            <div class="space-y-1.5">
-                <label class="text-[11px] font-bold text-black uppercase tracking-widest pl-2">Identidad de Usuario</label>
-                <div class="relative">
-                    <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black"></i>
-                    <input type="text" id="loginUser" required autocomplete="username" class="w-full pl-11 pr-4 py-3.5 input-glass text-sm text-black placeholder:text-black/60" placeholder="nombre">
-                </div>
+    <div id="loginContainer" class="hidden relative rounded-3xl w-full max-w-[420px] text-center animate-fade-scale shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-white/60 overflow-hidden">
+        
+        <div class="absolute inset-0 z-0 bg-cover bg-center" style="background-image: url('ingreso.png');"></div>
+        <div class="absolute inset-0 z-0 bg-white/60 backdrop-blur-[5px]"></div>
+        
+        <div class="relative z-10 p-8 sm:p-10 text-left">
+            <div class="mx-auto mb-8 text-center">
+                <span class="text-[#0f4c81] text-2xl font-bold tracking-[0.2em] uppercase font-serif-title">Portal</span>
             </div>
-            <div class="space-y-1.5">
-                <label class="text-[11px] font-bold text-black uppercase tracking-widest pl-2">Clave de Seguridad</label>
-                <div class="relative">
-                    <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black"></i>
-                    <input type="password" id="loginPass" required autocomplete="current-password" class="w-full pl-11 pr-12 py-3.5 input-glass text-sm text-black placeholder:text-black/60" placeholder="••••••••">
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-black hover:text-[#0f4c81] rounded-lg transition-colors focus:outline-none">
-                        <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
-                    </button>
+            <form id="loginForm" class="space-y-5">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-black uppercase tracking-widest pl-2">Identidad de Usuario</label>
+                    <div class="relative">
+                        <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black"></i>
+                        <input type="text" id="loginUser" required autocomplete="username" class="w-full pl-11 pr-4 py-3.5 input-glass text-sm text-black placeholder:text-black/60" placeholder="nombre">
+                    </div>
                 </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-black uppercase tracking-widest pl-2">Clave de Seguridad</label>
+                    <div class="relative">
+                        <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-black"></i>
+                        <input type="password" id="loginPass" required autocomplete="current-password" class="w-full pl-11 pr-12 py-3.5 input-glass text-sm text-black placeholder:text-black/60" placeholder="••••••••">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-black hover:text-[#0f4c81] rounded-lg transition-colors focus:outline-none">
+                            <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" id="submitBtn" class="w-full btn-elegant py-4 mt-4 text-[15px] flex items-center justify-center gap-2">
+                    <span>Verificar Credenciales</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+            </form>
+            <div class="mt-8 text-xs text-black font-medium text-center">
+                &copy; 2026 Novell Digital. Acceso Seguro.<br>
+                <span class="inline-block mt-1">Created by <em class="font-serif-title italic text-[14px] text-[#0f4c81] ml-0.5">Douglas</em></span>
             </div>
-            <button type="submit" id="submitBtn" class="w-full btn-elegant py-4 mt-4 text-[15px] flex items-center justify-center gap-2">
-                <span>Verificar Credenciales</span>
-                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
-        </form>
-        <div class="mt-8 text-xs text-black font-medium">
-            &copy; 2026 Novell Digital. Acceso Seguro.<br>
-            <span class="inline-block mt-1">Created by <em class="font-serif-title italic text-[14px] text-[#0f4c81] ml-0.5">Douglas</em></span>
         </div>
     </div>
-
     <script>
         if (!localStorage.getItem('portalSessionId')) {
             document.getElementById('loginContainer').classList.remove('hidden');
