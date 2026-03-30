@@ -682,7 +682,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, addDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc, getDoc, deleteDoc, addDoc, updateDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyAG51FqizcLdlhMmHDhVRstqHpMZKAHJ0A",
@@ -702,6 +702,8 @@
         let globalRole = ''; 
         let globalUsername = ''; 
         let noticiasLocales = []; 
+        let unsubscribeNoticias = null;
+        let unsubscribePracticas = null;
 
         window.formatTextSafe = (text) => {
             if (!text) return '';
@@ -747,9 +749,59 @@
             lucide.createIcons();
         });
 
+        window.iniciarNotificacionesEnTiempoReal = (currentAppId) => {
+            // Limpiar listeners si existían previamente
+            if (unsubscribeNoticias) unsubscribeNoticias();
+            if (unsubscribePracticas) unsubscribePracticas();
+
+            const refNoticias = (currentAppId === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'noticias');
+            const refPracticas = (currentAppId === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'practicas');
+
+            // --- Listener de Noticias ---
+            let initialLoadNoticias = true;
+            unsubscribeNoticias = onSnapshot(refNoticias, (snapshot) => {
+                if (initialLoadNoticias) {
+                    initialLoadNoticias = false; // Ignorar el estado inicial masivo
+                    return;
+                }
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        // Mostrar alerta solo si NO fuimos nosotros mismos los que publicamos
+                        if (data.autor !== globalUsername) {
+                            window.mostrarNotificacion("🔔 Nuevo Aviso", `${data.titulo || 'Se ha publicado una nueva noticia en cartelera.'}`, 'info');
+                            // Si el usuario está viendo las noticias en este instante, actualizar la lista en vivo
+                            if (!document.getElementById('noticiasContainer').classList.contains('hidden')) cargarNoticias();
+                        }
+                    }
+                });
+            }, (error) => console.error("Error onSnapshot noticias:", error));
+
+            // --- Listener de Prácticas ---
+            let initialLoadPracticas = true;
+            unsubscribePracticas = onSnapshot(refPracticas, (snapshot) => {
+                if (initialLoadPracticas) {
+                    initialLoadPracticas = false;
+                    return;
+                }
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === 'added') {
+                        const data = change.doc.data();
+                        if (data.autor !== globalUsername) {
+                            window.mostrarNotificacion("📚 Nueva Práctica", `${data.materiaNombre || 'Se ha asignado un nuevo material de estudio.'}`, 'info');
+                            if (!document.getElementById('practicasContainer').classList.contains('hidden')) cargarPracticas();
+                        }
+                    }
+                });
+            }, (error) => console.error("Error onSnapshot practicas:", error));
+        };
+
         function mostrarDashboard(username, role, conRetraso = false) {
             globalRole = role;
             globalUsername = username;
+            
+            // Iniciar la escucha en segundo plano en el momento que se aprueba el dashboard
+            window.iniciarNotificacionesEnTiempoReal(appId);
 
             if (role === 'admin') {
                 document.getElementById('dashboardTitle').innerText = "Portal de Administración";
@@ -2005,6 +2057,10 @@
         };
 
         window.cerrarSesion = async () => {
+            // Detener las escuchas en segundo plano por seguridad al cerrar sesión
+            if (unsubscribeNoticias) { unsubscribeNoticias(); unsubscribeNoticias = null; }
+            if (unsubscribePracticas) { unsubscribePracticas(); unsubscribePracticas = null; }
+
             const currentSessionId = localStorage.getItem('portalSessionId');
             if (currentSessionId) {
                 try {
