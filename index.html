@@ -28,19 +28,27 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* --- Fondo Premium Elegante --- */
+        /* --- Fondo Estilo Plano Electrónico / Cuaderno --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop');
-            background-size: cover; background-position: center;
+            background-color: #f8fafc; /* Fondo base casi blanco */
+            /* Patrón de cuadrícula muy sutil usando el color principal */
+            background-image: 
+                linear-gradient(rgba(15, 76, 129, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 76, 129, 0.07) 1px, transparent 1px),
+                linear-gradient(rgba(15, 76, 129, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 76, 129, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
+            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
             z-index: -2;
         }
         
         .premium-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background: linear-gradient(135deg, rgba(255,255,255,0.7) 0%, rgba(248,250,252,0.85) 100%);
-            backdrop-filter: blur(12px);
+            /* Sutil viñeta en los bordes para dar profundidad sin borrar la cuadrícula */
+            background: radial-gradient(circle at center, transparent 0%, rgba(248, 250, 252, 0.8) 100%);
             z-index: -1;
+            pointer-events: none;
         }
 
         /* --- Glassmorphism UI --- */
