@@ -630,7 +630,7 @@
                 toast.style.transform = 'translateY(20px)'; 
                 toast.style.transition = 'all 0.4s ease'; 
                 setTimeout(() => toast.remove(), 400); 
-            }, 2500);
+            }, 3500); // Aumenté el tiempo de lectura a 3.5s
         };
 
         window.previewImage = (input) => {
@@ -750,49 +750,113 @@
         });
 
         window.iniciarNotificacionesEnTiempoReal = (currentAppId) => {
-            // Limpiar listeners si existían previamente
             if (unsubscribeNoticias) unsubscribeNoticias();
             if (unsubscribePracticas) unsubscribePracticas();
 
             const refNoticias = (currentAppId === 'root') ? collection(db, 'noticias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'noticias');
             const refPracticas = (currentAppId === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'practicas');
 
+            // CLAVE ÚNICA PARA NO MEZCLAR ENTRE USUARIOS EN EL MISMO NAVEGADOR
+            const safeUsername = globalUsername.replace(/\s+/g, '_').toLowerCase(); 
+            const lsKeyNoticias = `vistas_noticias_${safeUsername}`;
+            const lsKeyPracticas = `vistas_practicas_${safeUsername}`;
+
+            // RECUPERAR HISTORIAL DEL USUARIO O INICIALIZAR
+            let vistasNoticias = JSON.parse(localStorage.getItem(lsKeyNoticias));
+            let isFirstTimeNoticias = !vistasNoticias;
+            if (isFirstTimeNoticias) vistasNoticias = [];
+
+            let vistasPracticas = JSON.parse(localStorage.getItem(lsKeyPracticas));
+            let isFirstTimePracticas = !vistasPracticas;
+            if (isFirstTimePracticas) vistasPracticas = [];
+
             // --- Listener de Noticias ---
             let initialLoadNoticias = true;
             unsubscribeNoticias = onSnapshot(refNoticias, (snapshot) => {
-                if (initialLoadNoticias) {
-                    initialLoadNoticias = false; // Ignorar el estado inicial masivo
-                    return;
-                }
+                let nuevasCount = 0;
+                let ultimaNoticia = null;
+
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === 'added') {
                         const data = change.doc.data();
-                        // Mostrar alerta solo si NO fuimos nosotros mismos los que publicamos
-                        if (data.autor !== globalUsername) {
-                            window.mostrarNotificacion("🔔 Nuevo Aviso", `${data.titulo || 'Se ha publicado una nueva noticia en cartelera.'}`, 'info');
-                            // Si el usuario está viendo las noticias en este instante, actualizar la lista en vivo
-                            if (!document.getElementById('noticiasContainer').classList.contains('hidden')) cargarNoticias();
+                        const docId = change.doc.id;
+
+                        if (isFirstTimeNoticias && initialLoadNoticias) {
+                            // Primera vez usando la app en esta compu: Marcamos todo como leído para no saturar
+                            vistasNoticias.push(docId);
+                        } else if (!vistasNoticias.includes(docId)) {
+                            // ¡ES NUEVA y NO LA HA VISTO!
+                            vistasNoticias.push(docId); // La guardamos como vista
+                            if (data.autor !== globalUsername) {
+                                if (initialLoadNoticias) {
+                                    nuevasCount++; // Acumulamos si estaba desconectado
+                                    ultimaNoticia = data;
+                                } else {
+                                    // Si está online en vivo
+                                    window.mostrarNotificacion("🔔 Nuevo Aviso", `${data.titulo || 'Se ha publicado una nueva noticia.'}`, 'info');
+                                    if (!document.getElementById('noticiasContainer').classList.contains('hidden')) cargarNoticias();
+                                }
+                            }
                         }
                     }
                 });
+
+                // Si se conectó y hay novedades pendientes
+                if (initialLoadNoticias && nuevasCount > 0) {
+                    if (nuevasCount === 1 && ultimaNoticia) {
+                        window.mostrarNotificacion("🔔 Nuevo Aviso", `${ultimaNoticia.titulo || 'Tienes un aviso sin leer.'}`, 'info');
+                    } else {
+                        window.mostrarNotificacion("🔔 Avisos Nuevos", `Tienes ${nuevasCount} noticias sin leer.`, 'info');
+                    }
+                }
+
+                localStorage.setItem(lsKeyNoticias, JSON.stringify(vistasNoticias));
+                initialLoadNoticias = false;
+                isFirstTimeNoticias = false;
             }, (error) => console.error("Error onSnapshot noticias:", error));
 
             // --- Listener de Prácticas ---
             let initialLoadPracticas = true;
             unsubscribePracticas = onSnapshot(refPracticas, (snapshot) => {
-                if (initialLoadPracticas) {
-                    initialLoadPracticas = false;
-                    return;
-                }
+                let nuevasCount = 0;
+                let ultimaPractica = null;
+
                 snapshot.docChanges().forEach((change) => {
                     if (change.type === 'added') {
                         const data = change.doc.data();
-                        if (data.autor !== globalUsername) {
-                            window.mostrarNotificacion("📚 Nueva Práctica", `${data.materiaNombre || 'Se ha asignado un nuevo material de estudio.'}`, 'info');
-                            if (!document.getElementById('practicasContainer').classList.contains('hidden')) cargarPracticas();
+                        const docId = change.doc.id;
+
+                        if (isFirstTimePracticas && initialLoadPracticas) {
+                            vistasPracticas.push(docId);
+                        } else if (!vistasPracticas.includes(docId)) {
+                            // ¡ES NUEVA y NO LA HA VISTO!
+                            vistasPracticas.push(docId);
+                            if (data.autor !== globalUsername) {
+                                if (initialLoadPracticas) {
+                                    nuevasCount++;
+                                    ultimaPractica = data;
+                                } else {
+                                    // En vivo
+                                    window.mostrarNotificacion("📚 Nueva Práctica", `${data.materiaNombre || data.titulo || 'Se ha asignado un nuevo material.'}`, 'info');
+                                    if (!document.getElementById('practicasContainer').classList.contains('hidden')) cargarPracticas();
+                                }
+                            }
                         }
                     }
                 });
+
+                // Si se conectó y hay novedades pendientes
+                if (initialLoadPracticas && nuevasCount > 0) {
+                    if (nuevasCount === 1 && ultimaPractica) {
+                        window.mostrarNotificacion("📚 Práctica Asignada", `${ultimaPractica.materiaNombre || ultimaPractica.titulo || 'Tienes una nueva asignación.'}`, 'info');
+                    } else {
+                        window.mostrarNotificacion("📚 Prácticas Nuevas", `Tienes ${nuevasCount} asignaciones pendientes sin leer.`, 'info');
+                    }
+                }
+
+                localStorage.setItem(lsKeyPracticas, JSON.stringify(vistasPracticas));
+                initialLoadPracticas = false;
+                isFirstTimePracticas = false;
             }, (error) => console.error("Error onSnapshot practicas:", error));
         };
 
