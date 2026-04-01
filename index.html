@@ -31,14 +31,14 @@
         /* --- Fondo Estilo Plano Electrónico / Cuaderno --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Fondo azul oscuro elegante */
-            background-color: #0b1120; 
-            /* Patrón de cuadrícula milimetrada blanca */
+            /* Fondo azul elegante y más claro (no negro) */
+            background-color: #1a365d; 
+            /* Patrón de cuadrícula milimetrada con líneas blancas más visibles */
             background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+                linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
+                linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
             background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
             background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
             z-index: -2;
@@ -46,8 +46,8 @@
         
         .premium-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Viñeta oscura en los bordes para profundidad */
-            background: radial-gradient(circle at center, transparent 0%, rgba(5, 8, 15, 0.6) 100%);
+            /* Viñeta sutil en tono azul marino para dar profundidad sin llegar al negro */
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 25, 47, 0.5) 100%);
             z-index: -1;
             pointer-events: none;
         }
@@ -721,14 +721,12 @@
             return safeText;
         };
 
-        // CORRECCIÓN: Evitar condiciones redundantes que puedan entorpecer la grabación del estado
         window.cambiarHistorial = (vista, ruta) => {
             try {
                 history.pushState({ view: vista }, '', ruta);
             } catch (e) {}
         };
 
-        // CORRECCIÓN: Mejor manejo de popstate para ocultar siempre el login y navegar correctamente
         window.addEventListener('popstate', (e) => {
             const modales = ['modalNoticia', 'modalDetalleNoticia', 'modalPractica', 'modalDetallePractica'];
             modales.forEach(id => {
@@ -736,7 +734,6 @@
                 if (el) el.classList.add('hidden');
             });
 
-            // Si no hay sesión, volver al login
             if (!localStorage.getItem('portalSessionId')) {
                  document.getElementById('loginContainer').classList.remove('hidden');
                  document.getElementById('dashboardContainer').classList.add('hidden');
@@ -750,7 +747,6 @@
             else if (hash.startsWith('#sugerencias')) view = 'sugerencias';
             else if (hash.startsWith('#calificaciones')) view = 'calificaciones';
             
-            // Ocultar todas las pantallas principales
             document.getElementById('loginContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.add('hidden');
@@ -758,7 +754,6 @@
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.add('hidden');
             
-            // Mostrar sólo la que corresponde
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
             else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
@@ -892,16 +887,13 @@
                 document.getElementById('loginContainer').classList.add('hidden');
                 document.getElementById('adminNameDisplay').innerText = username;
                 
-                // CORRECCIÓN: Ocultar todas las pantallas al iniciar sesión para prevenir bugs visuales
                 document.getElementById('noticiasContainer').classList.add('hidden');
                 document.getElementById('sugerenciasContainer').classList.add('hidden');
                 document.getElementById('practicasContainer').classList.add('hidden');
                 document.getElementById('calificacionesContainer').classList.add('hidden');
                 
-                // CORRECCIÓN: Forzar siempre mostrar el Dashboard principal al autenticarse
                 document.getElementById('dashboardContainer').classList.remove('hidden');
                 
-                // CORRECCIÓN: Limpiar la URL de hashes residuales para evitar recargas automáticas en módulos
                 try { 
                     history.replaceState({ view: 'dashboard' }, '', window.location.pathname); 
                 } catch(e){}
