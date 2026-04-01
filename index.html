@@ -31,13 +31,14 @@
         /* --- Fondo Estilo Plano Electrónico / Cuaderno --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-color: #f8fafc; /* Fondo base casi blanco */
-            /* Patrón de cuadrícula muy sutil usando el color principal */
+            /* Fondo azul oscuro elegante */
+            background-color: #0b1120; 
+            /* Patrón de cuadrícula milimetrada blanca */
             background-image: 
-                linear-gradient(rgba(15, 76, 129, 0.07) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(15, 76, 129, 0.07) 1px, transparent 1px),
-                linear-gradient(rgba(15, 76, 129, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(15, 76, 129, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
             background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
             background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
             z-index: -2;
@@ -45,8 +46,8 @@
         
         .premium-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Sutil viñeta en los bordes para dar profundidad sin borrar la cuadrícula */
-            background: radial-gradient(circle at center, transparent 0%, rgba(248, 250, 252, 0.8) 100%);
+            /* Viñeta oscura en los bordes para profundidad */
+            background: radial-gradient(circle at center, transparent 0%, rgba(5, 8, 15, 0.6) 100%);
             z-index: -1;
             pointer-events: none;
         }
