@@ -48,11 +48,11 @@
 
         /* --- Glassmorphism UI --- */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.65);
+            background: rgba(15, 76, 129, 0.7); /* Azul oscuro transparente para todos los paneles */
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
         .glass-card {
@@ -125,7 +125,7 @@
             border-radius: 999px;
             font-weight: 600;
             font-size: 0.85rem;
-            color: #64748b;
+            color: rgba(255, 255, 255, 0.7); /* Texto claro por defecto */
             transition: all 0.3s ease;
             cursor: pointer;
             border: 1px solid transparent;
@@ -133,10 +133,10 @@
         }
         @media (min-width: 640px) { .section-tab { padding: 0.75rem 2rem; font-size: 0.9rem; } }
         .section-tab.active {
-            background: white;
-            color: var(--brand-color);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid rgba(255,255,255,0.8);
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         /* --- Scrollbars & Animaciones --- */
@@ -197,7 +197,7 @@
 
     <main class="w-full pt-20">
         <div class="max-w-[1400px] mx-auto px-4 sm:px-8 mt-6 mb-8 flex justify-center animate-fade overflow-x-auto hide-scrollbar" style="animation-delay: 0.1s;">
-            <div class="glass-panel p-1.5 rounded-full flex gap-1 items-center shadow-sm border border-white/60 shrink-0">
+            <div class="glass-panel p-1.5 rounded-full flex gap-1 items-center shadow-sm border border-white/20 shrink-0">
                 <button onclick="window.switchSection('book')" id="tab-book" class="section-tab active flex items-center gap-2">
                     <i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca
                 </button>
@@ -211,13 +211,13 @@
         </div>
 
         <section id="heroSection" class="w-full relative px-4 sm:px-8 mb-10 animate-fade" style="animation-delay: 0.2s;">
-            <div id="heroContent" class="max-w-[1400px] mx-auto glass-panel rounded-3xl p-8 sm:p-12 border border-white/60 relative overflow-hidden">
+            <div id="heroContent" class="max-w-[1400px] mx-auto glass-panel rounded-3xl p-8 sm:p-12 border border-white/20 relative overflow-hidden">
                 </div>
         </section>
         
         <div class="max-w-[1400px] mx-auto px-4 sm:px-8 mb-8 w-full" id="filterChips">
             <div class="flex overflow-x-auto hide-scrollbar gap-2 pb-2">
-                <button class="px-5 py-2 rounded-full text-sm font-medium bg-white text-[#0f4c81] shadow-sm">Cargando...</button>
+                <button class="px-5 py-2 rounded-full text-sm font-medium bg-[rgba(15,76,129,0.7)] border border-white/20 text-white shadow-sm">Cargando...</button>
             </div>
         </div>
 
@@ -226,27 +226,27 @@
 
     <div id="loginModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="window.closeModal('loginModal')"></div>
-        <div class="relative glass-panel rounded-2xl w-full max-w-sm p-8 text-center animate-fade border border-white/80">
-            <button onclick="window.closeModal('loginModal')" class="absolute top-4 right-4 text-gray-400 hover:text-gray-800 transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
-            <div class="w-12 h-12 rounded-full bg-[#0f4c81]/10 flex items-center justify-center mx-auto mb-4">
-                <i data-lucide="shield" class="w-6 h-6 text-[#0f4c81]"></i>
+        <div class="relative glass-panel rounded-2xl w-full max-w-sm p-8 text-center animate-fade border border-white/20">
+            <button onclick="window.closeModal('loginModal')" class="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            <div class="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4 border border-white/20">
+                <i data-lucide="shield" class="w-6 h-6 text-white"></i>
             </div>
-            <h2 class="text-2xl font-semibold mb-6">Acceso Restringido</h2>
+            <h2 class="text-2xl font-semibold mb-6 text-white">Acceso Restringido</h2>
             <form id="loginForm" class="space-y-5 text-left">
                 <div class="space-y-1">
-                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider pl-1">Identidad</label>
-                    <input type="text" id="loginUser" required class="w-full px-4 py-3 input-glass text-sm bg-white/50" placeholder="Usuario">
+                    <label class="text-xs font-semibold text-blue-200 uppercase tracking-wider pl-1">Identidad</label>
+                    <input type="text" id="loginUser" required class="w-full px-4 py-3 rounded-xl border transition-all text-sm bg-white/10 text-white border-white/20 placeholder-blue-200/50 focus:outline-none focus:bg-white/20 focus:border-white/50" placeholder="Usuario">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-xs font-semibold text-gray-500 uppercase tracking-wider pl-1">Clave de Seguridad</label>
+                    <label class="text-xs font-semibold text-blue-200 uppercase tracking-wider pl-1">Clave de Seguridad</label>
                     <div class="relative">
-                        <input type="password" id="loginPass" required class="w-full px-4 py-3 input-glass text-sm pr-12 bg-white/50" placeholder="••••••••">
-                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0f4c81] transition-colors">
+                        <input type="password" id="loginPass" required class="w-full px-4 py-3 rounded-xl border transition-all text-sm pr-12 bg-white/10 text-white border-white/20 placeholder-blue-200/50 focus:outline-none focus:bg-white/20 focus:border-white/50" placeholder="••••••••">
+                        <button type="button" onclick="window.togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 text-white/50 hover:text-white transition-colors">
                             <i data-lucide="eye" id="eyeIcon" class="w-5 h-5"></i>
                         </button>
                     </div>
                 </div>
-                <button type="submit" class="w-full btn-elegant py-3 mt-4">Verificar Credenciales</button>
+                <button type="submit" class="w-full bg-white text-[#0f4c81] hover:bg-gray-100 py-3 mt-4 rounded-full font-semibold transition-all shadow-md">Verificar Credenciales</button>
             </form>
         </div>
     </div>
@@ -767,13 +767,13 @@
                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full pb-2 animate-fade">
                         <div class="relative w-full sm:w-72 group">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="layers" class="w-4 h-4 text-[#0f4c81]"></i>
+                                <i data-lucide="layers" class="w-4 h-4 text-white"></i>
                             </div>
-                            <select onchange="window.filterByPracticeGroup(this.value)" class="w-full pl-11 pr-10 py-3 input-glass bg-white/70 backdrop-blur-md text-sm font-semibold text-gray-800 appearance-none cursor-pointer hover:bg-white hover:shadow-lg transition-all shadow-sm border border-white/80 focus:ring-2 focus:ring-[#0f4c81]/20 outline-none">
-                                <option value="All" ${activePracticeGroup === 'All' ? 'selected' : ''}>Todas las modalidades</option>
-                                ${practiceGroups.map(c => `<option value="${c}" ${activePracticeGroup === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            <select onchange="window.filterByPracticeGroup(this.value)" class="w-full pl-11 pr-10 py-3 input-glass bg-[rgba(15,76,129,0.7)] backdrop-blur-md text-sm font-semibold text-white appearance-none cursor-pointer hover:bg-[rgba(15,76,129,0.9)] transition-all shadow-sm border border-white/20 focus:ring-2 focus:ring-white/30 outline-none">
+                                <option value="All" class="text-gray-900 bg-white" ${activePracticeGroup === 'All' ? 'selected' : ''}>Todas las modalidades</option>
+                                ${practiceGroups.map(c => `<option value="${c}" class="text-gray-900 bg-white" ${activePracticeGroup === c ? 'selected' : ''}>${c}</option>`).join('')}
                             </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-hover:text-[#0f4c81] transition-colors">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-white/70 group-hover:text-white transition-colors">
                                 <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
                             </div>
                         </div>
@@ -781,13 +781,13 @@
                         ${practiceCats.length > 0 ? `
                         <div class="relative w-full sm:w-72 group">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="book-open" class="w-4 h-4 text-[#0f4c81]"></i>
+                                <i data-lucide="book-open" class="w-4 h-4 text-white"></i>
                             </div>
-                            <select onchange="window.filterByPracticeSubject(this.value)" class="w-full pl-11 pr-10 py-3 input-glass bg-white/70 backdrop-blur-md text-sm font-semibold text-gray-800 appearance-none cursor-pointer hover:bg-white hover:shadow-lg transition-all shadow-sm border border-white/80 focus:ring-2 focus:ring-[#0f4c81]/20 outline-none">
-                                <option value="All" ${activePracticeSubject === 'All' ? 'selected' : ''}>Todas las materias</option>
-                                ${practiceCats.map(c => `<option value="${c}" ${activePracticeSubject === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            <select onchange="window.filterByPracticeSubject(this.value)" class="w-full pl-11 pr-10 py-3 input-glass bg-[rgba(15,76,129,0.7)] backdrop-blur-md text-sm font-semibold text-white appearance-none cursor-pointer hover:bg-[rgba(15,76,129,0.9)] transition-all shadow-sm border border-white/20 focus:ring-2 focus:ring-white/30 outline-none">
+                                <option value="All" class="text-gray-900 bg-white" ${activePracticeSubject === 'All' ? 'selected' : ''}>Todas las materias</option>
+                                ${practiceCats.map(c => `<option value="${c}" class="text-gray-900 bg-white" ${activePracticeSubject === c ? 'selected' : ''}>${c}</option>`).join('')}
                             </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-hover:text-[#0f4c81] transition-colors">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-white/70 group-hover:text-white transition-colors">
                                 <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
                             </div>
                         </div>
@@ -803,15 +803,15 @@
                     <div class="flex items-center justify-center w-full pb-2 animate-fade">
                         <div class="relative w-full sm:w-80 group">
                             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="filter" class="w-4 h-4 text-[#0f4c81]"></i>
+                                <i data-lucide="filter" class="w-4 h-4 text-white"></i>
                             </div>
                             
-                            <select onchange="window.filterByCategory(this.value)" class="w-full pl-11 pr-10 py-3.5 input-glass bg-white/70 backdrop-blur-md text-sm font-semibold text-gray-800 appearance-none cursor-pointer hover:bg-white hover:shadow-lg transition-all shadow-sm border border-white/80 focus:ring-2 focus:ring-[#0f4c81]/20 outline-none">
-                                <option value="All" ${activeFilter === 'All' ? 'selected' : ''}>Todas las categorías</option>
-                                ${allCats.map(c => `<option value="${c}" ${activeFilter === c ? 'selected' : ''}>${c}</option>`).join('')}
+                            <select onchange="window.filterByCategory(this.value)" class="w-full pl-11 pr-10 py-3.5 input-glass bg-[rgba(15,76,129,0.7)] backdrop-blur-md text-sm font-semibold text-white appearance-none cursor-pointer hover:bg-[rgba(15,76,129,0.9)] transition-all shadow-sm border border-white/20 focus:ring-2 focus:ring-white/30 outline-none">
+                                <option value="All" class="text-gray-900 bg-white" ${activeFilter === 'All' ? 'selected' : ''}>Todas las categorías</option>
+                                ${allCats.map(c => `<option value="${c}" class="text-gray-900 bg-white" ${activeFilter === c ? 'selected' : ''}>${c}</option>`).join('')}
                             </select>
                             
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-hover:text-[#0f4c81] transition-colors">
+                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-white/70 group-hover:text-white transition-colors">
                                 <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
                             </div>
                         </div>
@@ -828,7 +828,7 @@
             const booksInSection = books.filter(b => (b.type || 'book') === currentSection);
 
             if (booksInSection.length === 0) {
-                heroContent.innerHTML = `<div class="w-full text-center py-10"><i data-lucide="${currentSection === 'book' ? 'book-dashed' : (currentSection === 'practice' ? 'file-question' : 'pc-case')}" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i><h1 class="text-3xl text-gray-800">Sección en blanco</h1><p class="text-gray-500 mt-2">No hay elementos en esta área aún.</p></div>`;
+                heroContent.innerHTML = `<div class="w-full text-center py-10"><i data-lucide="${currentSection === 'book' ? 'book-dashed' : (currentSection === 'practice' ? 'file-question' : 'pc-case')}" class="w-12 h-12 text-white/50 mx-auto mb-4"></i><h1 class="text-3xl text-white">Sección en blanco</h1><p class="text-blue-200 mt-2">No hay elementos en esta área aún.</p></div>`;
                 shelf.innerHTML = "";
                 lucide.createIcons();
                 return;
@@ -841,16 +841,16 @@
             else { heroTitle = 'Centro de Prácticas'; heroIcon = 'pen-tool'; heroDesc = 'ejercicios resueltos y prácticas para evaluación'; }
 
             heroContent.innerHTML = `
-                <div class="absolute -right-10 -top-10 opacity-5 pointer-events-none">
+                <div class="absolute -right-10 -top-10 opacity-10 pointer-events-none text-white">
                     <i data-lucide="${heroIcon}" class="w-64 h-64"></i>
                 </div>
                 <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
                     <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 text-[#0f4c81] rounded-md text-[10px] font-bold uppercase tracking-widest mb-4 border border-white/80 shadow-sm">
+                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/10 text-white rounded-md text-[10px] font-bold uppercase tracking-widest mb-4 border border-white/20 shadow-sm">
                             <i data-lucide="award" class="w-3 h-3"></i> Colección Premium
                         </div>
-                        <h1 class="text-4xl md:text-5xl lg:text-6xl text-gray-900 tracking-tight mb-4 drop-shadow-sm font-serif-title">${heroTitle}</h1>
-                        <p class="text-gray-600 text-sm md:text-base max-w-xl leading-relaxed">Explora nuestra cuidada selección de ${heroDesc}. Actualmente disponemos de <b class="text-[#0f4c81]">${booksInSection.length}</b> activos listos para su uso.</p>
+                        <h1 class="text-4xl md:text-5xl lg:text-6xl text-white tracking-tight mb-4 drop-shadow-sm font-serif-title">${heroTitle}</h1>
+                        <p class="text-blue-100 text-sm md:text-base max-w-xl leading-relaxed">Explora nuestra cuidada selección de ${heroDesc}. Actualmente disponemos de <b class="text-white font-semibold">${booksInSection.length}</b> activos listos para su uso.</p>
                     </div>
                 </div>`;
 
@@ -1209,7 +1209,7 @@
             shelf.classList.add('hidden');
 
             if (filtered.length === 0) {
-                heroContent.innerHTML = `<div class="w-full text-center py-10 glass-panel rounded-3xl border border-white/60"><i data-lucide="search-x" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i><h2 class="text-xl font-semibold text-gray-900 mb-2 font-serif-title">Sin resultados</h2><p class="text-gray-500 text-sm">No encontramos coincidencias para "${searchStr}" en ninguna sección.</p></div>`;
+                heroContent.innerHTML = `<div class="w-full text-center py-10 glass-panel rounded-3xl border border-white/20"><i data-lucide="search-x" class="w-12 h-12 text-white/50 mx-auto mb-4"></i><h2 class="text-xl font-semibold text-white mb-2 font-serif-title">Sin resultados</h2><p class="text-blue-100 text-sm">No encontramos coincidencias para "${searchStr}" en ninguna sección.</p></div>`;
             } else {
                 heroContent.innerHTML = `
                     <div class="max-w-[1400px] mx-auto animate-fade mb-10">
