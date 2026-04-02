@@ -31,7 +31,7 @@
         /* --- Fondo Personalizado --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-image: url('fondo.png');
+            background-color: var(--brand-color); /* Color de respaldo mientras carga la imagen */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -592,6 +592,23 @@
     </div>
 
     <script>
+        // --- Carga dinámica del fondo (soporta cualquier formato) ---
+        (function() {
+            const extensiones = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            const bgElement = document.querySelector('.premium-bg');
+            let index = 0;
+
+            function probarSiguienteImagen() {
+                if (index >= extensiones.length) return; 
+                const url = `fondo.${extensiones[index]}`;
+                const img = new Image();
+                img.onload = () => { bgElement.style.backgroundImage = `url('${url}')`; };
+                img.onerror = () => { index++; probarSiguienteImagen(); };
+                img.src = url;
+            }
+            probarSiguienteImagen();
+        })();
+
         lucide.createIcons();
 
         window.togglePasswordVisibility = () => {
