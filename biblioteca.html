@@ -56,18 +56,18 @@
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.7);
+            background: rgba(15, 76, 129, 0.7); /* Azul oscuro transparente */
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.9);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .glass-card:hover {
             transform: translateY(-4px);
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-            border: 1px solid #ffffff;
+            background: rgba(15, 76, 129, 0.9); /* Más opaco al pasar el ratón */
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .glass-nav {
@@ -901,16 +901,16 @@
                                     </div>
                                 </div>
                                 <div class="p-4 flex flex-col grow">
-                                    <p class="text-[9px] font-bold text-[#0f4c81] uppercase tracking-wider mb-1 truncate" title="${catsStr}">${catsStr}</p>
-                                    <h4 class="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug mb-2 transition-colors">${b.title}</h4>
+                                    <p class="text-[9px] font-bold text-blue-200 uppercase tracking-wider mb-1 truncate" title="${catsStr}">${catsStr}</p>
+                                    <h4 class="font-semibold text-sm text-white line-clamp-2 leading-snug mb-2 transition-colors">${b.title}</h4>
                                     
                                     ${isPractice ? `
                                         <div class="mt-auto pt-2 space-y-1.5">
-                                            <div class="flex items-center justify-between text-[10px] bg-gray-50 px-2 py-1.5 rounded border border-gray-100 shadow-sm">
-                                                <span class="text-gray-500 font-medium">Publicado:</span>
-                                                <span class="text-gray-800">${formatDateStr(b.publishDate) || 'N/A'}</span>
+                                            <div class="flex items-center justify-between text-[10px] bg-white/10 px-2 py-1.5 rounded border border-white/10 shadow-sm">
+                                                <span class="text-gray-300 font-medium">Publicado:</span>
+                                                <span class="text-white">${formatDateStr(b.publishDate) || 'N/A'}</span>
                                             </div>
-                                            <div class="flex items-center justify-between text-[10px] ${b.dueDate ? 'bg-red-50 border-red-100 text-red-700' : 'bg-gray-50 border-gray-100 text-gray-500'} px-2 py-1.5 rounded border shadow-sm">
+                                            <div class="flex items-center justify-between text-[10px] ${b.dueDate ? 'bg-red-500/20 border-red-400/30 text-red-200' : 'bg-white/10 border-white/10 text-gray-300'} px-2 py-1.5 rounded border shadow-sm">
                                                 <span class="font-medium">Entrega:</span>
                                                 <span class="font-bold">${formatDateStr(b.dueDate) || 'Sin fecha'}</span>
                                             </div>
@@ -1232,7 +1232,7 @@
                                         <img src="${b.coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
                                     </div>
                                     <div class="p-3">
-                                        <h4 class="font-semibold text-xs text-gray-900 line-clamp-2">${b.title}</h4>
+                                        <h4 class="font-semibold text-xs text-white line-clamp-2">${b.title}</h4>
                                     </div>
                                 </div>
                             `).join('')}
