@@ -158,29 +158,29 @@
     </script>
 
     <div id="dashboardContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
-        <div class="glass-panel rounded-3xl p-8 sm:p-12">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 border-b border-gray-300/50 pb-6 gap-4">
+        <div class="bg-[rgba(15,76,129,0.75)] backdrop-blur-[20px] border border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-3xl p-8 sm:p-12">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 border-b border-white/20 pb-6 gap-4">
                 <div>
-                    <h2 id="dashboardTitle" class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Portal Principal</h2>
-                    <p class="text-sm text-gray-600 mt-2">Bienvenido al sistema. Selecciona un módulo para continuar.</p>
+                    <h2 id="dashboardTitle" class="text-3xl font-serif-title font-bold text-white tracking-tight">Portal Principal</h2>
+                    <p class="text-sm text-blue-100 mt-2">Bienvenido al sistema. Selecciona un módulo para continuar.</p>
                 </div>
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-[#0f4c81] flex items-center justify-center shadow-lg shrink-0">
+                    <div class="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center shadow-lg shrink-0">
                         <i data-lucide="user" class="w-6 h-6 text-white"></i>
                     </div>
                     <div class="text-left hidden sm:block">
-                        <p class="text-sm font-bold text-gray-900 capitalize" id="adminNameDisplay">Usuario</p>
-                        <p id="userRoleDisplay" class="text-[10px] text-green-600 font-bold uppercase tracking-widest flex items-center gap-1">
-                            <span class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span> En línea
+                        <p class="text-sm font-bold text-white capitalize" id="adminNameDisplay">Usuario</p>
+                        <p id="userRoleDisplay" class="text-[10px] text-green-300 font-bold uppercase tracking-widest flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse"></span> En línea
                         </p>
                     </div>
                 </div>
             </div>
 
-            <div class="hidden sm:block relative w-full h-40 sm:h-48 md:h-56 mb-8 rounded-2xl overflow-hidden bg-white border border-white/80 shadow-sm">
+            <div class="hidden sm:block relative w-full h-40 sm:h-48 md:h-56 mb-8 rounded-2xl overflow-hidden bg-white/5 border border-white/20 shadow-sm">
                 <img id="bannerSlide1" src="novell contabilidad.png" onerror="this.src='https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-100">
                 <img id="bannerSlide2" src="novell electronica.png" onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop'" class="absolute inset-0 w-full h-full object-cover object-center transition-opacity duration-1000 opacity-0">
-                <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
+                <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/50 to-transparent z-10"></div>
                 <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-20">
                     <div id="dot1" class="w-4 h-2 rounded-full bg-white transition-all duration-500 shadow-sm"></div>
                     <div id="dot2" class="w-2 h-2 rounded-full bg-white/50 transition-all duration-500 shadow-sm"></div>
@@ -188,79 +188,79 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <button onclick="abrirNoticias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-blue-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                <button onclick="abrirNoticias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/30 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="newspaper" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">Noticias y Eventos</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Publica comunicados, anuncios importantes y calendario de actividades.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Noticias y Eventos</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Publica comunicados, anuncios importantes y calendario de actividades.</p>
                     </div>
                 </button>
 
-                <button onclick="window.location.href='biblioteca.html'" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                <button onclick="window.location.href='biblioteca.html'" class="flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-cyan-300/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-cyan-500/20 text-cyan-300 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="library" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-cyan-600 transition-colors">Biblioteca</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Gestiona el repositorio digital, libros, documentos y material de lectura.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Biblioteca</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Gestiona el repositorio digital, libros, documentos y material de lectura.</p>
                     </div>
                 </button>
 
-                <button onclick="window.open('https://meet.google.com/tzo-efrb-qjk', '_blank')" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                <button onclick="window.open('https://meet.google.com/tzo-efrb-qjk', '_blank')" class="flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-emerald-300/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="video" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-emerald-600 transition-colors">Clases Virtuales</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Únete directamente a la sala de Google Meet para tus sesiones en vivo.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Clases Virtuales</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Únete directamente a la sala de Google Meet para tus sesiones en vivo.</p>
                     </div>
                 </button>
 
-                <button onclick="abrirPracticas()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-orange-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                <button onclick="abrirPracticas()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-orange-300/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-orange-500/20 text-orange-300 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="pen-tool" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-orange-600 transition-colors">Prácticas</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Gestiona prácticas en clase y virtuales, fechas de entrega y documentos.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Prácticas</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Gestiona prácticas en clase y virtuales, fechas de entrega y documentos.</p>
                     </div>
                 </button>
 
-                <button onclick="abrirSugerencias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-teal-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
+                <button onclick="abrirSugerencias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-teal-300/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-teal-500/20 text-teal-300 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="message-square" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-teal-600 transition-colors">Chats y Sugerencias</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Espacio para enviar consultas, mensajes o sugerencias institucionales.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Chats y Sugerencias</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Espacio para enviar consultas, mensajes o sugerencias institucionales.</p>
                     </div>
                 </button>
 
-                <button id="btnCalificaciones" onclick="abrirCalificaciones()" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-yellow-400 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-yellow-50 text-yellow-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-yellow-500 group-hover:text-white transition-all duration-300 shadow-sm">
+                <button id="btnCalificaciones" onclick="abrirCalificaciones()" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-yellow-400/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-yellow-500/20 text-yellow-300 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-yellow-500 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="graduation-cap" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-yellow-600 transition-colors">Mis Calificaciones</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Consulta tu historial académico y notas de las materias cursadas.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Mis Calificaciones</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Consulta tu historial académico y notas de las materias cursadas.</p>
                     </div>
                 </button>
 
-                <button id="btnGestion" onclick="window.location.href='registro.html'" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-[#0f4c81]/40 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
-                    <div class="w-14 h-14 rounded-xl bg-[#0f4c81]/10 text-[#0f4c81] flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-[#0f4c81] group-hover:text-white transition-all duration-300 shadow-sm">
+                <button id="btnGestion" onclick="window.location.href='registro.html'" class="hidden flex items-start gap-5 p-6 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/50 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                    <div class="w-14 h-14 rounded-xl bg-white/10 text-white flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-white group-hover:text-[#0f4c81] transition-all duration-300 shadow-sm">
                         <i data-lucide="users" class="w-7 h-7"></i>
                     </div>
                     <div>
-                        <h3 class="text-lg font-bold text-gray-900 mb-1 group-hover:text-[#0f4c81] transition-colors">Registro Académico</h3>
-                        <p class="text-sm text-gray-600 leading-snug">Registra nuevas materias, alumnos y asigna calificaciones.</p>
+                        <h3 class="text-lg font-bold text-white mb-1 transition-colors">Registro Académico</h3>
+                        <p class="text-sm text-blue-100/80 leading-snug">Registra nuevas materias, alumnos y asigna calificaciones.</p>
                     </div>
                 </button>
             </div>
             
-            <div class="mt-10 flex justify-center sm:justify-end border-t border-gray-300/50 pt-6">
-                <button onclick="cerrarSesion()" class="inline-flex items-center gap-2 text-sm font-bold text-red-600 hover:text-white bg-red-50 hover:bg-red-500 px-6 py-3 rounded-full transition-colors border border-red-100 hover:border-red-500 shadow-sm">
+            <div class="mt-10 flex justify-center sm:justify-end border-t border-white/20 pt-6">
+                <button onclick="cerrarSesion()" class="inline-flex items-center gap-2 text-sm font-bold text-red-300 hover:text-white bg-red-500/10 hover:bg-red-500 px-6 py-3 rounded-full transition-colors border border-red-500/20 hover:border-red-500 shadow-sm">
                     <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión Segura
                 </button>
             </div>
@@ -882,14 +882,14 @@
 
             if (role === 'admin') {
                 document.getElementById('dashboardTitle').innerText = "Portal de Administración";
-                document.getElementById('userRoleDisplay').innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-500 inline-block"></span> Administrador`;
-                document.getElementById('userRoleDisplay').className = "text-[10px] text-blue-600 font-bold uppercase tracking-widest flex items-center gap-1";
+                document.getElementById('userRoleDisplay').innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400 inline-block animate-pulse"></span> Administrador`;
+                document.getElementById('userRoleDisplay').className = "text-[10px] text-blue-300 font-bold uppercase tracking-widest flex items-center gap-1";
                 document.getElementById('btnGestion').classList.remove('hidden');
                 document.getElementById('btnCalificaciones').classList.add('hidden');
             } else {
                 document.getElementById('dashboardTitle').innerText = "Portal del Estudiante";
-                document.getElementById('userRoleDisplay').innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Estudiante`;
-                document.getElementById('userRoleDisplay').className = "text-[10px] text-green-600 font-bold uppercase tracking-widest flex items-center gap-1";
+                document.getElementById('userRoleDisplay').innerHTML = `<span class="w-2 h-2 rounded-full bg-green-400 inline-block animate-pulse"></span> Estudiante`;
+                document.getElementById('userRoleDisplay').className = "text-[10px] text-green-300 font-bold uppercase tracking-widest flex items-center gap-1";
                 document.getElementById('btnGestion').classList.add('hidden');
                 document.getElementById('btnCalificaciones').classList.remove('hidden');
             }
