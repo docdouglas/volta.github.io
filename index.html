@@ -28,26 +28,20 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* --- Fondo Estilo Plano Electrónico / Cuaderno --- */
+        /* --- Fondo Personalizado --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Fondo azul elegante y más claro (no negro) */
-            background-color: #1a365d; 
-            /* Patrón de cuadrícula milimetrada con líneas blancas más visibles */
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+            background-image: url('fondo.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             z-index: -2;
         }
         
         .premium-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Viñeta sutil en tono azul marino para dar profundidad sin llegar al negro */
-            background: radial-gradient(circle at center, transparent 0%, rgba(10, 25, 47, 0.5) 100%);
+            /* Viñeta sutil para dar profundidad y mejorar lectura de los paneles */
+            background: radial-gradient(circle at center, transparent 0%, rgba(10, 25, 47, 0.6) 100%);
             z-index: -1;
             pointer-events: none;
         }
