@@ -27,19 +27,14 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* --- Fondo Estilo Plano Electrónico / Cuaderno --- */
+        /* --- Fondo Personalizado Dinámico --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Fondo azul elegante y más claro (no negro) */
+            /* Fondo azul elegante de respaldo mientras carga la imagen */
             background-color: #1a365d; 
-            /* Patrón de cuadrícula milimetrada con líneas blancas más visibles */
-            background-image: 
-                linear-gradient(rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.15) 1px, transparent 1px),
-                linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-            background-size: 100px 100px, 100px 100px, 20px 20px, 20px 20px;
-            background-position: -1px -1px, -1px -1px, -1px -1px, -1px -1px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             z-index: -2;
         }
         
@@ -454,6 +449,26 @@
                 </div>
         </div>
     </div>
+
+    <script>
+        // --- Carga dinámica del fondo (soporta múltiples formatos de imagen) ---
+        (function() {
+            // Lista ampliada de extensiones, priorizando 'jpeg'
+            const extensiones = ['jpeg', 'jpg', 'png', 'webp', 'gif', 'svg', 'avif', 'bmp'];
+            const bgElement = document.querySelector('.premium-bg');
+            let index = 0;
+
+            function probarSiguienteImagen() {
+                if (index >= extensiones.length) return; 
+                const url = `fondo.${extensiones[index]}`;
+                const img = new Image();
+                img.onload = () => { bgElement.style.backgroundImage = `url('${url}')`; };
+                img.onerror = () => { index++; probarSiguienteImagen(); };
+                img.src = url;
+            }
+            probarSiguienteImagen();
+        })();
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
