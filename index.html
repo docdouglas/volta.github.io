@@ -1454,7 +1454,7 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 800; 
+                        const MAX_WIDTH = 600; // Reducido para acelerar la subida
                         let width = img.width;
                         let height = img.height;
 
@@ -1467,9 +1467,11 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.7));
+                        resolve(canvas.toDataURL('image/jpeg', 0.6)); // Mayor compresión para agilizar base de datos
                     };
+                    img.onerror = () => resolve(""); // Evitar que el sistema se cuelgue si falla al leer
                 };
+                reader.onerror = () => resolve("");
             });
         };
 
@@ -1492,6 +1494,10 @@
                     btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
                     lucide.createIcons();
                     imageUrl = await comprimirImagenBase64(file);
+                    
+                    // Actualizar el texto para que el usuario sepa que está subiendo a la base de datos
+                    btn.innerHTML = '<i data-lucide="upload-cloud" class="w-4 h-4 animate-bounce"></i> Subiendo a la nube...';
+                    lucide.createIcons();
                 }
 
                 const data = {
@@ -1907,6 +1913,10 @@
                     btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
                     lucide.createIcons();
                     imageUrl = await comprimirImagenBase64(file);
+                    
+                    // Actualizar el texto para que el usuario sepa que está subiendo a la base de datos
+                    btn.innerHTML = '<i data-lucide="upload-cloud" class="w-4 h-4 animate-bounce"></i> Subiendo a la nube...';
+                    lucide.createIcons();
                 }
 
                 const materiaSel = document.getElementById('practicaMateria').value;
