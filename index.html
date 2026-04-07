@@ -114,9 +114,76 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* --- Estilos para la Intro de Video --- */
+        #introVideoContainer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+            transition: opacity 0.8s ease-out;
+        }
+
+        #introVideo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Asegura que el video cubra toda la pantalla sin distorsionarse */
+            pointer-events: none; /* Evita que los clics interactúen con el reproductor base */
+        }
+
+        #btnSkipIntro {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 10px 20px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #btnSkipIntro:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.05);
+        }
+
+        /* Ocultar el video cuando ya no se necesite */
+        .intro-hidden {
+            opacity: 0 !important;
+            pointer-events: none !important;
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen px-4 py-8">
+
+    <!-- Contenedor del Video de Introducción -->
+    <div id="introVideoContainer">
+        <video id="introVideo" autoplay muted playsinline>
+            <!-- Asegúrate de tener el archivo intro.mp4 en la misma carpeta -->
+            <source src="intro.mp4" type="video/mp4">
+            Tu navegador no soporta la etiqueta de video.
+        </video>
+        <button id="btnSkipIntro" onclick="saltarIntro()">
+            Saltar Intro <i data-lucide="skip-forward" class="w-4 h-4"></i>
+        </button>
+    </div>
 
     <div class="premium-bg"></div>
     <div class="premium-overlay"></div>
@@ -613,6 +680,34 @@
         })();
 
         lucide.createIcons();
+
+        // --- Lógica del Video de Introducción ---
+        const introContainer = document.getElementById('introVideoContainer');
+        const introVideo = document.getElementById('introVideo');
+
+        // Función para saltar u ocultar la intro
+        window.saltarIntro = () => {
+            introContainer.classList.add('intro-hidden');
+            setTimeout(() => {
+                introContainer.style.display = 'none';
+                introVideo.pause(); // Detener la reproducción para ahorrar recursos
+            }, 800); // Esperar a que termine la transición de opacidad (0.8s)
+        };
+
+        // Escuchar el evento 'ended' del video para ocultarlo automáticamente
+        introVideo.addEventListener('ended', window.saltarIntro);
+
+        // Si ya hay una sesión activa, saltar la intro inmediatamente
+        if (localStorage.getItem('portalSessionId')) {
+             introContainer.style.display = 'none';
+        } else {
+             // Si no hay sesión, intentar reproducir (los navegadores bloquean el autoplay con sonido, por eso usamos muted)
+             introVideo.play().catch(e => {
+                 // Si falla el autoplay (muy raro con muted), saltar la intro
+                 console.log("Autoplay bloqueado o archivo no encontrado", e);
+                 window.saltarIntro();
+             });
+        }
 
         window.togglePasswordVisibility = () => {
             const passInput = document.getElementById('loginPass');
