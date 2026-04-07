@@ -122,6 +122,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh; /* Adaptable a pantallas de celulares modernas (Dynamic Viewport) */
             background-color: black;
             z-index: 9999;
             display: flex;
@@ -129,6 +130,7 @@
             align-items: center;
             opacity: 1;
             transition: opacity 0.8s ease-out;
+            overflow: hidden;
         }
 
         #introVideo {
@@ -140,28 +142,42 @@
 
         #btnSkipIntro {
             position: absolute;
-            bottom: 30px;
-            right: 30px;
+            bottom: 20px; /* Margen base para móviles */
+            right: 20px; /* Margen base para móviles */
+            /* Soporte para el notch y barras inferiores de iOS/Android */
+            bottom: max(20px, env(safe-area-inset-bottom));
+            right: max(20px, env(safe-area-inset-right));
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 10px 20px;
+            padding: 8px 16px; /* Botón más compacto en móviles */
             border-radius: 9999px;
-            font-size: 14px;
+            font-size: 13px; /* Texto un poco más pequeño */
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 10000;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         #btnSkipIntro:hover {
             background: rgba(255, 255, 255, 0.4);
             transform: scale(1.05);
+        }
+
+        /* Ajustes del botón para pantallas más grandes (Tablets/PCs) */
+        @media (min-width: 640px) {
+            #btnSkipIntro {
+                bottom: 30px;
+                right: 30px;
+                padding: 10px 20px;
+                font-size: 14px;
+                gap: 8px;
+            }
         }
 
         /* Ocultar el video cuando ya no se necesite */
