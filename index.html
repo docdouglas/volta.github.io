@@ -136,8 +136,14 @@
         #introVideo {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Asegura que el video cubra toda la pantalla sin distorsionarse */
+            object-fit: contain; /* Modificado: Muestra el video completo sin recortes en celulares */
             pointer-events: none; /* Evita que los clics interactúen con el reproductor base */
+        }
+
+        @media (min-width: 768px) {
+            #introVideo {
+                object-fit: cover; /* En tablets y PCs, el video vuelve a cubrir toda la pantalla */
+            }
         }
 
         #btnSkipIntro {
