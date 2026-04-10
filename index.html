@@ -191,7 +191,7 @@
 
     <!-- Contenedor del Video de Introducción -->
     <div id="introVideoContainer">
-        <video id="introVideo" autoplay muted playsinline>
+        <video id="introVideo" playsinline>
             Tu navegador no soporta la etiqueta de video.
         </video>
         <button id="btnSkipIntro" onclick="saltarIntro()">
@@ -719,11 +719,22 @@
              const esMovil = window.innerWidth < 640;
              introVideo.src = esMovil ? 'intro2.mp4' : 'intro.mp4';
              
-             // Si no hay sesión, intentar reproducir (los navegadores bloquean el autoplay con sonido, por eso usamos muted)
+             // Intentar reproducir con sonido. (Los navegadores bloquean el autoplay con sonido sin interacción previa)
              introVideo.play().catch(e => {
-                 // Si falla el autoplay (muy raro con muted), saltar la intro
-                 console.log("Autoplay bloqueado o archivo no encontrado", e);
-                 window.saltarIntro();
+                 console.log("Autoplay con sonido bloqueado por el navegador", e);
+                 
+                 // Creamos un botón para que el usuario interactúe y permita reproducir el sonido
+                 const btnPlay = document.createElement('button');
+                 btnPlay.innerHTML = '<i data-lucide="play" class="w-5 h-5"></i> Reproducir Intro';
+                 btnPlay.className = 'absolute z-[10001] bg-[#0f4c81] text-white px-6 py-3 rounded-full font-bold flex items-center gap-2 shadow-xl hover:scale-105 transition-all';
+                 
+                 btnPlay.onclick = () => {
+                     introVideo.play();
+                     btnPlay.remove();
+                 };
+                 
+                 document.getElementById('introVideoContainer').appendChild(btnPlay);
+                 if (window.lucide) lucide.createIcons();
              });
         }
 
