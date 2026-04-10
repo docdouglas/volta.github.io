@@ -294,7 +294,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <button onclick="abrirNoticias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-blue-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button id="menuNoticias" onclick="abrirNoticias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-blue-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="newspaper" class="w-7 h-7"></i>
                     </div>
@@ -304,7 +304,7 @@
                     </div>
                 </button>
 
-                <button onclick="verificarAccesoBiblioteca()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button id="menuBiblioteca" onclick="verificarAccesoBiblioteca()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="library" class="w-7 h-7"></i>
                     </div>
@@ -314,7 +314,7 @@
                     </div>
                 </button>
 
-                <button onclick="verificarAccesoClasesVirtuales()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button id="menuClases" onclick="verificarAccesoClasesVirtuales()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="video" class="w-7 h-7"></i>
                     </div>
@@ -324,7 +324,7 @@
                     </div>
                 </button>
 
-                <button onclick="abrirPracticas()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-orange-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button id="menuPracticas" onclick="abrirPracticas()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-orange-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-orange-50 text-orange-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="pen-tool" class="w-7 h-7"></i>
                     </div>
@@ -334,7 +334,7 @@
                     </div>
                 </button>
 
-                <button onclick="abrirSugerencias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-teal-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button id="menuChats" onclick="abrirSugerencias()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-teal-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="message-square" class="w-7 h-7"></i>
                     </div>
@@ -1108,6 +1108,27 @@
                 if (estado === 'abandono') {
                     estadoHtml = `<span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Abandono`;
                     textColor = "text-red-600";
+                    
+                    // Mostrar iconos de candado directamente sobre los botones restringidos en el menú
+                    const bloqueados = ['menuBiblioteca', 'menuClases', 'menuPracticas', 'menuChats'];
+                    bloqueados.forEach(id => {
+                        const btn = document.getElementById(id);
+                        if(btn && !btn.querySelector('.lock-badge')) {
+                            btn.classList.add('relative', 'opacity-90');
+                            btn.insertAdjacentHTML('beforeend', '<div class="lock-badge absolute top-4 right-4 bg-red-100 text-red-600 p-2 rounded-xl shadow-sm border border-red-200" title="Acceso Restringido"><i data-lucide="lock" class="w-4 h-4"></i></div>');
+                        }
+                    });
+                } else {
+                    // Quitar candados si se restaura la cuenta
+                    const bloqueados = ['menuBiblioteca', 'menuClases', 'menuPracticas', 'menuChats'];
+                    bloqueados.forEach(id => {
+                        const btn = document.getElementById(id);
+                        if(btn) {
+                            btn.classList.remove('opacity-90');
+                            const lock = btn.querySelector('.lock-badge');
+                            if(lock) lock.remove();
+                        }
+                    });
                 }
 
                 document.getElementById('dashboardTitle').innerText = "Portal del Estudiante";
