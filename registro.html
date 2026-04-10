@@ -31,10 +31,11 @@
         /* --- Fondo Premium Elegante --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-image: url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=2070&auto=format&fit=crop');
+            background-color: #0f4c81; /* Color de respaldo */
+            background-image: url('fondo.jpg'); /* Carga la imagen desde la misma carpeta */
             background-size: cover; background-position: center;
             z-index: -2;
-            opacity: 0.15; /* Muy sutil para evitar oscurecer */
+            opacity: 0.15; /* Muy sutil para evitar oscurecer. Cambia a 1 para verla normal */
         }
         
         .premium-overlay {
@@ -221,6 +222,7 @@
                                 <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Nombre Completo</th>
                                 <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Celular / Contraseña</th>
                                 <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Usuario (Login)</th>
+                                <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider text-center">Estado</th>
                                 <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider">Materias Inscritas</th>
                                 <th class="py-4 px-6 text-xs font-bold text-[#0f4c81] uppercase tracking-wider text-right">Acciones</th>
                             </tr>
@@ -351,6 +353,14 @@
                         <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Celular</label>
                         <input type="text" id="aluCel" required class="w-full mt-1 px-4 py-2.5 input-glass" oninput="updatePreviewAccount()">
                     </div>
+                </div>
+
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Estado Académico</label>
+                    <select id="aluEstado" class="w-full mt-1 px-4 py-2.5 input-glass font-medium text-gray-700">
+                        <option value="activo">🟢 Activo (Permitir Ingreso)</option>
+                        <option value="abandono">🔴 Abandono (Bloquear Cuenta)</option>
+                    </select>
                 </div>
 
                 <div class="bg-gray-50 p-4 rounded-xl border border-gray-200 mt-2">
@@ -486,6 +496,7 @@
                 editingAlumnoId = null;
                 document.getElementById('formAlumno').reset();
                 document.getElementById('modalAlumnoTitle').innerHTML = '<i data-lucide="user-plus" class="w-5 h-5"></i> Registrar Alumno';
+                document.getElementById('aluEstado').value = 'activo';
                 updatePreviewAccount();
                 renderMateriasCheckboxes();
             }
@@ -669,6 +680,7 @@
             const pat = document.getElementById('aluPat').value.trim();
             const cel = document.getElementById('aluCel').value.trim();
             const usuario = nom.toLowerCase().split(' ')[0];
+            const estado = document.getElementById('aluEstado').value;
 
             const id = editingAlumnoId ? editingAlumnoId : ('alu_' + Date.now());
             const data = {
@@ -679,6 +691,7 @@
                 celular: cel,
                 usuario: usuario,
                 password: cel,
+                estado: estado,
                 materiasInscritas: matChecks
             };
 
@@ -706,7 +719,7 @@
         function renderAlumnos() {
             const tbody = document.getElementById('listaAlumnos');
             if(alumnos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-8 text-center text-gray-400">No hay alumnos registrados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-gray-400">No hay alumnos registrados.</td></tr>`;
                 return;
             }
             
@@ -716,17 +729,28 @@
                     return m ? m.nombre : 'Desc.';
                 });
                 
+                const estado = a.estado || 'activo';
+                const badgeClass = estado === 'activo' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-red-100 text-red-700 border-red-200';
+                const badgeText = estado === 'activo' ? 'Activo' : 'Abandono';
+                const toggleIcon = estado === 'activo' ? 'user-x' : 'user-check';
+                const toggleColor = estado === 'activo' ? 'text-orange-500 hover:text-orange-700' : 'text-emerald-500 hover:text-emerald-700';
+                const toggleTitle = estado === 'activo' ? 'Bloquear por Abandono' : 'Desbloquear y Retomar';
+
                 return `
                 <tr class="hover:bg-blue-50/30 transition-colors">
                     <td class="py-3 px-6 text-sm font-semibold text-gray-900">${a.paterno} ${a.materno} ${a.nombre}</td>
                     <td class="py-3 px-6 text-sm text-gray-600 font-mono">${a.celular}</td>
                     <td class="py-3 px-6 text-sm text-[#0f4c81] font-mono font-medium">${a.usuario}</td>
+                    <td class="py-3 px-6 text-center">
+                        <span class="px-2.5 py-1 text-[10px] font-bold uppercase rounded-full border ${badgeClass}">${badgeText}</span>
+                    </td>
                     <td class="py-3 px-6 text-xs text-gray-500">
                         ${matNames.length > 0 ? matNames.map(n => `<span class="inline-block bg-gray-100 px-2 py-1 rounded border border-gray-200 mr-1 mb-1">${n}</span>`).join('') : '<span class="italic">Ninguna</span>'}
                     </td>
-                    <td class="py-3 px-6 text-right">
-                        <button onclick="editarAlumno('${a.id}')" class="text-blue-400 hover:text-blue-600 p-1 mr-2"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                        <button onclick="borrarAlumno('${a.id}')" class="text-red-400 hover:text-red-600 p-1"><i data-lucide="trash" class="w-4 h-4"></i></button>
+                    <td class="py-3 px-6 text-right whitespace-nowrap">
+                        <button onclick="toggleEstadoAlumno('${a.id}', '${estado}')" class="${toggleColor} p-1 mr-2" title="${toggleTitle}"><i data-lucide="${toggleIcon}" class="w-4 h-4"></i></button>
+                        <button onclick="editarAlumno('${a.id}')" class="text-blue-400 hover:text-blue-600 p-1 mr-2" title="Editar Alumno"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button onclick="borrarAlumno('${a.id}')" class="text-red-400 hover:text-red-600 p-1" title="Eliminar"><i data-lucide="trash" class="w-4 h-4"></i></button>
                     </td>
                 </tr>
             `}).join('');
@@ -740,6 +764,7 @@
             document.getElementById('aluMat').value = a.materno;
             document.getElementById('aluNom').value = a.nombre;
             document.getElementById('aluCel').value = a.celular;
+            document.getElementById('aluEstado').value = a.estado || 'activo';
             
             updatePreviewAccount();
             renderMateriasCheckboxes(a.materiasInscritas);
@@ -748,6 +773,22 @@
             document.getElementById('modalAlumno').classList.remove('hidden');
             document.getElementById('modalAlumno').classList.add('flex');
             lucide.createIcons();
+        };
+
+        window.toggleEstadoAlumno = async (id, currentStatus) => {
+            if (!currentUser) return mostrarNotificacion("Error", "No autenticado.", true);
+            const newStatus = currentStatus === 'activo' ? 'abandono' : 'activo';
+            const msg = newStatus === 'activo' ? '¿Desbloquear cuenta? El alumno podrá volver a ingresar.' : '¿Marcar como abandono? Se bloqueará su acceso al portal.';
+            
+            if(confirm(msg)) {
+                try {
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'alumnos', id);
+                    await setDoc(docRef, { estado: newStatus }, { merge: true });
+                    mostrarNotificacion("Estado Actualizado", newStatus === 'activo' ? 'Cuenta desbloqueada.' : 'Cuenta bloqueada.');
+                } catch(err) {
+                    mostrarNotificacion("Error", "No se pudo actualizar el estado.", true);
+                }
+            }
         };
 
         window.borrarAlumno = async (id) => {
