@@ -192,8 +192,6 @@
     <!-- Contenedor del Video de Introducción -->
     <div id="introVideoContainer">
         <video id="introVideo" autoplay muted playsinline>
-            <!-- Asegúrate de tener el archivo intro.mp4 en la misma carpeta -->
-            <source src="intro.mp4" type="video/mp4">
             Tu navegador no soporta la etiqueta de video.
         </video>
         <button id="btnSkipIntro" onclick="saltarIntro()">
@@ -717,6 +715,10 @@
         if (localStorage.getItem('portalSessionId')) {
              introContainer.style.display = 'none';
         } else {
+             // Detectar el tamaño de pantalla y asignar el video correspondiente
+             const esMovil = window.innerWidth < 640;
+             introVideo.src = esMovil ? 'intro2.mp4' : 'intro.mp4';
+             
              // Si no hay sesión, intentar reproducir (los navegadores bloquean el autoplay con sonido, por eso usamos muted)
              introVideo.play().catch(e => {
                  // Si falla el autoplay (muy raro con muted), saltar la intro
