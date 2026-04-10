@@ -1142,6 +1142,13 @@
                             );
 
                             if (alumnoEncontrado) {
+                                // VERIFICACIÓN DE BLOQUEO (ABANDONO)
+                                if (alumnoEncontrado.estado === 'abandono') {
+                                    window.mostrarNotificacion("Acceso Suspendido", "Tu cuenta está bloqueada por abandono. Comunícate con administración.", "error");
+                                    restaurarBoton();
+                                    return; // Cancela el ingreso
+                                }
+
                                 userData = alumnoEncontrado; userRole = 'alumno'; correctAppId = currentId;
                                 localStorage.setItem('alumnoId', alumnoEncontrado.id);
                                 localStorage.setItem('alumnoData', JSON.stringify(alumnoEncontrado));
@@ -1171,6 +1178,13 @@
                             );
 
                             if (alumnoRaiz) {
+                                // VERIFICACIÓN DE BLOQUEO EN BASE DE DATOS RAÍZ
+                                if (alumnoRaiz.estado === 'abandono') {
+                                    window.mostrarNotificacion("Acceso Suspendido", "Tu cuenta está bloqueada por abandono. Comunícate con administración.", "error");
+                                    restaurarBoton();
+                                    return; // Cancela el ingreso
+                                }
+
                                 userData = alumnoRaiz; userRole = 'alumno'; correctAppId = 'root';
                                 localStorage.setItem('alumnoId', alumnoRaiz.id);
                                 localStorage.setItem('alumnoData', JSON.stringify(alumnoRaiz));
