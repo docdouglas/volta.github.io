@@ -314,7 +314,7 @@
                     </div>
                 </button>
 
-                <button onclick="window.open('https://meet.google.com/tzo-efrb-qjk', '_blank')" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button onclick="verificarAccesoClasesVirtuales()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-emerald-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-emerald-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="video" class="w-7 h-7"></i>
                     </div>
@@ -841,6 +841,14 @@
             }
         };
 
+        window.verificarAccesoClasesVirtuales = () => {
+            if (globalEstado === 'abandono') {
+                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a las clases virtuales.", "error");
+            } else {
+                window.open('https://meet.google.com/tzo-efrb-qjk', '_blank');
+            }
+        };
+
         window.previewImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -956,10 +964,21 @@
             
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
-            else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
+            else if (view === 'sugerencias') {
+                if (globalEstado === 'abandono') {
+                    window.mostrarNotificacion("Acceso Restringido", "Cuenta en abandono. Acceso denegado.", "error");
+                    document.getElementById('dashboardContainer').classList.remove('hidden');
+                } else {
+                    document.getElementById('sugerenciasContainer').classList.remove('hidden');
+                }
+            }
             else if (view === 'practicas') {
-                document.getElementById('practicasContainer').classList.remove('hidden');
-                if (globalEstado === 'abandono') document.getElementById('stampPracticas').classList.remove('hidden');
+                if (globalEstado === 'abandono') {
+                    window.mostrarNotificacion("Acceso Restringido", "Cuenta en abandono. Acceso denegado.", "error");
+                    document.getElementById('dashboardContainer').classList.remove('hidden');
+                } else {
+                    document.getElementById('practicasContainer').classList.remove('hidden');
+                }
             }
             else if (view === 'calificaciones') {
                 document.getElementById('calificacionesContainer').classList.remove('hidden');
@@ -1283,6 +1302,10 @@
         let sugerenciasLocales = [];
 
         window.abrirSugerencias = (omitirHistorial) => {
+            if (globalEstado === 'abandono') {
+                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a chats y sugerencias.", "error");
+                return;
+            }
             if (omitirHistorial !== true) window.cambiarHistorial('sugerencias', '#sugerencias');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.remove('hidden');
@@ -1748,6 +1771,11 @@
         let tabPracticasActivo = 'clase';
 
         window.abrirPracticas = async (omitirHistorial) => {
+            if (globalEstado === 'abandono') {
+                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a las prácticas.", "error");
+                return;
+            }
+            
             if (omitirHistorial !== true) window.cambiarHistorial('practicas', '#practicas');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.remove('hidden');
@@ -2298,7 +2326,13 @@
                 nota = Math.round(nota);
                 
                 const aprobado = nota >= 60;
-                const estado = aprobado ? 'Aprobado' : 'Reprobado';
+                let estado = aprobado ? 'Aprobado' : 'Reprobado';
+                
+                // Si el alumno abandonó, cambiamos el texto de 'Reprobado' a 'Abandono'
+                if (globalEstado === 'abandono' && !aprobado) {
+                    estado = 'Abandono';
+                }
+                
                 const colorPill = aprobado ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-red-700 bg-red-100 border-red-200';
                 const colorText = aprobado ? 'text-emerald-600' : 'text-red-500';
 
