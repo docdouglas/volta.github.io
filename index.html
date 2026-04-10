@@ -115,6 +115,33 @@
             scrollbar-width: none;
         }
 
+        /* --- Sello de Abandono --- */
+        .stamp-abandono {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 5rem;
+            font-weight: 900;
+            color: rgba(239, 68, 68, 0.08); /* Rojo muy sutil */
+            text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
+            letter-spacing: 0.2em;
+            border: 6px solid rgba(239, 68, 68, 0.08);
+            padding: 10px 30px;
+            border-radius: 1rem;
+            white-space: nowrap;
+            user-select: none;
+        }
+        @media (min-width: 768px) {
+            .stamp-abandono {
+                font-size: 8rem;
+                border-width: 10px;
+                padding: 20px 50px;
+            }
+        }
+
         /* --- Estilos para la Intro de Video --- */
         #introVideoContainer {
             position: fixed;
@@ -122,7 +149,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            height: 100dvh; /* Adaptable a pantallas de celulares modernas (Dynamic Viewport) */
+            height: 100dvh;
             background-color: black;
             z-index: 9999;
             display: flex;
@@ -136,15 +163,12 @@
         #introVideo {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Asegura que el video cubra toda la pantalla sin distorsionarse */
-            pointer-events: none; /* Evita que los clics interactúen con el reproductor base */
+            object-fit: cover;
+            pointer-events: none;
         }
 
         #btnSkipIntro {
             position: absolute;
-            bottom: 20px; /* Margen base para móviles */
-            right: 20px; /* Margen base para móviles */
-            /* Soporte para el notch y barras inferiores de iOS/Android */
             bottom: max(20px, env(safe-area-inset-bottom));
             right: max(20px, env(safe-area-inset-right));
             background: rgba(255, 255, 255, 0.2);
@@ -152,9 +176,9 @@
             -webkit-backdrop-filter: blur(5px);
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.4);
-            padding: 8px 16px; /* Botón más compacto en móviles */
+            padding: 8px 16px;
             border-radius: 9999px;
-            font-size: 13px; /* Texto un poco más pequeño */
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -169,7 +193,6 @@
             transform: scale(1.05);
         }
 
-        /* Ajustes del botón para pantallas más grandes (Tablets/PCs) */
         @media (min-width: 640px) {
             #btnSkipIntro {
                 bottom: 30px;
@@ -180,7 +203,6 @@
             }
         }
 
-        /* Ocultar el video cuando ya no se necesite */
         .intro-hidden {
             opacity: 0 !important;
             pointer-events: none !important;
@@ -282,7 +304,7 @@
                     </div>
                 </button>
 
-                <button onclick="window.location.href='biblioteca.html'" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
+                <button onclick="verificarAccesoBiblioteca()" class="flex items-start gap-5 p-6 rounded-2xl bg-white/70 hover:bg-white border border-white/80 hover:border-cyan-300 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group text-left">
                     <div class="w-14 h-14 rounded-xl bg-cyan-50 text-cyan-600 flex items-center justify-center shrink-0 group-hover:scale-110 group-hover:bg-cyan-600 group-hover:text-white transition-all duration-300 shadow-sm">
                         <i data-lucide="library" class="w-7 h-7"></i>
                     </div>
@@ -492,8 +514,10 @@
     </div>
 
     <div id="practicasContainer" class="hidden relative w-full max-w-6xl mx-auto animate-fade-scale">
-        <div class="glass-panel rounded-3xl p-8 sm:p-12">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4">
+        <div class="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+            <div id="stampPracticas" class="hidden stamp-abandono">ABANDONO</div>
+            
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4 relative z-20">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Prácticas Asignadas</h2>
                     <p class="text-sm text-gray-600 mt-2">Accede a tus asignaciones, documentos y fechas de entrega.</p>
@@ -510,7 +534,7 @@
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 relative z-20">
                 <div class="flex gap-1 bg-slate-100/80 p-1.5 rounded-full border border-slate-200/60 w-full sm:w-max shadow-inner">
                     <button id="tabClase" onclick="cambiarTabPracticas('clase')" class="flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]">
                         <i data-lucide="users" class="w-4 h-4"></i> En Clase
@@ -526,7 +550,7 @@
                 </div>
             </div>
             
-            <div id="practicasList" class="flex flex-col gap-10 min-h-[250px] w-full"></div>
+            <div id="practicasList" class="flex flex-col gap-10 min-h-[250px] w-full relative z-20"></div>
         </div>
     </div>
 
@@ -660,8 +684,10 @@
     </div>
 
     <div id="calificacionesContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
-        <div class="glass-panel rounded-3xl p-8 sm:p-12">
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4">
+        <div class="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+            <div id="stampCalificaciones" class="hidden stamp-abandono">ABANDONO</div>
+            
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4 relative z-20">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Mis Calificaciones</h2>
                     <p class="text-sm text-gray-600 mt-2">Detalle de tu historial académico y rendimiento por materia.</p>
@@ -671,7 +697,7 @@
                     <span class="hidden sm:inline">Volver al Menú</span>
                 </button>
             </div>
-            <div id="calificacionesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[250px]"></div>
+            <div id="calificacionesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[250px] relative z-20"></div>
         </div>
     </div>
 
@@ -807,6 +833,14 @@
             }, 3500);
         };
 
+        window.verificarAccesoBiblioteca = () => {
+            if (globalEstado === 'abandono') {
+                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a la biblioteca.", "error");
+            } else {
+                window.location.href = 'biblioteca.html';
+            }
+        };
+
         window.previewImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -875,6 +909,7 @@
         let appId = localStorage.getItem('workingAppId') || 'default';
         let globalRole = ''; 
         let globalUsername = ''; 
+        let globalEstado = 'activo';
         let noticiasLocales = []; 
         let unsubscribeNoticias = null;
         let unsubscribePracticas = null;
@@ -922,8 +957,14 @@
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
             else if (view === 'sugerencias') document.getElementById('sugerenciasContainer').classList.remove('hidden');
-            else if (view === 'practicas') document.getElementById('practicasContainer').classList.remove('hidden');
-            else if (view === 'calificaciones') document.getElementById('calificacionesContainer').classList.remove('hidden');
+            else if (view === 'practicas') {
+                document.getElementById('practicasContainer').classList.remove('hidden');
+                if (globalEstado === 'abandono') document.getElementById('stampPracticas').classList.remove('hidden');
+            }
+            else if (view === 'calificaciones') {
+                document.getElementById('calificacionesContainer').classList.remove('hidden');
+                if (globalEstado === 'abandono') document.getElementById('stampCalificaciones').classList.remove('hidden');
+            }
             
             lucide.createIcons();
         });
@@ -1028,9 +1069,10 @@
             }, (error) => console.error("Error onSnapshot practicas:", error));
         };
 
-        function mostrarDashboard(username, role, conRetraso = false) {
+        function mostrarDashboard(username, role, conRetraso = false, estado = 'activo') {
             globalRole = role;
             globalUsername = username;
+            globalEstado = estado;
             
             window.iniciarNotificacionesEnTiempoReal(appId);
 
@@ -1041,9 +1083,17 @@
                 document.getElementById('btnGestion').classList.remove('hidden');
                 document.getElementById('btnCalificaciones').classList.add('hidden');
             } else {
+                let estadoHtml = `<span class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span> En línea`;
+                let textColor = "text-green-600";
+                
+                if (estado === 'abandono') {
+                    estadoHtml = `<span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Abandono`;
+                    textColor = "text-red-600";
+                }
+
                 document.getElementById('dashboardTitle').innerText = "Portal del Estudiante";
-                document.getElementById('userRoleDisplay').innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 inline-block"></span> Estudiante`;
-                document.getElementById('userRoleDisplay').className = "text-[10px] text-green-600 font-bold uppercase tracking-widest flex items-center gap-1";
+                document.getElementById('userRoleDisplay').innerHTML = estadoHtml;
+                document.getElementById('userRoleDisplay').className = `text-[10px] ${textColor} font-bold uppercase tracking-widest flex items-center gap-1`;
                 document.getElementById('btnGestion').classList.add('hidden');
                 document.getElementById('btnCalificaciones').classList.remove('hidden');
             }
@@ -1088,7 +1138,7 @@
                         const docSnap = await getDoc(docRef);
                         if (docSnap && docSnap.exists()) {
                             const userData = docSnap.data();
-                            mostrarDashboard(userData.usuario, userData.rol, false);
+                            mostrarDashboard(userData.usuario, userData.rol, false, userData.estado || 'activo');
                         } else {
                             localStorage.removeItem('portalSessionId');
                             document.getElementById('loginContainer').classList.remove('hidden');
@@ -1125,7 +1175,7 @@
                 let correctAppId = 'default';
 
                 if (inputUser === 'douglas' && inputPass === 'd5720') {
-                    userData = { id: 'admin_master_douglas', usuario: 'Douglas' };
+                    userData = { id: 'admin_master_douglas', usuario: 'Douglas', estado: 'activo' };
                     userRole = 'admin';
                     correctAppId = 'default';
                     localStorage.setItem('adminId', userData.id);
@@ -1142,13 +1192,6 @@
                             );
 
                             if (alumnoEncontrado) {
-                                // VERIFICACIÓN DE BLOQUEO (ABANDONO)
-                                if (alumnoEncontrado.estado === 'abandono') {
-                                    window.mostrarNotificacion("Acceso Suspendido", "Tu cuenta está bloqueada por abandono. Comunícate con administración.", "error");
-                                    restaurarBoton();
-                                    return; // Cancela el ingreso
-                                }
-
                                 userData = alumnoEncontrado; userRole = 'alumno'; correctAppId = currentId;
                                 localStorage.setItem('alumnoId', alumnoEncontrado.id);
                                 localStorage.setItem('alumnoData', JSON.stringify(alumnoEncontrado));
@@ -1178,13 +1221,6 @@
                             );
 
                             if (alumnoRaiz) {
-                                // VERIFICACIÓN DE BLOQUEO EN BASE DE DATOS RAÍZ
-                                if (alumnoRaiz.estado === 'abandono') {
-                                    window.mostrarNotificacion("Acceso Suspendido", "Tu cuenta está bloqueada por abandono. Comunícate con administración.", "error");
-                                    restaurarBoton();
-                                    return; // Cancela el ingreso
-                                }
-
                                 userData = alumnoRaiz; userRole = 'alumno'; correctAppId = 'root';
                                 localStorage.setItem('alumnoId', alumnoRaiz.id);
                                 localStorage.setItem('alumnoData', JSON.stringify(alumnoRaiz));
@@ -1214,18 +1250,19 @@
                     lucide.createIcons();
                     
                     const nombreUsuario = userData.usuario || inputUser;
+                    const userEstado = userData.estado || 'activo';
                     const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
                     
                     try {
                         if (correctAppId === 'root') {
-                            await setDoc(doc(db, 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, creado: new Date().toISOString() });
+                            await setDoc(doc(db, 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, estado: userEstado, creado: new Date().toISOString() });
                         } else {
-                            await setDoc(doc(db, 'artifacts', correctAppId, 'public', 'data', 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, creado: new Date().toISOString() });
+                            await setDoc(doc(db, 'artifacts', correctAppId, 'public', 'data', 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, estado: userEstado, creado: new Date().toISOString() });
                         }
                     } catch (sessionError) {}
                     
                     localStorage.setItem('portalSessionId', newSessionId);
-                    mostrarDashboard(nombreUsuario, userRole, true);
+                    mostrarDashboard(nombreUsuario, userRole, true, userEstado);
                     
                 } else {
                     window.mostrarNotificacion("Acceso Denegado", "Usuario o contraseña incorrectos.", "error");
@@ -1723,6 +1760,12 @@
                 document.getElementById('btnNuevaPractica').classList.remove('flex');
             }
 
+            if (globalEstado === 'abandono') {
+                document.getElementById('stampPracticas').classList.remove('hidden');
+            } else {
+                document.getElementById('stampPracticas').classList.add('hidden');
+            }
+
             if(document.getElementById('buscadorPracticas')) {
                 document.getElementById('buscadorPracticas').value = '';
             }
@@ -2140,6 +2183,13 @@
             if (omitirHistorial !== true) window.cambiarHistorial('calificaciones', '#calificaciones');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.remove('hidden');
+            
+            if (globalEstado === 'abandono') {
+                document.getElementById('stampCalificaciones').classList.remove('hidden');
+            } else {
+                document.getElementById('stampCalificaciones').classList.add('hidden');
+            }
+
             lucide.createIcons();
 
             const container = document.getElementById('calificacionesList');
