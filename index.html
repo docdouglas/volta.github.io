@@ -833,22 +833,6 @@
             }, 3500);
         };
 
-        window.verificarAccesoBiblioteca = () => {
-            if (globalEstado === 'abandono') {
-                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a la biblioteca.", "error");
-            } else {
-                window.location.href = 'biblioteca.html';
-            }
-        };
-
-        window.verificarAccesoClasesVirtuales = () => {
-            if (globalEstado === 'abandono') {
-                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a las clases virtuales.", "error");
-            } else {
-                window.open('https://meet.google.com/tzo-efrb-qjk', '_blank');
-            }
-        };
-
         window.previewImage = (input) => {
             if (input.files && input.files[0]) {
                 const reader = new FileReader();
@@ -927,6 +911,22 @@
             let safeText = text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
             safeText = safeText.replace(/\*(.*?)\*/g, '<strong class="font-extrabold">$1</strong>');
             return safeText;
+        };
+
+        window.verificarAccesoBiblioteca = () => {
+            if (globalEstado === 'abandono') {
+                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a la biblioteca.", "error");
+            } else {
+                window.location.href = 'biblioteca.html';
+            }
+        };
+
+        window.verificarAccesoClasesVirtuales = () => {
+            if (globalEstado === 'abandono') {
+                window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a las clases virtuales.", "error");
+            } else {
+                window.open('https://meet.google.com/tzo-efrb-qjk', '_blank');
+            }
         };
 
         window.cambiarHistorial = (vista, ruta) => {
