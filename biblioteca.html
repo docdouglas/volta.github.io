@@ -30,13 +30,11 @@
         /* --- Fondo Personalizado Dinámico --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-color: #1a365d; 
-            background-image: url('fondo.jpg'); /* Imagen de fondo restaurada */
-            background-size: 100% 100%; /* <-- Modificado para que se vea TODA la imagen en la ventana */
+            background-color: var(--brand-color); /* Color de respaldo mientras carga la imagen */
+            background-size: 100% 100%; /* Para que se vea TODA la imagen en la ventana */
             background-position: center;
             background-repeat: no-repeat;
             z-index: -2;
-            opacity: 0.15; /* Opacidad sutil para no interferir con la lectura */
         }
         
         .premium-overlay {
@@ -566,6 +564,24 @@
         </div>
     </div>
 
+    <script>
+        // --- Carga dinámica del fondo (soporta cualquier formato) ---
+        (function() {
+            const extensiones = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+            const bgElement = document.querySelector('.premium-bg');
+            let index = 0;
+
+            function probarSiguienteImagen() {
+                if (index >= extensiones.length) return; 
+                const url = `fondo.${extensiones[index]}`;
+                const img = new Image();
+                img.onload = () => { bgElement.style.backgroundImage = `url('${url}')`; };
+                img.onerror = () => { index++; probarSiguienteImagen(); };
+                img.src = url;
+            }
+            probarSiguienteImagen();
+        })();
+    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
