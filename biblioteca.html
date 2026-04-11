@@ -1197,14 +1197,23 @@
             document.getElementById('searchInput').value = term;
             document.getElementById('mobileSearchInput').value = term;
             
-            const searchStr = term.toLowerCase().trim();
+            // Función para eliminar acentos y convertir a minúsculas
+            const removeAccents = (str) => {
+                return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
+            };
+            
+            const searchStr = removeAccents(term.trim());
             const shelf = document.getElementById('shelvesContainer');
             const heroContent = document.getElementById('heroContent');
 
             if (!searchStr) { shelf.classList.remove('hidden'); renderApp(); return; }
 
-            const filtered = books.filter(b => b.title.toLowerCase().includes(searchStr) || b.author.toLowerCase().includes(searchStr) || b.id.toLowerCase().includes(searchStr) || getCats(b).some(c => c.toLowerCase().includes(searchStr)))
-                                  .sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })); 
+            const filtered = books.filter(b => 
+                removeAccents(b.title).includes(searchStr) || 
+                removeAccents(b.author).includes(searchStr) || 
+                removeAccents(b.id).includes(searchStr) || 
+                getCats(b).some(c => removeAccents(c).includes(searchStr))
+            ).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })); 
             
             shelf.classList.add('hidden');
 
