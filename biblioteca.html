@@ -30,7 +30,6 @@
         /* --- Fondo Personalizado Dinámico --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Fondo azul elegante de respaldo mientras carga la imagen */
             background-color: #1a365d; 
             background-size: cover;
             background-position: center;
@@ -40,7 +39,6 @@
         
         .premium-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            /* Viñeta sutil en tono azul marino para dar profundidad sin llegar al negro */
             background: radial-gradient(circle at center, transparent 0%, rgba(10, 25, 47, 0.5) 100%);
             z-index: -1;
             pointer-events: none;
@@ -149,6 +147,10 @@
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .animate-fade { animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        /* Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #0f4c81; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #0f4c81; }
     </style>
 </head>
 <body class="antialiased">
@@ -166,18 +168,10 @@
             </div>
             
             <div class="flex items-center gap-3 sm:gap-5">
-                <div class="relative hidden md:flex items-center">
-                    <i data-lucide="search" class="w-4 h-4 absolute left-4 text-gray-400"></i>
-                    <input type="text" id="searchInput" placeholder="Buscar en el repositorio..." class="pl-10 pr-4 py-2 input-glass text-sm w-64 lg:w-80">
-                </div>
-                <button onclick="window.toggleMobileSearch()" class="md:hidden w-10 h-10 rounded-full text-gray-600 hover:bg-white/50 flex items-center justify-center transition-all">
-                    <i data-lucide="search" class="w-5 h-5"></i>
-                </button>
-                
                 <button id="btnUploadNav" onclick="window.openAddBookModal()" class="hidden items-center gap-2 text-sm font-medium text-gray-700 hover:text-[#0f4c81] bg-white/50 hover:bg-white px-4 py-2 rounded-full transition-all border border-white/60 shadow-sm">
-                    <i data-lucide="plus" class="w-4 h-4"></i><span class="hidden sm:inline">Añadir</span>
+                    <i data-lucide="plus" class="w-4 h-4"></i><span class="hidden sm:inline">Añadir Recurso</span>
                 </button>
-                <button id="btnManageCategories" onclick="window.openManageCategories()" class="hidden items-center justify-center w-10 h-10 rounded-full text-gray-700 hover:text-[#0f4c81] bg-white/50 hover:bg-white transition-all border border-white/60 shadow-sm" title="Categorías">
+                <button id="btnManageCategories" onclick="window.openManageCategories()" class="hidden items-center justify-center w-10 h-10 rounded-full text-gray-700 hover:text-[#0f4c81] bg-white/50 hover:bg-white transition-all border border-white/60 shadow-sm" title="Gestión de Materias">
                     <i data-lucide="tags" class="w-4 h-4"></i>
                 </button>
                 
@@ -186,17 +180,10 @@
                 </div>
             </div>
         </div>
-        
-        <div id="mobileSearchBox" class="hidden md:hidden w-full px-4 pb-4 animate-fade">
-            <div class="relative flex items-center">
-                <i data-lucide="search" class="w-4 h-4 absolute left-4 text-gray-400"></i>
-                <input type="text" id="mobileSearchInput" placeholder="Buscar..." class="w-full pl-10 pr-4 py-3 input-glass text-sm">
-            </div>
-        </div>
     </nav>
 
     <main class="w-full pt-20">
-        <div class="max-w-[1400px] mx-auto px-4 sm:px-8 mt-6 mb-8 flex justify-center animate-fade overflow-x-auto hide-scrollbar" style="animation-delay: 0.1s;">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-8 mt-6 mb-6 flex justify-center animate-fade overflow-x-auto hide-scrollbar" style="animation-delay: 0.1s;">
             <div class="glass-panel p-1.5 rounded-full flex gap-1 items-center shadow-sm border border-white/60 shrink-0">
                 <button onclick="window.switchSection('book')" id="tab-book" class="section-tab active flex items-center gap-2">
                     <i data-lucide="book-open" class="w-4 h-4"></i> Biblioteca
@@ -210,20 +197,322 @@
             </div>
         </div>
 
-        <section id="heroSection" class="w-full relative px-4 sm:px-8 mb-10 animate-fade" style="animation-delay: 0.2s;">
-            <div id="heroContent" class="max-w-[1400px] mx-auto glass-panel rounded-3xl p-8 sm:p-12 border border-white/60 relative overflow-hidden">
-                </div>
-        </section>
-        
-        <div class="max-w-[1400px] mx-auto px-4 sm:px-8 mb-8 w-full" id="filterChips">
-            <div class="flex overflow-x-auto hide-scrollbar gap-2 pb-2">
-                <button class="px-5 py-2 rounded-full text-sm font-medium bg-white text-[#0f4c81] shadow-sm">Cargando...</button>
+        <section id="heroSection" class="w-full relative z-50 px-4 sm:px-8 mb-10 animate-fade" style="animation-delay: 0.2s;">
+            <div id="heroContent" class="max-w-[1400px] mx-auto glass-panel rounded-3xl p-8 sm:p-12 border border-white/60 relative overflow-hidden mb-6">
+                <!-- Se llena en JS: Título, Ícono, Texto -->
             </div>
-        </div>
+            
+            <!-- CONTROLES UNIFICADOS: Buscador Gigante + Menú Desplegable -->
+            <div class="max-w-4xl mx-auto flex flex-col md:flex-row gap-3 relative z-40">
+                
+                <!-- Buscador Principal -->
+                <div class="relative group flex-1">
+                    <i data-lucide="search" class="absolute left-6 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400 group-focus-within:text-[#0f4c81] transition-colors"></i>
+                    <input type="text" id="mainSearchInput" oninput="window.executeSearch(this.value)" placeholder="Buscar por título, etiquetas clave o autor..." class="w-full pl-16 pr-14 py-4 md:py-5 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl md:rounded-l-full md:rounded-r-xl shadow-[0_15px_30px_rgba(0,0,0,0.1)] focus:outline-none focus:ring-4 focus:ring-[#0f4c81]/20 focus:border-[#0f4c81]/40 transition-all text-base md:text-lg text-gray-800 placeholder:text-gray-400 font-medium">
+                    <button onclick="document.getElementById('mainSearchInput').value=''; window.executeSearch('');" class="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-gray-400 hover:text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-full transition-colors hidden" id="clearMainSearchBtn" title="Limpiar búsqueda">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                
+                <!-- Dropdown de Categorías -->
+                <div class="relative shrink-0 md:w-72" id="categoryDropdownContainer">
+                    <button onclick="window.toggleCategoryDropdown()" id="dropdownCategoryBtn" class="w-full h-full min-h-[56px] md:min-h-[68px] flex items-center justify-between px-6 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl md:rounded-r-full md:rounded-l-xl shadow-[0_15px_30px_rgba(0,0,0,0.1)] hover:bg-white transition-all text-gray-700 hover:text-[#0f4c81] font-semibold text-base md:text-lg group">
+                        <div class="flex items-center gap-3 overflow-hidden">
+                            <i data-lucide="layers" class="w-5 h-5 text-gray-400 group-hover:text-[#0f4c81]"></i>
+                            <span id="dropdownBtnText" class="truncate">Todas las Categorías</span>
+                        </div>
+                        <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 group-hover:text-[#0f4c81] transition-transform" id="dropdownArrow"></i>
+                    </button>
+                    
+                    <!-- Menú Flotante -->
+                    <div id="categoryDropdownMenu" class="absolute top-[calc(100%+0.5rem)] right-0 w-full md:w-80 bg-white/90 backdrop-blur-xl border border-white/60 shadow-[0_20px_50px_rgba(0,0,0,0.15)] rounded-2xl hidden flex-col overflow-hidden z-50 transform origin-top transition-all duration-200 opacity-0 scale-95">
+                        <div class="max-h-80 overflow-y-auto smooth-scroll py-2" id="dropdownCategoryList">
+                            <!-- Se llena en JS -->
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </section>
 
         <section id="shelvesContainer" class="max-w-[1400px] mx-auto px-4 sm:px-8 pb-24 flex flex-col gap-10 animate-fade" style="animation-delay: 0.4s;"></section>
+        
+        <!-- Contenedor exclusivo para resultados de búsqueda -->
+        <section id="searchResultsContainer" class="max-w-[1400px] mx-auto px-4 sm:px-8 pb-24 flex flex-col gap-10 hidden animate-fade"></section>
     </main>
 
+    <!-- Modal Detalles del Libro -->
+    <div id="bookModal" class="fixed inset-0 z-[150] hidden items-end md:items-center justify-center sm:p-6 overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md" onclick="window.closeModal('bookModal')"></div>
+        
+        <div class="relative bg-white rounded-t-3xl md:rounded-3xl w-full max-w-4xl max-h-[90vh] md:max-h-[85vh] h-full md:h-auto overflow-hidden flex flex-col md:flex-row animate-fade border border-gray-100 shadow-2xl">
+            <button onclick="window.closeModal('bookModal')" class="absolute top-4 right-4 md:top-5 md:right-5 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 z-50 transition-all shadow-sm">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-gray-200 rounded-full md:hidden z-50"></div>
+            
+            <div class="w-full md:w-[38%] p-6 pt-10 md:p-8 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200 flex flex-row md:flex-col items-center md:justify-center gap-6 md:gap-0 shrink-0">
+                <div class="w-32 sm:w-40 md:w-full md:max-w-[220px] shrink-0 relative">
+                    <img id="modalCover" src="" class="w-full rounded-xl shadow-lg border border-gray-200 aspect-[2/3] object-cover md:mb-8">
+                    <div id="modalInactiveBadge" class="hidden absolute top-2 left-2 bg-red-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">INACTIVO</div>
+                </div>
+                <div class="flex flex-col w-full gap-3 md:max-w-[220px]">
+                    <button onclick="window.actionRead()" class="btn-elegant w-full flex justify-center items-center gap-2 py-3 shadow-md">
+                        <i data-lucide="external-link" class="w-4 h-4"></i> <span id="lblAcceder">Acceder al Recurso</span>
+                    </button>
+                    <button onclick="window.copyCode()" class="btn-glass bg-white w-full flex justify-center items-center gap-2 text-xs border-gray-200 hover:bg-gray-100">
+                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar ID Enlace
+                    </button>
+                    <div id="adminActions" class="hidden grid-cols-2 gap-2 mt-2 pt-4 border-t border-gray-200">
+                        <button onclick="window.editCurrentBook()" class="bg-white hover:bg-gray-100 text-gray-600 py-2 rounded-lg text-xs font-semibold transition-all border border-gray-200 shadow-sm"><i data-lucide="edit-3" class="w-3 h-3 inline mr-1"></i> Editar</button>
+                        <button onclick="window.deleteCurrentBook()" class="bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-lg text-xs font-semibold transition-all border border-red-100 shadow-sm"><i data-lucide="trash" class="w-3 h-3 inline mr-1"></i> Borrar</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-full md:w-[62%] p-6 md:p-10 bg-white flex flex-col overflow-y-auto smooth-scroll grow">
+                <div class="flex items-center gap-3 mb-4">
+                    <div id="modalCategoryContainer" class="flex flex-wrap gap-2"></div>
+                    <span class="w-1.5 h-1.5 bg-gray-300 rounded-full mx-1"></span>
+                    <span id="modalTypeBadge" class="text-gray-500 font-medium text-xs uppercase tracking-wider shrink-0">Tipo</span>
+                </div>
+                
+                <h2 id="modalTitle" class="text-2xl sm:text-3xl font-semibold mb-2 text-gray-900 leading-tight">Título del Recurso</h2>
+                <p class="text-sm md:text-base text-gray-500 mb-4 font-medium"><span id="lblResponsable">Autor:</span> <span id="modalAuthorName" class="text-gray-800">Nombre</span></p>
+                
+                <!-- Metadatos de Control de Archivo -->
+                <div id="modalExtraMeta" class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-6 bg-gray-50 p-3 rounded-xl border border-gray-100">
+                    <!-- Se llena dinámicamente -->
+                </div>
+
+                <div id="modalPracticeDates" class="hidden mb-6 flex gap-4">
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 flex-1 shadow-sm">
+                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Publicación</p>
+                        <p id="modalPublishDate" class="text-sm font-semibold text-gray-800"></p>
+                    </div>
+                    <div class="bg-red-50 border border-red-100 rounded-lg px-4 py-2 flex-1 shadow-sm">
+                        <p class="text-[9px] font-bold text-red-400 uppercase tracking-widest">Fecha Entrega</p>
+                        <p id="modalDueDate" class="text-sm font-bold text-red-700"></p>
+                    </div>
+                </div>
+
+                <div class="mb-6 flex-1">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Descripción General</h4>
+                    <p id="modalDescription" class="text-gray-700 leading-relaxed text-sm"></p>
+                </div>
+                
+                <!-- Etiquetas / Tags -->
+                <div class="mb-8 hidden">
+                    <h4 class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-2 flex items-center gap-1"><i data-lucide="tag" class="w-3 h-3"></i> Etiquetas</h4>
+                    <div id="modalTags" class="flex flex-wrap gap-2"></div>
+                </div>
+                
+                <div class="bg-gray-50 p-4 sm:p-5 rounded-2xl border border-gray-200 flex justify-between items-center mt-auto shrink-0">
+                    <div>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Identificador del Sistema</p>
+                        <p id="modalId" class="font-mono font-medium text-gray-800 text-sm md:text-base"></p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Agregado el</p>
+                        <p id="modalAddedDate" class="font-medium text-gray-600 text-xs md:text-sm"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Formulario Mejorado en 3 Secciones -->
+    <div id="addBookModal" class="fixed inset-0 z-[200] hidden items-end md:items-center justify-center sm:p-4 overflow-hidden">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md" onclick="window.closeModal('addBookModal')"></div>
+        <div class="relative bg-white shadow-2xl rounded-t-3xl md:rounded-3xl w-full max-w-4xl max-h-[95vh] h-full md:h-auto flex flex-col animate-fade overflow-hidden mt-auto md:my-4">
+            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-gray-200 rounded-full md:hidden z-50"></div>
+            
+            <div class="px-6 md:px-8 py-5 md:py-6 border-b border-gray-100 bg-white flex items-center justify-between shrink-0 z-10 shadow-sm">
+                <h2 id="modalFormTitle" class="text-xl font-semibold text-gray-900 flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-lg bg-[#0f4c81]/10 flex items-center justify-center"><i data-lucide="layers" class="w-4 h-4 text-[#0f4c81]"></i></div>
+                    Gestión de Activos
+                </h2>
+                <button onclick="window.closeModal('addBookModal')" class="text-gray-400 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 md:p-8 bg-gray-50/50 smooth-scroll">
+                <form id="addBookForm" class="max-w-3xl mx-auto space-y-6">
+                    
+                    <div class="bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
+                        <label class="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-3">Clasificación del Formato</label>
+                        <div class="flex flex-wrap gap-4 sm:gap-8">
+                            <label class="flex items-center gap-2 cursor-pointer group">
+                                <input type="radio" name="assetType" value="book" checked class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
+                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="book-open" class="w-4 h-4 inline text-gray-400 mr-1"></i>Documento / Libro</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer group">
+                                <input type="radio" name="assetType" value="software" class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
+                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="monitor" class="w-4 h-4 inline text-gray-400 mr-1"></i>Software / App</span>
+                            </label>
+                            <label class="flex items-center gap-2 cursor-pointer group">
+                                <input type="radio" name="assetType" value="video" class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
+                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="play-circle" class="w-4 h-4 inline text-gray-400 mr-1"></i>Video / Clase</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-blue-500"></div>
+                        <h3 class="text-sm font-bold text-[#0f4c81] mb-5 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> 1. Información Básica</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Título Completo <span class="text-red-500">*</span></label>
+                                <input type="text" id="addTitle" required class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. Programación de PLC con TIA Portal">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1" id="lblInputAuthor">Autor / Autores <span class="text-red-500">*</span></label>
+                                <input type="text" id="addAuthor" required class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Nombre del responsable...">
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Editorial o Institución</label>
+                                <input type="text" id="addEditorial" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. McGraw Hill, Universidad...">
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Descripción / Resumen <span class="text-red-500">*</span></label>
+                            <textarea id="addDescription" required class="w-full h-24 px-4 py-3 input-glass bg-gray-50 focus:bg-white resize-none" placeholder="Breve resumen de lo que el alumno aprenderá..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-emerald-500"></div>
+                        <h3 class="text-sm font-bold text-emerald-700 mb-5 flex items-center gap-2"><i data-lucide="tags" class="w-4 h-4"></i> 2. Clasificación Académica</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Categoría Principal</label>
+                                <input type="text" id="addMainCategory" list="mainCatsList" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. Automatización Industrial" autocomplete="off">
+                                <datalist id="mainCatsList">
+                                    <option value="Automatización Industrial">
+                                    <option value="Electrotecnia">
+                                    <option value="Desarrollo de Software">
+                                    <option value="Ciencias Básicas">
+                                    <option value="Sistemas Embebidos">
+                                </datalist>
+                            </div>
+                            
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Materia(s) Relacionada(s) <span class="text-red-500">*</span></label>
+                                <div class="flex flex-col gap-2">
+                                    <div class="flex gap-2">
+                                        <select id="categorySelect" class="flex-1 px-4 py-2.5 input-glass appearance-none bg-gray-50 focus:bg-white" onchange="window.addCategoryToForm()">
+                                            <option value="" disabled selected>Seleccione materia...</option>
+                                        </select>
+                                        <button type="button" onclick="window.openManageCategories()" class="btn-glass px-3 bg-gray-50 border-gray-200" title="Añadir Nueva Materia al Sistema"><i data-lucide="settings" class="w-4 h-4"></i></button>
+                                    </div>
+                                    <div id="selectedCategoriesContainer" class="flex flex-wrap gap-2 mt-1"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-1.5">
+                            <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1 flex items-center gap-1"><i data-lucide="tag" class="w-3 h-3"></i> Etiquetas / Palabras clave de búsqueda</label>
+                            <input type="text" id="addTags" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. contactores, plc, estrella-triangulo, motores... (Separados por coma)">
+                            <p class="text-[10px] text-gray-400 pl-1 mt-1">Ayuda a los estudiantes a encontrar este recurso más rápido en el buscador.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-5 md:p-6 rounded-2xl border border-gray-200 shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 left-0 w-1.5 h-full bg-orange-500"></div>
+                        <h3 class="text-sm font-bold text-orange-600 mb-5 flex items-center gap-2"><i data-lucide="server" class="w-4 h-4"></i> 3. Control de Archivo y Sistema</h3>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-[1fr_200px] gap-6 mb-6">
+                            <div class="space-y-5">
+                                <div class="space-y-1.5">
+                                    <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Enlace del Archivo (URL) <span class="text-red-500">*</span></label>
+                                    <input type="url" id="addResourceLink" required class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="https://drive.google.com/... o enlace directo">
+                                </div>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div class="space-y-1.5">
+                                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Tamaño (MB)</label>
+                                        <input type="number" step="0.1" min="0" id="addSizeMB" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. 12.5">
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Nº Páginas</label>
+                                        <input type="number" min="0" id="addPages" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. 340">
+                                    </div>
+                                </div>
+                                
+                                <div class="pt-4 border-t border-gray-100">
+                                    <label class="flex items-center cursor-pointer relative w-max">
+                                        <div class="relative">
+                                            <input type="checkbox" id="addIsActive" class="sr-only toggle-checkbox" checked>
+                                            <div class="block bg-gray-200 w-10 h-6 rounded-full transition-colors border border-gray-300"></div>
+                                            <div class="dot absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 shadow-sm flex items-center justify-center"></div>
+                                        </div>
+                                        <div class="ml-3 font-semibold text-sm text-gray-700">Estado Activo (Visible para los estudiantes)</div>
+                                    </label>
+                                    <style>
+                                        .toggle-checkbox:checked ~ .block { background-color: #10b981; border-color: #10b981; }
+                                        .toggle-checkbox:checked ~ .dot { transform: translateX(100%); }
+                                    </style>
+                                    <p class="text-[10px] text-gray-400 ml-14 mt-1">Si lo desmarcas, el libro se ocultará del catálogo general pero no se borrará.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-1.5">
+                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1 block text-center">Miniatura / Portada</label>
+                                <div onclick="document.getElementById('addCover').click()" class="relative border-2 border-dashed border-gray-300 bg-gray-50 h-[220px] rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 hover:border-orange-500 transition-all overflow-hidden group shadow-sm">
+                                    <input type="file" id="addCover" accept="image/*" class="hidden">
+                                    <div id="imagePreviewContainer" class="hidden h-full w-full">
+                                        <img id="imagePreview" src="" alt="Preview" class="h-full w-full object-cover">
+                                    </div>
+                                    <div id="imagePlaceholder" class="flex flex-col items-center text-gray-400 group-hover:text-orange-500">
+                                        <i data-lucide="image-plus" class="w-8 h-8 mb-2"></i>
+                                        <span class="text-[10px] font-semibold uppercase tracking-wider text-center px-4">Subir Imagen (Opcional)</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div id="practiceFields" class="hidden bg-[#0f4c81]/5 p-5 rounded-xl border border-[#0f4c81]/20 shadow-sm mb-6">
+                        <h4 class="text-[10px] font-bold text-[#0f4c81] uppercase tracking-wider mb-4 flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> Fechas y Grupo de Práctica</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-[#0f4c81] uppercase tracking-wider pl-1">Grupo</label>
+                                <select id="addPracticeGroup" class="w-full px-3 py-2.5 input-glass bg-white text-sm border-[#0f4c81]/30">
+                                    <option value="Ejercicios en Clase">Ejercicios en Clase</option>
+                                    <option value="Prácticas para Casa">Prácticas para Casa</option>
+                                </select>
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-[#0f4c81] uppercase tracking-wider pl-1">Publicación</label>
+                                <input type="date" id="addPublishDate" class="w-full px-3 py-2.5 input-glass bg-white text-sm border-[#0f4c81]/30">
+                            </div>
+                            <div class="space-y-1.5">
+                                <label class="text-[10px] font-bold text-red-500 uppercase tracking-wider pl-1">Entrega</label>
+                                <input type="date" id="addDueDate" class="w-full px-3 py-2.5 input-glass bg-white text-sm border-red-200">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="hiddenSubmit" class="hidden"></button>
+                </form>
+            </div>
+
+            <div class="px-6 md:px-8 py-5 border-t border-gray-200 bg-white flex flex-col sm:flex-row justify-between items-center gap-4 shrink-0 pb-8 md:pb-5 z-10 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+                <p class="text-[11px] text-gray-400 hidden sm:block"><span class="text-red-500 font-bold">*</span> Campos obligatorios</p>
+                <div class="flex gap-3 w-full sm:w-auto">
+                    <button type="button" onclick="window.closeModal('addBookModal')" class="flex-1 sm:flex-none btn-glass bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200 px-6">Cancelar</button>
+                    <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="flex-1 sm:flex-none btn-elegant px-8">Guardar en Repositorio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Login, ManageCategories, etc -->
     <div id="loginModal" class="fixed inset-0 z-[200] hidden items-center justify-center p-4">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="window.closeModal('loginModal')"></div>
         <div class="relative glass-panel rounded-2xl w-full max-w-sm p-8 text-center animate-fade border border-white/80">
@@ -251,197 +540,18 @@
         </div>
     </div>
 
-    <div id="bookModal" class="fixed inset-0 z-[150] hidden items-end md:items-center justify-center sm:p-6 overflow-hidden">
-        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md" onclick="window.closeModal('bookModal')"></div>
-        
-        <div class="relative bg-white rounded-t-3xl md:rounded-3xl w-full max-w-4xl max-h-[90vh] md:max-h-[85vh] h-full md:h-auto overflow-hidden flex flex-col md:flex-row animate-fade border border-gray-100 shadow-2xl">
-            <button onclick="window.closeModal('bookModal')" class="absolute top-4 right-4 md:top-5 md:right-5 p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 z-50 transition-all shadow-sm">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
-            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-gray-200 rounded-full md:hidden z-50"></div>
-            
-            <div class="w-full md:w-[38%] p-6 pt-10 md:p-8 bg-gray-50 border-b md:border-b-0 md:border-r border-gray-200 flex flex-row md:flex-col items-center md:justify-center gap-6 md:gap-0 shrink-0">
-                <div class="w-32 sm:w-40 md:w-full md:max-w-[220px] shrink-0">
-                    <img id="modalCover" src="" class="w-full rounded-xl shadow-lg border border-gray-200 aspect-[2/3] object-cover md:mb-8">
-                </div>
-                <div class="flex flex-col w-full gap-3 md:max-w-[220px]">
-                    <button onclick="window.actionRead()" class="btn-elegant w-full flex justify-center items-center gap-2 py-3 shadow-md">
-                        <i data-lucide="external-link" class="w-4 h-4"></i> <span id="lblAcceder">Acceder al Recurso</span>
-                    </button>
-                    <button onclick="window.copyCode()" class="btn-glass bg-white w-full flex justify-center items-center gap-2 text-xs border-gray-200 hover:bg-gray-100">
-                        <i data-lucide="copy" class="w-4 h-4"></i> Copiar ID Enlace
-                    </button>
-                    <div id="adminActions" class="hidden grid-cols-2 gap-2 mt-2 pt-4 border-t border-gray-200">
-                        <button onclick="window.editCurrentBook()" class="bg-white hover:bg-gray-100 text-gray-600 py-2 rounded-lg text-xs font-semibold transition-all border border-gray-200 shadow-sm"><i data-lucide="edit-3" class="w-3 h-3 inline mr-1"></i> Editar</button>
-                        <button onclick="window.deleteCurrentBook()" class="bg-red-50 hover:bg-red-100 text-red-600 py-2 rounded-lg text-xs font-semibold transition-all border border-red-100 shadow-sm"><i data-lucide="trash" class="w-3 h-3 inline mr-1"></i> Borrar</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="w-full md:w-[62%] p-6 md:p-10 bg-white flex flex-col overflow-y-auto smooth-scroll grow">
-                <div class="flex items-center gap-3 mb-4">
-                    <div id="modalCategoryContainer" class="flex flex-wrap gap-2">
-                        </div>
-                    <span class="w-1.5 h-1.5 bg-gray-300 rounded-full mx-1"></span>
-                    <span id="modalTypeBadge" class="text-gray-500 font-medium text-xs uppercase tracking-wider shrink-0">Tipo</span>
-                </div>
-                <h2 id="modalTitle" class="text-2xl sm:text-3xl font-semibold mb-2 text-gray-900 leading-tight">Título del Recurso</h2>
-                <p class="text-sm md:text-base text-gray-500 mb-6 font-medium"><span id="lblResponsable">Responsable:</span> <span id="modalAuthorName" class="text-gray-800">Nombre</span></p>
-                
-                <div id="modalPracticeDates" class="hidden mb-6 flex gap-4">
-                    <div class="bg-gray-50 border border-gray-200 rounded-lg px-4 py-2 flex-1 shadow-sm">
-                        <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Publicación</p>
-                        <p id="modalPublishDate" class="text-sm font-semibold text-gray-800"></p>
-                    </div>
-                    <div class="bg-red-50 border border-red-100 rounded-lg px-4 py-2 flex-1 shadow-sm">
-                        <p class="text-[9px] font-bold text-red-400 uppercase tracking-widest">Fecha Entrega</p>
-                        <p id="modalDueDate" class="text-sm font-bold text-red-700"></p>
-                    </div>
-                </div>
-
-                <div class="mb-8 flex-1">
-                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Descripción General</h4>
-                    <p id="modalDescription" class="text-gray-700 leading-relaxed text-sm"></p>
-                </div>
-                
-                <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200 flex justify-between items-center mt-auto shrink-0">
-                    <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Identificador del Sistema</p>
-                        <p id="modalId" class="font-mono font-medium text-gray-800 text-sm md:text-base"></p>
-                    </div>
-                    <i data-lucide="database" class="w-6 h-6 text-gray-300"></i>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="addBookModal" class="fixed inset-0 z-[200] hidden items-end md:items-center justify-center sm:p-4 overflow-hidden">
-        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md" onclick="window.closeModal('addBookModal')"></div>
-        <div class="relative bg-white shadow-2xl rounded-t-3xl md:rounded-3xl w-full max-w-2xl max-h-[90vh] h-full md:h-auto flex flex-col animate-fade overflow-hidden mt-auto md:my-4">
-            <div class="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-gray-200 rounded-full md:hidden z-50"></div>
-            
-            <div class="px-6 md:px-8 py-5 md:py-6 border-b border-gray-100 bg-white flex items-center justify-between shrink-0">
-                <h2 id="modalFormTitle" class="text-xl font-semibold text-gray-900 flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-lg bg-[#0f4c81]/10 flex items-center justify-center"><i data-lucide="plus-circle" class="w-4 h-4 text-[#0f4c81]"></i></div>
-                    Gestión de Activos
-                </h2>
-                <button onclick="window.closeModal('addBookModal')" class="text-gray-400 hover:text-gray-800 hover:bg-gray-100 p-2 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
-            </div>
-
-            <div class="flex-1 overflow-y-auto p-6 md:p-8 bg-white smooth-scroll">
-                <form id="addBookForm" class="space-y-6">
-                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-100 shadow-sm">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">Clasificación del Activo</label>
-                        <div class="flex flex-wrap gap-4 sm:gap-6">
-                            <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="radio" name="assetType" value="book" checked class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
-                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="book-open" class="w-4 h-4 inline text-gray-400 mr-1"></i>Documento / Libro</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="radio" name="assetType" value="software" class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
-                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="monitor" class="w-4 h-4 inline text-gray-400 mr-1"></i>Software / App</span>
-                            </label>
-                            <label class="flex items-center gap-2 cursor-pointer group">
-                                <input type="radio" name="assetType" value="video" class="w-4 h-4 text-[#0f4c81] focus:ring-[#0f4c81]">
-                                <span class="text-sm font-medium text-gray-700 group-hover:text-gray-900"><i data-lucide="play-circle" class="w-4 h-4 inline text-gray-400 mr-1"></i>Video / Clase</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div id="practiceFields" class="hidden bg-[#0f4c81]/5 p-5 rounded-xl border border-[#0f4c81]/20 shadow-sm">
-                        <h4 class="text-[10px] font-bold text-[#0f4c81] uppercase tracking-wider mb-4 flex items-center gap-2"><i data-lucide="calendar" class="w-4 h-4"></i> Fechas y Grupo de Práctica</h4>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-[#0f4c81] uppercase tracking-wider pl-1">Grupo</label>
-                                <select id="addPracticeGroup" class="w-full px-3 py-2.5 input-glass bg-white text-sm border-[#0f4c81]/30">
-                                    <option value="Ejercicios en Clase">Ejercicios en Clase</option>
-                                    <option value="Prácticas para Casa">Prácticas para Casa</option>
-                                </select>
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-[#0f4c81] uppercase tracking-wider pl-1">Publicación</label>
-                                <input type="date" id="addPublishDate" class="w-full px-3 py-2.5 input-glass bg-white text-sm border-[#0f4c81]/30">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[10px] font-bold text-red-500 uppercase tracking-wider pl-1">Entrega</label>
-                                <input type="date" id="addDueDate" class="w-full px-3 py-2.5 input-glass bg-white text-sm border-red-200">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Título</label>
-                            <input type="text" id="addTitle" required class="w-full px-4 py-2.5 input-glass bg-white" placeholder="Ej. Diseño Estructural...">
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1" id="lblInputAuthor">Autor / Responsable</label>
-                            <input type="text" id="addAuthor" required class="w-full px-4 py-2.5 input-glass bg-white" placeholder="Nombre...">
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Materia(s) / Categoría(s)</label>
-                            <div class="flex flex-col gap-2">
-                                <div class="flex gap-2">
-                                    <select id="categorySelect" class="flex-1 px-4 py-2.5 input-glass appearance-none bg-white" onchange="window.addCategoryToForm()">
-                                        <option value="" disabled selected>Añadir materia...</option>
-                                    </select>
-                                    <button type="button" onclick="window.openManageCategories()" class="btn-glass px-3" title="Gestionar Materias"><i data-lucide="settings" class="w-4 h-4"></i></button>
-                                </div>
-                                <div id="selectedCategoriesContainer" class="flex flex-wrap gap-2 mt-1">
-                                    </div>
-                            </div>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Enlace de Acceso (URL)</label>
-                            <input type="url" id="addResourceLink" required class="w-full px-4 py-2.5 input-glass bg-white" placeholder="https://drive.google.com/...">
-                        </div>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-[160px_1fr] gap-6">
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Miniatura / Portada</label>
-                            <div onclick="document.getElementById('addCover').click()" class="relative border-2 border-dashed border-gray-300 bg-gray-50 h-[180px] rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-100 hover:border-[#0f4c81]/50 transition-all overflow-hidden group">
-                                <input type="file" id="addCover" accept="image/*" class="hidden">
-                                <div id="imagePreviewContainer" class="hidden h-full w-full">
-                                    <img id="imagePreview" src="" alt="Preview" class="h-full w-full object-cover">
-                                </div>
-                                <div id="imagePlaceholder" class="flex flex-col items-center text-gray-400 group-hover:text-[#0f4c81]">
-                                    <i data-lucide="image-plus" class="w-8 h-8 mb-2"></i>
-                                    <span class="text-[10px] font-semibold uppercase tracking-wider">Subir Imagen</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="space-y-1.5">
-                            <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Resumen o Descripción</label>
-                            <textarea id="addDescription" required class="w-full h-[180px] px-4 py-3 input-glass bg-white resize-none" placeholder="Escriba los detalles..."></textarea>
-                        </div>
-                    </div>
-                    <button type="submit" id="hiddenSubmit" class="hidden"></button>
-                </form>
-            </div>
-
-            <div class="px-6 md:px-8 py-5 border-t border-gray-100 bg-white flex justify-end gap-3 shrink-0 pb-8 md:pb-5">
-                <button type="button" onclick="window.closeModal('addBookModal')" class="btn-glass bg-gray-50 hover:bg-gray-100 text-gray-700 border-gray-200 px-6">Cancelar</button>
-                <button type="button" onclick="document.getElementById('hiddenSubmit').click()" id="modalFormSubmitBtn" class="btn-elegant px-8">Guardar en Repositorio</button>
-            </div>
-        </div>
-    </div>
-
     <div id="manageCategoriesModal" class="fixed inset-0 z-[250] hidden items-center justify-center p-4 overflow-hidden">
         <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="window.closeModal('manageCategoriesModal')"></div>
         <div class="relative bg-white shadow-2xl rounded-2xl w-full max-w-sm max-h-[80vh] flex flex-col animate-fade overflow-hidden border border-gray-100">
             <div class="px-6 py-4 border-b border-gray-100 bg-gray-50 flex items-center justify-between shrink-0">
                 <h2 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-                    <i data-lucide="tags" class="w-4 h-4 text-[#0f4c81]"></i> Categorías Generales
+                    <i data-lucide="tags" class="w-4 h-4 text-[#0f4c81]"></i> Gestión de Materias
                 </h2>
                 <button onclick="window.closeModal('manageCategoriesModal')" class="text-gray-500 hover:text-gray-800 hover:bg-gray-200 p-1.5 rounded-full transition-colors"><i data-lucide="x" class="w-4 h-4"></i></button>
             </div>
             
             <div class="p-4 border-b border-gray-100 bg-white flex gap-2 shrink-0">
-                <input type="text" id="newCategoryInput" class="flex-1 px-4 py-2 input-glass bg-white text-sm border-gray-200" placeholder="Nueva categoría...">
+                <input type="text" id="newCategoryInput" class="flex-1 px-4 py-2 input-glass bg-white text-sm border-gray-200" placeholder="Nueva materia...">
                 <button onclick="window.addNewCategoryFromModal()" class="btn-elegant px-4 flex items-center justify-center shadow-sm"><i data-lucide="plus" class="w-4 h-4"></i></button>
             </div>
             
@@ -450,25 +560,6 @@
         </div>
     </div>
 
-    <script>
-        // --- Carga dinámica del fondo (soporta múltiples formatos de imagen) ---
-        (function() {
-            // Lista ampliada de extensiones, priorizando 'jpeg'
-            const extensiones = ['jpeg', 'jpg', 'png', 'webp', 'gif', 'svg', 'avif', 'bmp'];
-            const bgElement = document.querySelector('.premium-bg');
-            let index = 0;
-
-            function probarSiguienteImagen() {
-                if (index >= extensiones.length) return; 
-                const url = `fondo.${extensiones[index]}`;
-                const img = new Image();
-                img.onload = () => { bgElement.style.backgroundImage = `url('${url}')`; };
-                img.onerror = () => { index++; probarSiguienteImagen(); };
-                img.src = url;
-            }
-            probarSiguienteImagen();
-        })();
-    </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -495,9 +586,7 @@
         let books = [];
         let categories = [];
         let activeFilter = 'All';
-        let activePracticeGroup = 'All'; // Nuevo estado para Prácticas
-        let activePracticeSubject = 'All'; // Nuevo estado para Prácticas
-        let currentSection = 'book'; // 'book', 'software' o 'practice'
+        let currentSection = 'book'; 
         let isAdmin = localStorage.getItem('winLibraryAdmin') === 'true';
         let currentViewBookId = null;
         let editingBookId = null;
@@ -516,6 +605,12 @@
             return `${parts[2]}/${parts[1]}/${parts[0]}`;
         };
 
+        const formatFullDate = (isoStr) => {
+            if (!isoStr) return '';
+            const d = new Date(isoStr);
+            return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
+        };
+
         const initAuth = async () => {
           try {
               if (initialAuthToken) await signInWithCustomToken(auth, initialAuthToken);
@@ -528,13 +623,13 @@
             if (user) {
                 onSnapshot(booksCollection, (snap) => {
                     books = snap.docs.map(d => d.data());
-                    if (!document.getElementById('searchInput').value.trim()) renderApp();
-                    renderFilterChips();
+                    if (!document.getElementById('mainSearchInput').value.trim()) renderApp();
+                    renderCategoryDropdown();
                 });
                 onSnapshot(categoriesCollection, (snap) => {
                     categories = snap.docs.map(d => d.data());
                     updateCategoryDropdown();
-                    renderFilterChips();
+                    renderCategoryDropdown();
                     if (!document.getElementById('manageCategoriesModal').classList.contains('hidden')) {
                         window.renderCategoriesList();
                     }
@@ -542,15 +637,103 @@
             }
         });
 
+        // --- SISTEMA DROPDOWN DE CATEGORÍAS ---
+        window.toggleCategoryDropdown = () => {
+            const menu = document.getElementById('categoryDropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                arrow.classList.add('rotate-180');
+                // Retardo minúsculo para que el navegador procese la eliminación del hidden y aplique la animación
+                requestAnimationFrame(() => {
+                    menu.classList.remove('opacity-0', 'scale-95');
+                    menu.classList.add('opacity-100', 'scale-100');
+                });
+            } else {
+                window.closeCategoryDropdown();
+            }
+        };
+
+        window.closeCategoryDropdown = () => {
+            const menu = document.getElementById('categoryDropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
+            if (!menu) return;
+            
+            menu.classList.remove('opacity-100', 'scale-100');
+            menu.classList.add('opacity-0', 'scale-95');
+            arrow.classList.remove('rotate-180');
+            
+            setTimeout(() => {
+                menu.classList.add('hidden');
+            }, 200); // Igual a duration-200 en Tailwind
+        };
+
+        // Cerrar dropdown al hacer clic afuera
+        document.addEventListener('click', (e) => {
+            const container = document.getElementById('categoryDropdownContainer');
+            if (container && !container.contains(e.target)) {
+                window.closeCategoryDropdown();
+            }
+        });
+
+        function renderCategoryDropdown() {
+            const list = document.getElementById('dropdownCategoryList');
+            if (!list) return;
+            
+            let booksInSection = books.filter(b => (b.type || 'book') === currentSection);
+            if (!isAdmin) booksInSection = booksInSection.filter(b => b.isActive !== false);
+            
+            const mainCats = [...new Set(booksInSection.map(b => b.mainCategory))]
+                .filter(Boolean)
+                .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
+
+            const activeClass = "bg-[#0f4c81]/5 text-[#0f4c81] font-bold border-l-4 border-[#0f4c81]";
+            const inactiveClass = "text-gray-700 hover:bg-gray-50 hover:text-[#0f4c81] font-medium border-l-4 border-transparent";
+
+            list.innerHTML = `
+                <button onclick="window.filterByMainCategory('All')" class="w-full text-left px-5 py-3 transition-colors text-sm ${activeFilter === 'All' ? activeClass : inactiveClass}">
+                    Todas las Categorías
+                </button>
+                ${mainCats.map(c => `
+                    <button onclick="window.filterByMainCategory('${c.replace(/'/g, "\\'")}')" class="w-full text-left px-5 py-3 transition-colors text-sm ${activeFilter === c ? activeClass : inactiveClass}">
+                        ${c}
+                    </button>
+                `).join('')}
+            `;
+            
+            // Actualizar texto del botón principal
+            const btnText = document.getElementById('dropdownBtnText');
+            if(btnText) btnText.textContent = activeFilter === 'All' ? 'Todas las Categorías' : activeFilter;
+        }
+
+        window.filterByMainCategory = (cat) => {
+            activeFilter = cat;
+            document.getElementById('mainSearchInput').value = '';
+            document.getElementById('clearMainSearchBtn').classList.add('hidden');
+            
+            window.closeCategoryDropdown();
+            
+            // Ocultar la capa de búsquedas si estaba abierta
+            document.getElementById('searchResultsContainer').classList.add('hidden');
+            document.getElementById('shelvesContainer').classList.remove('hidden');
+            
+            renderCategoryDropdown();
+            renderApp();
+            
+            // Scroll suave hacia los resultados
+            if (cat !== 'All') {
+                const shelf = document.getElementById('shelvesContainer');
+                window.scrollTo({ top: shelf.offsetTop - 120, behavior: 'smooth' });
+            }
+        };
+
         // --- NAVEGACIÓN Y SECCIONES ---
         window.switchSection = (section) => {
             currentSection = section;
             activeFilter = 'All';
-            activePracticeGroup = 'All';
-            activePracticeSubject = 'All';
-            document.getElementById('searchInput').value = '';
+            document.getElementById('mainSearchInput').value = '';
             
-            // Actualización de pestañas visuales
             const tabBook = document.getElementById('tab-book');
             const tabSoftware = document.getElementById('tab-software');
             const tabVideo = document.getElementById('tab-video');
@@ -559,8 +742,12 @@
             if (tabSoftware) tabSoftware.className = `section-tab flex items-center gap-2 ${section === 'software' ? 'active' : ''}`;
             if (tabVideo) tabVideo.className = `section-tab flex items-center gap-2 ${section === 'video' ? 'active' : ''}`;
             
-            renderFilterChips();
+            renderCategoryDropdown();
             renderApp();
+            
+            // Ocultar resultados si estaban abiertos y mostrar el catálogo
+            document.getElementById('searchResultsContainer').classList.add('hidden');
+            document.getElementById('shelvesContainer').classList.remove('hidden');
         };
 
         // --- SISTEMA HISTORY API MODALES ---
@@ -609,16 +796,15 @@
             lucide.createIcons();
         };
 
-        // Selector dinámico para mostrar panel de Prácticas y cambiar etiqueta
         document.querySelectorAll('input[name="assetType"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 const val = e.target.value;
                 const lbl = document.getElementById('lblInputAuthor');
                 
-                if(val === 'software') lbl.innerText = 'Desarrollador / Empresa';
-                else if(val === 'practice') lbl.innerText = 'Docente / Auxiliar';
-                else if(val === 'video') lbl.innerText = 'Creador / Canal';
-                else lbl.innerText = 'Autor / Responsable';
+                if(val === 'software') lbl.innerText = 'Desarrollador / Empresa *';
+                else if(val === 'practice') lbl.innerText = 'Docente / Auxiliar *';
+                else if(val === 'video') lbl.innerText = 'Creador / Canal *';
+                else lbl.innerText = 'Autor / Autores *';
 
                 const pFields = document.getElementById('practiceFields');
                 if(val === 'practice') pFields.classList.remove('hidden');
@@ -652,7 +838,7 @@
             }
         });
 
-        // --- SISTEMA DE ETIQUETAS MÚLTIPLES ---
+        // --- MATERIAS / CATEGORÍAS EN FORMULARIO ---
         window.addCategoryToForm = () => {
             const select = document.getElementById('categorySelect');
             const val = select.value;
@@ -671,7 +857,7 @@
         window.renderSelectedCategoriesForForm = () => {
             const container = document.getElementById('selectedCategoriesContainer');
             if (selectedCategoriesForForm.length === 0) {
-                container.innerHTML = '<span class="text-xs text-gray-400 italic">No has añadido categorías/materias aún.</span>';
+                container.innerHTML = '<span class="text-xs text-gray-400 italic">Ninguna materia seleccionada aún.</span>';
                 return;
             }
             container.innerHTML = selectedCategoriesForForm.map(c => `
@@ -689,6 +875,7 @@
             if (isAdmin) {
                 isAdmin = false; localStorage.setItem('winLibraryAdmin', 'false');
                 updateAuthUI(); mostrarNotificacion("Información", "Sesión cerrada correctamente.");
+                renderApp(); 
             } else { window.openModal('loginModal'); }
         };
 
@@ -701,6 +888,7 @@
                 window.closeModal('loginModal'); updateAuthUI();
                 mostrarNotificacion("Seguridad", "Administrador conectado.");
                 document.getElementById('loginForm').reset();
+                renderApp(); 
             } else { mostrarNotificacion("Error", "Credenciales incorrectas."); }
         });
 
@@ -725,113 +913,55 @@
             }
         }
 
-        window.filterByCategory = (cat) => {
-            activeFilter = cat;
-            document.getElementById('searchInput').value = '';
-            renderFilterChips();
-            renderApp();
-            if (cat !== 'All') {
-                const shelf = document.getElementById('shelvesContainer');
-                window.scrollTo({ top: shelf.offsetTop - 100, behavior: 'smooth' });
-            }
-        };
+        // --- CARTA REUTILIZABLE PARA CATÁLOGO Y BÚSQUEDA ---
+        window.generateBookCardHTML = (b) => {
+            const bCats = getCats(b);
+            const catsStr = bCats.length > 0 ? bCats.join(' • ') : (b.mainCategory || 'General');
+            const isPractice = (b.type === 'practice');
+            const isInactive = b.isActive === false;
 
-        window.filterByPracticeGroup = (grp) => {
-            activePracticeGroup = grp;
-            document.getElementById('searchInput').value = '';
-            renderFilterChips();
-            renderApp();
-        };
-
-        window.filterByPracticeSubject = (sub) => {
-            activePracticeSubject = sub;
-            document.getElementById('searchInput').value = '';
-            renderFilterChips();
-            renderApp();
-        };
-
-        function renderFilterChips() {
-            const chipContainer = document.getElementById('filterChips');
-            if (!chipContainer) return;
-            
-            const booksInSection = books.filter(b => (b.type || 'book') === currentSection);
-            
-            if (currentSection === 'practice') {
-                // Grupos fijos para prácticas y Materias dinámicas
-                const practiceGroups = ['Ejercicios en Clase', 'Prácticas para Casa'];
-                const practiceCats = [...new Set(booksInSection.flatMap(b => getCats(b)))]
-                    .filter(Boolean)
-                    .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
-                
-                chipContainer.innerHTML = `
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 w-full pb-2 animate-fade">
-                        <div class="relative w-full sm:w-72 group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="layers" class="w-4 h-4 text-[#0f4c81]"></i>
-                            </div>
-                            <select onchange="window.filterByPracticeGroup(this.value)" class="w-full pl-11 pr-10 py-3 input-glass bg-white/70 backdrop-blur-md text-sm font-semibold text-gray-800 appearance-none cursor-pointer hover:bg-white hover:shadow-lg transition-all shadow-sm border border-white/80 focus:ring-2 focus:ring-[#0f4c81]/20 outline-none">
-                                <option value="All" ${activePracticeGroup === 'All' ? 'selected' : ''}>Todas las modalidades</option>
-                                ${practiceGroups.map(c => `<option value="${c}" ${activePracticeGroup === c ? 'selected' : ''}>${c}</option>`).join('')}
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-hover:text-[#0f4c81] transition-colors">
-                                <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
-                            </div>
-                        </div>
-
-                        ${practiceCats.length > 0 ? `
-                        <div class="relative w-full sm:w-72 group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="book-open" class="w-4 h-4 text-[#0f4c81]"></i>
-                            </div>
-                            <select onchange="window.filterByPracticeSubject(this.value)" class="w-full pl-11 pr-10 py-3 input-glass bg-white/70 backdrop-blur-md text-sm font-semibold text-gray-800 appearance-none cursor-pointer hover:bg-white hover:shadow-lg transition-all shadow-sm border border-white/80 focus:ring-2 focus:ring-[#0f4c81]/20 outline-none">
-                                <option value="All" ${activePracticeSubject === 'All' ? 'selected' : ''}>Todas las materias</option>
-                                ${practiceCats.map(c => `<option value="${c}" ${activePracticeSubject === c ? 'selected' : ''}>${c}</option>`).join('')}
-                            </select>
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-hover:text-[#0f4c81] transition-colors">
-                                <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
-                            </div>
-                        </div>
-                        ` : ''}
+            return `
+            <div class="glass-card rounded-2xl cursor-pointer group flex flex-col overflow-hidden relative ${isInactive ? 'opacity-70 grayscale-[30%]' : ''}" onclick="window.openBookDetails('${b.id}')">
+                ${isInactive && isAdmin ? `<div class="absolute top-2 left-2 z-20 bg-red-500/90 text-white text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">INACTIVO</div>` : ''}
+                <div class="absolute top-2 right-2 z-10 bg-white/90 backdrop-blur-md rounded-full p-1.5 shadow-sm text-[#0f4c81]">
+                    <i data-lucide="${(b.type || 'book') === 'software' ? 'monitor' : (b.type === 'video' ? 'play-circle' : (b.type === 'practice' ? 'pen-tool' : 'book-open'))}" class="w-3 h-3"></i>
+                </div>
+                <div class="w-full aspect-[2/3] bg-white/50 overflow-hidden relative">
+                    <img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                        <button class="w-full bg-white/90 backdrop-blur-sm text-[#0f4c81] font-semibold text-xs py-2 rounded-lg shadow-lg">Ver Detalles</button>
                     </div>
-                `;
-            } else {
-                const allCats = [...new Set(booksInSection.flatMap(b => getCats(b)))]
-                    .filter(Boolean)
-                    .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
-                
-                chipContainer.innerHTML = `
-                    <div class="flex items-center justify-center w-full pb-2 animate-fade">
-                        <div class="relative w-full sm:w-80 group">
-                            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                <i data-lucide="filter" class="w-4 h-4 text-[#0f4c81]"></i>
+                </div>
+                <div class="p-4 flex flex-col grow">
+                    <p class="text-[9px] font-bold text-[#0f4c81] uppercase tracking-wider mb-1.5 truncate" title="${catsStr}">${catsStr}</p>
+                    <h4 class="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug mb-2 transition-colors">${b.title}</h4>
+                    
+                    ${isPractice ? `
+                        <div class="mt-auto pt-2 space-y-1.5">
+                            <div class="flex items-center justify-between text-[10px] bg-gray-50 px-2 py-1.5 rounded border border-gray-100 shadow-sm">
+                                <span class="text-gray-500 font-medium">Publicado:</span>
+                                <span class="text-gray-800">${formatDateStr(b.publishDate) || 'N/A'}</span>
                             </div>
-                            
-                            <select onchange="window.filterByCategory(this.value)" class="w-full pl-11 pr-10 py-3.5 input-glass bg-white/70 backdrop-blur-md text-sm font-semibold text-gray-800 appearance-none cursor-pointer hover:bg-white hover:shadow-lg transition-all shadow-sm border border-white/80 focus:ring-2 focus:ring-[#0f4c81]/20 outline-none">
-                                <option value="All" ${activeFilter === 'All' ? 'selected' : ''}>Todas las categorías</option>
-                                ${allCats.map(c => `<option value="${c}" ${activeFilter === c ? 'selected' : ''}>${c}</option>`).join('')}
-                            </select>
-                            
-                            <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none text-gray-400 group-hover:text-[#0f4c81] transition-colors">
-                                <i data-lucide="chevron-down" class="w-4.5 h-4.5"></i>
+                            <div class="flex items-center justify-between text-[10px] ${b.dueDate ? 'bg-red-50 border-red-100 text-red-700' : 'bg-gray-50 border-gray-100 text-gray-500'} px-2 py-1.5 rounded border shadow-sm">
+                                <span class="font-medium">Entrega:</span>
+                                <span class="font-bold">${formatDateStr(b.dueDate) || 'Sin fecha'}</span>
                             </div>
                         </div>
-                    </div>
-                `;
-            }
-            lucide.createIcons();
-        }
+                    ` : `
+                        <p class="text-[11px] text-gray-500 truncate italic mt-auto pt-1">${b.author}</p>
+                    `}
+                </div>
+            </div>
+            `;
+        };
 
         function renderApp() {
             const heroContent = document.getElementById('heroContent');
             const shelf = document.getElementById('shelvesContainer');
             
-            const booksInSection = books.filter(b => (b.type || 'book') === currentSection);
-
-            if (booksInSection.length === 0) {
-                heroContent.innerHTML = `<div class="w-full text-center py-10"><i data-lucide="${currentSection === 'book' ? 'book-dashed' : (currentSection === 'practice' ? 'file-question' : 'pc-case')}" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i><h1 class="text-3xl text-gray-800">Sección en blanco</h1><p class="text-gray-500 mt-2">No hay elementos en esta área aún.</p></div>`;
-                shelf.innerHTML = "";
-                lucide.createIcons();
-                return;
+            let booksInSection = books.filter(b => (b.type || 'book') === currentSection);
+            if (!isAdmin) {
+                booksInSection = booksInSection.filter(b => b.isActive !== false);
             }
 
             let heroTitle, heroIcon, heroDesc;
@@ -844,41 +974,28 @@
                 <div class="absolute -right-10 -top-10 opacity-5 pointer-events-none">
                     <i data-lucide="${heroIcon}" class="w-64 h-64"></i>
                 </div>
-                <div class="relative z-10 w-full flex flex-col md:flex-row items-center md:items-start justify-between gap-6">
-                    <div>
-                        <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 text-[#0f4c81] rounded-md text-[10px] font-bold uppercase tracking-widest mb-4 border border-white/80 shadow-sm">
-                            <i data-lucide="award" class="w-3 h-3"></i> Colección Premium
-                        </div>
-                        <h1 class="text-4xl md:text-5xl lg:text-6xl text-gray-900 tracking-tight mb-4 drop-shadow-sm font-serif-title">${heroTitle}</h1>
-                        <p class="text-gray-600 text-sm md:text-base max-w-xl leading-relaxed">Explora nuestra cuidada selección de ${heroDesc}. Actualmente disponemos de <b class="text-[#0f4c81]">${booksInSection.length}</b> activos listos para su uso.</p>
+                <div class="relative z-10 w-full flex flex-col items-center justify-center text-center gap-4">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 bg-white/60 text-[#0f4c81] rounded-md text-[10px] font-bold uppercase tracking-widest border border-white/80 shadow-sm">
+                        <i data-lucide="award" class="w-3 h-3"></i> Colección Premium
                     </div>
-                </div>`;
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl text-gray-900 tracking-tight drop-shadow-sm font-serif-title">${heroTitle}</h1>
+                    <p class="text-gray-600 text-sm md:text-base max-w-2xl leading-relaxed">Explora nuestra cuidada selección de ${heroDesc}. Actualmente disponemos de <b class="text-[#0f4c81]">${booksInSection.length}</b> activos listos para su uso.</p>
+                </div>
+            `;
+
+            if (booksInSection.length === 0) {
+                shelf.innerHTML = `<div class="w-full text-center py-10 glass-panel rounded-3xl"><i data-lucide="${currentSection === 'book' ? 'book-dashed' : (currentSection === 'practice' ? 'file-question' : 'pc-case')}" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i><h3 class="text-2xl font-serif-title text-gray-800">Sección en blanco</h3><p class="text-gray-500 mt-2">No hay elementos visibles en esta área aún.</p></div>`;
+                lucide.createIcons();
+                return;
+            }
 
             let filteredBooks = [];
-            if (currentSection === 'practice') {
-                 filteredBooks = booksInSection.filter(b => {
-                     const matchGroup = activePracticeGroup === 'All' || b.practiceGroup === activePracticeGroup;
-                     const matchSubject = activePracticeSubject === 'All' || getCats(b).includes(activePracticeSubject);
-                     return matchGroup && matchSubject;
-                 }).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
-            } else {
-                 filteredBooks = (activeFilter === 'All') 
-                    ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }))
-                    : booksInSection.filter(b => getCats(b).includes(activeFilter)).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
-            }
+            // Filtrar por la categoría seleccionada en el Dropdown
+            filteredBooks = (activeFilter === 'All') 
+                ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }))
+                : booksInSection.filter(b => b.mainCategory === activeFilter).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
 
-            let catalogTitle = 'Catálogo General';
-            if (currentSection === 'practice') {
-                if (activePracticeGroup !== 'All' && activePracticeSubject !== 'All') {
-                    catalogTitle = `${activePracticeGroup} - ${activePracticeSubject}`;
-                } else if (activePracticeGroup !== 'All') {
-                    catalogTitle = activePracticeGroup;
-                } else if (activePracticeSubject !== 'All') {
-                    catalogTitle = activePracticeSubject;
-                }
-            } else {
-                catalogTitle = activeFilter === 'All' ? 'Catálogo General' : activeFilter;
-            }
+            let catalogTitle = activeFilter === 'All' ? 'Catálogo General' : activeFilter;
 
             shelf.innerHTML = `
                 <div>
@@ -887,40 +1004,7 @@
                         <span class="text-xs font-semibold text-[#0f4c81] bg-white/80 px-3 py-1.5 rounded-full border border-white shadow-sm">${filteredBooks.length} elementos</span>
                     </div>
                     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 sm:gap-8">
-                        ${filteredBooks.map(b => {
-                            const bCats = getCats(b);
-                            const catsStr = bCats.length > 0 ? bCats.join(' • ') : 'General';
-                            const isPractice = (b.type === 'practice');
-
-                            return `
-                            <div class="glass-card rounded-2xl cursor-pointer group flex flex-col overflow-hidden" onclick="window.openBookDetails('${b.id}')">
-                                <div class="w-full aspect-[2/3] bg-white/50 overflow-hidden relative">
-                                    <img src="${b.coverUrl}" onerror="this.src='${fallbackImg}'" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                                        <button class="w-full bg-white/90 backdrop-blur-sm text-[#0f4c81] font-semibold text-xs py-2 rounded-lg shadow-lg">Ver Detalles</button>
-                                    </div>
-                                </div>
-                                <div class="p-4 flex flex-col grow">
-                                    <p class="text-[9px] font-bold text-[#0f4c81] uppercase tracking-wider mb-1 truncate" title="${catsStr}">${catsStr}</p>
-                                    <h4 class="font-semibold text-sm text-gray-900 line-clamp-2 leading-snug mb-2 transition-colors">${b.title}</h4>
-                                    
-                                    ${isPractice ? `
-                                        <div class="mt-auto pt-2 space-y-1.5">
-                                            <div class="flex items-center justify-between text-[10px] bg-gray-50 px-2 py-1.5 rounded border border-gray-100 shadow-sm">
-                                                <span class="text-gray-500 font-medium">Publicado:</span>
-                                                <span class="text-gray-800">${formatDateStr(b.publishDate) || 'N/A'}</span>
-                                            </div>
-                                            <div class="flex items-center justify-between text-[10px] ${b.dueDate ? 'bg-red-50 border-red-100 text-red-700' : 'bg-gray-50 border-gray-100 text-gray-500'} px-2 py-1.5 rounded border shadow-sm">
-                                                <span class="font-medium">Entrega:</span>
-                                                <span class="font-bold">${formatDateStr(b.dueDate) || 'Sin fecha'}</span>
-                                            </div>
-                                        </div>
-                                    ` : `
-                                        <p class="text-[11px] text-gray-500 truncate italic mt-auto pt-1">${b.author}</p>
-                                    `}
-                                </div>
-                            </div>
-                        `}).join('')}
+                        ${filteredBooks.map(b => window.generateBookCardHTML(b)).join('')}
                     </div>
                 </div>`;
             lucide.createIcons();
@@ -944,21 +1028,52 @@
 
             document.getElementById('modalCover').src = b.coverUrl;
             
+            if (b.isActive === false && isAdmin) {
+                document.getElementById('modalInactiveBadge').classList.remove('hidden');
+            } else {
+                document.getElementById('modalInactiveBadge').classList.add('hidden');
+            }
+            
             const catContainer = document.getElementById('modalCategoryContainer');
             const bCats = getCats(b);
             catContainer.innerHTML = bCats.length > 0 
                 ? bCats.map(c => `<span class="text-[#0f4c81] font-semibold text-xs uppercase tracking-wider bg-[#0f4c81]/10 px-3 py-1 rounded-full border border-[#0f4c81]/20">${c}</span>`).join('')
                 : `<span class="text-[#0f4c81] font-semibold text-xs uppercase tracking-wider bg-[#0f4c81]/10 px-3 py-1 rounded-full border border-[#0f4c81]/20">General</span>`;
             
+            // Main Category (Categoría Principal)
+            if (b.mainCategory) {
+                catContainer.innerHTML = `<span class="text-emerald-700 font-semibold text-xs uppercase tracking-wider bg-emerald-100 px-3 py-1 rounded-full border border-emerald-200" title="Categoría Principal">${b.mainCategory}</span>` + catContainer.innerHTML;
+            }
+
             document.getElementById('modalTypeBadge').textContent = isPractice ? 'Práctica' : (isVideo ? 'Video' : (isSoftware ? 'Software' : 'Documento'));
             document.getElementById('modalTitle').textContent = b.title;
             
             document.getElementById('lblResponsable').textContent = isPractice ? 'Docente:' : (isVideo ? 'Canal / Creador:' : (isSoftware ? 'Desarrollador:' : 'Autor:'));
-            document.getElementById('lblAcceder').textContent = isPractice ? 'Ver Práctica' : (isVideo ? 'Ver Video' : (isSoftware ? 'Descargar Software' : 'Acceder al Recurso'));
+            document.getElementById('lblAcceder').textContent = isPractice ? 'Ver Práctica' : (isVideo ? 'Ver Video' : (isSoftware ? 'Descargar Software' : 'Acceder al Archivo'));
             
             document.getElementById('modalAuthorName').textContent = b.author;
             document.getElementById('modalId').textContent = b.id;
+            document.getElementById('modalAddedDate').textContent = formatFullDate(b.fecha_agregado) || 'Reciente';
+
+            // Extra Metadata (Editorial, Size, Pages)
+            const metaContainer = document.getElementById('modalExtraMeta');
+            let metaHtml = '';
+            if (b.editorial) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="book" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Editorial:</strong> ${b.editorial}</span></div>`;
+            if (b.pages) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="file-text" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Páginas:</strong> ${b.pages}</span></div>`;
+            if (b.sizeMB) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="hard-drive" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Tamaño:</strong> ${b.sizeMB} MB</span></div>`;
             
+            metaContainer.innerHTML = metaHtml;
+            if(metaHtml === '') metaContainer.classList.add('hidden'); else metaContainer.classList.remove('hidden');
+
+            // Etiquetas (Tags)
+            const tagsContainer = document.getElementById('modalTags');
+            if (b.tags && Array.isArray(b.tags) && b.tags.length > 0) {
+                tagsContainer.innerHTML = b.tags.map(t => `<span class="bg-gray-100 text-gray-600 text-[10px] px-2.5 py-1 rounded-md border border-gray-200 shadow-sm font-medium">#${t}</span>`).join('');
+                tagsContainer.parentElement.classList.remove('hidden');
+            } else {
+                tagsContainer.parentElement.classList.add('hidden');
+            }
+
             // Mostrar fechas solo si es práctica
             if(isPractice) {
                 document.getElementById('modalPracticeDates').classList.remove('hidden');
@@ -987,13 +1102,19 @@
             
             document.getElementById('addTitle').value = '';
             document.getElementById('addAuthor').value = '';
+            document.getElementById('addEditorial').value = '';
+            document.getElementById('addMainCategory').value = '';
+            document.getElementById('addTags').value = '';
+            document.getElementById('addSizeMB').value = '';
+            document.getElementById('addPages').value = '';
+            document.getElementById('addIsActive').checked = true;
+
             document.getElementById('addResourceLink').value = '';
             document.getElementById('addDescription').value = '';
             document.getElementById('categorySelect').value = '';
             document.getElementById('addCover').value = '';
             document.getElementById('imagePreview').src = '';
             
-            // Restablecer valores de práctica
             document.getElementById('addPracticeGroup').value = 'Ejercicios en Clase';
             document.getElementById('addPublishDate').value = '';
             document.getElementById('addDueDate').value = '';
@@ -1001,13 +1122,13 @@
             
             const defaultTypeRadio = document.querySelector('input[name="assetType"][value="book"]');
             if(defaultTypeRadio) defaultTypeRadio.checked = true;
-            document.getElementById('lblInputAuthor').innerText = 'Autor / Responsable';
+            document.getElementById('lblInputAuthor').innerHTML = 'Autor / Autores <span class="text-red-500">*</span>';
             
             window.renderSelectedCategoriesForForm();
             
             document.getElementById('imagePreviewContainer').classList.add('hidden');
             document.getElementById('imagePlaceholder').classList.remove('hidden');
-            document.getElementById('modalFormTitle').innerHTML = '<div class="w-8 h-8 rounded-lg bg-[#0f4c81]/10 flex items-center justify-center"><i data-lucide="plus-circle" class="w-4 h-4 text-[#0f4c81]"></i></div> Añadir Activo';
+            document.getElementById('modalFormTitle').innerHTML = '<div class="w-8 h-8 rounded-lg bg-[#0f4c81]/10 flex items-center justify-center"><i data-lucide="plus-circle" class="w-4 h-4 text-[#0f4c81]"></i></div> Añadir Recurso';
             window.openModal('addBookModal');
             lucide.createIcons();
         };
@@ -1053,7 +1174,7 @@
         };
 
         window.editCategory = async (id, oldName) => {
-            const newName = prompt("Editar nombre de la categoría:", oldName);
+            const newName = prompt("Editar nombre de la materia:", oldName);
             if (newName && newName.trim() && newName.trim() !== oldName) {
                 try {
                     const newNameStr = newName.trim();
@@ -1064,7 +1185,7 @@
                         let updatedCats = getCats(b).map(c => c === oldName ? newNameStr : c);
                         await setDoc(doc(booksCollection, b.id), { category: updatedCats }, { merge: true });
                     }
-                    mostrarNotificacion("Éxito", "Categoría actualizada.");
+                    mostrarNotificacion("Éxito", "Materia actualizada.");
                 } catch(e) { console.error(e); mostrarNotificacion("Error", "No se pudo actualizar."); }
             }
         };
@@ -1072,10 +1193,10 @@
         window.deleteCategory = async (id, name) => {
             const inUse = books.some(b => getCats(b).includes(name));
             if (inUse) { mostrarNotificacion("Aviso", "No se puede eliminar: en uso."); return; }
-            if (confirm(`¿Eliminar permanente la categoría "${name}"?`)) {
+            if (confirm(`¿Eliminar permanente la materia "${name}"?`)) {
                 try {
                     await deleteDoc(doc(categoriesCollection, id));
-                    mostrarNotificacion("Éxito", "Categoría eliminada.");
+                    mostrarNotificacion("Éxito", "Materia eliminada.");
                 } catch(e) { console.error(e); mostrarNotificacion("Error", "No se pudo eliminar."); }
             }
         };
@@ -1085,7 +1206,7 @@
             if (!s) return;
             const current = s.value;
             
-            s.innerHTML = '<option value="" disabled selected>Añadir materia...</option>' + 
+            s.innerHTML = '<option value="" disabled selected>Seleccione materia...</option>' + 
                 categories.sort((a,b)=>a.name.localeCompare(b.name, 'es', { sensitivity: 'base' })).map(c => `<option value="${c.name}">${c.name}</option>`).join('');
             if (current) s.value = current;
         }
@@ -1094,24 +1215,36 @@
             e.preventDefault();
             const btn = document.getElementById('modalFormSubmitBtn');
             
-            if (!editingBookId && !currentImageData) { mostrarNotificacion("Aviso", "Añada una imagen de miniatura."); return; }
-            if (selectedCategoriesForForm.length === 0) { mostrarNotificacion("Aviso", "Añada al menos una materia."); return; }
+            if (!editingBookId && !currentImageData) { mostrarNotificacion("Aviso", "Se recomienda subir una miniatura de portada."); }
+            if (selectedCategoriesForForm.length === 0) { mostrarNotificacion("Aviso", "Debe asignar al menos una Materia Relacionada."); return; }
             
-            btn.disabled = true; btn.textContent = "Guardando...";
+            btn.disabled = true; btn.innerHTML = "<i data-lucide='loader-2' class='w-4 h-4 animate-spin inline'></i> Guardando...";
+            lucide.createIcons();
+
             try {
                 const id = editingBookId || generateSimpleCode();
                 let finalUrl = currentImageData || (editingBookId ? books.find(x => x.id === editingBookId).coverUrl : fallbackImg);
                 const selectedType = document.querySelector('input[name="assetType"]:checked').value;
 
+                const tagsInput = document.getElementById('addTags').value;
+                const tagsArray = tagsInput.split(',').map(t => t.trim()).filter(t => t !== '');
+
                 const data = {
                     id: id, 
                     type: selectedType,
-                    title: document.getElementById('addTitle').value,
-                    author: document.getElementById('addAuthor').value, 
-                    category: selectedCategoriesForForm, 
-                    resourceLink: document.getElementById('addResourceLink').value, 
-                    description: document.getElementById('addDescription').value,
-                    coverUrl: finalUrl
+                    title: document.getElementById('addTitle').value.trim(),
+                    author: document.getElementById('addAuthor').value.trim(), 
+                    editorial: document.getElementById('addEditorial').value.trim(),
+                    mainCategory: document.getElementById('addMainCategory').value.trim(),
+                    category: selectedCategoriesForForm, // Materias Relacionadas
+                    tags: tagsArray,
+                    resourceLink: document.getElementById('addResourceLink').value.trim(), 
+                    sizeMB: parseFloat(document.getElementById('addSizeMB').value) || 0,
+                    pages: parseInt(document.getElementById('addPages').value) || 0,
+                    description: document.getElementById('addDescription').value.trim(),
+                    coverUrl: finalUrl,
+                    isActive: document.getElementById('addIsActive').checked,
+                    fecha_agregado: editingBookId ? (books.find(x => x.id === editingBookId).fecha_agregado || new Date().toISOString()) : new Date().toISOString()
                 };
 
                 if (selectedType === 'practice') {
@@ -1122,9 +1255,9 @@
 
                 await setDoc(doc(booksCollection, id), data, { merge: true });
                 window.closeModal('addBookModal'); 
-                mostrarNotificacion("Éxito", "Guardado en Repositorio.");
+                mostrarNotificacion("Éxito", "Recurso guardado en el Repositorio.");
                 if(currentSection !== selectedType) { window.switchSection(selectedType); }
-            } catch (err) { mostrarNotificacion("Error", "No se pudo guardar."); }
+            } catch (err) { mostrarNotificacion("Error", "No se pudo conectar con la base de datos."); }
             finally { btn.disabled = false; btn.textContent = "Guardar en Repositorio"; currentImageData = null; }
         });
 
@@ -1138,7 +1271,7 @@
             const typeRadio = document.querySelector(`input[name="assetType"][value="${type}"]`);
             if (typeRadio) typeRadio.checked = true;
 
-            document.getElementById('lblInputAuthor').innerText = type === 'software' ? 'Desarrollador / Empresa' : (type === 'video' ? 'Creador / Canal' : (type === 'practice' ? 'Docente / Auxiliar' : 'Autor / Responsable'));
+            document.getElementById('lblInputAuthor').innerHTML = type === 'software' ? 'Desarrollador / Empresa <span class="text-red-500">*</span>' : (type === 'video' ? 'Creador / Canal <span class="text-red-500">*</span>' : (type === 'practice' ? 'Docente / Auxiliar <span class="text-red-500">*</span>' : 'Autor / Autores <span class="text-red-500">*</span>'));
 
             if (type === 'practice') {
                 document.getElementById('practiceFields').classList.remove('hidden');
@@ -1152,10 +1285,17 @@
             selectedCategoriesForForm = getCats(b);
             window.renderSelectedCategoriesForForm();
 
-            document.getElementById('addTitle').value = b.title; 
-            document.getElementById('addAuthor').value = b.author;
-            document.getElementById('addResourceLink').value = b.resourceLink;
-            document.getElementById('addDescription').value = b.description; 
+            document.getElementById('addTitle').value = b.title || ''; 
+            document.getElementById('addAuthor').value = b.author || '';
+            document.getElementById('addEditorial').value = b.editorial || '';
+            document.getElementById('addMainCategory').value = b.mainCategory || '';
+            document.getElementById('addTags').value = Array.isArray(b.tags) ? b.tags.join(', ') : '';
+            document.getElementById('addSizeMB').value = b.sizeMB || '';
+            document.getElementById('addPages').value = b.pages || '';
+            document.getElementById('addIsActive').checked = b.isActive !== false; // true por defecto si no existe
+
+            document.getElementById('addResourceLink').value = b.resourceLink || '';
+            document.getElementById('addDescription').value = b.description || ''; 
             
             document.getElementById('imagePreview').src = b.coverUrl;
             document.getElementById('imagePreviewContainer').classList.remove('hidden'); 
@@ -1170,14 +1310,14 @@
         };
 
         window.deleteCurrentBook = async () => {
-            if (confirm("¿Eliminar este elemento permanentemente?") && currentViewBookId) {
-                try { await deleteDoc(doc(booksCollection, currentViewBookId)); window.closeModal('bookModal'); mostrarNotificacion("Aviso", "Elemento eliminado."); }
+            if (confirm("¿Eliminar este elemento permanentemente del repositorio?") && currentViewBookId) {
+                try { await deleteDoc(doc(booksCollection, currentViewBookId)); window.closeModal('bookModal'); mostrarNotificacion("Aviso", "Elemento eliminado exitosamente."); }
                 catch(e) { console.error(e); }
             }
         };
 
         window.actionRead = () => { const b = books.find(x => x.id === currentViewBookId); if (b?.resourceLink) window.open(b.resourceLink, '_blank'); };
-        window.copyCode = () => { const c = document.getElementById('modalId').textContent; navigator.clipboard.writeText(c).then(() => mostrarNotificacion("Copiado", "ID en el portapapeles.")); };
+        window.copyCode = () => { const c = document.getElementById('modalId').textContent; navigator.clipboard.writeText(c).then(() => mostrarNotificacion("Copiado", "ID del recurso en el portapapeles.")); };
 
         function mostrarNotificacion(t, m) {
             const toast = document.createElement('div');
@@ -1187,96 +1327,85 @@
             setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateY(15px)'; toast.style.transition = 'all 0.4s ease'; setTimeout(() => toast.remove(), 400); }, 3500);
         }
 
-        window.toggleMobileSearch = () => {
-            const box = document.getElementById('mobileSearchBox');
-            if (box.classList.contains('hidden')) { box.classList.remove('hidden'); document.getElementById('mobileSearchInput').focus(); } 
-            else { box.classList.add('hidden'); }
-        };
-
+        // --- SISTEMA DE BÚSQUEDA ROBUSTO ---
         window.executeSearch = (term) => {
-            document.getElementById('searchInput').value = term;
-            document.getElementById('mobileSearchInput').value = term;
+            // Sincronizar input principal
+            const mainInput = document.getElementById('mainSearchInput');
+            if(mainInput && mainInput.value !== term) mainInput.value = term;
+
+            const clearBtn = document.getElementById('clearMainSearchBtn');
+            if (clearBtn) {
+                if (term) clearBtn.classList.remove('hidden');
+                else clearBtn.classList.add('hidden');
+            }
             
-            // Función para eliminar acentos y convertir a minúsculas
             const removeAccents = (str) => {
                 return str ? str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase() : '';
             };
             
             const searchStr = removeAccents(term.trim());
             const shelf = document.getElementById('shelvesContainer');
-            const heroContent = document.getElementById('heroContent');
+            const resultsContainer = document.getElementById('searchResultsContainer');
 
-            if (!searchStr) { shelf.classList.remove('hidden'); renderApp(); return; }
+            if (!searchStr) { 
+                shelf.classList.remove('hidden'); 
+                resultsContainer.classList.add('hidden'); 
+                resultsContainer.innerHTML = '';
+                return; 
+            }
 
-            const filtered = books.filter(b => 
-                removeAccents(b.title).includes(searchStr) || 
-                removeAccents(b.author).includes(searchStr) || 
-                removeAccents(b.id).includes(searchStr) || 
-                getCats(b).some(c => removeAccents(c).includes(searchStr))
-            ).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })); 
+            // Buscar inteligentemente
+            let filtered = books.filter(b => {
+                if ((b.type || 'book') !== currentSection) return false;
+
+                return removeAccents(b.title).includes(searchStr) || 
+                       removeAccents(b.author).includes(searchStr) || 
+                       removeAccents(b.editorial || '').includes(searchStr) || 
+                       removeAccents(b.mainCategory || '').includes(searchStr) || 
+                       removeAccents(b.id).includes(searchStr) || 
+                       (b.tags || []).some(t => removeAccents(t).includes(searchStr)) ||
+                       getCats(b).some(c => removeAccents(c).includes(searchStr));
+            });
+
+            // Respetar visibilidad para alumnos
+            if (!isAdmin) {
+                filtered = filtered.filter(b => b.isActive !== false);
+            }
+            
+            filtered.sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' })); 
             
             shelf.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
 
             if (filtered.length === 0) {
-                heroContent.innerHTML = `<div class="w-full text-center py-10 glass-panel rounded-3xl border border-white/60"><i data-lucide="search-x" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i><h2 class="text-xl font-semibold text-gray-900 mb-2 font-serif-title">Sin resultados</h2><p class="text-gray-500 text-sm">No encontramos coincidencias para "${searchStr}" en ninguna sección.</p></div>`;
+                resultsContainer.innerHTML = `<div class="w-full text-center py-12 glass-panel rounded-3xl border border-white/60 animate-fade"><i data-lucide="search-x" class="w-12 h-12 text-gray-400 mx-auto mb-4"></i><h2 class="text-2xl font-semibold text-gray-900 mb-2 font-serif-title">Sin resultados</h2><p class="text-gray-500">No encontramos coincidencias para "<b class="text-gray-800">${term}</b>". Intenta con otras etiquetas.</p></div>`;
             } else {
-                heroContent.innerHTML = `
-                    <div class="max-w-[1400px] mx-auto animate-fade mb-10">
-                        <div class="flex items-center justify-between mb-6 border-b border-white/30 pb-4">
-                            <h3 class="text-xl font-semibold text-white font-serif-title drop-shadow-md">Resultados de búsqueda: ${filtered.length}</h3>
-                            <button onclick="window.executeSearch(''); document.getElementById('shelvesContainer').classList.remove('hidden');" class="text-white hover:bg-white/20 p-2 rounded-full transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+                resultsContainer.innerHTML = `
+                    <div class="animate-fade">
+                        <div class="flex items-center justify-between mb-8 border-b border-white/40 pb-4">
+                            <h3 class="text-xl font-serif-title text-white shadow-sm drop-shadow-md">Resultados de búsqueda: ${filtered.length}</h3>
+                            <button onclick="window.executeSearch('');" class="text-[#0f4c81] bg-white/80 hover:bg-white px-4 py-2 rounded-full transition-colors flex items-center gap-2 text-xs font-bold shadow-sm border border-white"><i data-lucide="x" class="w-3.5 h-3.5"></i> Limpiar Búsqueda</button>
                         </div>
-                        <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-5">
-                            ${filtered.map(b => `
-                                <div class="glass-card rounded-2xl cursor-pointer group flex flex-col overflow-hidden relative" onclick="window.openBookDetails('${b.id}')">
-                                    <div class="absolute top-2 right-2 z-10 bg-white/90 backdrop-blur-md rounded-full p-1.5 shadow-sm text-[#0f4c81]">
-                                        <i data-lucide="${(b.type || 'book') === 'software' ? 'monitor' : (b.type === 'video' ? 'play-circle' : (b.type === 'practice' ? 'pen-tool' : 'book-open'))}" class="w-3 h-3"></i>
-                                    </div>
-                                    ${(b.type === 'practice' && b.practiceGroup === 'Ejercicios en Clase') ? `
-                                        <div class="absolute top-2 left-2 z-20 bg-green-500/90 backdrop-blur-md rounded-full px-2 py-1 shadow-md text-white flex items-center gap-1">
-                                            <i data-lucide="check-circle" class="w-3 h-3"></i>
-                                        </div>
-                                    ` : ''}
-                                    <div class="w-full aspect-[2/3] bg-white/50 overflow-hidden relative">
-                                        <img src="${b.coverUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
-                                    </div>
-                                    <div class="p-3">
-                                        <h4 class="font-semibold text-xs text-gray-900 line-clamp-2">${b.title}</h4>
-                                    </div>
-                                </div>
-                            `).join('')}
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5 sm:gap-8">
+                            ${filtered.map(b => window.generateBookCardHTML(b)).join('')}
                         </div>
                     </div>`;
             }
             lucide.createIcons();
         };
 
-        document.getElementById('searchInput').addEventListener('input', (e) => window.executeSearch(e.target.value));
-        document.getElementById('mobileSearchInput').addEventListener('input', (e) => window.executeSearch(e.target.value));
-
         // --- ATAJOS DE TECLADO ---
         document.addEventListener('keydown', (e) => {
-            // Atajo Alt + A para añadir
             if (e.altKey && e.key.toLowerCase() === 'a') {
                 e.preventDefault(); 
-                if (isAdmin) {
-                    window.openAddBookModal();
-                } else {
-                    window.toggleAuth();
-                    mostrarNotificacion("Acceso Requerido", "Inicia sesión como administrador para usar este atajo.");
-                }
+                if (isAdmin) { window.openAddBookModal(); } 
+                else { window.toggleAuth(); mostrarNotificacion("Acceso Requerido", "Inicia sesión como administrador para usar este atajo."); }
             }
-
-            // Atajo Escape para cerrar modales
             if (e.key === 'Escape') {
-                // Ordenados por z-index (del más alto al más bajo) para cerrar siempre el que está al frente
                 const modalsToClose = ['manageCategoriesModal', 'addBookModal', 'loginModal', 'bookModal'];
                 for (const modalId of modalsToClose) {
                     const modal = document.getElementById(modalId);
-                    if (modal && !modal.classList.contains('hidden')) {
-                        window.closeModal(modalId);
-                        break; // Cierra solo un modal por cada vez que se presiona Escape
-                    }
+                    if (modal && !modal.classList.contains('hidden')) { window.closeModal(modalId); break; }
                 }
             }
         });
