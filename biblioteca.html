@@ -214,12 +214,12 @@
                     </button>
                 </div>
                 
-                <!-- Dropdown de Categorías -->
+                <!-- Dropdown de Materias -->
                 <div class="relative shrink-0 md:w-72" id="categoryDropdownContainer">
                     <button onclick="window.toggleCategoryDropdown()" id="dropdownCategoryBtn" class="w-full h-full min-h-[56px] md:min-h-[68px] flex items-center justify-between px-6 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl md:rounded-r-full md:rounded-l-xl shadow-[0_15px_30px_rgba(0,0,0,0.1)] hover:bg-white transition-all text-gray-700 hover:text-[#0f4c81] font-semibold text-base md:text-lg group">
                         <div class="flex items-center gap-3 overflow-hidden">
-                            <i data-lucide="layers" class="w-5 h-5 text-gray-400 group-hover:text-[#0f4c81]"></i>
-                            <span id="dropdownBtnText" class="truncate">Todas las Categorías</span>
+                            <i data-lucide="book" class="w-5 h-5 text-gray-400 group-hover:text-[#0f4c81]"></i>
+                            <span id="dropdownBtnText" class="truncate">Todas las Materias</span>
                         </div>
                         <i data-lucide="chevron-down" class="w-5 h-5 text-gray-400 group-hover:text-[#0f4c81] transition-transform" id="dropdownArrow"></i>
                     </button>
@@ -706,7 +706,7 @@
             let booksInSection = books.filter(b => (b.type || 'book') === currentSection);
             if (!isAdmin) booksInSection = booksInSection.filter(b => b.isActive !== false);
             
-            const mainCats = [...new Set(booksInSection.map(b => b.mainCategory))]
+            const allCats = [...new Set(booksInSection.flatMap(b => getCats(b)))]
                 .filter(Boolean)
                 .sort((a, b) => a.localeCompare(b, 'es', { sensitivity: 'base' }));
 
@@ -714,11 +714,11 @@
             const inactiveClass = "text-gray-700 hover:bg-gray-50 hover:text-[#0f4c81] font-medium border-l-4 border-transparent";
 
             list.innerHTML = `
-                <button onclick="window.filterByMainCategory('All')" class="w-full text-left px-5 py-3 transition-colors text-sm ${activeFilter === 'All' ? activeClass : inactiveClass}">
-                    Todas las Categorías
+                <button onclick="window.filterByCategory('All')" class="w-full text-left px-5 py-3 transition-colors text-sm ${activeFilter === 'All' ? activeClass : inactiveClass}">
+                    Todas las Materias
                 </button>
-                ${mainCats.map(c => `
-                    <button onclick="window.filterByMainCategory('${c.replace(/'/g, "\\'")}')" class="w-full text-left px-5 py-3 transition-colors text-sm ${activeFilter === c ? activeClass : inactiveClass}">
+                ${allCats.map(c => `
+                    <button onclick="window.filterByCategory('${c.replace(/'/g, "\\'")}')" class="w-full text-left px-5 py-3 transition-colors text-sm ${activeFilter === c ? activeClass : inactiveClass}">
                         ${c}
                     </button>
                 `).join('')}
@@ -726,10 +726,10 @@
             
             // Actualizar texto del botón principal
             const btnText = document.getElementById('dropdownBtnText');
-            if(btnText) btnText.textContent = activeFilter === 'All' ? 'Todas las Categorías' : activeFilter;
+            if(btnText) btnText.textContent = activeFilter === 'All' ? 'Todas las Materias' : activeFilter;
         }
 
-        window.filterByMainCategory = (cat) => {
+        window.filterByCategory = (cat) => {
             activeFilter = cat;
             document.getElementById('mainSearchInput').value = '';
             document.getElementById('clearMainSearchBtn').classList.add('hidden');
@@ -1012,10 +1012,10 @@
             }
 
             let filteredBooks = [];
-            // Filtrar por la categoría seleccionada en el Dropdown
+            // Filtrar por la materia seleccionada en el Dropdown
             filteredBooks = (activeFilter === 'All') 
                 ? [...booksInSection].sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }))
-                : booksInSection.filter(b => b.mainCategory === activeFilter).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
+                : booksInSection.filter(b => getCats(b).includes(activeFilter)).sort((a, b) => a.title.localeCompare(b.title, 'es', { sensitivity: 'base' }));
 
             let catalogTitle = activeFilter === 'All' ? 'Catálogo General' : activeFilter;
 
