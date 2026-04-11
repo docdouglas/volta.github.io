@@ -32,7 +32,7 @@
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             background-color: #1a365d; 
             background-image: url('fondo.jpg'); /* Imagen de fondo restaurada */
-            background-size: cover;
+            background-size: 100% 100%; /* <-- Modificado para que se vea TODA la imagen en la ventana */
             background-position: center;
             background-repeat: no-repeat;
             z-index: -2;
@@ -393,13 +393,17 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                             <div class="space-y-1.5">
                                 <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Categoría Principal</label>
-                                <input type="text" id="addMainCategory" list="mainCatsList" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. Automatización Industrial" autocomplete="off">
+                                <input type="text" id="addMainCategory" list="mainCatsList" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Selecciona el área de estudio..." autocomplete="off">
                                 <datalist id="mainCatsList">
-                                    <option value="Automatización Industrial">
-                                    <option value="Electrotecnia">
-                                    <option value="Desarrollo de Software">
-                                    <option value="Ciencias Básicas">
-                                    <option value="Sistemas Embebidos">
+                                    <option value="Electrónica Básica y Analógica">
+                                    <option value="Electrónica Digital">
+                                    <option value="Automatización y Control Industrial">
+                                    <option value="Electrotecnia e Instalaciones">
+                                    <option value="Microcontroladores y Sistemas Embebidos">
+                                    <option value="Telecomunicaciones y Redes">
+                                    <option value="Ciencias Exactas y Físicas">
+                                    <option value="Matemáticas Aplicadas">
+                                    <option value="Contabilidad y Administración">
                                 </datalist>
                             </div>
                             
