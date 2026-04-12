@@ -446,6 +446,45 @@
                                         <input type="number" min="0" id="addPages" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. 340">
                                     </div>
                                 </div>
+
+                                <!-- CAMPOS ESPECÍFICOS PARA SOFTWARE -->
+                                <div id="containerSoftwareFields" class="hidden grid grid-cols-2 gap-4 mt-2">
+                                    <div class="space-y-1.5">
+                                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Plataforma / SO</label>
+                                        <select id="addPlatform" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white">
+                                            <option value="" disabled selected>Ej. Windows...</option>
+                                            <option value="Windows">Windows</option>
+                                            <option value="macOS">macOS</option>
+                                            <option value="Linux">Linux</option>
+                                            <option value="Android">Android</option>
+                                            <option value="iOS">iOS</option>
+                                            <option value="Web / Cloud">Web / Cloud</option>
+                                            <option value="Multiplataforma">Multiplataforma</option>
+                                        </select>
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Arquitectura</label>
+                                        <select id="addArchitecture" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white">
+                                            <option value="" disabled selected>Ej. 64-bit...</option>
+                                            <option value="32-bit (x86)">32-bit (x86)</option>
+                                            <option value="64-bit (x64)">64-bit (x64)</option>
+                                            <option value="ARM">ARM</option>
+                                            <option value="No aplica">No aplica</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- CAMPOS ESPECÍFICOS PARA VIDEO -->
+                                <div id="containerVideoFields" class="hidden grid grid-cols-2 gap-4 mt-2">
+                                    <div class="space-y-1.5">
+                                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Duración</label>
+                                        <input type="text" id="addVideoDuration" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. 1h 45m / 15:30">
+                                    </div>
+                                    <div class="space-y-1.5">
+                                        <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Extensión</label>
+                                        <input type="text" id="addVideoFormat" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. MP4, 1080p...">
+                                    </div>
+                                </div>
                                 
                                 <div class="pt-4 border-t border-gray-100">
                                     <label class="flex items-center cursor-pointer relative w-max">
@@ -824,6 +863,8 @@
                 const lbl = document.getElementById('lblInputAuthor');
                 const cEdit = document.getElementById('containerEditorial');
                 const cPages = document.getElementById('containerPages');
+                const cSoft = document.getElementById('containerSoftwareFields');
+                const cVid = document.getElementById('containerVideoFields');
                 
                 if(val === 'software') lbl.innerText = 'Desarrollador / Empresa *';
                 else if(val === 'practice') lbl.innerText = 'Docente / Auxiliar *';
@@ -837,6 +878,17 @@
                 } else {
                     if (cEdit) cEdit.classList.remove('hidden');
                     if (cPages) cPages.classList.remove('hidden');
+                }
+
+                // Ocultar/Mostrar campos extra según el tipo
+                if (cSoft) {
+                    if (val === 'software') cSoft.classList.remove('hidden');
+                    else cSoft.classList.add('hidden');
+                }
+                
+                if (cVid) {
+                    if (val === 'video') cVid.classList.remove('hidden');
+                    else cVid.classList.add('hidden');
                 }
 
                 const pFields = document.getElementById('practiceFields');
@@ -1093,6 +1145,16 @@
             let metaHtml = '';
             if (b.editorial) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="book" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Editorial:</strong> ${b.editorial}</span></div>`;
             if (b.pages) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="file-text" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Páginas:</strong> ${b.pages}</span></div>`;
+            
+            // Atributos de Software y Video
+            if (b.type === 'software') {
+                if (b.platform) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="cpu" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Plataforma:</strong> ${b.platform}</span></div>`;
+                if (b.architecture) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="layers" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Arquitectura:</strong> ${b.architecture}</span></div>`;
+            } else if (b.type === 'video') {
+                if (b.videoDuration) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="clock" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Duración:</strong> ${b.videoDuration}</span></div>`;
+                if (b.videoFormat) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="film" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Formato:</strong> ${b.videoFormat}</span></div>`;
+            }
+
             if (b.sizeMB) metaHtml += `<div class="flex items-center gap-1.5"><i data-lucide="hard-drive" class="w-4 h-4 text-gray-400"></i><span><strong class="text-gray-700">Tamaño:</strong> ${b.sizeMB} MB</span></div>`;
             
             metaContainer.innerHTML = metaHtml;
@@ -1140,6 +1202,10 @@
             document.getElementById('addTags').value = '';
             document.getElementById('addSizeMB').value = '';
             document.getElementById('addPages').value = '';
+            document.getElementById('addPlatform').value = '';
+            document.getElementById('addArchitecture').value = '';
+            document.getElementById('addVideoDuration').value = '';
+            document.getElementById('addVideoFormat').value = '';
             document.getElementById('addIsActive').checked = true;
 
             document.getElementById('addResourceLink').value = '';
@@ -1276,6 +1342,10 @@
                     resourceLink: document.getElementById('addResourceLink').value.trim(), 
                     sizeMB: parseFloat(document.getElementById('addSizeMB').value) || 0,
                     pages: parseInt(document.getElementById('addPages').value) || 0,
+                    platform: document.getElementById('addPlatform').value,
+                    architecture: document.getElementById('addArchitecture').value,
+                    videoDuration: document.getElementById('addVideoDuration').value.trim(),
+                    videoFormat: document.getElementById('addVideoFormat').value.trim(),
                     description: document.getElementById('addDescription').value.trim(),
                     coverUrl: finalUrl,
                     isActive: document.getElementById('addIsActive').checked,
@@ -1328,6 +1398,10 @@
             document.getElementById('addTags').value = Array.isArray(b.tags) ? b.tags.join(', ') : '';
             document.getElementById('addSizeMB').value = b.sizeMB || '';
             document.getElementById('addPages').value = b.pages || '';
+            document.getElementById('addPlatform').value = b.platform || '';
+            document.getElementById('addArchitecture').value = b.architecture || '';
+            document.getElementById('addVideoDuration').value = b.videoDuration || '';
+            document.getElementById('addVideoFormat').value = b.videoFormat || '';
             document.getElementById('addIsActive').checked = b.isActive !== false; // true por defecto si no existe
 
             document.getElementById('addResourceLink').value = b.resourceLink || '';
