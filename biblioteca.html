@@ -361,18 +361,7 @@
                         <h3 class="text-sm font-bold text-[#0f4c81] mb-5 flex items-center gap-2"><i data-lucide="info" class="w-4 h-4"></i> 1. Información Básica</h3>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                            <div class="space-y-1.5">
-                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Título Completo <span class="text-red-500">*</span></label>
-                                <input type="text" id="addTitle" required class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. Programación de PLC con TIA Portal">
-                            </div>
-                            <div class="space-y-1.5">
-                                <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1" id="lblInputAuthor">Autor / Autores <span class="text-red-500">*</span></label>
-                                <input type="text" id="addAuthor" required class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Nombre del responsable...">
-                            </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
-                            <div class="space-y-1.5">
+                            <div class="space-y-1.5" id="containerEditorial">
                                 <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Editorial o Institución</label>
                                 <input type="text" id="addEditorial" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. McGraw Hill, Universidad...">
                             </div>
@@ -441,7 +430,7 @@
                                         <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Tamaño (MB)</label>
                                         <input type="number" step="0.1" min="0" id="addSizeMB" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. 12.5">
                                     </div>
-                                    <div class="space-y-1.5">
+                                    <div class="space-y-1.5" id="containerPages">
                                         <label class="text-[11px] font-bold text-gray-500 uppercase tracking-wider pl-1">Nº Páginas</label>
                                         <input type="number" min="0" id="addPages" class="w-full px-4 py-2.5 input-glass bg-gray-50 focus:bg-white" placeholder="Ej. 340">
                                     </div>
@@ -822,11 +811,22 @@
             radio.addEventListener('change', (e) => {
                 const val = e.target.value;
                 const lbl = document.getElementById('lblInputAuthor');
+                const cEdit = document.getElementById('containerEditorial');
+                const cPages = document.getElementById('containerPages');
                 
                 if(val === 'software') lbl.innerText = 'Desarrollador / Empresa *';
                 else if(val === 'practice') lbl.innerText = 'Docente / Auxiliar *';
                 else if(val === 'video') lbl.innerText = 'Creador / Canal *';
                 else lbl.innerText = 'Autor / Autores *';
+
+                // Ocultar Editorial y Páginas para Software y Video
+                if (val === 'software' || val === 'video') {
+                    if (cEdit) cEdit.classList.add('hidden');
+                    if (cPages) cPages.classList.add('hidden');
+                } else {
+                    if (cEdit) cEdit.classList.remove('hidden');
+                    if (cPages) cPages.classList.remove('hidden');
+                }
 
                 const pFields = document.getElementById('practiceFields');
                 if(val === 'practice') pFields.classList.remove('hidden');
@@ -1143,8 +1143,10 @@
             document.getElementById('practiceFields').classList.add('hidden');
             
             const defaultTypeRadio = document.querySelector('input[name="assetType"][value="book"]');
-            if(defaultTypeRadio) defaultTypeRadio.checked = true;
-            document.getElementById('lblInputAuthor').innerHTML = 'Autor / Autores <span class="text-red-500">*</span>';
+            if(defaultTypeRadio) {
+                defaultTypeRadio.checked = true;
+                defaultTypeRadio.dispatchEvent(new Event('change')); // Fuerza a mostrar los campos por defecto
+            }
             
             window.renderSelectedCategoriesForForm();
             
@@ -1291,9 +1293,10 @@
             
             const type = b.type || 'book';
             const typeRadio = document.querySelector(`input[name="assetType"][value="${type}"]`);
-            if (typeRadio) typeRadio.checked = true;
-
-            document.getElementById('lblInputAuthor').innerHTML = type === 'software' ? 'Desarrollador / Empresa <span class="text-red-500">*</span>' : (type === 'video' ? 'Creador / Canal <span class="text-red-500">*</span>' : (type === 'practice' ? 'Docente / Auxiliar <span class="text-red-500">*</span>' : 'Autor / Autores <span class="text-red-500">*</span>'));
+            if (typeRadio) {
+                typeRadio.checked = true;
+                typeRadio.dispatchEvent(new Event('change')); // Ajusta los campos según el tipo al editar
+            }
 
             if (type === 'practice') {
                 document.getElementById('practiceFields').classList.remove('hidden');
