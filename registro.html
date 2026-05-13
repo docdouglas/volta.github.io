@@ -249,9 +249,18 @@
             </div>
             
             <div id="gradesContainer" class="glass-panel rounded-2xl overflow-hidden hidden">
-                <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-3">
-                    <div id="gradesInfo" class="text-sm font-medium text-gray-600"></div>
-                    <button onclick="saveAllGrades()" class="btn-elegant py-2 text-sm hidden w-full sm:w-auto" id="btnSaveGrades">Guardar Notas</button>
+                <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div id="gradesInfo" class="text-sm font-medium text-gray-600 whitespace-nowrap"></div>
+                    
+                    <!-- Nueva Barra de Búsqueda -->
+                    <div class="relative w-full sm:max-w-xs">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchGrades" oninput="filterGradesTable()" placeholder="Buscar alumno..." class="w-full pl-10 pr-4 py-2 input-glass text-sm">
+                    </div>
+
+                    <button onclick="saveAllGrades()" class="btn-elegant py-2 text-sm hidden w-full sm:w-auto whitespace-nowrap" id="btnSaveGrades">Guardar Notas</button>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse min-w-[800px]">
@@ -861,24 +870,27 @@
                 // Inputs Prácticas
                 for(let i=0; i<materia.numPracticas; i++) {
                     const val = notaObj.practicas[i] || '';
-                    bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10"><input type="number" min="0" max="100" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')"></td>`;
+                    bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10"><input type="number" min="0" max="100" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
                 }
                 
                 // Inputs Parciales
                 for(let i=0; i<materia.numParciales; i++) {
                     const val = notaObj.parciales[i] || '';
-                    bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/10"><input type="number" min="0" max="100" data-type="parc" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')"></td>`;
+                    bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/10"><input type="number" min="0" max="100" data-type="parc" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
                 }
 
                 // Input Asistencia
                 const asisVal = notaObj.asistencia || '';
-                bodyHTML += `<td class="py-2 px-2 text-center bg-green-50/10"><input type="number" min="0" max="100" data-type="asis" data-al="${al.id}" value="${asisVal}" class="w-16 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-green-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')"></td>`;
+                bodyHTML += `<td class="py-2 px-2 text-center bg-green-50/10"><input type="number" min="0" max="100" data-type="asis" data-al="${al.id}" value="${asisVal}" class="w-16 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-green-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
 
                 // Celda Nota Final
                 bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l border-gray-100 font-bold text-lg" id="final_${al.id}">-</td>`;
                 bodyHTML += `</tr>`;
             });
             tbody.innerHTML = bodyHTML;
+            
+            // Limpiar la barra de búsqueda al cambiar de materia
+            document.getElementById('searchGrades').value = '';
             
             // Trigger calculation for all rows initially
             setTimeout(() => {
@@ -923,6 +935,59 @@
             if(finalCell) {
                 finalCell.innerText = notaFinal;
                 finalCell.className = `py-2 px-4 text-center bg-gray-50 border-l border-gray-100 font-bold text-lg ${notaFinal >= 51 ? 'text-green-600' : 'text-red-500'}`;
+            }
+        };
+
+        // Nueva función para navegación con Enter
+        window.handleEnterNavigation = (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Evitar comportamiento por defecto del Enter
+                
+                // Forzar el cálculo antes de cambiar de foco (por si acaso el evento onchange no se dispara a tiempo)
+                const input = event.target;
+                const matId = document.getElementById('selectMateriaGrades').value;
+                window.calcFinalRow(input, matId);
+
+                // Obtener todos los inputs de calificación visibles
+                const inputs = Array.from(document.querySelectorAll('.grade-input'));
+                
+                // Encontrar el índice del input actual
+                const currentIndex = inputs.indexOf(input);
+                
+                // Si encontramos el input actual y no es el último
+                if (currentIndex > -1 && currentIndex < inputs.length - 1) {
+                    // Enfocar el siguiente input
+                    inputs[currentIndex + 1].focus();
+                    inputs[currentIndex + 1].select(); // Seleccionar el contenido para fácil reemplazo
+                }
+            }
+        };
+
+        // Función auxiliar para quitar acentos
+        const removeAccents = (str) => {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        };
+
+        // Nueva función para filtrar la tabla de calificaciones
+        window.filterGradesTable = () => {
+            const searchInput = document.getElementById('searchGrades').value.toLowerCase();
+            const normalizedSearch = removeAccents(searchInput);
+            const tbody = document.getElementById('gradesTableBody');
+            const rows = tbody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                // Asumimos que el nombre del alumno está en la primera celda (td)
+                const nameCell = rows[i].getElementsByTagName('td')[0];
+                if (nameCell) {
+                    const nameText = nameCell.textContent || nameCell.innerText;
+                    const normalizedName = removeAccents(nameText.toLowerCase());
+
+                    if (normalizedName.indexOf(normalizedSearch) > -1) {
+                        rows[i].style.display = ""; // Mostrar fila
+                    } else {
+                        rows[i].style.display = "none"; // Ocultar fila
+                    }
+                }
             }
         };
 
