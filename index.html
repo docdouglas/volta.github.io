@@ -2404,17 +2404,46 @@
                 const colorPill = aprobado ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-red-700 bg-red-100 border-red-200';
                 const colorText = aprobado ? 'text-emerald-600' : 'text-red-500';
 
+                const crearFilaDetalle = (titulo, icono, notasStr, puntos, pesoMax) => {
+                    if (puntos === undefined) return '';
+                    const notasMostradas = notasStr === '-' || notasStr === '' ? 'Sin registros' : notasStr;
+                    return `
+                        <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-2">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-bold text-gray-800 text-[13px] flex items-center gap-1.5">
+                                    <i data-lucide="${icono}" class="w-4 h-4 text-[#0f4c81]"></i> ${titulo}
+                                </span>
+                                <div class="text-right flex items-baseline gap-1">
+                                    <span class="text-[#0f4c81] font-black text-[16px]">${puntos}</span>
+                                    <span class="text-gray-400 font-bold text-[10px] uppercase tracking-wider">/ ${pesoMax} pts</span>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-1.5 bg-white p-2 rounded-lg border border-gray-200/60 shadow-sm">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 shrink-0">Notas obtenidas:</span>
+                                <span class="text-[12px] text-gray-700 font-medium break-words">${notasMostradas}</span>
+                            </div>
+                        </div>
+                    `;
+                };
+
                 let detalleHTML = data.detalle || '';
                 if (valAsistencia !== undefined || valParciales !== undefined || valPracticas !== undefined) {
                     detalleHTML = `
-                        <div class="flex flex-col gap-2 mt-2">
-                            ${valAsistencia !== undefined ? `<div class="bg-white px-3 py-2 rounded-lg text-[11px] font-bold border border-gray-200 text-gray-700 shadow-sm flex justify-between items-center"><span class="text-gray-500">Asistencia <span class="font-normal">(${asistData.str})</span></span> <span class="text-[#0f4c81] text-xs bg-[#0f4c81]/10 px-2 py-0.5 rounded">${asistData.puntos} / ${pesoAsist} pts</span></div>` : ''}
-                            ${valParciales !== undefined ? `<div class="bg-white px-3 py-2 rounded-lg text-[11px] font-bold border border-gray-200 text-gray-700 shadow-sm flex justify-between items-center"><span class="text-gray-500">Parciales <span class="font-normal">(${parcData.str})</span></span> <span class="text-[#0f4c81] text-xs bg-[#0f4c81]/10 px-2 py-0.5 rounded">${parcData.puntos} / ${pesoParc} pts</span></div>` : ''}
-                            ${valPracticas !== undefined ? `<div class="bg-white px-3 py-2 rounded-lg text-[11px] font-bold border border-gray-200 text-gray-700 shadow-sm flex justify-between items-center"><span class="text-gray-500">Prácticas <span class="font-normal">(${pracData.str})</span></span> <span class="text-[#0f4c81] text-xs bg-[#0f4c81]/10 px-2 py-0.5 rounded">${pracData.puntos} / ${pesoPrac} pts</span></div>` : ''}
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="font-bold text-gray-800 text-xs uppercase tracking-wider">Desglose de Puntos</span>
+                            </div>
+                            <div class="flex flex-col">
+                                ${valAsistencia !== undefined ? crearFilaDetalle('Asistencia', 'calendar-check', asistData.str, asistData.puntos, pesoAsist) : ''}
+                                ${valPracticas !== undefined ? crearFilaDetalle('Prácticas', 'pen-tool', pracData.str, pracData.puntos, pesoPrac) : ''}
+                                ${valParciales !== undefined ? crearFilaDetalle('Parciales', 'file-text', parcData.str, parcData.puntos, pesoParc) : ''}
+                            </div>
                         </div>
                     `;
                 } else if (!detalleHTML) {
-                    detalleHTML = 'Calificación final consolidada.';
+                    detalleHTML = '<div class="mt-4 pt-4 border-t border-gray-100 text-[13px] text-gray-500 italic">Calificación final consolidada.</div>';
+                } else {
+                    detalleHTML = `<div class="mt-4 pt-4 border-t border-gray-100"><p class="text-[13px] text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-100">${detalleHTML}</p></div>`;
                 }
 
                 const card = document.createElement('div');
@@ -2430,16 +2459,11 @@
                         </div>
                         <span class="px-3 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider ${colorPill}">${estado}</span>
                     </div>
-                    <div class="flex items-end gap-2 mb-4 border-b border-gray-100 pb-4">
+                    <div class="flex items-end gap-2 mb-2">
                         <span class="text-5xl font-black ${colorText} font-serif-title tracking-tighter">${nota}</span>
                         <span class="text-sm text-gray-400 mb-1.5 font-bold uppercase tracking-widest">/ 100</span>
                     </div>
-                    <div>
-                        <p class="text-[13px] text-gray-600 leading-relaxed bg-gray-50/80 p-3 rounded-xl border border-gray-100">
-                            <span class="block font-bold text-gray-800 text-xs uppercase tracking-wider mb-1">Detalle de Evaluación</span>
-                            ${detalleHTML}
-                        </p>
-                    </div>
+                    ${detalleHTML}
                 `;
                 container.appendChild(card);
             });
