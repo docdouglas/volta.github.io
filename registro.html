@@ -205,14 +205,23 @@
         </div>
 
         <div id="view-alumnos" class="view-section hidden animate-fade">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900">Registro de Alumnos</h2>
                     <p class="text-gray-500 text-sm mt-1">Administra estudiantes y sus inscripciones.</p>
                 </div>
-                <button onclick="openModal('modalAlumno')" class="btn-elegant flex items-center justify-center gap-2 w-full sm:w-auto">
-                    <i data-lucide="user-plus" class="w-4 h-4"></i> Nuevo Alumno
-                </button>
+                <!-- Barra de Búsqueda y Botón en la misma fila en desktop -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
+                    <div class="relative w-full sm:w-72">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchAlumnos" oninput="filterAlumnosTable()" placeholder="Buscar por nombre, celular o materia..." class="w-full pl-10 pr-4 py-2 input-glass text-sm">
+                    </div>
+                    <button onclick="openModal('modalAlumno')" class="btn-elegant flex items-center justify-center gap-2 w-full sm:w-auto whitespace-nowrap">
+                        <i data-lucide="user-plus" class="w-4 h-4"></i> Nuevo Alumno
+                    </button>
+                </div>
             </div>
             <div class="glass-panel rounded-2xl overflow-hidden">
                 <div class="overflow-x-auto">
@@ -252,7 +261,7 @@
                 <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div id="gradesInfo" class="text-sm font-medium text-gray-600 whitespace-nowrap"></div>
                     
-                    <!-- Nueva Barra de Búsqueda -->
+                    <!-- Barra de Búsqueda de Notas -->
                     <div class="relative w-full sm:max-w-xs">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
@@ -535,6 +544,11 @@
             lucide.createIcons();
         }
 
+        // --- Función auxiliar común para quitar acentos ---
+        const removeAccents = (str) => {
+            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        };
+
         // --- Lógica Materias ---
         document.getElementById('formMateria').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -763,7 +777,38 @@
                     </td>
                 </tr>
             `}).join('');
+
+            // Si hay un término de búsqueda, re-aplicarlo tras renderizar
+            if(document.getElementById('searchAlumnos') && document.getElementById('searchAlumnos').value) {
+                filterAlumnosTable();
+            }
         }
+
+        // --- Nueva función para filtrar la tabla de alumnos ---
+        window.filterAlumnosTable = () => {
+            const searchInput = document.getElementById('searchAlumnos').value.toLowerCase();
+            const normalizedSearch = removeAccents(searchInput);
+            const tbody = document.getElementById('listaAlumnos');
+            const rows = tbody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                // Asegurarse de que la fila es de datos y no el mensaje de "No hay alumnos"
+                if (cells.length >= 5) {
+                    const nameText = cells[0].textContent || cells[0].innerText;
+                    const celText = cells[1].textContent || cells[1].innerText;
+                    const matText = cells[4].textContent || cells[4].innerText;
+                    
+                    const combinedText = removeAccents((nameText + " " + celText + " " + matText).toLowerCase());
+
+                    if (combinedText.indexOf(normalizedSearch) > -1) {
+                        rows[i].style.display = "";
+                    } else {
+                        rows[i].style.display = "none";
+                    }
+                }
+            }
+        };
 
         window.editarAlumno = (id) => {
             const a = alumnos.find(x => x.id === id);
@@ -961,11 +1006,6 @@
                     inputs[currentIndex + 1].select(); // Seleccionar el contenido para fácil reemplazo
                 }
             }
-        };
-
-        // Función auxiliar para quitar acentos
-        const removeAccents = (str) => {
-            return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         };
 
         // Nueva función para filtrar la tabla de calificaciones
