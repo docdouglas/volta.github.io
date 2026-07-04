@@ -308,32 +308,19 @@
                 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Prácticas</label>
-                        <input type="number" id="matNumPrac" required min="0" max="20" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Secciones</label>
+                        <input type="number" id="matNumSec" required min="1" max="10" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
                     </div>
                     <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Parciales</label>
-                        <input type="number" id="matNumParc" required min="0" max="10" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
+                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Prácticas por Sección</label>
+                        <input type="number" id="matNumPrac" required min="1" max="20" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
                     </div>
                 </div>
 
-                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100">
-                    <h4 class="text-xs font-bold text-[#0f4c81] uppercase tracking-wider mb-3 text-center">Ponderación (Debe sumar 100%)</h4>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div class="text-center">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Prácticas %</label>
-                            <input type="number" id="matPesoPrac" required min="0" max="100" class="w-full mt-1 px-2 py-2 input-glass text-center text-sm" value="30">
-                        </div>
-                        <div class="text-center">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Parciales %</label>
-                            <input type="number" id="matPesoParc" required min="0" max="100" class="w-full mt-1 px-2 py-2 input-glass text-center text-sm" value="50">
-                        </div>
-                        <div class="text-center">
-                            <label class="text-[10px] font-bold text-gray-500 uppercase">Asistencia %</label>
-                            <input type="number" id="matPesoAsis" required min="0" max="100" class="w-full mt-1 px-2 py-2 input-glass text-center text-sm" value="20">
-                        </div>
-                    </div>
-                    <p id="errorPesos" class="text-red-500 text-xs text-center mt-2 hidden font-medium">La suma debe ser exactamente 100%.</p>
+                <div class="bg-blue-50/50 p-4 rounded-xl border border-blue-100 text-center">
+                    <h4 class="text-xs font-bold text-[#0f4c81] uppercase tracking-wider mb-2">Ponderación Fija por Sección</h4>
+                    <p class="text-sm font-medium text-gray-600">Evaluación Práctica: <b>70%</b></p>
+                    <p class="text-sm font-medium text-gray-600">Evaluación Teórica: <b>30%</b></p>
                 </div>
 
                 <button type="submit" id="btnGuardarMateria" class="w-full btn-elegant py-3 mt-2">Guardar Materia</button>
@@ -508,7 +495,6 @@
                 editingMateriaId = null;
                 document.getElementById('formMateria').reset();
                 document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="book" class="w-5 h-5"></i> Registrar Materia';
-                document.getElementById('errorPesos').classList.add('hidden');
             }
             if(id === 'modalAlumno') {
                 editingAlumnoId = null;
@@ -554,15 +540,6 @@
             e.preventDefault();
             
             const btn = document.getElementById('btnGuardarMateria');
-            const prac = parseInt(document.getElementById('matPesoPrac').value);
-            const parc = parseInt(document.getElementById('matPesoParc').value);
-            const asis = parseInt(document.getElementById('matPesoAsis').value);
-            
-            if ((prac + parc + asis) !== 100) {
-                document.getElementById('errorPesos').classList.remove('hidden');
-                return;
-            }
-            document.getElementById('errorPesos').classList.add('hidden');
 
             // Feedback visual para evitar que el usuario piense que se congeló
             const originalText = btn.innerText;
@@ -573,11 +550,8 @@
             const data = {
                 id: id,
                 nombre: document.getElementById('matNombre').value.trim(),
-                numPracticas: parseInt(document.getElementById('matNumPrac').value),
-                numParciales: parseInt(document.getElementById('matNumParc').value),
-                pesoPracticas: prac,
-                pesoParciales: parc,
-                pesoAsistencia: asis
+                numSecciones: parseInt(document.getElementById('matNumSec').value),
+                numPracticas: parseInt(document.getElementById('matNumPrac').value)
             };
 
             if (!currentUser) {
@@ -620,19 +594,17 @@
                     
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
-                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Prácticas</p>
-                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numPracticas}</p>
+                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Secciones</p>
+                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numSecciones || 1}</p>
                         </div>
                         <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
-                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Parciales</p>
-                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numParciales}</p>
+                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Prácticas/Sec</p>
+                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numPracticas}</p>
                         </div>
                     </div>
                     
-                    <div class="flex justify-between text-[10px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
-                        <span>P: ${m.pesoPracticas}%</span>
-                        <span>Ex: ${m.pesoParciales}%</span>
-                        <span>Asist: ${m.pesoAsistencia}%</span>
+                    <div class="flex justify-center text-[11px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
+                        <span>Práctica 70% | Teórica 30%</span>
                     </div>
                 </div>
             `).join('');
@@ -643,11 +615,8 @@
             if (!m) return;
             editingMateriaId = id;
             document.getElementById('matNombre').value = m.nombre;
+            document.getElementById('matNumSec').value = m.numSecciones || 1;
             document.getElementById('matNumPrac').value = m.numPracticas;
-            document.getElementById('matNumParc').value = m.numParciales;
-            document.getElementById('matPesoPrac').value = m.pesoPracticas;
-            document.getElementById('matPesoParc').value = m.pesoParciales;
-            document.getElementById('matPesoAsis').value = m.pesoAsistencia;
             
             document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="edit" class="w-5 h-5"></i> Editar Materia';
             document.getElementById('modalMateria').classList.remove('hidden');
@@ -882,6 +851,7 @@
 
             const materia = materias.find(m => m.id === matId);
             if(!materia) return;
+            const numSecciones = materia.numSecciones || 1;
 
             const alumnosInscritos = alumnos.filter(a => a.materiasInscritas.includes(matId));
             
@@ -890,13 +860,24 @@
             document.getElementById('btnSaveGrades').classList.remove('hidden');
             document.getElementById('gradesInfo').innerText = `${alumnosInscritos.length} alumnos inscritos`;
 
-            // Generar Cabeceras
-            let headHTML = `<tr><th class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase sticky left-0 bg-white z-10 border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">Alumno</th>`;
-            for(let i=1; i<=materia.numPracticas; i++) headHTML += `<th class="py-3 px-2 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/30">Prác ${i}</th>`;
-            for(let i=1; i<=materia.numParciales; i++) headHTML += `<th class="py-3 px-2 text-[10px] font-bold text-gray-500 uppercase text-center bg-indigo-50/30">Parc ${i}</th>`;
-            headHTML += `<th class="py-3 px-2 text-[10px] font-bold text-gray-500 uppercase text-center bg-green-50/30">Asist. (100)</th>`;
-            headHTML += `<th class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase text-center bg-gray-50 border-l border-gray-200">Nota Final</th></tr>`;
-            thead.innerHTML = headHTML;
+            // Generar Cabeceras Dinámicas por Sección (Doble fila para agrupar)
+            let headRow1 = `<tr><th rowspan="2" class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase align-middle sticky left-0 bg-white z-10 border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">Alumno</th>`;
+            let headRow2 = `<tr>`;
+            
+            for(let s = 0; s < numSecciones; s++) {
+                // Colspan = (nº de prácticas) + 1 (teórica) + 1 (promedio de la sección)
+                headRow1 += `<th colspan="${materia.numPracticas + 2}" class="py-2 px-2 text-sm font-bold text-gray-800 uppercase text-center bg-blue-100/50 border-l-2 border-blue-200 border-b border-blue-200">Sección ${s+1}</th>`;
+
+                for(let i=1; i<=materia.numPracticas; i++) {
+                    headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/50 border-l border-blue-100" title="Práctica ${i} (Parte del 70%)">P${i}<br><span class="text-[9px] font-medium text-gray-400">70%</span></th>`;
+                }
+                headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-indigo-700 uppercase text-center bg-indigo-100/50 border-l border-indigo-200" title="Evaluación Teórica (30%)">Teoría<br><span class="text-[9px] font-medium text-indigo-500">30%</span></th>`;
+                headRow2 += `<th class="py-2 px-2 text-[10px] font-bold text-emerald-700 uppercase text-center bg-emerald-100/50 border-l border-emerald-200" title="Promedio de la Sección ${s+1}">Prom.<br>Sec ${s+1}</th>`;
+            }
+            headRow1 += `<th rowspan="2" class="py-3 px-4 text-sm font-bold text-white uppercase align-middle text-center bg-[#0f4c81] border-l-2 border-[#0a365c] shadow-md">Nota Final</th></tr>`;
+            headRow2 += `</tr>`;
+            
+            thead.innerHTML = headRow1 + headRow2;
 
             // Generar Filas
             if(alumnosInscritos.length === 0) {
@@ -907,29 +888,30 @@
             let bodyHTML = '';
             alumnosInscritos.forEach(al => {
                 const califId = `${al.id}_${matId}`;
-                const notaObj = calificaciones.find(c => c.id === califId) || { practicas: [], parciales: [], asistencia: 0 };
+                const notaObj = calificaciones.find(c => c.id === califId) || { secciones: [] };
                 
                 bodyHTML += `<tr>`;
-                bodyHTML += `<td class="py-2 px-4 text-sm font-semibold text-gray-800 sticky left-0 bg-white/90 backdrop-blur border-r border-gray-100 shadow-[2px_0_5px_rgba(0,0,0,0.02)] whitespace-nowrap">${al.paterno} ${al.materno} ${al.nombre}</td>`;
+                bodyHTML += `<td class="py-2 px-4 text-sm font-semibold text-gray-800 sticky left-0 bg-white/90 backdrop-blur border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)] whitespace-nowrap">${al.paterno} ${al.materno} ${al.nombre}</td>`;
                 
-                // Inputs Prácticas
-                for(let i=0; i<materia.numPracticas; i++) {
-                    const val = notaObj.practicas[i] || '';
-                    bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10"><input type="number" min="0" max="100" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
-                }
-                
-                // Inputs Parciales
-                for(let i=0; i<materia.numParciales; i++) {
-                    const val = notaObj.parciales[i] || '';
-                    bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/10"><input type="number" min="0" max="100" data-type="parc" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
-                }
+                for(let s = 0; s < numSecciones; s++) {
+                    const secData = notaObj.secciones[s] || { practicas: [], teorica: '' };
+                    
+                    // Inputs Prácticas
+                    for(let i=0; i<materia.numPracticas; i++) {
+                        const val = secData.practicas[i] !== undefined ? secData.practicas[i] : '';
+                        bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10 border-l ${i===0 ? 'border-l-2 border-blue-200' : 'border-blue-100'}"><input type="number" min="0" max="100" data-sec="${s}" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-400 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
+                    }
+                    
+                    // Input Teórica
+                    const valTeo = secData.teorica !== undefined ? secData.teorica : '';
+                    bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/20 border-l border-indigo-100"><input type="number" min="0" max="100" data-sec="${s}" data-type="teo" data-al="${al.id}" value="${valTeo}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-500 grade-input font-bold text-indigo-700" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
 
-                // Input Asistencia
-                const asisVal = notaObj.asistencia || '';
-                bodyHTML += `<td class="py-2 px-2 text-center bg-green-50/10"><input type="number" min="0" max="100" data-type="asis" data-al="${al.id}" value="${asisVal}" class="w-16 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-green-300 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
+                    // Celda de Promedio de esta Sección
+                    bodyHTML += `<td class="py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm text-emerald-700" id="prom_sec_${al.id}_${s}">-</td>`;
+                }
 
                 // Celda Nota Final
-                bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l border-gray-100 font-bold text-lg" id="final_${al.id}">-</td>`;
+                bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l-2 border-gray-300 font-bold text-xl" id="final_${al.id}">-</td>`;
                 bodyHTML += `</tr>`;
             });
             tbody.innerHTML = bodyHTML;
@@ -950,36 +932,57 @@
             const alId = el.getAttribute('data-al');
             const materia = materias.find(m => m.id === matId);
             if(!materia) return;
+            const numSecciones = materia.numSecciones || 1;
 
             // Recopilar valores de esta fila
             const rowInputs = document.querySelectorAll(`input[data-al="${alId}"]`);
-            let sumPrac = 0, countPrac = 0;
-            let sumParc = 0, countParc = 0;
-            let asis = 0;
+            
+            let sectionsData = [];
+            for(let s = 0; s < numSecciones; s++) {
+                sectionsData.push({ sumPrac: 0, countPrac: 0, teorica: 0 });
+            }
 
             rowInputs.forEach(inp => {
                 const val = parseFloat(inp.value) || 0;
                 const type = inp.getAttribute('data-type');
-                if(type === 'prac') { sumPrac += val; countPrac++; }
-                else if(type === 'parc') { sumParc += val; countParc++; }
-                else if(type === 'asis') { asis = val; }
+                const sec = parseInt(inp.getAttribute('data-sec'));
+                
+                if (!isNaN(sec) && sectionsData[sec]) {
+                    if(type === 'prac') { 
+                        sectionsData[sec].sumPrac += val; 
+                        sectionsData[sec].countPrac++; 
+                    }
+                    else if(type === 'teo') { 
+                        sectionsData[sec].teorica = val; 
+                    }
+                }
             });
 
-            // Promedios sobre 100
-            const avgPrac = countPrac > 0 ? (sumPrac / countPrac) : 0;
-            const avgParc = countParc > 0 ? (sumParc / countParc) : 0;
+            let totalSumaSecciones = 0;
+            for(let s = 0; s < numSecciones; s++) {
+                const avgPrac = sectionsData[s].countPrac > 0 ? (sectionsData[s].sumPrac / sectionsData[s].countPrac) : 0;
+                const teo = sectionsData[s].teorica;
+                
+                // Cálculo: Prácticas 70%, Teórica 30%
+                const notaSec = (avgPrac * 0.70) + (teo * 0.30);
+                totalSumaSecciones += notaSec;
 
-            // Calculo final ponderado (Asumiendo que las notas se ingresan sobre 100)
-            const ptsPrac = avgPrac * (materia.pesoPracticas / 100);
-            const ptsParc = avgParc * (materia.pesoParciales / 100);
-            const ptsAsis = asis * (materia.pesoAsistencia / 100);
+                // Actualizar celda visual del promedio de sección
+                const cellSec = document.getElementById(`prom_sec_${alId}_${s}`);
+                if(cellSec) {
+                    const roundedSec = Math.round(notaSec);
+                    cellSec.innerText = roundedSec;
+                    cellSec.className = `py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm ${roundedSec >= 51 ? 'text-emerald-700' : 'text-red-500'}`;
+                }
+            }
 
-            const notaFinal = Math.round(ptsPrac + ptsParc + ptsAsis);
+            // Nota final es el promedio de las secciones
+            const notaFinal = numSecciones > 0 ? Math.round(totalSumaSecciones / numSecciones) : 0;
             
             const finalCell = document.getElementById(`final_${alId}`);
             if(finalCell) {
                 finalCell.innerText = notaFinal;
-                finalCell.className = `py-2 px-4 text-center bg-gray-50 border-l border-gray-100 font-bold text-lg ${notaFinal >= 51 ? 'text-green-600' : 'text-red-500'}`;
+                finalCell.className = `py-2 px-4 text-center bg-gray-50 border-l-2 border-gray-300 font-bold text-xl shadow-inner ${notaFinal >= 51 ? 'text-[#0f4c81]' : 'text-red-600'}`;
             }
         };
 
@@ -1036,6 +1039,7 @@
             const matId = select.value;
             if(!matId) return;
             const materia = materias.find(m => m.id === matId);
+            const numSecciones = materia.numSecciones || 1;
 
             const btn = document.getElementById('btnSaveGrades');
             btn.innerText = "Guardando..."; btn.disabled = true;
@@ -1045,18 +1049,25 @@
             try {
                 for(const al of alumnosInscritos) {
                     const rowInputs = document.querySelectorAll(`input[data-al="${al.id}"]`);
-                    let pracArr = new Array(materia.numPracticas).fill(0);
-                    let parcArr = new Array(materia.numParciales).fill(0);
-                    let asisVal = 0;
+                    
+                    let seccionesData = [];
+                    for(let s = 0; s < numSecciones; s++) {
+                        seccionesData.push({ practicas: new Array(materia.numPracticas).fill(0), teorica: 0 });
+                    }
 
                     rowInputs.forEach(inp => {
                         const val = parseFloat(inp.value) || 0;
                         const type = inp.getAttribute('data-type');
+                        const sec = parseInt(inp.getAttribute('data-sec'));
                         const idx = parseInt(inp.getAttribute('data-idx'));
                         
-                        if(type === 'prac') pracArr[idx] = val;
-                        else if(type === 'parc') parcArr[idx] = val;
-                        else if(type === 'asis') asisVal = val;
+                        if (!isNaN(sec) && seccionesData[sec]) {
+                            if(type === 'prac' && !isNaN(idx)) {
+                                seccionesData[sec].practicas[idx] = val;
+                            } else if(type === 'teo') {
+                                seccionesData[sec].teorica = val;
+                            }
+                        }
                     });
 
                     if (!currentUser) throw new Error("No autenticado");
@@ -1068,9 +1079,7 @@
                         id: califId,
                         alumnoId: al.id,
                         materiaId: matId,
-                        practicas: pracArr,
-                        parciales: parcArr,
-                        asistencia: asisVal
+                        secciones: seccionesData
                     }));
                 }
                 mostrarNotificacion("Guardado", "Notas actualizadas correctamente.");
