@@ -865,12 +865,16 @@
             let headRow2 = `<tr>`;
             
             for(let s = 0; s < numSecciones; s++) {
-                // Colspan = (nº de prácticas) + 1 (teórica) + 1 (promedio de la sección)
-                headRow1 += `<th colspan="${materia.numPracticas + 2}" class="py-2 px-2 text-sm font-bold text-gray-800 uppercase text-center bg-blue-100/50 border-l-2 border-blue-200 border-b border-blue-200">Sección ${s+1}</th>`;
+                // Colspan = (nº de prácticas) + 1 (promedio prácticas) + 1 (teórica) + 1 (promedio de la sección)
+                headRow1 += `<th colspan="${materia.numPracticas + 3}" class="py-2 px-2 text-sm font-bold text-gray-800 uppercase text-center bg-blue-100/50 border-l-2 border-blue-200 border-b border-blue-200">Sección ${s+1}</th>`;
 
                 for(let i=1; i<=materia.numPracticas; i++) {
-                    headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/50 border-l border-blue-100" title="Práctica ${i} (Parte del 70%)">P${i}<br><span class="text-[9px] font-medium text-gray-400">70%</span></th>`;
+                    headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/50 border-l border-blue-100" title="Práctica ${i}">P${i}</th>`;
                 }
+                
+                // NUEVA COLUMNA: Promedio de prácticas
+                headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-blue-700 uppercase text-center bg-blue-100/60 border-l border-blue-200" title="Promedio de Prácticas (70%)">Práctica<br><span class="text-[9px] font-medium text-blue-500">70%</span></th>`;
+
                 headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-indigo-700 uppercase text-center bg-indigo-100/50 border-l border-indigo-200" title="Evaluación Teórica (30%)">Teoría<br><span class="text-[9px] font-medium text-indigo-500">30%</span></th>`;
                 headRow2 += `<th class="py-2 px-2 text-[10px] font-bold text-emerald-700 uppercase text-center bg-emerald-100/50 border-l border-emerald-200" title="Promedio de la Sección ${s+1}">Prom.<br>Sec ${s+1}</th>`;
             }
@@ -902,6 +906,9 @@
                         bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10 border-l ${i===0 ? 'border-l-2 border-blue-200' : 'border-blue-100'}"><input type="number" min="0" max="100" data-sec="${s}" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-400 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
                     }
                     
+                    // NUEVA CELDA: Promedio de prácticas (Solo lectura)
+                    bodyHTML += `<td class="py-2 px-2 text-center bg-blue-50/40 border-l border-blue-200 font-bold text-sm text-blue-700" id="prom_prac_${al.id}_${s}">-</td>`;
+
                     // Input Teórica
                     const valTeo = secData.teorica !== undefined ? secData.teorica : '';
                     bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/20 border-l border-indigo-100"><input type="number" min="0" max="100" data-sec="${s}" data-type="teo" data-al="${al.id}" value="${valTeo}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-500 grade-input font-bold text-indigo-700" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
@@ -939,40 +946,64 @@
             
             let sectionsData = [];
             for(let s = 0; s < numSecciones; s++) {
-                sectionsData.push({ sumPrac: 0, countPrac: 0, teorica: 0 });
+                sectionsData.push({ sumPrac: 0, countPrac: 0, teorica: 0, hasData: false });
             }
 
             rowInputs.forEach(inp => {
-                const val = parseFloat(inp.value) || 0;
+                const rawVal = inp.value.trim();
                 const type = inp.getAttribute('data-type');
                 const sec = parseInt(inp.getAttribute('data-sec'));
                 
                 if (!isNaN(sec) && sectionsData[sec]) {
                     if(type === 'prac') { 
-                        sectionsData[sec].sumPrac += val; 
-                        sectionsData[sec].countPrac++; 
+                        // Solo promediar las prácticas si tienen un valor
+                        if (rawVal !== '') {
+                            const val = parseFloat(rawVal) || 0;
+                            sectionsData[sec].sumPrac += val; 
+                            sectionsData[sec].countPrac++; 
+                            sectionsData[sec].hasData = true;
+                        }
                     }
                     else if(type === 'teo') { 
-                        sectionsData[sec].teorica = val; 
+                        if (rawVal !== '') {
+                            sectionsData[sec].teorica = parseFloat(rawVal) || 0; 
+                            sectionsData[sec].hasData = true;
+                        }
                     }
                 }
             });
 
             let totalSumaSecciones = 0;
             for(let s = 0; s < numSecciones; s++) {
+                // 1. Promediar las prácticas evaluadas
                 const avgPrac = sectionsData[s].countPrac > 0 ? (sectionsData[s].sumPrac / sectionsData[s].countPrac) : 0;
-                const teo = sectionsData[s].teorica;
+                const teo = sectionsData[s].teorica || 0;
                 
-                // Cálculo: Prácticas 70%, Teórica 30%
+                // Actualizar celda visual del promedio de prácticas
+                const cellPrac = document.getElementById(`prom_prac_${alId}_${s}`);
+                if(cellPrac) {
+                    if (sectionsData[s].countPrac > 0) {
+                        cellPrac.innerText = Math.round(avgPrac);
+                    } else {
+                        cellPrac.innerText = '-';
+                    }
+                }
+
+                // 2. Sumar el porcentaje de prácticas (70%) + teoría (30%)
                 const notaSec = (avgPrac * 0.70) + (teo * 0.30);
                 totalSumaSecciones += notaSec;
 
                 // Actualizar celda visual del promedio de sección
                 const cellSec = document.getElementById(`prom_sec_${alId}_${s}`);
                 if(cellSec) {
-                    const roundedSec = Math.round(notaSec);
-                    cellSec.innerText = roundedSec;
-                    cellSec.className = `py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm ${roundedSec >= 51 ? 'text-emerald-700' : 'text-red-500'}`;
+                    if (sectionsData[s].hasData) {
+                        const roundedSec = Math.round(notaSec);
+                        cellSec.innerText = roundedSec;
+                        cellSec.className = `py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm ${roundedSec >= 51 ? 'text-emerald-700' : 'text-red-500'}`;
+                    } else {
+                        cellSec.innerText = '-';
+                        cellSec.className = `py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm text-gray-400`;
+                    }
                 }
             }
 
@@ -1052,11 +1083,13 @@
                     
                     let seccionesData = [];
                     for(let s = 0; s < numSecciones; s++) {
-                        seccionesData.push({ practicas: new Array(materia.numPracticas).fill(0), teorica: 0 });
+                        seccionesData.push({ practicas: new Array(materia.numPracticas).fill(''), teorica: '' });
                     }
 
                     rowInputs.forEach(inp => {
-                        const val = parseFloat(inp.value) || 0;
+                        const rawVal = inp.value.trim();
+                        // Guardar como vacío si no hay valor para no afectar el promedio futuro como si fuera un 0
+                        const val = rawVal !== '' ? parseFloat(rawVal) : ''; 
                         const type = inp.getAttribute('data-type');
                         const sec = parseInt(inp.getAttribute('data-sec'));
                         const idx = parseInt(inp.getAttribute('data-idx'));
