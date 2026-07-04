@@ -853,7 +853,14 @@
             if(!materia) return;
             const numSecciones = materia.numSecciones || 1;
 
-            const alumnosInscritos = alumnos.filter(a => a.materiasInscritas.includes(matId));
+            // Filtrar alumnos inscritos y ordenarlos alfabéticamente por apellido paterno, materno y nombre
+            const alumnosInscritos = alumnos
+                .filter(a => a.materiasInscritas.includes(matId))
+                .sort((a, b) => {
+                    const nombreA = `${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase();
+                    const nombreB = `${b.paterno || ''} ${b.materno || ''} ${b.nombre || ''}`.trim().toLowerCase();
+                    return nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
+                });
             
             emptyState.classList.add('hidden'); 
             container.classList.remove('hidden');
