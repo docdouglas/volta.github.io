@@ -248,43 +248,40 @@
             <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900">Calificaciones</h2>
-                    <p class="text-gray-500 text-sm mt-1">Registra notas seleccionando una materia.</p>
+                    <p class="text-gray-500 text-sm mt-1">Busca a un alumno o selecciona una materia.</p>
                 </div>
-                <div class="w-full md:w-72">
-                    <select id="selectMateriaGrades" onchange="renderGradesTable()" class="w-full px-4 py-3 input-glass text-sm font-semibold text-[#0f4c81]">
-                        <option value="">-- Seleccionar Materia --</option>
-                    </select>
+                
+                <!-- Búsqueda Global y Selector de Materia alineados -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                    <div class="relative w-full sm:w-72">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
+                        </div>
+                        <input type="text" id="searchGradesGlobal" oninput="renderGradesTable()" placeholder="Buscar alumno..." class="w-full pl-10 pr-4 py-3 input-glass text-sm">
+                    </div>
+                    <div class="w-full sm:w-64">
+                        <select id="selectMateriaGrades" onchange="renderGradesTable()" class="w-full px-4 py-3 input-glass text-sm font-semibold text-[#0f4c81]">
+                            <option value="all">-- Todas las Materias --</option>
+                        </select>
+                    </div>
                 </div>
             </div>
             
             <div id="gradesContainer" class="glass-panel rounded-2xl overflow-hidden hidden">
                 <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div id="gradesInfo" class="text-sm font-medium text-gray-600 whitespace-nowrap"></div>
-                    
-                    <!-- Barra de Búsqueda de Notas -->
-                    <div class="relative w-full sm:max-w-xs">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
-                        </div>
-                        <input type="text" id="searchGrades" oninput="filterGradesTable()" placeholder="Buscar alumno..." class="w-full pl-10 pr-4 py-2 input-glass text-sm">
-                    </div>
-
                     <button onclick="saveAllGrades()" class="btn-elegant py-2 text-sm hidden w-full sm:w-auto whitespace-nowrap" id="btnSaveGrades">Guardar Notas</button>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse min-w-[800px]">
-                        <thead id="gradesTableHead" class="bg-white">
-                            <!-- JS Dinámico -->
-                        </thead>
-                        <tbody id="gradesTableBody" class="divide-y divide-gray-100 bg-white/60">
-                            <!-- JS Dinámico -->
-                        </tbody>
-                    </table>
+                
+                <!-- Contenedor dinámico para múltiples tablas (una por materia) -->
+                <div id="multiGradesContainer" class="divide-y divide-gray-200">
+                     <!-- JS Dinámico -->
                 </div>
+
             </div>
             <div id="emptyGradesState" class="text-center py-20 text-gray-400">
                 <i data-lucide="clipboard-list" class="w-16 h-16 mx-auto mb-4 opacity-50"></i>
-                <p class="text-lg">Selecciona una materia para ver y calificar a los alumnos inscritos.</p>
+                <p class="text-lg">Selecciona una materia o usa el buscador para calificar.</p>
             </div>
         </div>
 
@@ -466,9 +463,9 @@
                     const refAlumnos = collection(db, 'artifacts', appId, 'public', 'data', 'alumnos');
                     const refCalificaciones = collection(db, 'artifacts', appId, 'public', 'data', 'calificaciones');
 
-                    onSnapshot(refMaterias, (snap) => { materias = snap.docs.map(d => d.data()); renderUI(); }, (err) => console.error("Snapshot Materias Error:", err));
-                    onSnapshot(refAlumnos, (snap) => { alumnos = snap.docs.map(d => d.data()); renderUI(); }, (err) => console.error("Snapshot Alumnos Error:", err));
-                    onSnapshot(refCalificaciones, (snap) => { calificaciones = snap.docs.map(d => d.data()); renderGradesTable(); }, (err) => console.error("Snapshot Calificaciones Error:", err));
+                    onSnapshot(refMaterias, (snap) => { materias = snap.docs.map(d => d.data()); renderUI(); updateGradesSelect(); }, (err) => console.error("Snapshot Materias Error:", err));
+                    onSnapshot(refAlumnos, (snap) => { alumnos = snap.docs.map(d => d.data()); renderUI(); if(document.getElementById('view-calificaciones').classList.contains('hidden') === false) renderGradesTable();}, (err) => console.error("Snapshot Alumnos Error:", err));
+                    onSnapshot(refCalificaciones, (snap) => { calificaciones = snap.docs.map(d => d.data()); if(document.getElementById('view-calificaciones').classList.contains('hidden') === false) renderGradesTable(); }, (err) => console.error("Snapshot Calificaciones Error:", err));
                 }
             });
         })();
@@ -753,7 +750,6 @@
             }
         }
 
-        // --- Nueva función para filtrar la tabla de alumnos ---
         window.filterAlumnosTable = () => {
             const searchInput = document.getElementById('searchAlumnos').value.toLowerCase();
             const normalizedSearch = removeAccents(searchInput);
@@ -762,7 +758,6 @@
 
             for (let i = 0; i < rows.length; i++) {
                 const cells = rows[i].getElementsByTagName('td');
-                // Asegurarse de que la fila es de datos y no el mensaje de "No hay alumnos"
                 if (cells.length >= 5) {
                     const nameText = cells[0].textContent || cells[0].innerText;
                     const celText = cells[1].textContent || cells[1].innerText;
@@ -826,118 +821,180 @@
             }
         };
 
-        // --- Lógica Calificaciones ---
+        // --- Lógica Calificaciones Refactorizada ---
         function updateGradesSelect() {
             const select = document.getElementById('selectMateriaGrades');
             const currentVal = select.value;
-            select.innerHTML = '<option value="">-- Seleccionar Materia --</option>' + 
+            select.innerHTML = '<option value="all">-- Todas las Materias --</option>' + 
                 materias.map(m => `<option value="${m.id}">${m.nombre}</option>`).join('');
-            if(materias.find(m => m.id === currentVal)) select.value = currentVal;
+            if(materias.find(m => m.id === currentVal) || currentVal === 'all') select.value = currentVal;
         }
 
-        window.renderGradesTable = () => {
-            const select = document.getElementById('selectMateriaGrades');
-            const matId = select.value;
-            const emptyState = document.getElementById('emptyGradesState');
-            const container = document.getElementById('gradesContainer');
-            const thead = document.getElementById('gradesTableHead');
-            const tbody = document.getElementById('gradesTableBody');
-            
-            if(!matId) {
-                emptyState.classList.remove('hidden'); container.classList.add('hidden');
-                document.getElementById('btnSaveGrades').classList.add('hidden');
-                return;
-            }
-
-            const materia = materias.find(m => m.id === matId);
-            if(!materia) return;
+        // Genera el HTML de la tabla para una materia específica y un conjunto de alumnos
+        const buildMateriaTableHTML = (materia, alumnosDeMateria) => {
             const numSecciones = materia.numSecciones || 1;
-
-            // Filtrar alumnos inscritos y ordenarlos alfabéticamente por apellido paterno, materno y nombre
-            const alumnosInscritos = alumnos
-                .filter(a => a.materiasInscritas.includes(matId))
-                .sort((a, b) => {
-                    const nombreA = `${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase();
-                    const nombreB = `${b.paterno || ''} ${b.materno || ''} ${b.nombre || ''}`.trim().toLowerCase();
-                    return nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
-                });
             
-            emptyState.classList.add('hidden'); 
-            container.classList.remove('hidden');
-            document.getElementById('btnSaveGrades').classList.remove('hidden');
-            document.getElementById('gradesInfo').innerText = `${alumnosInscritos.length} alumnos inscritos`;
-
-            // Generar Cabeceras Dinámicas por Sección (Doble fila para agrupar)
-            let headRow1 = `<tr><th rowspan="2" class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase align-middle sticky left-0 bg-white z-10 border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)]">Alumno</th>`;
+            // CABECERAS
+            let headRow1 = `<tr><th rowspan="2" class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase align-middle sticky left-0 bg-white z-10 border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)] min-w-[200px]">Alumno</th>`;
             let headRow2 = `<tr>`;
             
             for(let s = 0; s < numSecciones; s++) {
-                // Colspan = (nº de prácticas) + 1 (promedio prácticas) + 1 (teórica) + 1 (promedio de la sección)
                 headRow1 += `<th colspan="${materia.numPracticas + 3}" class="py-2 px-2 text-sm font-bold text-gray-800 uppercase text-center bg-blue-100/50 border-l-2 border-blue-200 border-b border-blue-200">Sección ${s+1}</th>`;
 
                 for(let i=1; i<=materia.numPracticas; i++) {
                     headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/50 border-l border-blue-100" title="Práctica ${i}">P${i}</th>`;
                 }
                 
-                // NUEVA COLUMNA: Promedio de prácticas
                 headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-blue-700 uppercase text-center bg-blue-100/60 border-l border-blue-200" title="Promedio de Prácticas (70%)">Práctica<br><span class="text-[9px] font-medium text-blue-500">70%</span></th>`;
-
                 headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-indigo-700 uppercase text-center bg-indigo-100/50 border-l border-indigo-200" title="Evaluación Teórica (30%)">Teoría<br><span class="text-[9px] font-medium text-indigo-500">30%</span></th>`;
                 headRow2 += `<th class="py-2 px-2 text-[10px] font-bold text-emerald-700 uppercase text-center bg-emerald-100/50 border-l border-emerald-200" title="Promedio de la Sección ${s+1}">Prom.<br>Sec ${s+1}</th>`;
             }
             headRow1 += `<th rowspan="2" class="py-3 px-4 text-sm font-bold text-white uppercase align-middle text-center bg-[#0f4c81] border-l-2 border-[#0a365c] shadow-md">Nota Final</th></tr>`;
             headRow2 += `</tr>`;
             
-            thead.innerHTML = headRow1 + headRow2;
+            // CUERPO
+            let bodyHTML = '';
+            if (alumnosDeMateria.length === 0) {
+                bodyHTML = `<tr><td colspan="100%" class="py-4 text-center text-gray-400 italic text-sm">No hay alumnos que coincidan con la búsqueda en esta materia.</td></tr>`;
+            } else {
+                alumnosDeMateria.forEach(al => {
+                    const califId = `${al.id}_${materia.id}`;
+                    const notaObj = calificaciones.find(c => c.id === califId) || { secciones: [] };
+                    
+                    bodyHTML += `<tr class="alumno-row-grade">`;
+                    bodyHTML += `<td class="py-2 px-4 text-sm font-semibold text-gray-800 sticky left-0 bg-white/90 backdrop-blur border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)] whitespace-nowrap">${al.paterno} ${al.materno} ${al.nombre}</td>`;
+                    
+                    for(let s = 0; s < numSecciones; s++) {
+                        const secData = notaObj.secciones[s] || { practicas: [], teorica: '' };
+                        
+                        // Inputs Prácticas
+                        for(let i=0; i<materia.numPracticas; i++) {
+                            const val = secData.practicas[i] !== undefined ? secData.practicas[i] : '';
+                            bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10 border-l ${i===0 ? 'border-l-2 border-blue-200' : 'border-blue-100'}"><input type="number" min="0" max="100" data-sec="${s}" data-type="prac" data-idx="${i}" data-al="${al.id}" data-mat="${materia.id}" value="${val}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-400 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
+                        }
+                        
+                        bodyHTML += `<td class="py-2 px-2 text-center bg-blue-50/40 border-l border-blue-200 font-bold text-sm text-blue-700" id="prom_prac_${al.id}_${materia.id}_${s}">-</td>`;
 
-            // Generar Filas
-            if(alumnosInscritos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="100%" class="py-8 text-center text-gray-400">No hay alumnos en esta materia.</td></tr>`;
+                        // Input Teórica
+                        const valTeo = secData.teorica !== undefined ? secData.teorica : '';
+                        bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/20 border-l border-indigo-100"><input type="number" min="0" max="100" data-sec="${s}" data-type="teo" data-al="${al.id}" data-mat="${materia.id}" value="${valTeo}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-500 grade-input font-bold text-indigo-700" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
+
+                        // Celda de Promedio de esta Sección
+                        bodyHTML += `<td class="py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm text-emerald-700" id="prom_sec_${al.id}_${materia.id}_${s}">-</td>`;
+                    }
+
+                    // Celda Nota Final
+                    bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l-2 border-gray-300 font-bold text-xl" id="final_${al.id}_${materia.id}">-</td>`;
+                    bodyHTML += `</tr>`;
+                });
+            }
+
+            return `
+                <div class="py-6 px-4 bg-white">
+                    <h3 class="text-lg font-bold text-[#0f4c81] mb-3 flex items-center gap-2"><i data-lucide="book-open" class="w-5 h-5 text-gray-400"></i> ${materia.nombre}</h3>
+                    <div class="overflow-x-auto rounded-xl border border-gray-200">
+                        <table class="w-full text-left border-collapse min-w-[800px]">
+                            <thead class="bg-white">
+                                ${headRow1}
+                                ${headRow2}
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 bg-white/60">
+                                ${bodyHTML}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        };
+
+        window.renderGradesTable = () => {
+            const select = document.getElementById('selectMateriaGrades');
+            const searchInput = document.getElementById('searchGradesGlobal').value.toLowerCase().trim();
+            const normalizedSearch = removeAccents(searchInput);
+            
+            const matId = select.value;
+            const emptyState = document.getElementById('emptyGradesState');
+            const container = document.getElementById('gradesContainer');
+            const multiContainer = document.getElementById('multiGradesContainer');
+            
+            let materiasToRender = [];
+            
+            if (matId === 'all') {
+                materiasToRender = materias;
+            } else if (matId) {
+                const mat = materias.find(m => m.id === matId);
+                if (mat) materiasToRender = [mat];
+            }
+
+            // Filtrar materias que no tengan alumnos si no hay búsqueda
+            if (normalizedSearch === '') {
+                 materiasToRender = materiasToRender.filter(m => alumnos.some(a => a.materiasInscritas.includes(m.id)));
+            }
+
+            if(materiasToRender.length === 0 && normalizedSearch === '') {
+                emptyState.classList.remove('hidden'); 
+                container.classList.add('hidden');
+                document.getElementById('btnSaveGrades').classList.add('hidden');
                 return;
             }
 
-            let bodyHTML = '';
-            alumnosInscritos.forEach(al => {
-                const califId = `${al.id}_${matId}`;
-                const notaObj = calificaciones.find(c => c.id === califId) || { secciones: [] };
-                
-                bodyHTML += `<tr>`;
-                bodyHTML += `<td class="py-2 px-4 text-sm font-semibold text-gray-800 sticky left-0 bg-white/90 backdrop-blur border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)] whitespace-nowrap">${al.paterno} ${al.materno} ${al.nombre}</td>`;
-                
-                for(let s = 0; s < numSecciones; s++) {
-                    const secData = notaObj.secciones[s] || { practicas: [], teorica: '' };
-                    
-                    // Inputs Prácticas
-                    for(let i=0; i<materia.numPracticas; i++) {
-                        const val = secData.practicas[i] !== undefined ? secData.practicas[i] : '';
-                        bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10 border-l ${i===0 ? 'border-l-2 border-blue-200' : 'border-blue-100'}"><input type="number" min="0" max="100" data-sec="${s}" data-type="prac" data-idx="${i}" data-al="${al.id}" value="${val}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-400 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
-                    }
-                    
-                    // NUEVA CELDA: Promedio de prácticas (Solo lectura)
-                    bodyHTML += `<td class="py-2 px-2 text-center bg-blue-50/40 border-l border-blue-200 font-bold text-sm text-blue-700" id="prom_prac_${al.id}_${s}">-</td>`;
+            emptyState.classList.add('hidden'); 
+            container.classList.remove('hidden');
+            document.getElementById('btnSaveGrades').classList.remove('hidden');
 
-                    // Input Teórica
-                    const valTeo = secData.teorica !== undefined ? secData.teorica : '';
-                    bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/20 border-l border-indigo-100"><input type="number" min="0" max="100" data-sec="${s}" data-type="teo" data-al="${al.id}" value="${valTeo}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-500 grade-input font-bold text-indigo-700" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
+            let totalAlumnosRenderizados = 0;
+            let fullHTML = '';
 
-                    // Celda de Promedio de esta Sección
-                    bodyHTML += `<td class="py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm text-emerald-700" id="prom_sec_${al.id}_${s}">-</td>`;
+            materiasToRender.forEach(materia => {
+                // Encontrar alumnos inscritos en esta materia
+                let alumnosDeMateria = alumnos
+                    .filter(a => a.materiasInscritas.includes(materia.id))
+                    .sort((a, b) => {
+                        const nombreA = `${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase();
+                        const nombreB = `${b.paterno || ''} ${b.materno || ''} ${b.nombre || ''}`.trim().toLowerCase();
+                        return nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
+                    });
+
+                // Filtrar por la barra de búsqueda global
+                if (normalizedSearch !== '') {
+                    alumnosDeMateria = alumnosDeMateria.filter(a => {
+                        const fullName = removeAccents(`${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase());
+                        return fullName.includes(normalizedSearch);
+                    });
+                }
+                
+                // Si estamos buscando algo y no hay alumnos en esta materia, no renderizamos la tabla de la materia
+                if (normalizedSearch !== '' && alumnosDeMateria.length === 0) {
+                     return; // Continue to next materia
                 }
 
-                // Celda Nota Final
-                bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l-2 border-gray-300 font-bold text-xl" id="final_${al.id}">-</td>`;
-                bodyHTML += `</tr>`;
+                totalAlumnosRenderizados += alumnosDeMateria.length;
+                fullHTML += buildMateriaTableHTML(materia, alumnosDeMateria);
             });
-            tbody.innerHTML = bodyHTML;
+
+            if (fullHTML === '') {
+                 multiContainer.innerHTML = `<div class="p-8 text-center text-gray-500 italic">No se encontraron resultados para "${searchInput}".</div>`;
+                 document.getElementById('gradesInfo').innerText = "0 resultados";
+            } else {
+                 multiContainer.innerHTML = fullHTML;
+                 document.getElementById('gradesInfo').innerText = `${totalAlumnosRenderizados} alumno(s) mostrados`;
+            }
             
-            // Limpiar la barra de búsqueda al cambiar de materia
-            document.getElementById('searchGrades').value = '';
-            
-            // Trigger calculation for all rows initially
+            lucide.createIcons();
+
+            // Trigger calculation for all rendered inputs
             setTimeout(() => {
-                alumnosInscritos.forEach(al => {
-                    const dummyInput = document.querySelector(`input[data-al="${al.id}"]`);
-                    if(dummyInput) window.calcFinalRow(dummyInput, materia.id);
+                const inputsToTrigger = document.querySelectorAll('.grade-input[data-idx="0"][data-type="prac"], .grade-input[data-type="teo"]');
+                const processed = new Set();
+                
+                inputsToTrigger.forEach(inp => {
+                    const alId = inp.getAttribute('data-al');
+                    const mId = inp.getAttribute('data-mat');
+                    const key = `${alId}_${mId}`;
+                    if (!processed.has(key)) {
+                        window.calcFinalRow(inp, mId);
+                        processed.add(key);
+                    }
                 });
             }, 50);
         };
@@ -948,8 +1005,8 @@
             if(!materia) return;
             const numSecciones = materia.numSecciones || 1;
 
-            // Recopilar valores de esta fila
-            const rowInputs = document.querySelectorAll(`input[data-al="${alId}"]`);
+            // Recopilar valores de esta fila para esta materia específica
+            const rowInputs = document.querySelectorAll(`input[data-al="${alId}"][data-mat="${matId}"]`);
             
             let sectionsData = [];
             for(let s = 0; s < numSecciones; s++) {
@@ -963,7 +1020,6 @@
                 
                 if (!isNaN(sec) && sectionsData[sec]) {
                     if(type === 'prac') { 
-                        // Solo promediar las prácticas si tienen un valor
                         if (rawVal !== '') {
                             const val = parseFloat(rawVal) || 0;
                             sectionsData[sec].sumPrac += val; 
@@ -982,12 +1038,10 @@
 
             let totalSumaSecciones = 0;
             for(let s = 0; s < numSecciones; s++) {
-                // 1. Promediar las prácticas evaluadas
                 const avgPrac = sectionsData[s].countPrac > 0 ? (sectionsData[s].sumPrac / sectionsData[s].countPrac) : 0;
                 const teo = sectionsData[s].teorica || 0;
                 
-                // Actualizar celda visual del promedio de prácticas
-                const cellPrac = document.getElementById(`prom_prac_${alId}_${s}`);
+                const cellPrac = document.getElementById(`prom_prac_${alId}_${matId}_${s}`);
                 if(cellPrac) {
                     if (sectionsData[s].countPrac > 0) {
                         cellPrac.innerText = Math.round(avgPrac);
@@ -996,12 +1050,10 @@
                     }
                 }
 
-                // 2. Sumar el porcentaje de prácticas (70%) + teoría (30%)
                 const notaSec = (avgPrac * 0.70) + (teo * 0.30);
                 totalSumaSecciones += notaSec;
 
-                // Actualizar celda visual del promedio de sección
-                const cellSec = document.getElementById(`prom_sec_${alId}_${s}`);
+                const cellSec = document.getElementById(`prom_sec_${alId}_${matId}_${s}`);
                 if(cellSec) {
                     if (sectionsData[s].hasData) {
                         const roundedSec = Math.round(notaSec);
@@ -1014,120 +1066,109 @@
                 }
             }
 
-            // Nota final es el promedio de las secciones
             const notaFinal = numSecciones > 0 ? Math.round(totalSumaSecciones / numSecciones) : 0;
             
-            const finalCell = document.getElementById(`final_${alId}`);
+            const finalCell = document.getElementById(`final_${alId}_${matId}`);
             if(finalCell) {
                 finalCell.innerText = notaFinal;
                 finalCell.className = `py-2 px-4 text-center bg-gray-50 border-l-2 border-gray-300 font-bold text-xl shadow-inner ${notaFinal >= 51 ? 'text-[#0f4c81]' : 'text-red-600'}`;
             }
         };
 
-        // Nueva función para navegación con Enter
         window.handleEnterNavigation = (event) => {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Evitar comportamiento por defecto del Enter
+                event.preventDefault(); 
                 
-                // Forzar el cálculo antes de cambiar de foco (por si acaso el evento onchange no se dispara a tiempo)
                 const input = event.target;
-                const matId = document.getElementById('selectMateriaGrades').value;
+                const matId = input.getAttribute('data-mat');
                 window.calcFinalRow(input, matId);
 
-                // Obtener todos los inputs de calificación visibles
                 const inputs = Array.from(document.querySelectorAll('.grade-input'));
-                
-                // Encontrar el índice del input actual
                 const currentIndex = inputs.indexOf(input);
                 
-                // Si encontramos el input actual y no es el último
                 if (currentIndex > -1 && currentIndex < inputs.length - 1) {
-                    // Enfocar el siguiente input
                     inputs[currentIndex + 1].focus();
-                    inputs[currentIndex + 1].select(); // Seleccionar el contenido para fácil reemplazo
-                }
-            }
-        };
-
-        // Nueva función para filtrar la tabla de calificaciones
-        window.filterGradesTable = () => {
-            const searchInput = document.getElementById('searchGrades').value.toLowerCase();
-            const normalizedSearch = removeAccents(searchInput);
-            const tbody = document.getElementById('gradesTableBody');
-            const rows = tbody.getElementsByTagName('tr');
-
-            for (let i = 0; i < rows.length; i++) {
-                // Asumimos que el nombre del alumno está en la primera celda (td)
-                const nameCell = rows[i].getElementsByTagName('td')[0];
-                if (nameCell) {
-                    const nameText = nameCell.textContent || nameCell.innerText;
-                    const normalizedName = removeAccents(nameText.toLowerCase());
-
-                    if (normalizedName.indexOf(normalizedSearch) > -1) {
-                        rows[i].style.display = ""; // Mostrar fila
-                    } else {
-                        rows[i].style.display = "none"; // Ocultar fila
-                    }
+                    inputs[currentIndex + 1].select(); 
                 }
             }
         };
 
         window.saveAllGrades = async () => {
-            const select = document.getElementById('selectMateriaGrades');
-            const matId = select.value;
-            if(!matId) return;
-            const materia = materias.find(m => m.id === matId);
-            const numSecciones = materia.numSecciones || 1;
-
             const btn = document.getElementById('btnSaveGrades');
+            const originalText = btn.innerText;
             btn.innerText = "Guardando..."; btn.disabled = true;
 
-            const alumnosInscritos = alumnos.filter(a => a.materiasInscritas.includes(matId));
+            // Recopilar todos los inputs visibles actualmente en el contenedor
+            const allInputs = document.querySelectorAll('#multiGradesContainer .grade-input');
             
-            try {
-                for(const al of alumnosInscritos) {
-                    const rowInputs = document.querySelectorAll(`input[data-al="${al.id}"]`);
-                    
-                    let seccionesData = [];
-                    for(let s = 0; s < numSecciones; s++) {
-                        seccionesData.push({ practicas: new Array(materia.numPracticas).fill(''), teorica: '' });
-                    }
+            // Agrupar los datos por alumno y materia
+            const gradesToSave = {};
 
-                    rowInputs.forEach(inp => {
-                        const rawVal = inp.value.trim();
-                        // Guardar como vacío si no hay valor para no afectar el promedio futuro como si fuera un 0
-                        const val = rawVal !== '' ? parseFloat(rawVal) : ''; 
-                        const type = inp.getAttribute('data-type');
-                        const sec = parseInt(inp.getAttribute('data-sec'));
-                        const idx = parseInt(inp.getAttribute('data-idx'));
-                        
-                        if (!isNaN(sec) && seccionesData[sec]) {
-                            if(type === 'prac' && !isNaN(idx)) {
-                                seccionesData[sec].practicas[idx] = val;
-                            } else if(type === 'teo') {
-                                seccionesData[sec].teorica = val;
-                            }
-                        }
-                    });
-
-                    if (!currentUser) throw new Error("No autenticado");
+            allInputs.forEach(inp => {
+                const alId = inp.getAttribute('data-al');
+                const matId = inp.getAttribute('data-mat');
+                const califId = `${alId}_${matId}`;
+                
+                if (!gradesToSave[califId]) {
+                    const materia = materias.find(m => m.id === matId);
+                    if (!materia) return;
+                    const numSecciones = materia.numSecciones || 1;
                     
-                    const califId = `${al.id}_${matId}`;
-                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'calificaciones', califId);
-                    
-                    await withTimeout(setDoc(docRef, {
+                    gradesToSave[califId] = {
                         id: califId,
-                        alumnoId: al.id,
+                        alumnoId: alId,
                         materiaId: matId,
-                        secciones: seccionesData
-                    }));
+                        materiaDef: materia,
+                        secciones: Array.from({length: numSecciones}, () => ({ practicas: new Array(materia.numPracticas).fill(''), teorica: '' }))
+                    };
                 }
+
+                const rawVal = inp.value.trim();
+                const val = rawVal !== '' ? parseFloat(rawVal) : ''; 
+                const type = inp.getAttribute('data-type');
+                const sec = parseInt(inp.getAttribute('data-sec'));
+                const idx = parseInt(inp.getAttribute('data-idx'));
+                
+                const dataObj = gradesToSave[califId];
+                if (!isNaN(sec) && dataObj.secciones[sec]) {
+                    if(type === 'prac' && !isNaN(idx)) {
+                        dataObj.secciones[sec].practicas[idx] = val;
+                    } else if(type === 'teo') {
+                        dataObj.secciones[sec].teorica = val;
+                    }
+                }
+            });
+
+            try {
+                if (!currentUser) throw new Error("No autenticado");
+                
+                const savePromises = [];
+                for (const califId in gradesToSave) {
+                    const data = gradesToSave[califId];
+                    // Remover materiaDef antes de guardar en firestore
+                    const dataToSave = {
+                        id: data.id,
+                        alumnoId: data.alumnoId,
+                        materiaId: data.materiaId,
+                        secciones: data.secciones
+                    };
+                    
+                    const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'calificaciones', califId);
+                    savePromises.push(setDoc(docRef, dataToSave));
+                }
+
+                await withTimeout(Promise.all(savePromises));
+                
                 mostrarNotificacion("Guardado", "Notas actualizadas correctamente.");
+                
+                // NO borramos la barra de búsqueda ni recargamos bruscamente, 
+                // onSnapshot se encargará de actualizar los datos en background silenciosamente.
+
             } catch(e) { 
                 console.error("Firebase Error:", e); 
                 mostrarNotificacion("Error", "Error al guardar. Revisa tu red.", true); 
             } finally {
-                btn.innerText = "Guardar Notas"; btn.disabled = false;
+                btn.innerText = originalText; btn.disabled = false;
             }
         };
 
