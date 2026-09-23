@@ -303,14 +303,16 @@
                     <input type="text" id="matNombre" required class="w-full mt-1 px-4 py-3 input-glass" placeholder="Ej. Matemáticas Discretas">
                 </div>
                 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Secciones</label>
-                        <input type="number" id="matNumSec" required min="1" max="10" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
-                    </div>
-                    <div>
-                        <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Prácticas por Sección</label>
-                        <input type="number" id="matNumPrac" required min="1" max="20" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1">
+                <!-- Cantidad de Secciones Dinámicas -->
+                <div>
+                    <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Secciones</label>
+                    <input type="number" id="matNumSec" required min="1" max="10" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1" oninput="generarInputsPracticas()">
+                </div>
+                
+                <div>
+                    <label class="text-xs font-bold text-[#0f4c81] uppercase tracking-wider pl-1 border-b border-gray-100 pb-1 mb-2 block">Prácticas por Sección</label>
+                    <div id="practicasContainer" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-40 overflow-y-auto smooth-scroll p-1">
+                        <!-- JS Dinámico -->
                     </div>
                 </div>
 
@@ -426,6 +428,14 @@
         let editingMateriaId = null;
         let editingAlumnoId = null;
 
+        // Función auxiliar para obtener cantidad de prácticas de forma retrocompatible
+        window.getPracCount = (materia, sectionIndex) => {
+            if (materia.practicasPorSeccion && materia.practicasPorSeccion[sectionIndex] !== undefined) {
+                return materia.practicasPorSeccion[sectionIndex];
+            }
+            return materia.numPracticas || 1;
+        };
+
         // Función auxiliar para evitar congelamiento infinito en Firebase
         const withTimeout = (promise, ms = 10000) => {
             return Promise.race([
@@ -492,6 +502,7 @@
                 editingMateriaId = null;
                 document.getElementById('formMateria').reset();
                 document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="book" class="w-5 h-5"></i> Registrar Materia';
+                generarInputsPracticas(); // Generar input por defecto
             }
             if(id === 'modalAlumno') {
                 editingAlumnoId = null;
@@ -533,22 +544,49 @@
         };
 
         // --- Lógica Materias ---
+        window.generarInputsPracticas = (valores = []) => {
+            const inputSec = document.getElementById('matNumSec');
+            if(!inputSec) return;
+            let numSec = parseInt(inputSec.value);
+            if(isNaN(numSec) || numSec < 1) numSec = 1;
+            if(numSec > 10) numSec = 10;
+
+            const container = document.getElementById('practicasContainer');
+            
+            const currentInputs = document.querySelectorAll('.input-prac-sec');
+            const currentValues = Array.from(currentInputs).map(inp => parseInt(inp.value) || 1);
+            
+            let html = '';
+            for (let i = 0; i < numSec; i++) {
+                const val = valores[i] !== undefined ? valores[i] : (currentValues[i] || 1);
+                html += `
+                    <div>
+                        <label class="text-[10px] font-bold text-gray-500 uppercase tracking-wider pl-1">Sección ${i+1}</label>
+                        <input type="number" required min="1" max="20" class="w-full mt-1 px-3 py-2 input-glass text-center input-prac-sec text-sm" value="${val}">
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        };
+
         document.getElementById('formMateria').addEventListener('submit', async (e) => {
             e.preventDefault();
             
             const btn = document.getElementById('btnGuardarMateria');
 
-            // Feedback visual para evitar que el usuario piense que se congeló
             const originalText = btn.innerText;
             btn.innerText = "Guardando...";
             btn.disabled = true;
+
+            const practicasInputs = document.querySelectorAll('.input-prac-sec');
+            const practicasPorSeccion = Array.from(practicasInputs).map(inp => parseInt(inp.value) || 1);
 
             const id = editingMateriaId ? editingMateriaId : ('mat_' + Date.now());
             const data = {
                 id: id,
                 nombre: document.getElementById('matNombre').value.trim(),
                 numSecciones: parseInt(document.getElementById('matNumSec').value),
-                numPracticas: parseInt(document.getElementById('matNumPrac').value)
+                practicasPorSeccion: practicasPorSeccion
             };
 
             if (!currentUser) {
@@ -568,7 +606,6 @@
                 console.error("Firebase Error:", err);
                 mostrarNotificacion("Error", "Fallo al guardar en Firebase. Revisa tu consola.", true);
             } finally {
-                // Restaurar botón siempre
                 btn.innerText = originalText;
                 btn.disabled = false;
             }
@@ -580,31 +617,34 @@
                 container.innerHTML = `<div class="col-span-full text-center py-10 text-gray-400"><p>No hay materias registradas.</p></div>`;
                 return;
             }
-            container.innerHTML = materias.map(m => `
-                <div class="glass-card p-6 rounded-2xl relative">
-                    <button onclick="editarMateria('${m.id}')" class="absolute top-4 right-12 text-blue-400 hover:text-blue-600 transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                    <button onclick="borrarMateria('${m.id}')" class="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
-                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-4 border border-blue-100 text-[#0f4c81]">
-                        <i data-lucide="book-open" class="w-5 h-5"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-gray-900 mb-4">${m.nombre}</h3>
-                    
-                    <div class="grid grid-cols-2 gap-3 mb-4">
-                        <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
-                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Secciones</p>
-                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numSecciones || 1}</p>
+            container.innerHTML = materias.map(m => {
+                const pracsText = m.practicasPorSeccion ? m.practicasPorSeccion.join(', ') : (m.numPracticas || 1);
+                return `
+                    <div class="glass-card p-6 rounded-2xl relative">
+                        <button onclick="editarMateria('${m.id}')" class="absolute top-4 right-12 text-blue-400 hover:text-blue-600 transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button onclick="borrarMateria('${m.id}')" class="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-4 border border-blue-100 text-[#0f4c81]">
+                            <i data-lucide="book-open" class="w-5 h-5"></i>
                         </div>
-                        <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
-                            <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Prácticas/Sec</p>
-                            <p class="text-lg font-semibold text-[#0f4c81]">${m.numPracticas}</p>
+                        <h3 class="text-lg font-bold text-gray-900 mb-4">${m.nombre}</h3>
+                        
+                        <div class="grid grid-cols-2 gap-3 mb-4">
+                            <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100">
+                                <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Secciones</p>
+                                <p class="text-lg font-semibold text-[#0f4c81]">${m.numSecciones || 1}</p>
+                            </div>
+                            <div class="bg-gray-50 p-2 rounded-lg text-center border border-gray-100 flex flex-col justify-center overflow-hidden">
+                                <p class="text-[10px] uppercase text-gray-500 font-bold tracking-wider">Prácticas/Sec</p>
+                                <p class="text-sm font-semibold text-[#0f4c81] truncate px-1" title="${pracsText}">${pracsText}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-center text-[11px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
+                            <span>Práctica 70% | Teórica 30%</span>
                         </div>
                     </div>
-                    
-                    <div class="flex justify-center text-[11px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
-                        <span>Práctica 70% | Teórica 30%</span>
-                    </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         window.editarMateria = (id) => {
@@ -613,7 +653,9 @@
             editingMateriaId = id;
             document.getElementById('matNombre').value = m.nombre;
             document.getElementById('matNumSec').value = m.numSecciones || 1;
-            document.getElementById('matNumPrac').value = m.numPracticas;
+            
+            const pracsArray = m.practicasPorSeccion || Array(m.numSecciones || 1).fill(m.numPracticas || 1);
+            generarInputsPracticas(pracsArray);
             
             document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="edit" class="w-5 h-5"></i> Editar Materia';
             document.getElementById('modalMateria').classList.remove('hidden');
@@ -839,9 +881,11 @@
             let headRow2 = `<tr>`;
             
             for(let s = 0; s < numSecciones; s++) {
-                headRow1 += `<th colspan="${materia.numPracticas + 3}" class="py-2 px-2 text-sm font-bold text-gray-800 uppercase text-center bg-blue-100/50 border-l-2 border-blue-200 border-b border-blue-200">Sección ${s+1}</th>`;
+                const numPracThisSec = window.getPracCount(materia, s);
 
-                for(let i=1; i<=materia.numPracticas; i++) {
+                headRow1 += `<th colspan="${numPracThisSec + 3}" class="py-2 px-2 text-sm font-bold text-gray-800 uppercase text-center bg-blue-100/50 border-l-2 border-blue-200 border-b border-blue-200">Sección ${s+1}</th>`;
+
+                for(let i=1; i<=numPracThisSec; i++) {
                     headRow2 += `<th class="py-2 px-1 text-[10px] font-bold text-gray-500 uppercase text-center bg-blue-50/50 border-l border-blue-100" title="Práctica ${i}">P${i}</th>`;
                 }
                 
@@ -866,9 +910,10 @@
                     
                     for(let s = 0; s < numSecciones; s++) {
                         const secData = notaObj.secciones[s] || { practicas: [], teorica: '' };
+                        const numPracThisSec = window.getPracCount(materia, s);
                         
                         // Inputs Prácticas
-                        for(let i=0; i<materia.numPracticas; i++) {
+                        for(let i=0; i<numPracThisSec; i++) {
                             const val = secData.practicas[i] !== undefined ? secData.practicas[i] : '';
                             bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10 border-l ${i===0 ? 'border-l-2 border-blue-200' : 'border-blue-100'}"><input type="number" min="0" max="100" data-sec="${s}" data-type="prac" data-idx="${i}" data-al="${al.id}" data-mat="${materia.id}" value="${val}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-400 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
                         }
@@ -1119,7 +1164,10 @@
                         alumnoId: alId,
                         materiaId: matId,
                         materiaDef: materia,
-                        secciones: Array.from({length: numSecciones}, () => ({ practicas: new Array(materia.numPracticas).fill(''), teorica: '' }))
+                        secciones: Array.from({length: numSecciones}, (_, s) => {
+                            const numPrac = window.getPracCount(materia, s);
+                            return { practicas: new Array(numPrac).fill(''), teorica: '' };
+                        })
                     };
                 }
 
