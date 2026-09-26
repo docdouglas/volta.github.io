@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Estudiantil Novell</title>
-    
+
     <!-- Ícono de la pestaña (Favicon) -->
     <link rel="icon" href="logo.png" type="image/png">
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap" rel="stylesheet">
 
     <style>
@@ -40,7 +40,7 @@
             background-repeat: no-repeat;
             z-index: -2;
         }
-        
+
         .premium-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
             /* Viñeta sutil para dar profundidad y mejorar lectura de los paneles */
@@ -99,13 +99,13 @@
             to { opacity: 1; transform: scale(1) translateY(0); } 
         }
         .animate-fade-scale { animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
+
         @keyframes slideInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         .toast-enter { animation: slideInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        
+
         /* Ocultar barra de scroll pero permitir scroll */
         .scrollbar-hide::-webkit-scrollbar {
             display: none;
@@ -364,7 +364,7 @@
                     </div>
                 </button>
             </div>
-            
+
             <div class="mt-10 flex justify-center sm:justify-end border-t border-gray-300/50 pt-6">
                 <button onclick="cerrarSesion()" class="inline-flex items-center gap-2 text-sm font-bold text-red-600 hover:text-white bg-red-50 hover:bg-red-500 px-6 py-3 rounded-full transition-colors border border-red-100 hover:border-red-500 shadow-sm">
                     <i data-lucide="log-out" class="w-4 h-4"></i> Cerrar Sesión Segura
@@ -471,16 +471,16 @@
     <div id="modalDetalleNoticia" class="hidden fixed inset-0 z-[250] flex items-center justify-center p-4 sm:p-6">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetalleNoticia()"></div>
         <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-scale flex flex-col md:flex-row max-h-[90vh]">
-            
+
             <button onclick="cerrarDetalleNoticia()" class="md:hidden absolute top-4 right-4 z-20 w-10 h-10 bg-black/20 backdrop-blur text-white rounded-full flex items-center justify-center shadow-sm">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
-            
+
             <div class="w-full md:w-[40%] bg-slate-50 border-r border-gray-100 p-6 md:p-8 flex flex-col gap-4 overflow-y-auto scrollbar-hide">
                 <div class="w-full aspect-square md:aspect-[4/5] bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-200/60 mb-2 p-2">
                     <img id="detalleNoticiaImagen" src="" class="w-full h-full object-cover rounded-xl">
                 </div>
-                
+
                 <div id="detalleNoticiaAdminControls" class="hidden flex gap-2 mt-auto pt-4 border-t border-gray-200/60">
                     </div>
             </div>
@@ -499,7 +499,7 @@
                 <h3 id="detalleNoticiaTitulo" class="text-2xl sm:text-3xl lg:text-4xl font-serif-title font-bold text-gray-900 mb-3 leading-tight pr-8 md:pr-12">
                     Título de la Noticia
                 </h3>
-                
+
                 <div class="text-sm text-gray-600 mb-8 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 border-b border-gray-100 pb-5">
                     <span>Publicado por: <span id="detalleNoticiaAutor" class="font-bold text-gray-800">Admin</span></span>
                 </div>
@@ -516,7 +516,7 @@
     <div id="practicasContainer" class="hidden relative w-full max-w-6xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
             <div id="stampPracticas" class="hidden stamp-abandono">ABANDONO</div>
-            
+
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4 relative z-20">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Prácticas Asignadas</h2>
@@ -543,13 +543,13 @@
                         <i data-lucide="laptop" class="w-4 h-4"></i> Virtuales
                     </button>
                 </div>
-                
+
                 <div class="relative w-full sm:w-72 shrink-0">
                     <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"></i>
                     <input type="text" id="buscadorPracticas" oninput="window.renderizarPracticas()" placeholder="Buscar materia o título..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-gray-200/80 rounded-full focus:outline-none focus:border-[#0f4c81] focus:ring-2 focus:ring-[#0f4c81]/20 transition-all text-sm shadow-sm text-gray-700">
                 </div>
             </div>
-            
+
             <div id="practicasList" class="flex flex-col gap-10 min-h-[250px] w-full relative z-20"></div>
         </div>
     </div>
@@ -607,6 +607,21 @@
                             </label>
                         </div>
                     </div>
+
+                    <!-- NUEVO SWITCH DE VISIBILIDAD -->
+                    <div class="space-y-1.5 md:col-span-2 mt-2">
+                        <label class="flex items-start cursor-pointer gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
+                            <div class="relative pt-1">
+                                <input type="checkbox" id="practicaVisible" class="sr-only peer" checked>
+                                <div class="w-12 h-6 bg-gray-300 rounded-full peer peer-focus:ring-4 peer-focus:ring-[#0bb57a]/30 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[5px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#0bb57a]"></div>
+                            </div>
+                            <div class="flex-1">
+                                <span class="block text-[15px] font-bold text-gray-700">Estado Activo (Visible para los estudiantes)</span>
+                                <span class="block text-[12px] text-gray-500 mt-1">Si lo desmarcas, la práctica se ocultará del listado general pero no se borrará.</span>
+                            </div>
+                        </label>
+                    </div>
+
                 </div>
                 <div class="flex gap-3 pt-4 border-t border-gray-100 mt-6">
                     <button type="button" onclick="cerrarModalPractica()" class="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold transition-colors">Cancelar</button>
@@ -621,7 +636,7 @@
     <div id="modalDetallePractica" class="hidden fixed inset-0 z-[250] flex items-end sm:items-center justify-center p-0 sm:p-6 pb-0 sm:pb-6">
         <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" onclick="cerrarDetallePractica()"></div>
         <div class="relative w-full max-w-3xl bg-white rounded-t-[2rem] sm:rounded-[2rem] shadow-2xl overflow-hidden animate-fade-scale flex flex-col max-h-[95vh] sm:max-h-[90vh]">
-            
+
             <div class="w-full flex justify-center pt-3 pb-2 sm:hidden absolute top-0 z-20">
                 <div class="w-10 h-1.5 bg-gray-200 rounded-full"></div>
             </div>
@@ -629,21 +644,21 @@
             <button onclick="cerrarDetallePractica()" class="absolute top-4 sm:top-6 right-4 sm:right-6 z-20 w-8 h-8 sm:w-10 sm:h-10 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full flex items-center justify-center transition-colors shadow-sm">
                 <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
             </button>
-            
+
             <div class="overflow-y-auto scrollbar-hide flex-1 pt-12 sm:pt-0">
-                
+
                 <div class="p-5 sm:p-8 flex flex-row gap-5 sm:gap-8 items-center sm:items-stretch border-b border-gray-100">
                     <div class="w-32 sm:w-48 shrink-0 relative">
                         <div class="w-full aspect-[3/4] bg-white rounded-xl overflow-hidden shadow-md border border-gray-200">
                             <img id="detallePracticaImagen" src="" class="w-full h-full object-cover">
                         </div>
                     </div>
-                    
+
                     <div class="flex-1 flex flex-col justify-center gap-2.5 sm:gap-3 py-1">
                         <a id="btnAccederRecurso" href="#" target="_blank" class="w-full py-2.5 sm:py-3.5 bg-[#0f4c81] hover:bg-[#0a365c] text-white rounded-xl font-bold transition-all shadow-md flex items-center justify-center gap-2 text-[13px] sm:text-[15px]">
                             <i data-lucide="external-link" class="w-4 h-4 sm:w-5 sm:h-5"></i> <span class="hidden sm:inline">Acceder al Recurso</span><span class="sm:hidden">Acceder al Recurso</span>
                         </a>
-                        
+
                         <button onclick="copiarEnlacePractica()" class="w-full py-2.5 sm:py-3 bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 rounded-xl font-bold transition-all flex items-center justify-center gap-2 text-[13px] sm:text-[14px] shadow-sm">
                             <i data-lucide="copy" class="w-4 h-4 sm:w-5 sm:h-5"></i> Copiar Enlace
                         </button>
@@ -666,7 +681,7 @@
                     <h4 id="detallePracticaMateria" class="text-[13px] sm:text-[15px] text-[#0f4c81] font-bold uppercase tracking-wider mb-4 hidden">
                         Nombre de la Materia
                     </h4>
-                    
+
                     <div class="text-[13px] sm:text-[14px] text-gray-600 mb-6 flex flex-col sm:flex-row sm:items-center gap-1.5 sm:gap-4 border-b border-gray-100 pb-5">
                         <span>Autor: <span id="detallePracticaAutor" class="font-bold text-gray-800">Admin</span></span>
                         <span class="hidden sm:inline text-gray-200">|</span>
@@ -692,7 +707,7 @@
             </div>
             <h3 class="text-2xl font-serif-title font-bold text-gray-900 mb-2">Aula Virtual</h3>
             <p class="text-sm text-gray-600 mb-8">Selecciona la plataforma a la que deseas ingresar para tu clase.</p>
-            
+
             <div class="flex flex-col gap-4">
                 <button onclick="window.open('https://meet.google.com/tzo-efrb-qjk', '_blank')" class="flex items-center p-4 rounded-2xl bg-white border border-gray-200 hover:border-emerald-400 hover:bg-emerald-50 transition-all group shadow-sm hover:shadow-md">
                     <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
@@ -704,7 +719,7 @@
                     </div>
                     <i data-lucide="external-link" class="w-5 h-5 ml-auto text-gray-400 group-hover:text-emerald-500"></i>
                 </button>
-                
+
                 <button onclick="window.open('https://app.idroo.com/es/boards/L4Cz29x9rs', '_blank')" class="flex items-center p-4 rounded-2xl bg-white border border-gray-200 hover:border-blue-400 hover:bg-blue-50 transition-all group shadow-sm hover:shadow-md">
                     <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-500 group-hover:text-white transition-colors">
                         <i data-lucide="pen-tool" class="w-6 h-6"></i>
@@ -716,7 +731,7 @@
                     <i data-lucide="external-link" class="w-5 h-5 ml-auto text-gray-400 group-hover:text-blue-500"></i>
                 </button>
             </div>
-            
+
             <button onclick="cerrarModalAulaVirtual()" class="mt-8 px-6 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold transition-colors w-full flex justify-center items-center gap-2">
                 Cancelar
             </button>
@@ -726,7 +741,7 @@
     <div id="calificacionesContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
         <div class="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
             <div id="stampCalificaciones" class="hidden stamp-abandono">ABANDONO</div>
-            
+
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4 relative z-20">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Mis Calificaciones</h2>
@@ -784,16 +799,16 @@
              // Detectar el tamaño de pantalla y asignar el video correspondiente
              const esMovil = window.innerWidth < 640;
              introVideo.src = esMovil ? 'intro2.mp4' : 'intro.mp4';
-             
+
              // Si el archivo de video no existe o falla al cargar (Evita NotSupportedError)
              introVideo.onerror = () => {
                  console.warn("Error al cargar el video (no se encontró o formato no soportado). Saltando...");
                  window.saltarIntro();
              };
-             
+
              // Intentar reproducir con sonido
              const playPromise = introVideo.play();
-             
+
              if (playPromise !== undefined) {
                  playPromise.catch(e => {
                      // Si el error es NotSupportedError (archivo no existe), saltamos directamente
@@ -802,9 +817,9 @@
                          window.saltarIntro();
                          return;
                      }
-                     
+
                      console.log("Autoplay bloqueado. Silenciando para forzar reproducción automática...", e);
-                     
+
                      // Para que se reproduzca automáticamente sí o sí en celulares, lo silenciamos si el navegador lo bloquea
                      introVideo.muted = true;
                      introVideo.play().catch(err => {
@@ -812,19 +827,19 @@
                          console.warn("Fallo al reproducir incluso silenciado.", err);
                          window.saltarIntro();
                      });
-                     
+
                      // Mostramos un botón flotante para activar el sonido sobre el video reproduciéndose
                      const btnSonido = document.createElement('button');
                      btnSonido.innerHTML = '<i data-lucide="volume-x" class="w-5 h-5"></i> Tocar para escuchar';
                      btnSonido.className = 'absolute z-[10001] bg-black/40 backdrop-blur-md border border-white/20 text-white px-6 py-3 rounded-full font-bold flex items-center gap-2 shadow-xl hover:scale-105 transition-all top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2';
-                     
+
                      btnSonido.onclick = () => {
                          introVideo.muted = false; // Restaurar audio
                          btnSonido.innerHTML = '<i data-lucide="volume-2" class="w-5 h-5"></i> Sonido Activado';
                          if (window.lucide) lucide.createIcons();
                          setTimeout(() => btnSonido.remove(), 1000); // Desaparecer suavemente
                      };
-                     
+
                      document.getElementById('introVideoContainer').appendChild(btnSonido);
                      if (window.lucide) lucide.createIcons();
                  });
@@ -846,13 +861,13 @@
 
         window.mostrarNotificacion = (titulo, mensaje, tipo = 'info') => {
             const toast = document.createElement('div');
-            
+
             const iconColor = tipo === 'error' ? 'text-red-400' : 'text-blue-400';
             const bgColor = tipo === 'error' ? 'bg-red-500/20' : 'bg-blue-500/20';
             const iconName = tipo === 'error' ? 'alert-circle' : 'check-circle';
 
             toast.className = "fixed top-4 right-4 md:top-auto md:bottom-6 z-[300] bg-gray-900/85 backdrop-blur-md border border-white/10 shadow-[0_15px_40px_rgba(0,0,0,0.3)] p-3 md:p-4 rounded-2xl flex items-start gap-2.5 md:gap-3 w-[calc(100%-2rem)] md:w-80 toast-enter";
-            
+
             toast.innerHTML = `
                 <div class="mt-0.5 ${bgColor} p-2 md:p-2.5 rounded-full ${iconColor}">
                     <i data-lucide="${iconName}" class="w-4 h-4 md:w-5 md:h-5"></i>
@@ -864,7 +879,7 @@
             `;
             document.body.appendChild(toast); 
             lucide.createIcons();
-            
+
             setTimeout(() => { 
                 toast.style.opacity = '0'; 
                 toast.style.transform = 'translateY(20px)'; 
@@ -937,7 +952,7 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
+
         let appId = localStorage.getItem('workingAppId') || 'default';
         let globalRole = ''; 
         let globalUsername = ''; 
@@ -1001,14 +1016,14 @@
             else if (hash.startsWith('#practicas')) view = 'practicas';
             else if (hash.startsWith('#sugerencias')) view = 'sugerencias';
             else if (hash.startsWith('#calificaciones')) view = 'calificaciones';
-            
+
             document.getElementById('loginContainer').classList.add('hidden');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.add('hidden');
             document.getElementById('sugerenciasContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.add('hidden');
-            
+
             if (view === 'dashboard') document.getElementById('dashboardContainer').classList.remove('hidden');
             else if (view === 'noticias') document.getElementById('noticiasContainer').classList.remove('hidden');
             else if (view === 'sugerencias') {
@@ -1031,7 +1046,7 @@
                 document.getElementById('calificacionesContainer').classList.remove('hidden');
                 if (globalEstado === 'abandono') document.getElementById('stampCalificaciones').classList.remove('hidden');
             }
-            
+
             lucide.createIcons();
         });
 
@@ -1104,17 +1119,22 @@
                         const data = change.doc.data();
                         const docId = change.doc.id;
 
-                        if (isFirstTimePracticas && initialLoadPracticas) {
-                            vistasPracticas.push(docId);
-                        } else if (!vistasPracticas.includes(docId)) {
-                            vistasPracticas.push(docId);
-                            if (data.autor !== globalUsername) {
-                                if (initialLoadPracticas) {
-                                    nuevasCount++;
-                                    ultimaPractica = data;
-                                } else {
-                                    window.mostrarNotificacion("📚 Nueva Práctica", `${data.materiaNombre || data.titulo || 'Se ha asignado un nuevo material.'}`, 'info');
-                                    if (!document.getElementById('practicasContainer').classList.contains('hidden')) cargarPracticas();
+                        // Solo notificar si la práctica es visible, a menos que el usuario sea admin
+                        const isVisible = data.visible !== false || globalRole === 'admin';
+
+                        if (isVisible) {
+                            if (isFirstTimePracticas && initialLoadPracticas) {
+                                vistasPracticas.push(docId);
+                            } else if (!vistasPracticas.includes(docId)) {
+                                vistasPracticas.push(docId);
+                                if (data.autor !== globalUsername) {
+                                    if (initialLoadPracticas) {
+                                        nuevasCount++;
+                                        ultimaPractica = data;
+                                    } else {
+                                        window.mostrarNotificacion("📚 Nueva Práctica", `${data.materiaNombre || data.titulo || 'Se ha asignado un nuevo material.'}`, 'info');
+                                        if (!document.getElementById('practicasContainer').classList.contains('hidden')) cargarPracticas();
+                                    }
                                 }
                             }
                         }
@@ -1139,7 +1159,7 @@
             globalRole = role;
             globalUsername = username;
             globalEstado = estado;
-            
+
             window.iniciarNotificacionesEnTiempoReal(appId);
 
             if (role === 'admin') {
@@ -1151,11 +1171,11 @@
             } else {
                 let estadoHtml = `<span class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span> En línea`;
                 let textColor = "text-green-600";
-                
+
                 if (estado === 'abandono') {
                     estadoHtml = `<span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Abandono`;
                     textColor = "text-red-600";
-                    
+
                     // Mostrar iconos de candado directamente sobre los botones restringidos en el menú
                     const bloqueados = ['menuBiblioteca', 'menuClases', 'menuPracticas', 'menuChats'];
                     bloqueados.forEach(id => {
@@ -1184,22 +1204,22 @@
                 document.getElementById('btnGestion').classList.add('hidden');
                 document.getElementById('btnCalificaciones').classList.remove('hidden');
             }
-            
+
             const ejecutarTransicion = () => {
                 document.getElementById('loginContainer').classList.add('hidden');
                 document.getElementById('adminNameDisplay').innerText = username;
-                
+
                 document.getElementById('noticiasContainer').classList.add('hidden');
                 document.getElementById('sugerenciasContainer').classList.add('hidden');
                 document.getElementById('practicasContainer').classList.add('hidden');
                 document.getElementById('calificacionesContainer').classList.add('hidden');
-                
+
                 document.getElementById('dashboardContainer').classList.remove('hidden');
-                
+
                 try { 
                     history.replaceState({ view: 'dashboard' }, '', window.location.pathname); 
                 } catch(e){}
-                
+
                 lucide.createIcons();
             };
 
@@ -1212,7 +1232,7 @@
                 if (!auth.currentUser) await signInAnonymously(auth);
 
                 const sessionId = localStorage.getItem('portalSessionId');
-                
+
                 if (sessionId) {
                     let docRef;
                     if (appId === 'root') {
@@ -1220,7 +1240,7 @@
                     } else {
                         docRef = doc(db, 'artifacts', appId, 'public', 'data', 'sesiones', sessionId);
                     }
-                    
+
                     try {
                         const docSnap = await getDoc(docRef);
                         if (docSnap && docSnap.exists()) {
@@ -1245,7 +1265,7 @@
 
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const btn = document.getElementById('submitBtn');
             const inputUser = document.getElementById('loginUser').value.toLowerCase().replace(/\s+/g, '');
             const inputPass = document.getElementById('loginPass').value.trim();
@@ -1325,7 +1345,7 @@
                         } catch (e) {}
                     }
                 } 
-                
+
                 if (userData) {
                     appId = correctAppId;
                     localStorage.setItem('workingAppId', correctAppId);
@@ -1335,11 +1355,11 @@
                     btn.classList.add('bg-emerald-600', 'hover:bg-emerald-700');
                     btn.innerHTML = `<i data-lucide="check-circle" class="w-5 h-5"></i> <span>¡Conectado!</span>`;
                     lucide.createIcons();
-                    
+
                     const nombreUsuario = userData.usuario || inputUser;
                     const userEstado = userData.estado || 'activo';
                     const newSessionId = 'sess_' + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-                    
+
                     try {
                         if (correctAppId === 'root') {
                             await setDoc(doc(db, 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, estado: userEstado, creado: new Date().toISOString() });
@@ -1347,10 +1367,10 @@
                             await setDoc(doc(db, 'artifacts', correctAppId, 'public', 'data', 'sesiones', newSessionId), { usuario: nombreUsuario, rol: userRole, estado: userEstado, creado: new Date().toISOString() });
                         }
                     } catch (sessionError) {}
-                    
+
                     localStorage.setItem('portalSessionId', newSessionId);
                     mostrarDashboard(nombreUsuario, userRole, true, userEstado);
-                    
+
                 } else {
                     window.mostrarNotificacion("Acceso Denegado", "Usuario o contraseña incorrectos.", "error");
                     restaurarBoton();
@@ -1466,7 +1486,7 @@
                 `;
                 container.appendChild(card);
             });
-            
+
             container.scrollTop = container.scrollHeight;
             lucide.createIcons();
         };
@@ -1489,9 +1509,9 @@
             const input = document.getElementById('sugerenciaTexto');
             const btn = document.getElementById('btnEnviarSugerencia');
             const texto = input.value.trim();
-            
+
             if (!texto || btn.disabled) return;
-            
+
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin text-white"></i>';
 
@@ -1515,7 +1535,7 @@
             if (omitirHistorial !== true) window.cambiarHistorial('noticias', '#noticias');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('noticiasContainer').classList.remove('hidden');
-            
+
             if (globalRole === 'admin') {
                 document.getElementById('btnNuevaNoticia').classList.remove('hidden');
                 document.getElementById('btnNuevaNoticia').classList.add('flex');
@@ -1523,7 +1543,7 @@
                 document.getElementById('btnNuevaNoticia').classList.add('hidden');
                 document.getElementById('btnNuevaNoticia').classList.remove('flex');
             }
-            
+
             lucide.createIcons();
             cargarNoticias();
         };
@@ -1592,7 +1612,7 @@
             noticias.forEach(noticia => {
                 const defaultImage = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop';
                 const imgUrl = noticia.imagen || defaultImage;
-                
+
                 let fechaStr = 'Fecha reciente';
                 if (noticia.fecha) {
                     const dateObj = new Date(noticia.fecha);
@@ -1606,7 +1626,7 @@
                 const card = document.createElement('div');
                 card.onclick = () => abrirDetalleNoticia(noticia.id);
                 card.className = "bg-white border border-gray-100 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 overflow-hidden group flex flex-col h-full relative cursor-pointer hover:-translate-y-1";
-                
+
                 card.innerHTML = `
                     <div class="h-44 bg-gray-200 relative overflow-hidden shrink-0">
                         <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700">
@@ -1638,12 +1658,12 @@
             if(!noticia) return;
 
             const defaultImage = 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?q=80&w=800&auto=format&fit=crop';
-            
+
             document.getElementById('detalleNoticiaImagen').src = noticia.imagen || defaultImage;
             document.getElementById('detalleNoticiaTitulo').innerHTML = window.formatTextSafe(noticia.titulo);
             document.getElementById('detalleNoticiaContenido').innerHTML = window.formatTextSafe(noticia.contenido);
             document.getElementById('detalleNoticiaAutor').innerText = noticia.autor || 'Administración';
-            
+
             let fechaStr = 'Fecha reciente';
             if (noticia.fecha) {
                 const dateObj = new Date(noticia.fecha);
@@ -1654,7 +1674,7 @@
             let colorPill = 'text-blue-700 bg-blue-50';
             if (noticia.tipo === 'Evento') colorPill = 'text-purple-700 bg-purple-50';
             if (noticia.tipo === 'Aviso') colorPill = 'text-orange-700 bg-orange-50';
-            
+
             const tipoBadge = document.getElementById('detalleNoticiaTipo');
             tipoBadge.className = `px-2 py-1 rounded-md ${colorPill}`;
             tipoBadge.innerText = noticia.tipo || 'Noticia';
@@ -1709,7 +1729,7 @@
                 document.getElementById('noticiaTitulo').value = noticia.titulo;
                 document.getElementById('noticiaTipo').value = noticia.tipo;
                 document.getElementById('noticiaContenido').value = noticia.contenido;
-                
+
                 document.getElementById('noticiaImagenUrlActual').value = noticia.imagen || '';
                 if (noticia.imagen) {
                     document.getElementById('imagePreviewContainer').classList.remove('hidden');
@@ -1720,7 +1740,7 @@
                     document.getElementById('imagePreview').src = '';
                     document.getElementById('fileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
                 }
-                
+
                 document.getElementById('modalNoticiaTitle').innerText = 'Editar Publicación';
                 document.getElementById('modalNoticia').classList.remove('hidden');
                 window.cambiarHistorial('modal_noticia', '#noticias-editar');
@@ -1775,7 +1795,7 @@
             e.preventDefault();
             const btn = document.getElementById('btnGuardarNoticia');
             if (btn.disabled) return;
-            
+
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando...';
             lucide.createIcons();
@@ -1784,13 +1804,13 @@
                 const id = document.getElementById('noticiaId').value;
                 let imageUrl = document.getElementById('noticiaImagenUrlActual').value || "";
                 const fileInput = document.getElementById('noticiaImagenFile');
-                
+
                 if (fileInput.files && fileInput.files[0]) {
                     const file = fileInput.files[0];
                     btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
                     lucide.createIcons();
                     imageUrl = await comprimirImagenBase64(file);
-                    
+
                     // Actualizar el texto para que el usuario sepa que está subiendo a la base de datos
                     btn.innerHTML = '<i data-lucide="upload-cloud" class="w-4 h-4 animate-bounce"></i> Subiendo a la nube...';
                     lucide.createIcons();
@@ -1843,11 +1863,11 @@
                 window.mostrarNotificacion("Acceso Restringido", "Tu cuenta está en estado de abandono. No tienes acceso a las prácticas.", "error");
                 return;
             }
-            
+
             if (omitirHistorial !== true) window.cambiarHistorial('practicas', '#practicas');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('practicasContainer').classList.remove('hidden');
-            
+
             if (globalRole === 'admin') {
                 document.getElementById('btnNuevaPractica').classList.remove('hidden');
                 document.getElementById('btnNuevaPractica').classList.add('flex');
@@ -1865,7 +1885,7 @@
             if(document.getElementById('buscadorPracticas')) {
                 document.getElementById('buscadorPracticas').value = '';
             }
-            
+
             lucide.createIcons();
             cargarPracticas();
         };
@@ -1880,7 +1900,7 @@
             tabPracticasActivo = tab;
             const activeClass = "flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-white text-[#0f4c81] rounded-full font-bold shadow-sm transition-all text-[14px]";
             const inactiveClass = "flex-1 px-4 sm:px-6 py-2.5 flex items-center justify-center gap-2 bg-transparent text-slate-500 hover:text-slate-700 rounded-full font-bold transition-all text-[14px]";
-            
+
             if (tab === 'clase') {
                 document.getElementById('tabClase').className = activeClass;
                 document.getElementById('tabVirtual').className = inactiveClass;
@@ -1936,12 +1956,12 @@
 
             const busquedaInput = document.getElementById('buscadorPracticas');
             const terminoRaw = busquedaInput ? busquedaInput.value.trim() : '';
-            
+
             const normalizar = (str) => {
                 if (!str) return '';
                 return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
             };
-            
+
             const terminoBusqueda = normalizar(terminoRaw);
 
             const practicasFiltradas = practicasLocales.filter(p => {
@@ -1949,7 +1969,11 @@
                 const coincideBusqueda = terminoBusqueda === '' || 
                     normalizar(p.materia).includes(terminoBusqueda) ||
                     normalizar(p.descripcion).includes(terminoBusqueda);
-                return coincideTab && coincideBusqueda;
+                
+                // NUEVA LÓGICA DE VISIBILIDAD: Solo mostrar si 'visible' no es false, O si es administrador
+                const esVisible = p.visible !== false || globalRole === 'admin';
+
+                return coincideTab && coincideBusqueda && esVisible;
             });
 
             if (practicasFiltradas.length === 0) {
@@ -1976,7 +2000,7 @@
                     nombreMateria = practica.materia.split(' - ')[0]; 
                 }
                 nombreMateria = nombreMateria || 'Otras Prácticas';
-                
+
                 if (!grupos[nombreMateria]) grupos[nombreMateria] = [];
                 grupos[nombreMateria].push(practica);
             });
@@ -1986,7 +2010,7 @@
             materiasOrdenadas.forEach(nombreMateria => {
                 const seccion = document.createElement('div');
                 seccion.className = "w-full animate-fade-scale";
-                
+
                 seccion.innerHTML = `
                     <div class="flex items-center gap-3 mb-5 border-b border-gray-200/60 pb-2">
                         <div class="w-2 h-6 bg-[#0f4c81] rounded-full"></div>
@@ -2001,10 +2025,10 @@
                 grupos[nombreMateria].forEach(practica => {
                     const defaultImage = 'https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?q=80&w=800&auto=format&fit=crop';
                     const imgUrl = practica.imagen || defaultImage;
-                    
+
                     const fechaPubObj = new Date(practica.fechaPublicacion);
                     const fechaPubStr = fechaPubObj.toLocaleDateString('es-ES', { day: 'numeric', month: 'short', year: 'numeric' });
-                    
+
                     let fechaEntStr = 'Sin fecha límite';
                     let alertColor = 'text-gray-500';
                     if (practica.fechaEntrega) {
@@ -2014,14 +2038,20 @@
                         else alertColor = 'text-emerald-600';
                     }
 
+                    const isHidden = practica.visible === false;
+                    const hiddenBadge = isHidden ? `<div class="absolute top-2 right-2 bg-red-50 text-red-500 px-2 py-1 rounded border border-red-100 text-[9px] font-bold uppercase flex items-center gap-1 z-10"><i data-lucide="eye-off" class="w-3 h-3"></i> Oculto</div>` : '';
+                    const bgClass = isHidden ? 'bg-gray-100/80 hover:bg-gray-100' : 'bg-white/90 hover:bg-white';
+                    const opacityClass = isHidden ? 'opacity-80' : '';
+
                     const card = document.createElement('div');
                     card.onclick = () => abrirDetallePractica(practica.id);
-                    card.className = "bg-white/90 border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md hover:bg-white hover:border-[#0f4c81]/30 transition-all duration-300 p-4 flex items-center gap-5 relative group cursor-pointer h-max";
-                    
+                    card.className = `${bgClass} ${opacityClass} border border-gray-200/80 rounded-2xl shadow-sm hover:shadow-md hover:border-[#0f4c81]/30 transition-all duration-300 p-4 flex items-center gap-5 relative group cursor-pointer h-max`;
+
                     const displayTitulo = practica.titulo || practica.materia;
                     const displayMateria = practica.materiaNombre || '';
 
                     card.innerHTML = `
+                        ${hiddenBadge}
                         <div class="w-24 h-24 sm:w-28 sm:h-28 shrink-0 bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm flex items-center justify-center p-1.5">
                             <img src="${imgUrl}" onerror="this.src='${defaultImage}'" class="w-full h-full object-contain rounded-lg">
                         </div>
@@ -2041,7 +2071,7 @@
                 seccion.appendChild(grid);
                 container.appendChild(seccion);
             });
-            
+
             lucide.createIcons();
         };
 
@@ -2053,14 +2083,14 @@
                 const currentAppId = localStorage.getItem('workingAppId') || 'default';
                 let materiasRef = (currentAppId === 'root') ? collection(db, 'materias') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'materias');
                 const snap = await getDocs(materiasRef);
-                
+
                 let options = '';
                 snap.forEach(doc => {
                     const data = doc.data();
                     const nombre = data.nombre || 'Materia sin nombre';
                     options += `<option value="${nombre}">`;
                 });
-                
+
                 datalist.innerHTML = options;
             } catch (error) {}
         };
@@ -2070,13 +2100,13 @@
             if(!practica) return;
 
             const defaultImage = 'https://images.unsplash.com/photo-1456406644174-8ddd4cd52a06?q=80&w=800&auto=format&fit=crop';
-            
+
             const displayTitulo = practica.titulo || practica.materia;
             const displayMateria = practica.materiaNombre || '';
 
             document.getElementById('detallePracticaImagen').src = practica.imagen || defaultImage;
             document.getElementById('detallePracticaTitulo').innerHTML = window.formatTextSafe(displayTitulo);
-            
+
             const materiaEl = document.getElementById('detallePracticaMateria');
             if (displayMateria) {
                 materiaEl.innerHTML = window.formatTextSafe(displayMateria);
@@ -2086,7 +2116,7 @@
             }
 
             document.getElementById('detallePracticaAutor').innerText = practica.autor || 'Administración';
-            
+
             let fechaEntStr = 'Sin límite';
             let alertColor = 'text-gray-500';
             if (practica.fechaEntrega) {
@@ -2096,9 +2126,9 @@
                 else alertColor = 'text-emerald-600';
             }
             document.getElementById('detallePracticaFechas').innerHTML = `Entrega: <span class="${alertColor}">${fechaEntStr}</span>`;
-            
+
             document.getElementById('detallePracticaBadge').innerText = practica.tipo === 'clase' ? 'EN CLASE' : 'VIRTUAL';
-            
+
             const desc = practica.descripcion ? practica.descripcion : 'No se han proporcionado instrucciones adicionales para esta práctica. Abre el documento adjunto para más información.';
             document.getElementById('detallePracticaDescripcion').innerHTML = window.formatTextSafe(desc);
 
@@ -2138,10 +2168,14 @@
             document.getElementById('practicaImagePreviewContainer').classList.add('hidden');
             document.getElementById('practicaImagePreview').src = '';
             document.getElementById('practicaFileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
+            
+            // Asegurarnos de que al crear una nueva, esté visible por defecto
+            document.getElementById('practicaVisible').checked = true;
+
             document.getElementById('modalPracticaTitle').innerText = 'Nueva Práctica';
             document.getElementById('modalPractica').classList.remove('hidden');
             window.cambiarHistorial('modal_practica', '#practicas-editar');
-            
+
             await window.cargarMateriasSelect();
         };
 
@@ -2157,9 +2191,9 @@
                 document.getElementById('modalPracticaTitle').innerText = 'Editar Práctica';
                 document.getElementById('modalPractica').classList.remove('hidden');
                 window.cambiarHistorial('modal_practica', '#practicas-editar');
-                
+
                 await window.cargarMateriasSelect();
-                
+
                 if (practica.materiaNombre && practica.titulo) {
                     document.getElementById('practicaMateria').value = practica.materiaNombre;
                     document.getElementById('practicaTitulo').value = practica.titulo;
@@ -2170,9 +2204,12 @@
                 document.getElementById('practicaTipo').value = practica.tipo;
                 document.getElementById('practicaDocUrl').value = practica.documentoUrl;
                 document.getElementById('practicaFechaEntrega').value = practica.fechaEntrega || '';
-                
+
                 document.getElementById('practicaDescripcion').value = practica.descripcion || '';
-                
+
+                // Cargar el valor del switch de visibilidad. Si no existe la propiedad (prácticas viejas), asume true
+                document.getElementById('practicaVisible').checked = practica.visible !== false;
+
                 document.getElementById('practicaImagenUrlActual').value = practica.imagen || '';
                 if (practica.imagen) {
                     document.getElementById('practicaImagePreviewContainer').classList.remove('hidden');
@@ -2192,7 +2229,7 @@
                 const practica = practicasLocales.find(p => p.id === id);
                 if (!practica) return;
                 let docRef = (practica._path === 'root') ? doc(db, 'practicas', id) : doc(db, 'artifacts', practica._path, 'public', 'data', 'practicas', id);
-                
+
                 await deleteDoc(docRef);
                 window.mostrarNotificacion("Eliminada", "La práctica ha sido borrada.");
                 cargarPracticas();
@@ -2205,7 +2242,7 @@
             e.preventDefault();
             const btn = document.getElementById('btnGuardarPractica');
             if (btn.disabled) return;
-            
+
             btn.disabled = true;
             btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> Guardando...';
             lucide.createIcons();
@@ -2214,13 +2251,13 @@
                 const id = document.getElementById('practicaId').value;
                 let imageUrl = document.getElementById('practicaImagenUrlActual').value || "";
                 const fileInput = document.getElementById('practicaImagenFile');
-                
+
                 if (fileInput.files && fileInput.files[0]) {
                     const file = fileInput.files[0];
                     btn.innerHTML = '<i data-lucide="image" class="w-4 h-4 animate-pulse"></i> Optimizando imagen...';
                     lucide.createIcons();
                     imageUrl = await comprimirImagenBase64(file);
-                    
+
                     // Actualizar el texto para que el usuario sepa que está subiendo a la base de datos
                     btn.innerHTML = '<i data-lucide="upload-cloud" class="w-4 h-4 animate-bounce"></i> Subiendo a la nube...';
                     lucide.createIcons();
@@ -2239,7 +2276,8 @@
                     fechaEntrega: document.getElementById('practicaFechaEntrega').value,
                     descripcion: document.getElementById('practicaDescripcion').value.trim(),
                     autor: globalUsername || "Administrador",
-                    fechaPublicacion: new Date().toISOString() 
+                    fechaPublicacion: new Date().toISOString(),
+                    visible: document.getElementById('practicaVisible').checked // AGREGAMOS EL VALOR DEL SWITCH
                 };
 
                 const currentAppId = localStorage.getItem('workingAppId') || 'default';
@@ -2249,16 +2287,20 @@
                     const pathGuardado = original ? original._path : currentAppId;
                     let colRef = (pathGuardado === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', pathGuardado, 'public', 'data', 'practicas');
                     await updateDoc(doc(colRef, id), data);
-                    window.mostrarNotificacion("Actualizada", "Práctica editada correctamente.");
+                    
+                    const msgVisibility = data.visible ? 'Práctica editada y visible.' : 'Práctica editada y oculta para estudiantes.';
+                    window.mostrarNotificacion("Actualizada", msgVisibility);
                 } else {
                     let colRef = (currentAppId === 'root') ? collection(db, 'practicas') : collection(db, 'artifacts', currentAppId, 'public', 'data', 'practicas');
                     await addDoc(colRef, data);
-                    window.mostrarNotificacion("Publicada", "Nueva práctica asignada.");
+                    
+                    const msgVisibility = data.visible ? 'Nueva práctica asignada.' : 'Práctica guardada (Oculta a estudiantes).';
+                    window.mostrarNotificacion("Publicada", msgVisibility);
                 }
 
                 cerrarModalPractica(true);
                 if(window.location.hash.includes('-editar')) history.back();
-                
+
                 cambiarTabPracticas(data.tipo);
                 cargarPracticas();
 
@@ -2279,7 +2321,7 @@
             if (omitirHistorial !== true) window.cambiarHistorial('calificaciones', '#calificaciones');
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('calificacionesContainer').classList.remove('hidden');
-            
+
             if (globalEstado === 'abandono') {
                 document.getElementById('stampCalificaciones').classList.remove('hidden');
             } else {
@@ -2298,7 +2340,7 @@
 
             const alumnoId = localStorage.getItem('alumnoId');
             const currentAppId = localStorage.getItem('workingAppId') || 'default';
-            
+
             if (!alumnoId) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-12 flex flex-col items-center">
@@ -2335,7 +2377,7 @@
                 const data = doc.data();
                 if (data.alumnoId === alumnoId) misCalificaciones.push(data);
             });
-            
+
             if (misCalificaciones.length === 0) {
                 container.innerHTML = `
                     <div class="col-span-full text-center py-16 flex flex-col items-center bg-white/40 rounded-2xl border border-dashed border-gray-300">
@@ -2350,7 +2392,7 @@
             }
 
             container.innerHTML = ''; 
-            
+
             misCalificaciones.forEach(data => {
                 const materiaObj = materiasMap[data.materiaId] || {};
                 const materia = materiaObj.nombre || data.materia || 'Materia sin título';
@@ -2363,7 +2405,7 @@
                 // Verificamos si la materia usa el nuevo sistema por secciones
                 if (data.secciones && Array.isArray(data.secciones)) {
                     let totalSumaSecciones = 0;
-                    
+
                     detalleHTML = `
                         <div class="mt-4 pt-4 border-t border-gray-100">
                             <div class="flex justify-between items-center mb-3">
@@ -2375,17 +2417,17 @@
                     for (let s = 0; s < numSecciones; s++) {
                         const secData = data.secciones[s] || { practicas: [], teorica: 0 };
                         const practicasArray = secData.practicas || [];
-                        
+
                         const countPrac = practicasArray.length;
                         const sumPrac = practicasArray.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
                         const avgPrac = countPrac > 0 ? (sumPrac / countPrac) : 0;
-                        
+
                         const teoricaVal = parseFloat(secData.teorica) || 0;
 
                         const puntosPrac = avgPrac * 0.70;
                         const puntosTeo = teoricaVal * 0.30;
                         const notaSec = puntosPrac + puntosTeo;
-                        
+
                         totalSumaSecciones += notaSec;
 
                         const practicasStr = practicasArray.length > 0 ? practicasArray.map(v => v !== '' && v !== null ? v : '0').join(', ') : '-';
@@ -2400,7 +2442,7 @@
                                 <div class="mb-4 pt-1">
                                     <span class="font-bold text-gray-800 text-[14px]">Promedio Sección: <span class="text-[#0f4c81]">${Math.round(notaSec)}</span><span class="text-gray-400 text-[10px]"> / 100</span></span>
                                 </div>
-                                
+
                                 <!-- Prácticas -->
                                 <div class="flex justify-between items-center mb-1.5">
                                     <span class="font-bold text-gray-700 text-[13px] flex items-center gap-1.5">
@@ -2435,7 +2477,7 @@
                     }
                     detalleHTML += `</div></div>`;
                     nota = numSecciones > 0 ? Math.round(totalSumaSecciones / numSecciones) : 0;
-                    
+
                 } else {
                     // --- LÓGICA ANTIGUA (Para retrocompatibilidad de notas pasadas) ---
                     const calcularPuntos = (valores, pesoMaximo) => {
@@ -2521,12 +2563,12 @@
                 // Condición de Aprobación ajustada a 51pts por defecto 
                 const aprobado = nota >= 51;
                 let estado = aprobado ? 'Aprobado' : 'Reprobado';
-                
+
                 // Si el alumno abandonó, cambiamos el texto
                 if (globalEstado === 'abandono' && !aprobado) {
                     estado = 'Abandono';
                 }
-                
+
                 const colorPill = aprobado ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-red-700 bg-red-100 border-red-200';
                 const colorText = aprobado ? 'text-emerald-600' : 'text-red-500';
 
@@ -2583,22 +2625,22 @@
                     else await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'sesiones', currentSessionId));
                 } catch (e) {}
             }
-            
+
             localStorage.removeItem('portalSessionId');
             localStorage.removeItem('alumnoId');
             localStorage.removeItem('alumnoData');
             localStorage.removeItem('adminId');
-            
+
             document.getElementById('dashboardContainer').classList.add('hidden');
             document.getElementById('loginContainer').classList.remove('hidden');
             document.getElementById('loginForm').reset();
-            
+
             const btn = document.getElementById('submitBtn');
             btn.disabled = false;
             btn.classList.add('bg-[#0f4c81]', 'hover:bg-[#0a365c]');
             btn.classList.remove('bg-emerald-600', 'hover:bg-emerald-700');
             btn.innerHTML = `<span>Verificar Credenciales</span><i data-lucide="arrow-right" class="w-4 h-4"></i>`;
-            
+
             window.mostrarNotificacion("Sesión Cerrada", "Has salido del sistema de forma segura.");
             lucide.createIcons();
         };
