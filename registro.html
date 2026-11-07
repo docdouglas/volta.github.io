@@ -31,11 +31,11 @@
         /* --- Fondo Premium Elegante --- */
         .premium-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
-            background-color: #0f4c81; /* Color de respaldo */
-            background-image: url('fondo.jpg'); /* Carga la imagen desde la misma carpeta */
+            background-color: #0f4c81;
+            background-image: url('fondo.jpg');
             background-size: cover; background-position: center;
             z-index: -2;
-            opacity: 0.15; /* Muy sutil para evitar oscurecer. Cambia a 1 para verla normal */
+            opacity: 0.15;
         }
         
         .premium-overlay {
@@ -133,6 +133,22 @@
             border: 1px solid rgba(15, 76, 129, 0.1);
         }
 
+        /* Item del Historial de Materias */
+        .history-materia-btn {
+            transition: all 0.2s ease;
+            border: 1px solid rgba(226, 232, 240, 0.8);
+        }
+        .history-materia-btn:hover {
+            border-color: rgba(15, 76, 129, 0.3);
+            background-color: #f8fafc;
+        }
+        .history-materia-btn.active {
+            background-color: #ffffff;
+            border-color: var(--brand-color);
+            box-shadow: 0 6px 20px rgba(15, 76, 129, 0.08);
+            transform: translateX(4px);
+        }
+
         .smooth-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
         .smooth-scroll::-webkit-scrollbar-track { background: transparent; }
         .smooth-scroll::-webkit-scrollbar-thumb { background: rgba(15, 76, 129, 0.2); border-radius: 10px; }
@@ -141,9 +157,8 @@
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-fade { animation: fadeIn 0.35s ease-out forwards; }
         
-        /* Ocultar input number arrows */
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
@@ -185,10 +200,13 @@
                 <button onclick="switchTab('calificaciones')" id="tab-calificaciones" class="section-tab flex items-center gap-2">
                     <i data-lucide="clipboard-check" class="w-4 h-4"></i> Calificaciones
                 </button>
+                <button onclick="switchTab('historial')" id="tab-historial" class="section-tab flex items-center gap-2">
+                    <i data-lucide="award" class="w-4 h-4"></i> Historial / Vista Alumno
+                </button>
             </div>
         </div>
 
-        <!-- VISTAS DINÁMICAS -->
+        <!-- VISTA 1: MATERIAS -->
         <div id="view-materias" class="view-section animate-fade">
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
                 <div>
@@ -204,13 +222,13 @@
             </div>
         </div>
 
+        <!-- VISTA 2: ALUMNOS -->
         <div id="view-alumnos" class="view-section hidden animate-fade">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-6">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900">Registro de Alumnos</h2>
-                    <p class="text-gray-500 text-sm mt-1">Administra estudiantes y sus inscripciones.</p>
+                    <p class="text-gray-500 text-sm mt-1">Administra estudiantes, sus inscripciones y consulta su historial individual.</p>
                 </div>
-                <!-- Barra de Búsqueda y Botón en la misma fila en desktop -->
                 <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
                     <div class="relative w-full sm:w-72">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -244,44 +262,100 @@
             </div>
         </div>
 
+        <!-- VISTA 3: CALIFICACIONES (POR MATERIA INDIVIDUAL) -->
         <div id="view-calificaciones" class="view-section hidden animate-fade">
             <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
                 <div>
-                    <h2 class="text-3xl font-serif-title font-bold text-gray-900">Calificaciones</h2>
-                    <p class="text-gray-500 text-sm mt-1">Busca a un alumno o selecciona una materia.</p>
+                    <h2 class="text-3xl font-serif-title font-bold text-gray-900">Registro de Calificaciones</h2>
+                    <p class="text-gray-500 text-sm mt-1">Selecciona una materia específica para calificar o filtrar estudiantes.</p>
                 </div>
                 
-                <!-- Búsqueda Global y Selector de Materia alineados -->
+                <!-- Selector de Materia Individual y Buscador -->
                 <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
-                    <div class="relative w-full sm:w-72">
+                    <div class="w-full sm:w-72">
+                        <select id="selectMateriaGrades" onchange="renderGradesTable()" class="w-full px-4 py-3 input-glass text-sm font-semibold text-[#0f4c81]">
+                            <option value="">-- Seleccionar Materia --</option>
+                        </select>
+                    </div>
+                    <div class="relative w-full sm:w-64">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
                         </div>
-                        <input type="text" id="searchGradesGlobal" oninput="renderGradesTable()" placeholder="Buscar alumno..." class="w-full pl-10 pr-4 py-3 input-glass text-sm">
-                    </div>
-                    <div class="w-full sm:w-64">
-                        <select id="selectMateriaGrades" onchange="renderGradesTable()" class="w-full px-4 py-3 input-glass text-sm font-semibold text-[#0f4c81]">
-                            <option value="all">-- Todas las Materias --</option>
-                        </select>
+                        <input type="text" id="searchGradesGlobal" oninput="renderGradesTable()" placeholder="Filtrar alumno..." class="w-full pl-10 pr-4 py-3 input-glass text-sm">
                     </div>
                 </div>
             </div>
             
+            <!-- Píldoras rápidas de selección de materia -->
+            <div id="materiasPillsGrades" class="flex gap-2 overflow-x-auto hide-scrollbar pb-3 mb-4"></div>
+
             <div id="gradesContainer" class="glass-panel rounded-2xl overflow-hidden hidden">
                 <div class="p-4 bg-gray-50 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-center gap-4">
                     <div id="gradesInfo" class="text-sm font-medium text-gray-600 whitespace-nowrap"></div>
                     <button onclick="saveAllGrades()" class="btn-elegant py-2 text-sm hidden w-full sm:w-auto whitespace-nowrap" id="btnSaveGrades">Guardar Notas</button>
                 </div>
                 
-                <!-- Contenedor dinámico para múltiples tablas (una por materia) -->
                 <div id="multiGradesContainer" class="divide-y divide-gray-200">
-                     <!-- JS Dinámico -->
+                     <!-- JS Dinámico (1 sola materia a la vez) -->
+                </div>
+            </div>
+
+            <div id="emptyGradesState" class="glass-panel rounded-2xl text-center py-20 text-gray-400">
+                <i data-lucide="book-open-check" class="w-16 h-16 mx-auto mb-4 opacity-50 text-[#0f4c81]"></i>
+                <p class="text-lg font-medium text-gray-600">Escoge una materia en la parte superior para ver y registrar sus calificaciones.</p>
+            </div>
+        </div>
+
+        <!-- VISTA 4: HISTORIAL ACADÉMICO / MIS CALIFICACIONES (SELECCIÓN UNA POR UNA) -->
+        <div id="view-historial" class="view-section hidden animate-fade">
+            <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+                <div>
+                    <h2 class="text-3xl font-serif-title font-bold text-gray-900">Mis Calificaciones</h2>
+                    <p class="text-gray-500 text-sm mt-1">Detalle del historial académico y rendimiento seleccionando materia por materia.</p>
                 </div>
 
+                <!-- Selector de Estudiante -->
+                <div class="flex flex-col sm:flex-row gap-3 w-full md:w-auto items-center">
+                    <div class="relative w-full sm:w-80">
+                        <label class="text-[10px] font-bold uppercase tracking-wider text-[#0f4c81] block mb-1 pl-1">Seleccionar Estudiante</label>
+                        <select id="selectAlumnoHistorial" onchange="onChangeAlumnoHistorial()" class="w-full px-4 py-3 input-glass text-sm font-semibold text-gray-800">
+                            <option value="">-- Escoge un Alumno --</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div id="emptyGradesState" class="text-center py-20 text-gray-400">
-                <i data-lucide="clipboard-list" class="w-16 h-16 mx-auto mb-4 opacity-50"></i>
-                <p class="text-lg">Selecciona una materia o usa el buscador para calificar.</p>
+
+            <!-- Estado vacío cuando no se ha elegido alumno -->
+            <div id="emptyHistorialState" class="glass-panel rounded-2xl text-center py-20 text-gray-400">
+                <i data-lucide="graduation-cap" class="w-16 h-16 mx-auto mb-4 opacity-50 text-[#0f4c81]"></i>
+                <p class="text-lg font-medium text-gray-600">Selecciona un estudiante arriba para explorar su historial académico por materia.</p>
+            </div>
+
+            <!-- Contenedor del Historial (Lista de Materias a la izquierda + Detalle de 1 Materia a la derecha) -->
+            <div id="historialContent" class="hidden grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                
+                <!-- Columna Izquierda: Historial de Materias Inscritas -->
+                <div class="lg:col-span-4 glass-panel rounded-2xl p-5">
+                    <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+                        <div>
+                            <h3 class="font-bold text-sm uppercase tracking-wider text-[#0f4c81]">Historial de Materias</h3>
+                            <p id="historialAlumnoNombre" class="text-xs text-gray-500 mt-0.5 font-medium"></p>
+                        </div>
+                        <span id="historialTotalMaterias" class="text-xs font-bold bg-blue-50 text-[#0f4c81] px-2.5 py-1 rounded-full border border-blue-100">0</span>
+                    </div>
+
+                    <p class="text-xs text-gray-400 mb-3">Haz clic en una asignatura para visualizar su desglose de notas:</p>
+
+                    <div id="listaHistorialMaterias" class="space-y-2.5 max-h-[65vh] overflow-y-auto smooth-scroll pr-1">
+                        <!-- Llenado con JS -->
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Tarjeta de Calificación de la Materia Seleccionada (1 por 1) -->
+                <div class="lg:col-span-8" id="detalleMateriaHistorial">
+                    <!-- Llenado con JS -->
+                </div>
+
             </div>
         </div>
 
@@ -300,10 +374,9 @@
             <form id="formMateria" class="p-6 space-y-5">
                 <div>
                     <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Nombre de la Materia</label>
-                    <input type="text" id="matNombre" required class="w-full mt-1 px-4 py-3 input-glass" placeholder="Ej. Matemáticas Discretas">
+                    <input type="text" id="matNombre" required class="w-full mt-1 px-4 py-3 input-glass" placeholder="Ej. Análisis de Circuitos">
                 </div>
                 
-                <!-- Cantidad de Secciones Dinámicas -->
                 <div>
                     <label class="text-xs font-bold text-gray-500 uppercase tracking-wider pl-1">Cant. Secciones</label>
                     <input type="number" id="matNumSec" required min="1" max="10" class="w-full mt-1 px-4 py-3 input-glass text-center" value="1" oninput="generarInputsPracticas()">
@@ -399,12 +472,11 @@
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, doc, setDoc, onSnapshot, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // Configuración requerida por el entorno o tu Firebase real
+        // Configuración intacta de Firebase
         let firebaseConfig;
         if (typeof __firebase_config !== 'undefined') {
             firebaseConfig = JSON.parse(__firebase_config);
         } else {
-            // Fallback a tu configuración real de Firebase
             firebaseConfig = {
                 apiKey: "AIzaSyAG51FqizcLdlhMmHDhVRstqHpMZKAHJ0A",
                 authDomain: "novell-instituto-superior.firebaseapp.com",
@@ -427,6 +499,7 @@
         let currentUser = null;
         let editingMateriaId = null;
         let editingAlumnoId = null;
+        let selectedHistoryMateriaId = null;
 
         // Función auxiliar para obtener cantidad de prácticas de forma retrocompatible
         window.getPracCount = (materia, sectionIndex) => {
@@ -436,7 +509,6 @@
             return materia.numPracticas || 1;
         };
 
-        // Función auxiliar para evitar congelamiento infinito en Firebase
         const withTimeout = (promise, ms = 10000) => {
             return Promise.race([
                 promise,
@@ -444,7 +516,7 @@
             ]);
         };
 
-        // --- Inicialización y Auth (Debe ser estricto) ---
+        // --- Inicialización y Auth ---
         const initAuth = async () => {
             try {
                 let userCred;
@@ -453,7 +525,6 @@
                 } else {
                     userCred = await signInAnonymously(auth);
                 }
-                // Asignar instantáneamente para evitar demoras
                 currentUser = userCred.user;
             } catch(e) { 
                 console.error("Auth error:", e); 
@@ -461,21 +532,36 @@
             }
         };
 
-        // Arrancar autenticación primero
         (async () => {
             await initAuth();
             
             onAuthStateChanged(auth, (user) => {
                 currentUser = user;
                 if (user) {
-                    // Escuchar Datos con callbacks de error requeridos
                     const refMaterias = collection(db, 'artifacts', appId, 'public', 'data', 'materias');
                     const refAlumnos = collection(db, 'artifacts', appId, 'public', 'data', 'alumnos');
                     const refCalificaciones = collection(db, 'artifacts', appId, 'public', 'data', 'calificaciones');
 
-                    onSnapshot(refMaterias, (snap) => { materias = snap.docs.map(d => d.data()); renderUI(); updateGradesSelect(); }, (err) => console.error("Snapshot Materias Error:", err));
-                    onSnapshot(refAlumnos, (snap) => { alumnos = snap.docs.map(d => d.data()); renderUI(); if(document.getElementById('view-calificaciones').classList.contains('hidden') === false) renderGradesTable();}, (err) => console.error("Snapshot Alumnos Error:", err));
-                    onSnapshot(refCalificaciones, (snap) => { calificaciones = snap.docs.map(d => d.data()); if(document.getElementById('view-calificaciones').classList.contains('hidden') === false) renderGradesTable(); }, (err) => console.error("Snapshot Calificaciones Error:", err));
+                    onSnapshot(refMaterias, (snap) => { 
+                        materias = snap.docs.map(d => d.data()); 
+                        renderUI(); 
+                        updateGradesSelect(); 
+                        if(!document.getElementById('view-historial').classList.contains('hidden')) renderHistorialView();
+                    }, (err) => console.error("Snapshot Materias Error:", err));
+
+                    onSnapshot(refAlumnos, (snap) => { 
+                        alumnos = snap.docs.map(d => d.data()); 
+                        renderUI(); 
+                        updateHistorialAlumnosSelect();
+                        if(!document.getElementById('view-calificaciones').classList.contains('hidden')) renderGradesTable();
+                        if(!document.getElementById('view-historial').classList.contains('hidden')) renderHistorialView();
+                    }, (err) => console.error("Snapshot Alumnos Error:", err));
+
+                    onSnapshot(refCalificaciones, (snap) => { 
+                        calificaciones = snap.docs.map(d => d.data()); 
+                        if(!document.getElementById('view-calificaciones').classList.contains('hidden')) renderGradesTable(); 
+                        if(!document.getElementById('view-historial').classList.contains('hidden')) renderHistorialView();
+                    }, (err) => console.error("Snapshot Calificaciones Error:", err));
                 }
             });
         })();
@@ -492,6 +578,11 @@
                 updateGradesSelect();
                 renderGradesTable();
             }
+            if(tabId === 'historial') {
+                updateHistorialAlumnosSelect();
+                renderHistorialView();
+            }
+            lucide.createIcons();
         };
 
         window.openModal = (id) => {
@@ -502,7 +593,7 @@
                 editingMateriaId = null;
                 document.getElementById('formMateria').reset();
                 document.getElementById('modalMateriaTitle').innerHTML = '<i data-lucide="book" class="w-5 h-5"></i> Registrar Materia';
-                generarInputsPracticas(); // Generar input por defecto
+                generarInputsPracticas();
             }
             if(id === 'modalAlumno') {
                 editingAlumnoId = null;
@@ -538,7 +629,6 @@
             lucide.createIcons();
         }
 
-        // --- Función auxiliar común para quitar acentos ---
         const removeAccents = (str) => {
             return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         };
@@ -552,7 +642,6 @@
             if(numSec > 10) numSec = 10;
 
             const container = document.getElementById('practicasContainer');
-            
             const currentInputs = document.querySelectorAll('.input-prac-sec');
             const currentValues = Array.from(currentInputs).map(inp => parseInt(inp.value) || 1);
             
@@ -573,7 +662,6 @@
             e.preventDefault();
             
             const btn = document.getElementById('btnGuardarMateria');
-
             const originalText = btn.innerText;
             btn.innerText = "Guardando...";
             btn.disabled = true;
@@ -590,7 +678,7 @@
             };
 
             if (!currentUser) {
-                mostrarNotificacion("Error", "No autenticado. Si estás en local, habilita el inicio de sesión 'Anónimo' en Firebase.", true);
+                mostrarNotificacion("Error", "No autenticado.", true);
                 btn.innerText = originalText;
                 btn.disabled = false;
                 return;
@@ -601,10 +689,10 @@
                 await withTimeout(setDoc(docRef, data));
                 closeModal('modalMateria');
                 document.getElementById('formMateria').reset();
-                mostrarNotificacion("Éxito", "Materia creada correctamente.");
+                mostrarNotificacion("Éxito", "Materia guardada correctamente.");
             } catch (err) { 
                 console.error("Firebase Error:", err);
-                mostrarNotificacion("Error", "Fallo al guardar en Firebase. Revisa tu consola.", true);
+                mostrarNotificacion("Error", "Fallo al guardar en Firebase.", true);
             } finally {
                 btn.innerText = originalText;
                 btn.disabled = false;
@@ -621,8 +709,8 @@
                 const pracsText = m.practicasPorSeccion ? m.practicasPorSeccion.join(', ') : (m.numPracticas || 1);
                 return `
                     <div class="glass-card p-6 rounded-2xl relative">
-                        <button onclick="editarMateria('${m.id}')" class="absolute top-4 right-12 text-blue-400 hover:text-blue-600 transition-colors"><i data-lucide="edit" class="w-4 h-4"></i></button>
-                        <button onclick="borrarMateria('${m.id}')" class="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                        <button onclick="editarMateria('${m.id}')" class="absolute top-4 right-12 text-blue-400 hover:text-blue-600 transition-colors" title="Editar"><i data-lucide="edit" class="w-4 h-4"></i></button>
+                        <button onclick="borrarMateria('${m.id}')" class="absolute top-4 right-4 text-red-300 hover:text-red-500 transition-colors" title="Eliminar"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
                         <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center mb-4 border border-blue-100 text-[#0f4c81]">
                             <i data-lucide="book-open" class="w-5 h-5"></i>
                         </div>
@@ -639,13 +727,21 @@
                             </div>
                         </div>
                         
-                        <div class="flex justify-center text-[11px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
+                        <div class="flex justify-between items-center text-[11px] uppercase font-bold text-gray-500 pt-3 border-t border-gray-100">
                             <span>Práctica 70% | Teórica 30%</span>
+                            <button onclick="irACalificarMateria('${m.id}')" class="text-[#0f4c81] hover:underline flex items-center gap-1">Calificar <i data-lucide="arrow-right" class="w-3 h-3"></i></button>
                         </div>
                     </div>
                 `;
             }).join('');
         }
+
+        window.irACalificarMateria = (matId) => {
+            switchTab('calificaciones');
+            const select = document.getElementById('selectMateriaGrades');
+            select.value = matId;
+            renderGradesTable();
+        };
 
         window.editarMateria = (id) => {
             const m = materias.find(x => x.id === id);
@@ -664,7 +760,7 @@
         };
 
         window.borrarMateria = async (id) => {
-            if (!currentUser) return mostrarNotificacion("Error", "No autenticado. Habilita Auth Anónima en Firebase.", true);
+            if (!currentUser) return mostrarNotificacion("Error", "No autenticado.", true);
             if(confirm("¿Seguro que deseas eliminar esta materia?")) {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'materias', id);
@@ -727,7 +823,7 @@
             };
 
             if (!currentUser) {
-                mostrarNotificacion("Error", "No autenticado. Si estás en local, habilita el inicio de sesión 'Anónimo' en Firebase.", true);
+                mostrarNotificacion("Error", "No autenticado.", true);
                 btn.innerText = originalText;
                 btn.disabled = false;
                 return;
@@ -755,7 +851,7 @@
             }
             
             tbody.innerHTML = alumnos.map(a => {
-                const matNames = a.materiasInscritas.map(mid => {
+                const matNames = (a.materiasInscritas || []).map(mid => {
                     const m = materias.find(x => x.id === mid);
                     return m ? m.nombre : 'Desc.';
                 });
@@ -779,6 +875,9 @@
                         ${matNames.length > 0 ? matNames.map(n => `<span class="inline-block bg-gray-100 px-2 py-1 rounded border border-gray-200 mr-1 mb-1">${n}</span>`).join('') : '<span class="italic">Ninguna</span>'}
                     </td>
                     <td class="py-3 px-6 text-right whitespace-nowrap">
+                        <button onclick="verHistorialAlumno('${a.id}')" class="text-[#0f4c81] hover:bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200 text-xs font-semibold inline-flex items-center gap-1 mr-2 transition-colors" title="Ver Historial por Materia">
+                            <i data-lucide="award" class="w-3.5 h-3.5"></i> Historial
+                        </button>
                         <button onclick="toggleEstadoAlumno('${a.id}', '${estado}')" class="${toggleColor} p-1 mr-2" title="${toggleTitle}"><i data-lucide="${toggleIcon}" class="w-4 h-4"></i></button>
                         <button onclick="editarAlumno('${a.id}')" class="text-blue-400 hover:text-blue-600 p-1 mr-2" title="Editar Alumno"><i data-lucide="edit" class="w-4 h-4"></i></button>
                         <button onclick="borrarAlumno('${a.id}')" class="text-red-400 hover:text-red-600 p-1" title="Eliminar"><i data-lucide="trash" class="w-4 h-4"></i></button>
@@ -786,11 +885,17 @@
                 </tr>
             `}).join('');
 
-            // Si hay un término de búsqueda, re-aplicarlo tras renderizar
             if(document.getElementById('searchAlumnos') && document.getElementById('searchAlumnos').value) {
                 filterAlumnosTable();
             }
         }
+
+        window.verHistorialAlumno = (alumnoId) => {
+            switchTab('historial');
+            const select = document.getElementById('selectAlumnoHistorial');
+            select.value = alumnoId;
+            onChangeAlumnoHistorial();
+        };
 
         window.filterAlumnosTable = () => {
             const searchInput = document.getElementById('searchAlumnos').value.toLowerCase();
@@ -827,7 +932,7 @@
             document.getElementById('aluEstado').value = a.estado || 'activo';
             
             updatePreviewAccount();
-            renderMateriasCheckboxes(a.materiasInscritas);
+            renderMateriasCheckboxes(a.materiasInscritas || []);
             
             document.getElementById('modalAlumnoTitle').innerHTML = '<i data-lucide="edit" class="w-5 h-5"></i> Editar Alumno';
             document.getElementById('modalAlumno').classList.remove('hidden');
@@ -852,7 +957,7 @@
         };
 
         window.borrarAlumno = async (id) => {
-            if (!currentUser) return mostrarNotificacion("Error", "No autenticado. Habilita Auth Anónima en Firebase.", true);
+            if (!currentUser) return mostrarNotificacion("Error", "No autenticado.", true);
             if(confirm("¿Seguro que deseas eliminar este alumno?")) {
                 try {
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'alumnos', id);
@@ -863,20 +968,51 @@
             }
         };
 
-        // --- Lógica Calificaciones Refactorizada ---
+        // --- Lógica Calificaciones (Seleccionando 1 Materia a la vez) ---
         function updateGradesSelect() {
             const select = document.getElementById('selectMateriaGrades');
             const currentVal = select.value;
-            select.innerHTML = '<option value="all">-- Todas las Materias --</option>' + 
+            select.innerHTML = '<option value="">-- Seleccionar Materia --</option>' + 
                 materias.map(m => `<option value="${m.id}">${m.nombre}</option>`).join('');
-            if(materias.find(m => m.id === currentVal) || currentVal === 'all') select.value = currentVal;
+            
+            if(materias.find(m => m.id === currentVal)) {
+                select.value = currentVal;
+            } else if (materias.length > 0 && !currentVal) {
+                // Seleccionar la primera materia automáticamente para comodidad
+                select.value = materias[0].id;
+            }
+            renderMateriasPillsGrades();
         }
 
-        // Genera el HTML de la tabla para una materia específica y un conjunto de alumnos
+        function renderMateriasPillsGrades() {
+            const pillsContainer = document.getElementById('materiasPillsGrades');
+            const selectedMatId = document.getElementById('selectMateriaGrades').value;
+            if (!pillsContainer) return;
+
+            if (materias.length === 0) {
+                pillsContainer.innerHTML = '';
+                return;
+            }
+
+            pillsContainer.innerHTML = materias.map(m => {
+                const isActive = m.id === selectedMatId;
+                return `
+                    <button onclick="selectMateriaPill('${m.id}')" class="px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${isActive ? 'bg-[#0f4c81] text-white border-[#0f4c81] shadow-md' : 'bg-white/80 text-gray-600 border-gray-200 hover:border-[#0f4c81]/40'}">
+                        ${m.nombre}
+                    </button>
+                `;
+            }).join('');
+        }
+
+        window.selectMateriaPill = (matId) => {
+            const select = document.getElementById('selectMateriaGrades');
+            select.value = matId;
+            renderGradesTable();
+        };
+
         const buildMateriaTableHTML = (materia, alumnosDeMateria) => {
             const numSecciones = materia.numSecciones || 1;
             
-            // CABECERAS
             let headRow1 = `<tr><th rowspan="2" class="py-3 px-4 text-xs font-bold text-[#0f4c81] uppercase align-middle sticky left-0 bg-white z-10 border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)] min-w-[200px]">Alumno</th>`;
             let headRow2 = `<tr>`;
             
@@ -896,10 +1032,9 @@
             headRow1 += `<th rowspan="2" class="py-3 px-4 text-sm font-bold text-white uppercase align-middle text-center bg-[#0f4c81] border-l-2 border-[#0a365c] shadow-md">Nota Final</th></tr>`;
             headRow2 += `</tr>`;
             
-            // CUERPO
             let bodyHTML = '';
             if (alumnosDeMateria.length === 0) {
-                bodyHTML = `<tr><td colspan="100%" class="py-4 text-center text-gray-400 italic text-sm">No hay alumnos que coincidan con la búsqueda en esta materia.</td></tr>`;
+                bodyHTML = `<tr><td colspan="100%" class="py-8 text-center text-gray-400 italic text-sm">No hay alumnos inscritos o que coincidan con la búsqueda en esta materia.</td></tr>`;
             } else {
                 alumnosDeMateria.forEach(al => {
                     const califId = `${al.id}_${materia.id}`;
@@ -909,26 +1044,22 @@
                     bodyHTML += `<td class="py-2 px-4 text-sm font-semibold text-gray-800 sticky left-0 bg-white/90 backdrop-blur border-r border-gray-200 shadow-[2px_0_5px_rgba(0,0,0,0.02)] whitespace-nowrap">${al.paterno} ${al.materno} ${al.nombre}</td>`;
                     
                     for(let s = 0; s < numSecciones; s++) {
-                        const secData = notaObj.secciones[s] || { practicas: [], teorica: '' };
+                        const secData = (notaObj.secciones && notaObj.secciones[s]) ? notaObj.secciones[s] : { practicas: [], teorica: '' };
                         const numPracThisSec = window.getPracCount(materia, s);
                         
-                        // Inputs Prácticas
                         for(let i=0; i<numPracThisSec; i++) {
-                            const val = secData.practicas[i] !== undefined ? secData.practicas[i] : '';
+                            const val = (secData.practicas && secData.practicas[i] !== undefined) ? secData.practicas[i] : '';
                             bodyHTML += `<td class="py-2 px-1 text-center bg-blue-50/10 border-l ${i===0 ? 'border-l-2 border-blue-200' : 'border-blue-100'}"><input type="number" min="0" max="100" data-sec="${s}" data-type="prac" data-idx="${i}" data-al="${al.id}" data-mat="${materia.id}" value="${val}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-blue-400 grade-input" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
                         }
                         
                         bodyHTML += `<td class="py-2 px-2 text-center bg-blue-50/40 border-l border-blue-200 font-bold text-sm text-blue-700" id="prom_prac_${al.id}_${materia.id}_${s}">-</td>`;
 
-                        // Input Teórica
                         const valTeo = secData.teorica !== undefined ? secData.teorica : '';
                         bodyHTML += `<td class="py-2 px-1 text-center bg-indigo-50/20 border-l border-indigo-100"><input type="number" min="0" max="100" data-sec="${s}" data-type="teo" data-al="${al.id}" data-mat="${materia.id}" value="${valTeo}" class="w-12 sm:w-14 px-1 py-1.5 text-center text-sm input-glass bg-white border-transparent focus:border-indigo-500 grade-input font-bold text-indigo-700" onchange="calcFinalRow(this, '${materia.id}')" onkeydown="handleEnterNavigation(event)"></td>`;
 
-                        // Celda de Promedio de esta Sección
                         bodyHTML += `<td class="py-2 px-2 text-center bg-emerald-50/40 border-l border-emerald-200 font-bold text-sm text-emerald-700" id="prom_sec_${al.id}_${materia.id}_${s}">-</td>`;
                     }
 
-                    // Celda Nota Final
                     bodyHTML += `<td class="py-2 px-4 text-center bg-gray-50 border-l-2 border-gray-300 font-bold text-xl" id="final_${al.id}_${materia.id}">-</td>`;
                     bodyHTML += `</tr>`;
                 });
@@ -953,6 +1084,7 @@
         };
 
         window.renderGradesTable = () => {
+            renderMateriasPillsGrades();
             const select = document.getElementById('selectMateriaGrades');
             const searchInput = document.getElementById('searchGradesGlobal').value.toLowerCase().trim();
             const normalizedSearch = removeAccents(searchInput);
@@ -962,21 +1094,9 @@
             const container = document.getElementById('gradesContainer');
             const multiContainer = document.getElementById('multiGradesContainer');
             
-            let materiasToRender = [];
-            
-            if (matId === 'all') {
-                materiasToRender = materias;
-            } else if (matId) {
-                const mat = materias.find(m => m.id === matId);
-                if (mat) materiasToRender = [mat];
-            }
+            const materia = materias.find(m => m.id === matId);
 
-            // Filtrar materias que no tengan alumnos si no hay búsqueda
-            if (normalizedSearch === '') {
-                 materiasToRender = materiasToRender.filter(m => alumnos.some(a => a.materiasInscritas.includes(m.id)));
-            }
-
-            if(materiasToRender.length === 0 && normalizedSearch === '') {
+            if(!materia) {
                 emptyState.classList.remove('hidden'); 
                 container.classList.add('hidden');
                 document.getElementById('btnSaveGrades').classList.add('hidden');
@@ -987,47 +1107,26 @@
             container.classList.remove('hidden');
             document.getElementById('btnSaveGrades').classList.remove('hidden');
 
-            let totalAlumnosRenderizados = 0;
-            let fullHTML = '';
+            let alumnosDeMateria = alumnos
+                .filter(a => (a.materiasInscritas || []).includes(materia.id))
+                .sort((a, b) => {
+                    const nombreA = `${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase();
+                    const nombreB = `${b.paterno || ''} ${b.materno || ''} ${b.nombre || ''}`.trim().toLowerCase();
+                    return nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
+                });
 
-            materiasToRender.forEach(materia => {
-                // Encontrar alumnos inscritos en esta materia
-                let alumnosDeMateria = alumnos
-                    .filter(a => a.materiasInscritas.includes(materia.id))
-                    .sort((a, b) => {
-                        const nombreA = `${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase();
-                        const nombreB = `${b.paterno || ''} ${b.materno || ''} ${b.nombre || ''}`.trim().toLowerCase();
-                        return nombreA.localeCompare(nombreB, 'es', { sensitivity: 'base' });
-                    });
-
-                // Filtrar por la barra de búsqueda global
-                if (normalizedSearch !== '') {
-                    alumnosDeMateria = alumnosDeMateria.filter(a => {
-                        const fullName = removeAccents(`${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase());
-                        return fullName.includes(normalizedSearch);
-                    });
-                }
-                
-                // Si estamos buscando algo y no hay alumnos en esta materia, no renderizamos la tabla de la materia
-                if (normalizedSearch !== '' && alumnosDeMateria.length === 0) {
-                     return; // Continue to next materia
-                }
-
-                totalAlumnosRenderizados += alumnosDeMateria.length;
-                fullHTML += buildMateriaTableHTML(materia, alumnosDeMateria);
-            });
-
-            if (fullHTML === '') {
-                 multiContainer.innerHTML = `<div class="p-8 text-center text-gray-500 italic">No se encontraron resultados para "${searchInput}".</div>`;
-                 document.getElementById('gradesInfo').innerText = "0 resultados";
-            } else {
-                 multiContainer.innerHTML = fullHTML;
-                 document.getElementById('gradesInfo').innerText = `${totalAlumnosRenderizados} alumno(s) mostrados`;
+            if (normalizedSearch !== '') {
+                alumnosDeMateria = alumnosDeMateria.filter(a => {
+                    const fullName = removeAccents(`${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase());
+                    return fullName.includes(normalizedSearch);
+                });
             }
+
+            multiContainer.innerHTML = buildMateriaTableHTML(materia, alumnosDeMateria);
+            document.getElementById('gradesInfo').innerText = `${alumnosDeMateria.length} alumno(s) en ${materia.nombre}`;
             
             lucide.createIcons();
 
-            // Trigger calculation for all rendered inputs
             setTimeout(() => {
                 const inputsToTrigger = document.querySelectorAll('.grade-input[data-idx="0"][data-type="prac"], .grade-input[data-type="teo"]');
                 const processed = new Set();
@@ -1050,7 +1149,6 @@
             if(!materia) return;
             const numSecciones = materia.numSecciones || 1;
 
-            // Recopilar valores de esta fila para esta materia específica
             const rowInputs = document.querySelectorAll(`input[data-al="${alId}"][data-mat="${matId}"]`);
             
             let sectionsData = [];
@@ -1088,11 +1186,7 @@
                 
                 const cellPrac = document.getElementById(`prom_prac_${alId}_${matId}_${s}`);
                 if(cellPrac) {
-                    if (sectionsData[s].countPrac > 0) {
-                        cellPrac.innerText = Math.round(avgPrac);
-                    } else {
-                        cellPrac.innerText = '-';
-                    }
+                    cellPrac.innerText = sectionsData[s].countPrac > 0 ? Math.round(avgPrac) : '-';
                 }
 
                 const notaSec = (avgPrac * 0.70) + (teo * 0.30);
@@ -1143,10 +1237,7 @@
             const originalText = btn.innerText;
             btn.innerText = "Guardando..."; btn.disabled = true;
 
-            // Recopilar todos los inputs visibles actualmente en el contenedor
             const allInputs = document.querySelectorAll('#multiGradesContainer .grade-input');
-            
-            // Agrupar los datos por alumno y materia
             const gradesToSave = {};
 
             allInputs.forEach(inp => {
@@ -1163,7 +1254,6 @@
                         id: califId,
                         alumnoId: alId,
                         materiaId: matId,
-                        materiaDef: materia,
                         secciones: Array.from({length: numSecciones}, (_, s) => {
                             const numPrac = window.getPracCount(materia, s);
                             return { practicas: new Array(numPrac).fill(''), teorica: '' };
@@ -1193,31 +1283,259 @@
                 const savePromises = [];
                 for (const califId in gradesToSave) {
                     const data = gradesToSave[califId];
-                    // Remover materiaDef antes de guardar en firestore
-                    const dataToSave = {
-                        id: data.id,
-                        alumnoId: data.alumnoId,
-                        materiaId: data.materiaId,
-                        secciones: data.secciones
-                    };
-                    
                     const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'calificaciones', califId);
-                    savePromises.push(setDoc(docRef, dataToSave));
+                    savePromises.push(setDoc(docRef, data));
                 }
 
                 await withTimeout(Promise.all(savePromises));
-                
                 mostrarNotificacion("Guardado", "Notas actualizadas correctamente.");
-                
-                // NO borramos la barra de búsqueda ni recargamos bruscamente, 
-                // onSnapshot se encargará de actualizar los datos en background silenciosamente.
-
             } catch(e) { 
                 console.error("Firebase Error:", e); 
                 mostrarNotificacion("Error", "Error al guardar. Revisa tu red.", true); 
             } finally {
                 btn.innerText = originalText; btn.disabled = false;
             }
+        };
+
+        // --- LÓGICA DEL HISTORIAL ACADÉMICO (SELECCIÓN DE MATERIAS UNA POR UNA) ---
+        function updateHistorialAlumnosSelect() {
+            const select = document.getElementById('selectAlumnoHistorial');
+            if (!select) return;
+            const currentVal = select.value;
+
+            const sortedAlumnos = [...alumnos].sort((a, b) => {
+                const na = `${a.paterno || ''} ${a.materno || ''} ${a.nombre || ''}`.trim().toLowerCase();
+                const nb = `${b.paterno || ''} ${b.materno || ''} ${b.nombre || ''}`.trim().toLowerCase();
+                return na.localeCompare(nb, 'es', { sensitivity: 'base' });
+            });
+
+            select.innerHTML = '<option value="">-- Escoge un Alumno --</option>' +
+                sortedAlumnos.map(a => `<option value="${a.id}">${a.paterno} ${a.materno} ${a.nombre} (${a.usuario})</option>`).join('');
+
+            if (alumnos.some(a => a.id === currentVal)) {
+                select.value = currentVal;
+            }
+        }
+
+        // Calcula el desglose exacto de una materia para un alumno (igual que en tus capturas)
+        function calcularDesgloseMateria(alumnoId, materia) {
+            const numSecciones = materia.numSecciones || 1;
+            const califId = `${alumnoId}_${materia.id}`;
+            const notaObj = calificaciones.find(c => c.id === califId) || { secciones: [] };
+
+            let sumaSecciones = 0;
+            const desgloseSecciones = [];
+
+            for (let s = 0; s < numSecciones; s++) {
+                const secData = (notaObj.secciones && notaObj.secciones[s]) ? notaObj.secciones[s] : { practicas: [], teorica: '' };
+                const numPracThisSec = window.getPracCount(materia, s);
+
+                const notasPracticas = [];
+                let sumPrac = 0;
+                let countPrac = 0;
+
+                for (let i = 0; i < numPracThisSec; i++) {
+                    const raw = (secData.practicas && secData.practicas[i] !== undefined) ? secData.practicas[i] : '';
+                    if (raw !== '' && raw !== null && !isNaN(parseFloat(raw))) {
+                        const val = parseFloat(raw);
+                        notasPracticas.push(val);
+                        sumPrac += val;
+                        countPrac++;
+                    }
+                }
+
+                const avgPrac = countPrac > 0 ? (sumPrac / countPrac) : 0;
+                const ptsPrac70 = avgPrac * 0.70;
+
+                const rawTeo = secData.teorica;
+                const hasTeo = (rawTeo !== '' && rawTeo !== undefined && rawTeo !== null && !isNaN(parseFloat(rawTeo)));
+                const valTeo = hasTeo ? parseFloat(rawTeo) : 0;
+                const ptsTeo30 = valTeo * 0.30;
+
+                const promSeccion = ptsPrac70 + ptsTeo30;
+                sumaSecciones += promSeccion;
+
+                desgloseSecciones.push({
+                    numero: s + 1,
+                    promedioSeccion: Math.round(promSeccion),
+                    ptsPrac70: ptsPrac70.toFixed(1),
+                    notasPracticasTexto: notasPracticas.length > 0 ? notasPracticas.join(', ') : '0',
+                    ptsTeo30: ptsTeo30.toFixed(1),
+                    notaTeoricaTexto: hasTeo ? valTeo : '-'
+                });
+            }
+
+            const notaFinal = numSecciones > 0 ? Math.round(sumaSecciones / numSecciones) : 0;
+            const aprobado = notaFinal >= 51;
+
+            return {
+                notaFinal,
+                aprobado,
+                desgloseSecciones
+            };
+        }
+
+        window.onChangeAlumnoHistorial = () => {
+            selectedHistoryMateriaId = null;
+            renderHistorialView();
+        };
+
+        window.seleccionarMateriaHistorial = (materiaId) => {
+            selectedHistoryMateriaId = materiaId;
+            renderHistorialView();
+        };
+
+        window.renderHistorialView = () => {
+            const select = document.getElementById('selectAlumnoHistorial');
+            const emptyState = document.getElementById('emptyHistorialState');
+            const content = document.getElementById('historialContent');
+            if (!select) return;
+
+            const alumnoId = select.value;
+            const alumno = alumnos.find(a => a.id === alumnoId);
+
+            if (!alumno) {
+                emptyState.classList.remove('hidden');
+                content.classList.add('hidden');
+                content.classList.remove('grid');
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            content.classList.remove('hidden');
+            content.classList.add('grid');
+
+            document.getElementById('historialAlumnoNombre').innerText = `${alumno.paterno} ${alumno.materno} ${alumno.nombre}`;
+
+            const materiasAlumno = (alumno.materiasInscritas || [])
+                .map(id => materias.find(m => m.id === id))
+                .filter(Boolean);
+
+            document.getElementById('historialTotalMaterias').innerText = `${materiasAlumno.length} mat.`;
+
+            const listaContainer = document.getElementById('listaHistorialMaterias');
+            const detalleContainer = document.getElementById('detalleMateriaHistorial');
+
+            if (materiasAlumno.length === 0) {
+                listaContainer.innerHTML = `<p class="text-sm text-gray-400 italic py-4 text-center">Este alumno no tiene materias inscritas.</p>`;
+                detalleContainer.innerHTML = `
+                    <div class="glass-panel rounded-2xl p-12 text-center text-gray-400">
+                        <i data-lucide="folder-open" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+                        <p>Inscribe al estudiante en alguna materia para ver sus calificaciones.</p>
+                    </div>
+                `;
+                lucide.createIcons();
+                return;
+            }
+
+            // Si no hay materia seleccionada o la seleccionada no pertenece al alumno, elegir la primera por defecto
+            if (!selectedHistoryMateriaId || !materiasAlumno.some(m => m.id === selectedHistoryMateriaId)) {
+                selectedHistoryMateriaId = materiasAlumno[0].id;
+            }
+
+            // Renderizar la lista lateral (Historial)
+            listaContainer.innerHTML = materiasAlumno.map(mat => {
+                const resumen = calcularDesgloseMateria(alumno.id, mat);
+                const isSelected = mat.id === selectedHistoryMateriaId;
+                const badgeColor = resumen.aprobado 
+                    ? 'bg-emerald-100 text-emerald-700 border-emerald-200' 
+                    : 'bg-red-100 text-red-600 border-red-200';
+                const scoreColor = resumen.aprobado ? 'text-emerald-600' : 'text-red-500';
+
+                return `
+                    <button onclick="seleccionarMateriaHistorial('${mat.id}')" class="history-materia-btn ${isSelected ? 'active' : 'bg-white/60'} w-full text-left p-3.5 rounded-xl flex items-center justify-between gap-3">
+                        <div class="overflow-hidden">
+                            <p class="font-bold text-sm text-gray-900 truncate">${mat.nombre}</p>
+                            <div class="flex items-center gap-2 mt-1">
+                                <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full border ${badgeColor}">
+                                    ${resumen.aprobado ? 'Aprobado' : 'Reprobado'}
+                                </span>
+                                <span class="text-[11px] text-gray-400">${mat.numSecciones || 1} sec.</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 shrink-0">
+                            <div class="text-right">
+                                <span class="text-xl font-serif-title font-bold ${scoreColor}">${resumen.notaFinal}</span>
+                                <span class="text-[10px] text-gray-400 font-semibold">/100</span>
+                            </div>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ${isSelected ? 'text-[#0f4c81]' : 'text-gray-300'}"></i>
+                        </div>
+                    </button>
+                `;
+            }).join('');
+
+            // Renderizar tarjeta de detalle de la materia activa (una sola materia a la vez)
+            const materiaActiva = materiasAlumno.find(m => m.id === selectedHistoryMateriaId);
+            const calc = calcularDesgloseMateria(alumno.id, materiaActiva);
+
+            const borderLeftColor = calc.aprobado ? 'border-l-[6px] border-l-emerald-500' : 'border-l-[6px] border-l-red-500';
+            const badgeTop = calc.aprobado 
+                ? `<span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-700">Aprobado</span>`
+                : `<span class="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-red-100 text-red-600">Reprobado</span>`;
+            const bigNumberColor = calc.aprobado ? 'text-emerald-600' : 'text-red-500';
+
+            const seccionesHTML = calc.desgloseSecciones.map(sec => `
+                <div class="bg-slate-50/70 rounded-2xl p-5 border border-gray-100 space-y-4">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm font-bold text-slate-700">Promedio Sección: <span class="text-[#0f4c81]">${sec.promedioSeccion}</span><span class="text-xs text-gray-400 font-normal"> / 100</span></p>
+                        <span class="px-3 py-1 rounded-lg bg-slate-200/70 text-[11px] font-bold uppercase tracking-wider text-slate-700">Sección ${sec.numero}</span>
+                    </div>
+
+                    <!-- Prácticas 70% -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-semibold text-slate-700 flex items-center gap-2">
+                                <i data-lucide="pen-tool" class="w-4 h-4 text-[#0f4c81]"></i> Prácticas <span class="text-xs text-gray-400 font-normal">(70%)</span>
+                            </span>
+                            <span class="font-bold text-[#0f4c81]">${sec.ptsPrac70} <span class="text-[10px] text-gray-400 font-normal uppercase">/ 70 PTS</span></span>
+                        </div>
+                        <div class="bg-white px-4 py-2.5 rounded-xl border border-gray-100 text-xs text-gray-500 uppercase tracking-wider font-semibold">
+                            Notas obtenidas: <span class="text-gray-800 font-bold ml-1">${sec.notasPracticasTexto}</span>
+                        </div>
+                    </div>
+
+                    <!-- Evaluación Teórica 30% -->
+                    <div class="space-y-2 pt-1">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="font-semibold text-slate-700 flex items-center gap-2">
+                                <i data-lucide="file-text" class="w-4 h-4 text-[#0f4c81]"></i> Evaluación Teórica <span class="text-xs text-gray-400 font-normal">(30%)</span>
+                            </span>
+                            <span class="font-bold text-[#0f4c81]">${sec.ptsTeo30} <span class="text-[10px] text-gray-400 font-normal uppercase">/ 30 PTS</span></span>
+                        </div>
+                        <div class="bg-white px-4 py-2.5 rounded-xl border border-gray-100 text-xs text-gray-500 uppercase tracking-wider font-semibold">
+                            Notas obtenidas: <span class="text-gray-800 font-bold ml-1">${sec.notaTeoricaTexto}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            detalleContainer.innerHTML = `
+                <div class="bg-white rounded-3xl shadow-xl border border-gray-100 ${borderLeftColor} p-6 sm:p-8 animate-fade">
+                    <div class="flex justify-between items-start gap-4 mb-3">
+                        <div>
+                            <h3 class="text-2xl font-bold text-slate-900">${materiaActiva.nombre}</h3>
+                            <p class="text-xs text-gray-500 flex items-center gap-1.5 mt-1">
+                                <i data-lucide="user" class="w-3.5 h-3.5"></i> Docente Asignado
+                            </p>
+                        </div>
+                        ${badgeTop}
+                    </div>
+
+                    <div class="my-6 flex items-baseline gap-1">
+                        <span class="text-5xl font-serif-title font-bold ${bigNumberColor}">${calc.notaFinal}</span>
+                        <span class="text-sm text-gray-400 font-semibold">/ 100</span>
+                    </div>
+
+                    <div class="border-t border-gray-100 pt-5">
+                        <p class="text-[11px] font-bold uppercase tracking-wider text-slate-700 mb-4">Desglose de Puntos</p>
+                        <div class="space-y-4">
+                            ${seccionesHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
         };
 
     </script>
