@@ -207,6 +207,32 @@
             opacity: 0 !important;
             pointer-events: none !important;
         }
+
+        /* --- Estilos de Impresión para Boleta --- */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #calificacionesContainer, #calificacionesContainer * {
+                visibility: visible;
+            }
+            #calificacionesContainer {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                max-width: 100%;
+                box-shadow: none;
+            }
+            #sidebarCalificaciones, #btnVolverCalificaciones {
+                display: none !important;
+            }
+            .glass-panel {
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+            }
+        }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen px-4 py-8">
@@ -608,7 +634,7 @@
                         </div>
                     </div>
 
-                    <!-- NUEVO SWITCH DE VISIBILIDAD -->
+                    <!-- SWITCH DE VISIBILIDAD -->
                     <div class="space-y-1.5 md:col-span-2 mt-2">
                         <label class="flex items-start cursor-pointer gap-4 p-4 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors shadow-sm">
                             <div class="relative pt-1">
@@ -738,21 +764,90 @@
         </div>
     </div>
 
-    <div id="calificacionesContainer" class="hidden relative w-full max-w-5xl mx-auto animate-fade-scale">
-        <div class="glass-panel rounded-3xl p-8 sm:p-12 relative overflow-hidden">
+    <!-- SECCIÓN DE CALIFICACIONES CON BARRA LATERAL IZQUIERDA -->
+    <div id="calificacionesContainer" class="hidden relative w-full max-w-6xl mx-auto animate-fade-scale">
+        <div class="glass-panel rounded-3xl p-6 sm:p-10 relative overflow-hidden">
             <div id="stampCalificaciones" class="hidden stamp-abandono">ABANDONO</div>
 
+            <!-- Cabecera Superior -->
             <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between border-b border-gray-300/50 pb-6 mb-8 gap-4 relative z-20">
                 <div>
                     <h2 class="text-3xl font-serif-title font-bold text-gray-900 tracking-tight">Mis Calificaciones</h2>
-                    <p class="text-sm text-gray-600 mt-2">Detalle de tu historial académico y rendimiento por materia.</p>
+                    <p class="text-sm text-gray-600 mt-1">Consulta tu expediente académico, historial de notas y rendimiento general.</p>
                 </div>
-                <button onclick="cerrarCalificaciones()" class="flex items-center gap-2 p-3 sm:px-5 sm:py-3 bg-white/60 hover:bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-[#0f4c81] font-bold text-sm border border-gray-200">
+                <button id="btnVolverCalificaciones" onclick="cerrarCalificaciones()" class="flex items-center gap-2 p-3 sm:px-5 sm:py-3 bg-white/60 hover:bg-white rounded-xl shadow-sm hover:shadow-md transition-all text-gray-700 hover:text-[#0f4c81] font-bold text-sm border border-gray-200 shrink-0">
                     <i data-lucide="arrow-left" class="w-5 h-5"></i>
                     <span class="hidden sm:inline">Volver al Menú</span>
                 </button>
             </div>
-            <div id="calificacionesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[250px] relative z-20"></div>
+
+            <!-- Estructura Principal: Barra Lateral Izquierda + Área de Contenido -->
+            <div class="flex flex-col lg:flex-row gap-8 relative z-20">
+                
+                <!-- Barra Lateral Izquierda (Sidebar) -->
+                <aside id="sidebarCalificaciones" class="w-full lg:w-64 shrink-0 flex flex-col gap-2">
+                    <div class="bg-white/75 backdrop-blur-md p-3 rounded-2xl border border-white/90 shadow-sm flex flex-col gap-1.5">
+                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-3 py-1.5">Menú Académico</span>
+
+                        <!-- Botón Obligatorio: Historial -->
+                        <button id="btnTabHistorial" onclick="cambiarVistaCalificaciones('historial')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all bg-[#0f4c81] text-white shadow-md text-left">
+                            <i data-lucide="history" class="w-4 h-4 shrink-0"></i>
+                            <span>Historial de Materias</span>
+                        </button>
+
+                        <!-- Botón: Resumen de Rendimiento -->
+                        <button id="btnTabResumen" onclick="cambiarVistaCalificaciones('resumen')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all text-gray-600 hover:bg-white hover:text-[#0f4c81] text-left">
+                            <i data-lucide="bar-chart-3" class="w-4 h-4 shrink-0"></i>
+                            <span>Resumen de Rendimiento</span>
+                        </button>
+
+                        <!-- Botón: Materias Aprobadas -->
+                        <button id="btnTabAprobadas" onclick="cambiarVistaCalificaciones('aprobadas')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all text-gray-600 hover:bg-white hover:text-[#0f4c81] text-left">
+                            <i data-lucide="award" class="w-4 h-4 shrink-0"></i>
+                            <span>Materias Aprobadas</span>
+                        </button>
+
+                        <div class="my-1 border-t border-gray-200/60"></div>
+
+                        <!-- Botón de Acción: Imprimir / Exportar -->
+                        <button onclick="window.print()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all text-emerald-700 bg-emerald-50/70 hover:bg-emerald-100 border border-emerald-200/60 text-left">
+                            <i data-lucide="printer" class="w-4 h-4 shrink-0"></i>
+                            <span>Imprimir Boleta</span>
+                        </button>
+                    </div>
+
+                    <!-- Tarjeta Informativa Inferior en el Sidebar -->
+                    <div class="hidden lg:block bg-[#0f4c81]/10 border border-[#0f4c81]/20 p-4 rounded-2xl mt-2">
+                        <div class="flex items-center gap-2 text-[#0f4c81] font-bold text-xs mb-1">
+                            <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+                            <span>Criterio de Evaluación</span>
+                        </div>
+                        <p class="text-[11px] text-gray-600 leading-relaxed">
+                            La nota mínima de aprobación para todas las asignaturas del instituto es de <strong>51 / 100 puntos</strong>.
+                        </p>
+                    </div>
+                </aside>
+
+                <!-- Contenedor Derecho: Vistas Dinámicas -->
+                <div class="flex-1 min-w-0">
+                    
+                    <!-- Sub-cabecera de la vista activa -->
+                    <div class="mb-5 flex items-center justify-between bg-white/50 px-5 py-3.5 rounded-2xl border border-white/80 shadow-sm">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-2.5 h-2.5 rounded-full bg-[#0f4c81]"></div>
+                            <h3 id="tituloSeccionCalificaciones" class="font-bold text-gray-800 text-sm sm:text-base">Historial Completo de Materias</h3>
+                        </div>
+                        <span id="contadorMateriasCalificaciones" class="text-xs font-bold bg-[#0f4c81]/10 text-[#0f4c81] px-3 py-1 rounded-full">Cargando...</span>
+                    </div>
+
+                    <!-- Vista 1: Resumen Estadístico (Oculta por defecto) -->
+                    <div id="calificacionesResumenView" class="hidden space-y-6 mb-6 animate-fade-scale"></div>
+
+                    <!-- Vista 2: Listado de Tarjetas de Historial / Aprobadas -->
+                    <div id="calificacionesList" class="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[250px]"></div>
+
+                </div>
+            </div>
         </div>
     </div>
 
@@ -960,6 +1055,10 @@
         let noticiasLocales = []; 
         let unsubscribeNoticias = null;
         let unsubscribePracticas = null;
+
+        // Variables para el módulo de calificaciones con barra lateral
+        let calificacionesProcesadas = [];
+        let vistaCalificacionesActiva = 'historial';
 
         window.formatTextSafe = (text) => {
             if (!text) return '';
@@ -1176,7 +1275,6 @@
                     estadoHtml = `<span class="w-2 h-2 rounded-full bg-red-500 inline-block"></span> Abandono`;
                     textColor = "text-red-600";
 
-                    // Mostrar iconos de candado directamente sobre los botones restringidos en el menú
                     const bloqueados = ['menuBiblioteca', 'menuClases', 'menuPracticas', 'menuChats'];
                     bloqueados.forEach(id => {
                         const btn = document.getElementById(id);
@@ -1186,7 +1284,6 @@
                         }
                     });
                 } else {
-                    // Quitar candados si se restaura la cuenta
                     const bloqueados = ['menuBiblioteca', 'menuClases', 'menuPracticas', 'menuChats'];
                     bloqueados.forEach(id => {
                         const btn = document.getElementById(id);
@@ -1770,7 +1867,7 @@
                     img.src = event.target.result;
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
-                        const MAX_WIDTH = 600; // Reducido para acelerar la subida
+                        const MAX_WIDTH = 600;
                         let width = img.width;
                         let height = img.height;
 
@@ -1783,9 +1880,9 @@
                         canvas.height = height;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, width, height);
-                        resolve(canvas.toDataURL('image/jpeg', 0.6)); // Mayor compresión para agilizar base de datos
+                        resolve(canvas.toDataURL('image/jpeg', 0.6));
                     };
-                    img.onerror = () => resolve(""); // Evitar que el sistema se cuelgue si falla al leer
+                    img.onerror = () => resolve("");
                 };
                 reader.onerror = () => resolve("");
             });
@@ -1811,7 +1908,6 @@
                     lucide.createIcons();
                     imageUrl = await comprimirImagenBase64(file);
 
-                    // Actualizar el texto para que el usuario sepa que está subiendo a la base de datos
                     btn.innerHTML = '<i data-lucide="upload-cloud" class="w-4 h-4 animate-bounce"></i> Subiendo a la nube...';
                     lucide.createIcons();
                 }
@@ -1970,7 +2066,6 @@
                     normalizar(p.materia).includes(terminoBusqueda) ||
                     normalizar(p.descripcion).includes(terminoBusqueda);
                 
-                // NUEVA LÓGICA DE VISIBILIDAD: Solo mostrar si 'visible' no es false, O si es administrador
                 const esVisible = p.visible !== false || globalRole === 'admin';
 
                 return coincideTab && coincideBusqueda && esVisible;
@@ -2169,7 +2264,6 @@
             document.getElementById('practicaImagePreview').src = '';
             document.getElementById('practicaFileNameDisplay').innerText = 'Seleccionar desde dispositivo...';
             
-            // Asegurarnos de que al crear una nueva, esté visible por defecto
             document.getElementById('practicaVisible').checked = true;
 
             document.getElementById('modalPracticaTitle').innerText = 'Nueva Práctica';
@@ -2207,7 +2301,6 @@
 
                 document.getElementById('practicaDescripcion').value = practica.descripcion || '';
 
-                // Cargar el valor del switch de visibilidad. Si no existe la propiedad (prácticas viejas), asume true
                 document.getElementById('practicaVisible').checked = practica.visible !== false;
 
                 document.getElementById('practicaImagenUrlActual').value = practica.imagen || '';
@@ -2258,7 +2351,6 @@
                     lucide.createIcons();
                     imageUrl = await comprimirImagenBase64(file);
 
-                    // Actualizar el texto para que el usuario sepa que está subiendo a la base de datos
                     btn.innerHTML = '<i data-lucide="upload-cloud" class="w-4 h-4 animate-bounce"></i> Subiendo a la nube...';
                     lucide.createIcons();
                 }
@@ -2277,7 +2369,7 @@
                     descripcion: document.getElementById('practicaDescripcion').value.trim(),
                     autor: globalUsername || "Administrador",
                     fechaPublicacion: new Date().toISOString(),
-                    visible: document.getElementById('practicaVisible').checked // AGREGAMOS EL VALOR DEL SWITCH
+                    visible: document.getElementById('practicaVisible').checked
                 };
 
                 const currentAppId = localStorage.getItem('workingAppId') || 'default';
@@ -2317,6 +2409,183 @@
             }
         });
 
+        // --- LÓGICA DE NAVEGACIÓN DE LA BARRA LATERAL EN CALIFICACIONES ---
+        window.cambiarVistaCalificaciones = (vista) => {
+            vistaCalificacionesActiva = vista;
+
+            const botones = {
+                'historial': document.getElementById('btnTabHistorial'),
+                'resumen': document.getElementById('btnTabResumen'),
+                'aprobadas': document.getElementById('btnTabAprobadas')
+            };
+
+            const claseActiva = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all bg-[#0f4c81] text-white shadow-md text-left";
+            const claseInactiva = "w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold text-sm transition-all text-gray-600 hover:bg-white hover:text-[#0f4c81] text-left";
+
+            Object.keys(botones).forEach(key => {
+                if (botones[key]) {
+                    botones[key].className = (key === vista) ? claseActiva : claseInactiva;
+                }
+            });
+
+            const tituloEl = document.getElementById('tituloSeccionCalificaciones');
+            const resumenView = document.getElementById('calificacionesResumenView');
+            const listView = document.getElementById('calificacionesList');
+
+            if (vista === 'historial') {
+                tituloEl.innerText = "Historial Completo de Materias";
+                resumenView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                renderizarTarjetasCalificaciones(calificacionesProcesadas);
+            } else if (vista === 'aprobadas') {
+                tituloEl.innerText = "Materias Aprobadas";
+                resumenView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                const aprobadas = calificacionesProcesadas.filter(c => c.aprobado);
+                renderizarTarjetasCalificaciones(aprobadas, "Aún no tienes materias aprobadas registradas.");
+            } else if (vista === 'resumen') {
+                tituloEl.innerText = "Resumen de Rendimiento Académico";
+                listView.classList.add('hidden');
+                resumenView.classList.remove('hidden');
+                renderizarVistaResumen();
+            }
+
+            lucide.createIcons();
+        };
+
+        const renderizarTarjetasCalificaciones = (lista, mensajeVacio = "No se han registrado notas en tu expediente académico para este periodo.") => {
+            const container = document.getElementById('calificacionesList');
+            const contadorEl = document.getElementById('contadorMateriasCalificaciones');
+            container.innerHTML = '';
+
+            contadorEl.innerText = `${lista.length} ${lista.length === 1 ? 'Materia' : 'Materias'}`;
+
+            if (lista.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-16 flex flex-col items-center bg-white/40 rounded-2xl border border-dashed border-gray-300">
+                        <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-gray-400 shadow-inner">
+                            <i data-lucide="folder-open" class="w-10 h-10"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Sin registros para mostrar</h3>
+                        <p class="text-gray-500 mt-2 max-w-md text-sm">${mensajeVacio}</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            lista.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-gray-100 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group animate-fade-scale";
+                card.innerHTML = `
+                    <div class="absolute left-0 top-0 bottom-0 w-1.5 ${item.aprobado ? 'bg-emerald-400' : 'bg-red-400'}"></div>
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h4 class="font-bold text-xl text-gray-900 leading-tight mb-1 group-hover:text-[#0f4c81] transition-colors">${item.materia}</h4>
+                            <p class="text-[13px] text-gray-500 flex items-center gap-1.5">
+                                <i data-lucide="user" class="w-3.5 h-3.5"></i> ${item.profesor}
+                            </p>
+                        </div>
+                        <span class="px-3 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider ${item.colorPill}">${item.estado}</span>
+                    </div>
+                    <div class="flex items-end gap-2 mb-2">
+                        <span class="text-5xl font-black ${item.colorText} font-serif-title tracking-tighter">${item.nota}</span>
+                        <span class="text-sm text-gray-400 mb-1.5 font-bold uppercase tracking-widest">/ 100</span>
+                    </div>
+                    ${item.detalleHTML}
+                `;
+                container.appendChild(card);
+            });
+
+            lucide.createIcons();
+        };
+
+        const renderizarVistaResumen = () => {
+            const container = document.getElementById('calificacionesResumenView');
+            const contadorEl = document.getElementById('contadorMateriasCalificaciones');
+
+            const total = calificacionesProcesadas.length;
+            const aprobadas = calificacionesProcesadas.filter(c => c.aprobado).length;
+            const reprobadas = total - aprobadas;
+            const sumaNotas = calificacionesProcesadas.reduce((acc, cur) => acc + cur.nota, 0);
+            const promedioGeneral = total > 0 ? Math.round(sumaNotas / total) : 0;
+            const porcentajeAprobacion = total > 0 ? Math.round((aprobadas / total) * 100) : 0;
+
+            contadorEl.innerText = `Promedio: ${promedioGeneral} / 100`;
+
+            if (total === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16 flex flex-col items-center bg-white/40 rounded-2xl border border-dashed border-gray-300">
+                        <i data-lucide="bar-chart-2" class="w-12 h-12 text-gray-400 mb-3"></i>
+                        <h3 class="text-lg font-bold text-gray-800">Sin estadísticas disponibles</h3>
+                        <p class="text-gray-500 mt-1 text-sm">Aún no tienes materias calificadas para calcular tu rendimiento.</p>
+                    </div>`;
+                lucide.createIcons();
+                return;
+            }
+
+            container.innerHTML = `
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-[#0f4c81]/10 text-[#0f4c81] flex items-center justify-center shrink-0">
+                            <i data-lucide="trending-up" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Promedio General</p>
+                            <p class="text-3xl font-black text-gray-900 font-serif-title">${promedioGeneral} <span class="text-xs font-sans font-bold text-gray-400">/ 100</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                            <i data-lucide="check-circle-2" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">Aprobadas</p>
+                            <p class="text-3xl font-black text-emerald-600 font-serif-title">${aprobadas} <span class="text-xs font-sans font-bold text-gray-400">de ${total}</span></p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex items-center gap-4">
+                        <div class="w-14 h-14 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
+                            <i data-lucide="alert-triangle" class="w-7 h-7"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs font-bold text-gray-400 uppercase tracking-wider">En Observación</p>
+                            <p class="text-3xl font-black text-red-500 font-serif-title">${reprobadas}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Barra de Avance y Tabla Resumen -->
+                <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs font-bold text-gray-700 uppercase tracking-wider">Tasa de Aprobación Académica</span>
+                        <span class="text-sm font-black text-[#0f4c81]">${porcentajeAprobacion}%</span>
+                    </div>
+                    <div class="w-full h-3 bg-gray-100 rounded-full overflow-hidden mb-6">
+                        <div class="h-full bg-[#0f4c81] rounded-full transition-all duration-700" style="width: ${porcentajeAprobacion}%"></div>
+                    </div>
+
+                    <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4">Vista Rápida por Asignatura</h4>
+                    <div class="divide-y divide-gray-100">
+                        ${calificacionesProcesadas.map(c => `
+                            <div class="py-3 flex items-center justify-between gap-4">
+                                <div>
+                                    <p class="font-bold text-sm text-gray-900">${c.materia}</p>
+                                    <p class="text-xs text-gray-400">${c.profesor}</p>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold border uppercase ${c.colorPill}">${c.estado}</span>
+                                    <span class="font-black text-base ${c.colorText} w-10 text-right">${c.nota}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            lucide.createIcons();
+        };
+
         window.abrirCalificaciones = async (omitirHistorial) => {
             if (omitirHistorial !== true) window.cambiarHistorial('calificaciones', '#calificaciones');
             document.getElementById('dashboardContainer').classList.add('hidden');
@@ -2328,7 +2597,11 @@
                 document.getElementById('stampCalificaciones').classList.add('hidden');
             }
 
-            lucide.createIcons();
+            // Resetear visualización a la pestaña obligatoria "Historial"
+            vistaCalificacionesActiva = 'historial';
+            document.getElementById('calificacionesResumenView').classList.add('hidden');
+            document.getElementById('calificacionesList').classList.remove('hidden');
+            document.getElementById('tituloSeccionCalificaciones').innerText = "Historial Completo de Materias";
 
             const container = document.getElementById('calificacionesList');
             container.innerHTML = `
@@ -2349,254 +2622,225 @@
                         </div>
                         <p class="font-bold text-lg text-gray-900">Error de Identificación</p>
                         <p class="text-gray-500 mt-1">No se pudo identificar tu cuenta de alumno.</p>
-                </div>`;
-            lucide.createIcons();
-            return;
-        }
-
-        try {
-            let calificacionesRef, materiasRef;
-            if (currentAppId === 'root') {
-                calificacionesRef = collection(db, 'calificaciones');
-                materiasRef = collection(db, 'materias');
-            } else {
-                calificacionesRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'calificaciones');
-                materiasRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'materias');
-            }
-
-            const materiasSnap = await getDocs(materiasRef);
-            const materiasMap = {};
-            materiasSnap.forEach(doc => {
-                materiasMap[doc.id] = doc.data();
-                if(doc.data().id) materiasMap[doc.data().id] = doc.data();
-            });
-
-            const calificacionesSnap = await getDocs(calificacionesRef);
-            const misCalificaciones = [];
-            calificacionesSnap.forEach(doc => {
-                const data = doc.data();
-                if (data.alumnoId === alumnoId) misCalificaciones.push(data);
-            });
-
-            if (misCalificaciones.length === 0) {
-                container.innerHTML = `
-                    <div class="col-span-full text-center py-16 flex flex-col items-center bg-white/40 rounded-2xl border border-dashed border-gray-300">
-                            <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-4 text-gray-400 shadow-inner">
-                                <i data-lucide="folder-open" class="w-10 h-10"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800">Aún no tienes calificaciones</h3>
-                        <p class="text-gray-500 mt-2 max-w-md">No se han registrado notas en tu expediente académico para este periodo.</p>
                     </div>`;
                 lucide.createIcons();
                 return;
             }
 
-            container.innerHTML = ''; 
-
-            misCalificaciones.forEach(data => {
-                const materiaObj = materiasMap[data.materiaId] || {};
-                const materia = materiaObj.nombre || data.materia || 'Materia sin título';
-                const profesor = data.profesor || 'Docente Asignado';
-                const numSecciones = materiaObj.numSecciones || 1;
-
-                let nota = 0;
-                let detalleHTML = '';
-
-                // Verificamos si la materia usa el nuevo sistema por secciones
-                if (data.secciones && Array.isArray(data.secciones)) {
-                    let totalSumaSecciones = 0;
-
-                    detalleHTML = `
-                        <div class="mt-4 pt-4 border-t border-gray-100">
-                            <div class="flex justify-between items-center mb-3">
-                                <span class="font-bold text-gray-800 text-[11px] uppercase tracking-wider">Desglose de Puntos</span>
-                            </div>
-                            <div class="flex flex-col gap-4">
-                    `;
-
-                    for (let s = 0; s < numSecciones; s++) {
-                        const secData = data.secciones[s] || { practicas: [], teorica: 0 };
-                        const practicasArray = secData.practicas || [];
-
-                        const countPrac = practicasArray.length;
-                        const sumPrac = practicasArray.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
-                        const avgPrac = countPrac > 0 ? (sumPrac / countPrac) : 0;
-
-                        const teoricaVal = parseFloat(secData.teorica) || 0;
-
-                        const puntosPrac = avgPrac * 0.70;
-                        const puntosTeo = teoricaVal * 0.30;
-                        const notaSec = puntosPrac + puntosTeo;
-
-                        totalSumaSecciones += notaSec;
-
-                        const practicasStr = practicasArray.length > 0 ? practicasArray.map(v => v !== '' && v !== null ? v : '0').join(', ') : '-';
-                        const teoricaStr = secData.teorica !== undefined && secData.teorica !== '' ? secData.teorica : '-';
-
-                        detalleHTML += `
-                            <div class="bg-gray-50/50 p-3.5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
-                                <!-- Etiqueta de Sección -->
-                                <div class="absolute top-0 right-0 bg-[#0f4c81]/10 text-[#0f4c81] font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-widest border-b border-l border-[#0f4c81]/10">
-                                    Sección ${s + 1}
-                                </div>
-                                <div class="mb-4 pt-1">
-                                    <span class="font-bold text-gray-800 text-[14px]">Promedio Sección: <span class="text-[#0f4c81]">${Math.round(notaSec)}</span><span class="text-gray-400 text-[10px]"> / 100</span></span>
-                                </div>
-
-                                <!-- Prácticas -->
-                                <div class="flex justify-between items-center mb-1.5">
-                                    <span class="font-bold text-gray-700 text-[13px] flex items-center gap-1.5">
-                                        <i data-lucide="pen-tool" class="w-4 h-4 text-[#0f4c81]"></i> Prácticas <span class="text-[10px] text-gray-400 font-normal">(70%)</span>
-                                    </span>
-                                    <div class="text-right flex items-baseline gap-1">
-                                        <span class="text-[#0f4c81] font-black text-[16px]">${(Math.round(puntosPrac * 10) / 10).toFixed(1)}</span>
-                                        <span class="text-gray-400 font-bold text-[9px] uppercase tracking-wider">/ 70 pts</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-200/60 shadow-sm mb-3">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">Notas obtenidas:</span>
-                                    <span class="text-[13px] text-gray-700 font-medium break-words">${practicasStr}</span>
-                                </div>
-
-                                <!-- Teoría -->
-                                <div class="flex justify-between items-center mb-1.5">
-                                    <span class="font-bold text-gray-700 text-[13px] flex items-center gap-1.5">
-                                        <i data-lucide="file-text" class="w-4 h-4 text-[#0f4c81]"></i> Evaluación Teórica <span class="text-[10px] text-gray-400 font-normal">(30%)</span>
-                                    </span>
-                                    <div class="text-right flex items-baseline gap-1">
-                                        <span class="text-[#0f4c81] font-black text-[16px]">${(Math.round(puntosTeo * 10) / 10).toFixed(1)}</span>
-                                        <span class="text-gray-400 font-bold text-[9px] uppercase tracking-wider">/ 30 pts</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-200/60 shadow-sm">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">Notas obtenidas:</span>
-                                    <span class="text-[13px] text-gray-700 font-medium break-words">${teoricaStr}</span>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    detalleHTML += `</div></div>`;
-                    nota = numSecciones > 0 ? Math.round(totalSumaSecciones / numSecciones) : 0;
-
+            try {
+                let calificacionesRef, materiasRef;
+                if (currentAppId === 'root') {
+                    calificacionesRef = collection(db, 'calificaciones');
+                    materiasRef = collection(db, 'materias');
                 } else {
-                    // --- LÓGICA ANTIGUA (Para retrocompatibilidad de notas pasadas) ---
-                    const calcularPuntos = (valores, pesoMaximo) => {
-                        if (valores === undefined || valores === null || valores === '') return { puntos: 0, str: '-' };
-                        let arr = [];
-                        if (typeof valores === 'string') {
-                            arr = valores.split(',').map(v => parseFloat(v)).filter(v => !isNaN(v));
-                        } else if (Array.isArray(valores)) {
-                            arr = valores.map(v => parseFloat(v)).filter(v => !isNaN(v));
-                        } else if (typeof valores === 'number') {
-                            arr = [valores];
-                        }
-                        if (arr.length === 0) return { puntos: 0, str: '-' };
-                        const promedio = arr.reduce((a, b) => a + b, 0) / arr.length;
-                        const peso = parseFloat(pesoMaximo) || 0;
-                        const puntos = (promedio / 100) * peso; 
-                        return { puntos: Math.round(puntos * 10) / 10, str: arr.join(', ') };
-                    };
+                    calificacionesRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'calificaciones');
+                    materiasRef = collection(db, 'artifacts', currentAppId, 'public', 'data', 'materias');
+                }
 
-                    const pesoAsist = materiaObj.pesoAsistencia || 0;
-                    const pesoParc = materiaObj.pesoParciales || 0;
-                    const pesoPrac = materiaObj.pesoPracticas || 0;
+                const materiasSnap = await getDocs(materiasRef);
+                const materiasMap = {};
+                materiasSnap.forEach(doc => {
+                    materiasMap[doc.id] = doc.data();
+                    if(doc.data().id) materiasMap[doc.data().id] = doc.data();
+                });
 
-                    const valAsistencia = data.asistencia ?? data.notaAsistencia;
-                    const valParciales = data.parciales ?? data.notaParciales ?? data.promedioParciales;
-                    const valPracticas = data.practicas ?? data.notaPracticas ?? data.promedioPracticas;
+                const calificacionesSnap = await getDocs(calificacionesRef);
+                const misCalificaciones = [];
+                calificacionesSnap.forEach(doc => {
+                    const data = doc.data();
+                    if (data.alumnoId === alumnoId) misCalificaciones.push(data);
+                });
 
-                    const asistData = calcularPuntos(valAsistencia, pesoAsist);
-                    const parcData = calcularPuntos(valParciales, pesoParc);
-                    const pracData = calcularPuntos(valPracticas, pesoPrac);
+                calificacionesProcesadas = [];
 
-                    nota = parseFloat(data.notaFinal || data.nota || data.promedio || data.calificacionFinal);
-                    if (isNaN(nota) || nota === 0) {
-                        if (asistData.puntos > 0 || parcData.puntos > 0 || pracData.puntos > 0) {
-                            nota = asistData.puntos + parcData.puntos + pracData.puntos;
-                        } else { nota = 0; }
-                    }
-                    nota = Math.round(nota);
+                misCalificaciones.forEach(data => {
+                    const materiaObj = materiasMap[data.materiaId] || {};
+                    const materia = materiaObj.nombre || data.materia || 'Materia sin título';
+                    const profesor = data.profesor || 'Docente Asignado';
+                    const numSecciones = materiaObj.numSecciones || 1;
 
-                    const crearFilaDetalle = (titulo, icono, notasStr, puntos, pesoMax) => {
-                        if (puntos === undefined) return '';
-                        const notasMostradas = notasStr === '-' || notasStr === '' ? 'Sin registros' : notasStr;
-                        return `
-                            <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
-                                <div class="flex justify-between items-center mb-2">
-                                    <span class="font-bold text-gray-800 text-[13px] flex items-center gap-1.5">
-                                        <i data-lucide="${icono}" class="w-4 h-4 text-[#0f4c81]"></i> ${titulo}
-                                    </span>
-                                    <div class="text-right flex items-baseline gap-1">
-                                        <span class="text-[#0f4c81] font-black text-[16px]">${puntos}</span>
-                                        <span class="text-gray-400 font-bold text-[10px] uppercase tracking-wider">/ ${pesoMax} pts</span>
-                                    </div>
-                                </div>
-                                <div class="flex items-start gap-1.5 bg-white p-2.5 rounded-lg border border-gray-200/60 shadow-sm">
-                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 shrink-0">Notas obtenidas:</span>
-                                    <span class="text-[13px] text-gray-700 font-medium break-words">${notasMostradas}</span>
-                                </div>
-                            </div>
-                        `;
-                    };
+                    let nota = 0;
+                    let detalleHTML = '';
 
-                    detalleHTML = data.detalle || '';
-                    if (valAsistencia !== undefined || valParciales !== undefined || valPracticas !== undefined) {
+                    if (data.secciones && Array.isArray(data.secciones)) {
+                        let totalSumaSecciones = 0;
+
                         detalleHTML = `
                             <div class="mt-4 pt-4 border-t border-gray-100">
                                 <div class="flex justify-between items-center mb-3">
                                     <span class="font-bold text-gray-800 text-[11px] uppercase tracking-wider">Desglose de Puntos</span>
                                 </div>
-                                <div class="flex flex-col">
-                                    ${valAsistencia !== undefined ? crearFilaDetalle('Asistencia', 'calendar-check', asistData.str, asistData.puntos, pesoAsist) : ''}
-                                    ${valPracticas !== undefined ? crearFilaDetalle('Prácticas', 'pen-tool', pracData.str, pracData.puntos, pesoPrac) : ''}
-                                    ${valParciales !== undefined ? crearFilaDetalle('Parciales', 'file-text', parcData.str, parcData.puntos, pesoParc) : ''}
-                                </div>
-                            </div>
+                                <div class="flex flex-col gap-4">
                         `;
-                    } else if (!detalleHTML) {
-                        detalleHTML = '<div class="mt-4 pt-4 border-t border-gray-100 text-[13px] text-gray-500 italic">Calificación final consolidada.</div>';
+
+                        for (let s = 0; s < numSecciones; s++) {
+                            const secData = data.secciones[s] || { practicas: [], teorica: 0 };
+                            const practicasArray = secData.practicas || [];
+
+                            const countPrac = practicasArray.length;
+                            const sumPrac = practicasArray.reduce((acc, val) => acc + (parseFloat(val) || 0), 0);
+                            const avgPrac = countPrac > 0 ? (sumPrac / countPrac) : 0;
+
+                            const teoricaVal = parseFloat(secData.teorica) || 0;
+
+                            const puntosPrac = avgPrac * 0.70;
+                            const puntosTeo = teoricaVal * 0.30;
+                            const notaSec = puntosPrac + puntosTeo;
+
+                            totalSumaSecciones += notaSec;
+
+                            const practicasStr = practicasArray.length > 0 ? practicasArray.map(v => v !== '' && v !== null ? v : '0').join(', ') : '-';
+                            const teoricaStr = secData.teorica !== undefined && secData.teorica !== '' ? secData.teorica : '-';
+
+                            detalleHTML += `
+                                <div class="bg-gray-50/50 p-3.5 rounded-2xl border border-gray-100 shadow-sm relative overflow-hidden">
+                                    <div class="absolute top-0 right-0 bg-[#0f4c81]/10 text-[#0f4c81] font-bold text-[10px] px-3 py-1 rounded-bl-xl uppercase tracking-widest border-b border-l border-[#0f4c81]/10">
+                                        Sección ${s + 1}
+                                    </div>
+                                    <div class="mb-4 pt-1">
+                                        <span class="font-bold text-gray-800 text-[14px]">Promedio Sección: <span class="text-[#0f4c81]">${Math.round(notaSec)}</span><span class="text-gray-400 text-[10px]"> / 100</span></span>
+                                    </div>
+
+                                    <div class="flex justify-between items-center mb-1.5">
+                                        <span class="font-bold text-gray-700 text-[13px] flex items-center gap-1.5">
+                                            <i data-lucide="pen-tool" class="w-4 h-4 text-[#0f4c81]"></i> Prácticas <span class="text-[10px] text-gray-400 font-normal">(70%)</span>
+                                        </span>
+                                        <div class="text-right flex items-baseline gap-1">
+                                            <span class="text-[#0f4c81] font-black text-[16px]">${(Math.round(puntosPrac * 10) / 10).toFixed(1)}</span>
+                                            <span class="text-gray-400 font-bold text-[9px] uppercase tracking-wider">/ 70 pts</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-200/60 shadow-sm mb-3">
+                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">Notas obtenidas:</span>
+                                        <span class="text-[13px] text-gray-700 font-medium break-words">${practicasStr}</span>
+                                    </div>
+
+                                    <div class="flex justify-between items-center mb-1.5">
+                                        <span class="font-bold text-gray-700 text-[13px] flex items-center gap-1.5">
+                                            <i data-lucide="file-text" class="w-4 h-4 text-[#0f4c81]"></i> Evaluación Teórica <span class="text-[10px] text-gray-400 font-normal">(30%)</span>
+                                        </span>
+                                        <div class="text-right flex items-baseline gap-1">
+                                            <span class="text-[#0f4c81] font-black text-[16px]">${(Math.round(puntosTeo * 10) / 10).toFixed(1)}</span>
+                                            <span class="text-gray-400 font-bold text-[9px] uppercase tracking-wider">/ 30 pts</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-2 bg-white p-3 rounded-xl border border-gray-200/60 shadow-sm">
+                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest shrink-0">Notas obtenidas:</span>
+                                        <span class="text-[13px] text-gray-700 font-medium break-words">${teoricaStr}</span>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                        detalleHTML += `</div></div>`;
+                        nota = numSecciones > 0 ? Math.round(totalSumaSecciones / numSecciones) : 0;
+
                     } else {
-                        detalleHTML = `<div class="mt-4 pt-4 border-t border-gray-100"><p class="text-[13px] text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-100">${detalleHTML}</p></div>`;
+                        const calcularPuntos = (valores, pesoMaximo) => {
+                            if (valores === undefined || valores === null || valores === '') return { puntos: 0, str: '-' };
+                            let arr = [];
+                            if (typeof valores === 'string') {
+                                arr = valores.split(',').map(v => parseFloat(v)).filter(v => !isNaN(v));
+                            } else if (Array.isArray(valores)) {
+                                arr = valores.map(v => parseFloat(v)).filter(v => !isNaN(v));
+                            } else if (typeof valores === 'number') {
+                                arr = [valores];
+                            }
+                            if (arr.length === 0) return { puntos: 0, str: '-' };
+                            const promedio = arr.reduce((a, b) => a + b, 0) / arr.length;
+                            const peso = parseFloat(pesoMaximo) || 0;
+                            const puntos = (promedio / 100) * peso; 
+                            return { puntos: Math.round(puntos * 10) / 10, str: arr.join(', ') };
+                        };
+
+                        const pesoAsist = materiaObj.pesoAsistencia || 0;
+                        const pesoParc = materiaObj.pesoParciales || 0;
+                        const pesoPrac = materiaObj.pesoPracticas || 0;
+
+                        const valAsistencia = data.asistencia ?? data.notaAsistencia;
+                        const valParciales = data.parciales ?? data.notaParciales ?? data.promedioParciales;
+                        const valPracticas = data.practicas ?? data.notaPracticas ?? data.promedioPracticas;
+
+                        const asistData = calcularPuntos(valAsistencia, pesoAsist);
+                        const parcData = calcularPuntos(valParciales, pesoParc);
+                        const pracData = calcularPuntos(valPracticas, pesoPrac);
+
+                        nota = parseFloat(data.notaFinal || data.nota || data.promedio || data.calificacionFinal);
+                        if (isNaN(nota) || nota === 0) {
+                            if (asistData.puntos > 0 || parcData.puntos > 0 || pracData.puntos > 0) {
+                                nota = asistData.puntos + parcData.puntos + pracData.puntos;
+                            } else { nota = 0; }
+                        }
+                        nota = Math.round(nota);
+
+                        const crearFilaDetalle = (titulo, icono, notasStr, puntos, pesoMax) => {
+                            if (puntos === undefined) return '';
+                            const notasMostradas = notasStr === '-' || notasStr === '' ? 'Sin registros' : notasStr;
+                            return `
+                                <div class="bg-gray-50 p-3 rounded-xl border border-gray-100 mb-2 shadow-sm">
+                                    <div class="flex justify-between items-center mb-2">
+                                        <span class="font-bold text-gray-800 text-[13px] flex items-center gap-1.5">
+                                            <i data-lucide="${icono}" class="w-4 h-4 text-[#0f4c81]"></i> ${titulo}
+                                        </span>
+                                        <div class="text-right flex items-baseline gap-1">
+                                            <span class="text-[#0f4c81] font-black text-[16px]">${puntos}</span>
+                                            <span class="text-gray-400 font-bold text-[10px] uppercase tracking-wider">/ ${pesoMax} pts</span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-1.5 bg-white p-2.5 rounded-lg border border-gray-200/60 shadow-sm">
+                                        <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-0.5 shrink-0">Notas obtenidas:</span>
+                                        <span class="text-[13px] text-gray-700 font-medium break-words">${notasMostradas}</span>
+                                    </div>
+                                </div>
+                            `;
+                        };
+
+                        detalleHTML = data.detalle || '';
+                        if (valAsistencia !== undefined || valParciales !== undefined || valPracticas !== undefined) {
+                            detalleHTML = `
+                                <div class="mt-4 pt-4 border-t border-gray-100">
+                                    <div class="flex justify-between items-center mb-3">
+                                        <span class="font-bold text-gray-800 text-[11px] uppercase tracking-wider">Desglose de Puntos</span>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        ${valAsistencia !== undefined ? crearFilaDetalle('Asistencia', 'calendar-check', asistData.str, asistData.puntos, pesoAsist) : ''}
+                                        ${valPracticas !== undefined ? crearFilaDetalle('Prácticas', 'pen-tool', pracData.str, pracData.puntos, pesoPrac) : ''}
+                                        ${valParciales !== undefined ? crearFilaDetalle('Parciales', 'file-text', parcData.str, parcData.puntos, pesoParc) : ''}
+                                    </div>
+                                </div>
+                            `;
+                        } else if (!detalleHTML) {
+                            detalleHTML = '<div class="mt-4 pt-4 border-t border-gray-100 text-[13px] text-gray-500 italic">Calificación final consolidada.</div>';
+                        } else {
+                            detalleHTML = `<div class="mt-4 pt-4 border-t border-gray-100"><p class="text-[13px] text-gray-600 bg-gray-50 p-3 rounded-xl border border-gray-100">${detalleHTML}</p></div>`;
+                        }
                     }
-                }
 
-                // Condición de Aprobación ajustada a 51pts por defecto 
-                const aprobado = nota >= 51;
-                let estado = aprobado ? 'Aprobado' : 'Reprobado';
+                    const aprobado = nota >= 51;
+                    let estado = aprobado ? 'Aprobado' : 'Reprobado';
 
-                // Si el alumno abandonó, cambiamos el texto
-                if (globalEstado === 'abandono' && !aprobado) {
-                    estado = 'Abandono';
-                }
+                    if (globalEstado === 'abandono' && !aprobado) {
+                        estado = 'Abandono';
+                    }
 
-                const colorPill = aprobado ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-red-700 bg-red-100 border-red-200';
-                const colorText = aprobado ? 'text-emerald-600' : 'text-red-500';
+                    const colorPill = aprobado ? 'text-emerald-700 bg-emerald-100 border-emerald-200' : 'text-red-700 bg-red-100 border-red-200';
+                    const colorText = aprobado ? 'text-emerald-600' : 'text-red-500';
 
-                const card = document.createElement('div');
-                card.className = "bg-white border border-gray-100 p-6 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300 relative overflow-hidden group";
-                card.innerHTML = `
-                        <div class="absolute left-0 top-0 bottom-0 w-1.5 ${aprobado ? 'bg-emerald-400' : 'bg-red-400'}"></div>
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                            <h4 class="font-bold text-xl text-gray-900 leading-tight mb-1 group-hover:text-[#0f4c81] transition-colors">${materia}</h4>
-                            <p class="text-[13px] text-gray-500 flex items-center gap-1.5">
-                                <i data-lucide="user" class="w-3.5 h-3.5"></i> ${profesor}
-                            </p>
-                        </div>
-                        <span class="px-3 py-1 rounded-full text-[11px] font-bold border uppercase tracking-wider ${colorPill}">${estado}</span>
-                    </div>
-                    <div class="flex items-end gap-2 mb-2">
-                        <span class="text-5xl font-black ${colorText} font-serif-title tracking-tighter">${nota}</span>
-                        <span class="text-sm text-gray-400 mb-1.5 font-bold uppercase tracking-widest">/ 100</span>
-                    </div>
-                    ${detalleHTML}
-                `;
-                container.appendChild(card);
-            });
-            lucide.createIcons();
+                    calificacionesProcesadas.push({
+                        materia,
+                        profesor,
+                        nota,
+                        aprobado,
+                        estado,
+                        colorPill,
+                        colorText,
+                        detalleHTML
+                    });
+                });
 
-        } catch (error) {
-            container.innerHTML = `
+                window.cambiarVistaCalificaciones('historial');
+
+            } catch (error) {
+                container.innerHTML = `
                     <div class="col-span-full text-center py-12 flex flex-col items-center">
                         <div class="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center mb-4 text-red-600">
                             <i data-lucide="server-crash" class="w-8 h-8"></i>
